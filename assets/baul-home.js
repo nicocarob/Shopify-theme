@@ -1,4 +1,6 @@
 const TOTAL = 5 * 3600000;
+const MAIN_DURATION_MS = 5 * 3600 * 1000;
+const MAIN_TIMER_KEY = 'bdc_main5';
 const CARD_FLOORS = [270 * 60000, 190 * 60000, 80 * 60000, 45 * 60000];
 
 function getEnd(key, floor) {
@@ -11,7 +13,17 @@ function getEnd(key, floor) {
   return v;
 }
 
-const END_MAIN = getEnd('bdc_main5', 60 * 60000);
+function getMainEnd() {
+  const now = Date.now();
+  let end = parseInt(localStorage.getItem(MAIN_TIMER_KEY) || '0', 10);
+  if (!end || end <= now) {
+    end = now + MAIN_DURATION_MS;
+    localStorage.setItem(MAIN_TIMER_KEY, end);
+  }
+  return end;
+}
+
+let mainEnd = getMainEnd();
 const cardEnds = CARD_FLOORS.map((f, i) => getEnd('bdc_c' + i, f));
 
 function fmt(ms) {
@@ -23,8 +35,14 @@ function fmt(ms) {
 
 function tick() {
   const now = Date.now();
+  let mainRemaining = mainEnd - now;
+  if (mainRemaining <= 0) {
+    mainEnd = now + MAIN_DURATION_MS;
+    localStorage.setItem(MAIN_TIMER_KEY, mainEnd);
+    mainRemaining = MAIN_DURATION_MS;
+  }
   const mainTimer = document.getElementById('mainTimer');
-  if (mainTimer) mainTimer.textContent = fmt(END_MAIN - now);
+  if (mainTimer) mainTimer.textContent = fmt(mainRemaining);
 
   document.querySelectorAll('.urg-timer').forEach((el) => {
     const i = parseInt(el.dataset.idx, 10);

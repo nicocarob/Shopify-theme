@@ -661,16 +661,17 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .n-brand { font-size: 9px; }
     .n-links { display: none; }
     .btn-cart { padding: 8px 12px; font-size: 12px; }
-    .hero { min-height: auto; }
-    .hero-grid { grid-template-columns: 1fr; padding: 40px 24px 32px; gap: 0; text-align: center; }
+    .hero { min-height: auto; overflow-x: hidden; }
+    .hero-grid { grid-template-columns: 1fr; padding: 40px 24px 32px; gap: 0; text-align: center; overflow-x: hidden; }
+    .hero-title { font-size: clamp(32px, 10vw, 52px); }
     .hero-tag { margin: 0 auto 16px; }
     .hero-desc { max-width: 100%; margin: 0 auto 24px; }
     .hero-btns { justify-content: center; }
     .hero-flags { justify-content: center; margin-top: 20px; }
-    .hero-r { order: -1; margin-bottom: 12px; }
-    .trophy-scene { width: 200px; height: 260px; margin: 0 auto; }
-    .trophy-img { width: 160px; }
-    .trophy-glow { width: 200px; height: 200px; }
+    .hero-r { display: flex; justify-content: center; margin-top: 24px; max-width: 280px; margin-left: auto; margin-right: auto; }
+    .trophy-scene { width: 100%; max-width: 280px; height: auto; margin: 0 auto; }
+    .trophy-img { width: 100%; max-width: 280px; height: auto; }
+    .trophy-glow { width: 100%; max-width: 280px; height: 280px; }
     .mv-sec, .col-sec, .srch-sec, .testi-sec { padding: 40px 16px; }
     .divider { margin: 0 16px; }
     .sec-hdr { flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 24px; }
@@ -694,9 +695,9 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   }
   
   @media (max-width: 480px) {
-    .hero-title { font-size: clamp(44px, 14vw, 64px); }
-    .trophy-scene { width: 160px; height: 210px; }
-    .trophy-img { width: 130px; }
+    .hero-title { font-size: clamp(32px, 10vw, 52px); }
+    .trophy-scene { max-width: 280px; }
+    .trophy-img { max-width: 280px; }
     .liga-grid { grid-template-columns: repeat(2, 1fr); }
     .ft-grid { grid-template-columns: 1fr; gap: 24px; }
   }
