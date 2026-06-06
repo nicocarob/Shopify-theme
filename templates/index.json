@@ -1,42 +1,213 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "layout": "baul",
   "sections": {
     "baul_homepage": {
       "type": "baul-homepage",
       "blocks": {
-        "testi_01": { "type": "testimonial", "settings": { "image": "shopify://shop_images/IMG_1790.jpg" } },
-        "testi_02": { "type": "testimonial", "settings": { "image": "shopify://shop_images/IMG_1775.jpg" } },
-        "testi_03": { "type": "testimonial", "settings": { "image": "shopify://shop_images/IMG_1780.jpg" } },
-        "testi_04": { "type": "testimonial", "settings": { "image": "shopify://shop_images/IMG_1783.jpg" } },
-        "testi_05": { "type": "testimonial", "settings": { "image": "shopify://shop_images/IMG_1789.jpg" } },
-        "testi_06": { "type": "testimonial", "settings": { "image": "shopify://shop_images/IMG_1781.jpg" } },
-        "testi_07": { "type": "testimonial", "settings": { "image": "shopify://shop_images/IMG_1784.jpg" } },
-        "testi_08": { "type": "testimonial", "settings": { "image": "shopify://shop_images/IMG_1787.jpg" } },
-        "testi_09": { "type": "testimonial", "settings": { "image": "shopify://shop_images/IMG_1782.jpg" } },
-        "testi_10": { "type": "testimonial", "settings": { "image": "shopify://shop_images/IMG_1792.jpg" } },
-        "testi_11": { "type": "testimonial", "settings": { "image": "shopify://shop_images/IMG_1788.jpg" } },
-        "testi_12": { "type": "testimonial", "settings": { "image": "shopify://shop_images/IMG_1779.jpg" } },
-        "testi_13": { "type": "testimonial", "settings": { "image": "shopify://shop_images/IMG_1785.jpg" } },
-        "testi_14": { "type": "testimonial", "settings": { "image": "shopify://shop_images/IMG_1776.jpg" } },
-        "liga_01": { "type": "liga", "settings": { "collection_handle": "liga-chilena", "liga_name": "Liga Chilena", "emoji": "🇨🇱", "logo": "shopify://shop_images/chile.png" } },
-        "liga_02": { "type": "liga", "settings": { "collection_handle": "liga-espanola", "liga_name": "Liga Española", "emoji": "🇪🇸", "logo": "shopify://shop_images/LaLiga_EA_Sports_2023_Vertical_Logo_svg.png" } },
-        "liga_03": { "type": "liga", "settings": { "collection_handle": "premier-league", "liga_name": "Premier League", "emoji": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "logo": "shopify://shop_images/premier-league-logo-png-transparent.png" } },
-        "liga_04": { "type": "liga", "settings": { "collection_handle": "serie-a", "liga_name": "Serie A", "emoji": "🇮🇹", "logo": "shopify://shop_images/Serie_A_logo_2022_svg.png" } },
-        "liga_05": { "type": "liga", "settings": { "collection_handle": "liga-alemana", "liga_name": "Bundesliga", "emoji": "🇩🇪" } },
-        "liga_06": { "type": "liga", "settings": { "collection_handle": "liga-francesa", "liga_name": "Ligue 1", "emoji": "🇫🇷" } },
-        "liga_07": { "type": "liga", "settings": { "collection_handle": "selecciones", "liga_name": "Selecciones", "emoji": "🌍", "logo": "shopify://shop_images/real_madrid_1.png" } },
-        "liga_08": { "type": "liga", "settings": { "collection_handle": "liga-argentina-1", "liga_name": "Liga Argentina", "emoji": "🇦🇷" } },
-        "liga_09": { "type": "liga", "settings": { "collection_handle": "liga-brasilena", "liga_name": "Liga Brasileña", "emoji": "🇧🇷" } },
-        "liga_10": { "type": "liga", "settings": { "collection_handle": "liga-argentina", "liga_name": "Otras Ligas", "emoji": "🏆", "logo": "shopify://shop_images/real_madrid_2.png" } }
+        "testi_01": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/unnamed_2.jpg"
+          }
+        },
+        "testi_02": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/unnamed_1.jpg"
+          }
+        },
+        "testi_03": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/unnamed.jpg"
+          }
+        },
+        "testi_04": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/IMG_2296.jpg"
+          }
+        },
+        "testi_05": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/IMG_2295.jpg"
+          }
+        },
+        "testi_06": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/IMG_2294.jpg"
+          }
+        },
+        "testi_07": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/IMG_2293.jpg"
+          }
+        },
+        "testi_08": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/IMG_2292.jpg"
+          }
+        },
+        "testi_09": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/IMG_2291.jpg"
+          }
+        },
+        "testi_10": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/IMG_2290.jpg"
+          }
+        },
+        "testi_11": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/IMG_2289.jpg"
+          }
+        },
+        "testi_12": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/IMG_2287.jpg"
+          }
+        },
+        "testi_13": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/IMG_2283.jpg"
+          }
+        },
+        "testi_14": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/IMG_2275.jpg"
+          }
+        },
+        "liga_01": {
+          "type": "liga",
+          "settings": {
+            "collection_handle": "liga-chilena",
+            "liga_name": "Liga Chilena",
+            "emoji": "🇨🇱"
+          }
+        },
+        "liga_02": {
+          "type": "liga",
+          "settings": {
+            "collection_handle": "liga-espanola",
+            "liga_name": "Liga Española",
+            "emoji": "🇪🇸"
+          }
+        },
+        "liga_03": {
+          "type": "liga",
+          "settings": {
+            "collection_handle": "premier-league",
+            "liga_name": "Premier League",
+            "emoji": "🏴󠁧󠁢󠁥󠁮󠁧󠁿"
+          }
+        },
+        "liga_04": {
+          "type": "liga",
+          "settings": {
+            "collection_handle": "serie-a",
+            "liga_name": "Serie A",
+            "emoji": "🇮🇹"
+          }
+        },
+        "liga_05": {
+          "type": "liga",
+          "settings": {
+            "collection_handle": "liga-alemana",
+            "liga_name": "Bundesliga",
+            "emoji": "🇩🇪"
+          }
+        },
+        "liga_06": {
+          "type": "liga",
+          "settings": {
+            "collection_handle": "liga-francesa",
+            "liga_name": "Ligue 1",
+            "emoji": "🇫🇷"
+          }
+        },
+        "liga_07": {
+          "type": "liga",
+          "settings": {
+            "collection_handle": "selecciones",
+            "liga_name": "Selecciones",
+            "emoji": "🌍"
+          }
+        },
+        "liga_08": {
+          "type": "liga",
+          "settings": {
+            "collection_handle": "liga-argentina-1",
+            "liga_name": "Liga Argentina",
+            "emoji": "🇦🇷"
+          }
+        },
+        "liga_09": {
+          "type": "liga",
+          "settings": {
+            "collection_handle": "liga-brasilena",
+            "liga_name": "Liga Brasileña",
+            "emoji": "🇧🇷"
+          }
+        },
+        "liga_10": {
+          "type": "liga",
+          "settings": {
+            "collection_handle": "liga-argentina",
+            "liga_name": "Otras Ligas",
+            "emoji": "🏆"
+          }
+        }
       },
       "block_order": [
-        "testi_01", "testi_02", "testi_03", "testi_04", "testi_05", "testi_06", "testi_07", "testi_08",
-        "testi_09", "testi_10", "testi_11", "testi_12", "testi_13", "testi_14",
-        "liga_01", "liga_02", "liga_03", "liga_04", "liga_05", "liga_06", "liga_07", "liga_08", "liga_09", "liga_10"
+        "testi_01",
+        "testi_02",
+        "testi_03",
+        "testi_04",
+        "testi_05",
+        "testi_06",
+        "testi_07",
+        "testi_08",
+        "testi_09",
+        "testi_10",
+        "testi_11",
+        "testi_12",
+        "testi_13",
+        "testi_14",
+        "liga_01",
+        "liga_02",
+        "liga_03",
+        "liga_04",
+        "liga_05",
+        "liga_06",
+        "liga_07",
+        "liga_08",
+        "liga_09",
+        "liga_10"
       ],
       "settings": {
         "countdown_text": "ENVÍO GRATIS POR TIEMPO LIMITADO — TERMINA EN:",
         "promo_text": "🎽 Lleva 3 camisetas y te llevas la 4ª a mitad de precio 🔥",
+        "logo": "shopify://shop_images/ANUNCIOS_5.png",
         "hero_tag": "Colección Oficial 2026",
         "hero_year": "2026",
         "hero_subtitle": "USA · CANADÁ · MÉXICO",
@@ -46,12 +217,23 @@
         "testi_eyebrow": "Lo que dicen de nosotros",
         "testi_title": "NUESTROS CLIENTES NOS RECOMIENDAN",
         "testi_subtitle": "Más de 10 años vendiendo a hinchas de todo Chile",
+        "mv_collection": "",
+        "mv_collection_url": "",
         "wc_collection": "selecciones",
+        "wc_collection_url": "",
         "retro_collection": "retro",
+        "retro_collection_url": "",
+        "ninos_collection": "",
+        "ninos_collection_url": "",
+        "fem_collection": "",
+        "fem_collection_url": "",
         "footer_description": "Más de 10 años equipando hinchas en todo Chile. La mejor calidad, envío gratis y atención personalizada.",
+        "instagram_url": "",
         "whatsapp_url": "https://wa.me/56951543485"
       }
     }
   },
-  "order": ["baul_homepage"]
+  "order": [
+    "baul_homepage"
+  ]
 }
