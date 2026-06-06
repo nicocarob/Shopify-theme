@@ -651,27 +651,47 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   
   /* ── Mobile ── */
   @media (max-width: 768px) {
-    #cbar { padding: 7px 12px; gap: 8px; flex-wrap: wrap; }
-    #cbar span:nth-child(2) { display: none; }
-    .ctimer { font-size: 18px; }
-    .cb-pill { font-size: 10px; padding: 3px 8px; }
-    .tick-it { padding: 0 16px; font-size: 11px; }
-    nav { padding: 0 16px; height: 54px; top: 36px; }
-    .n-logo img { width: 36px; height: 36px; }
-    .n-brand { font-size: 9px; }
-    .n-links { display: none; }
-    .btn-cart { padding: 8px 12px; font-size: 12px; }
+    #cbar {
+      padding: 6px 10px; gap: 6px; flex-wrap: nowrap;
+      font-size: 10px; overflow-x: hidden;
+    }
+    #cbar span:nth-child(2) { font-size: 8px; letter-spacing: 0.06em; }
+    .ctimer { font-size: 15px; }
+    .cb-pill { font-size: 8px; padding: 3px 6px; letter-spacing: 0.08em; }
+    .ticker { overflow-x: hidden; padding: 8px 0; }
+    .tick-it { padding: 0 10px; font-size: 9px; letter-spacing: 0.1em; }
+    nav {
+      padding: 0 8px; height: auto; min-height: 50px; top: 36px;
+      overflow-x: hidden; gap: 4px;
+    }
+    .n-logo { gap: 6px; flex-shrink: 0; }
+    .n-logo img { width: 32px; height: 32px; }
+    .n-brand { font-size: 8px; letter-spacing: 0.1em; }
+    .n-links { display: flex; flex-shrink: 1; min-width: 0; }
+    .n-links a {
+      font-size: 10px; padding: 0 4px; height: 50px;
+      letter-spacing: 0.04em;
+    }
+    .btn-cart { padding: 6px 8px; font-size: 10px; flex-shrink: 0; }
     .hero { min-height: auto; overflow-x: hidden; }
-    .hero-grid { grid-template-columns: 1fr; padding: 40px 24px 32px; gap: 0; text-align: center; overflow-x: hidden; }
-    .hero-title { font-size: clamp(32px, 10vw, 52px); }
-    .hero-tag { margin: 0 auto 16px; }
-    .hero-desc { max-width: 100%; margin: 0 auto 24px; }
-    .hero-btns { justify-content: center; }
-    .hero-flags { justify-content: center; margin-top: 20px; }
-    .hero-r { display: flex; justify-content: center; margin-top: 24px; max-width: 280px; margin-left: auto; margin-right: auto; }
-    .trophy-scene { width: 100%; max-width: 280px; height: auto; margin: 0 auto; }
-    .trophy-img { width: 100%; max-width: 280px; height: auto; }
-    .trophy-glow { width: 100%; max-width: 280px; height: 280px; }
+    .hero-grid {
+      grid-template-columns: 1fr 1fr;
+      padding: 24px 16px; gap: 12px;
+      align-items: center; overflow-x: hidden;
+    }
+    .hero-title { font-size: 32px; line-height: 0.9; }
+    .hero-sub-line { font-size: 10px; margin-bottom: 10px; letter-spacing: 0.08em; }
+    .hero-desc { font-size: 11px; max-width: 100%; margin-bottom: 14px; line-height: 1.5; }
+    .hero-tag { margin-bottom: 10px; padding: 4px 8px; }
+    .hero-tag span { font-size: 8px; letter-spacing: 0.12em; }
+    .hero-btns { gap: 6px; }
+    .btn-gold, .btn-ghost { padding: 8px 10px; font-size: 10px; }
+    .hero-flags { gap: 4px; margin-top: 10px; }
+    .flag-b { padding: 4px 6px; font-size: 13px; }
+    .hero-r { display: flex; align-items: center; justify-content: center; }
+    .trophy-scene { width: 160px; max-width: 160px; height: auto; margin: 0 auto; }
+    .trophy-img { width: 100%; max-width: 160px; height: auto; }
+    .trophy-glow { width: 140px; height: 140px; }
     .mv-sec, .col-sec, .srch-sec, .testi-sec { padding: 40px 16px; }
     .divider { margin: 0 16px; }
     .sec-hdr { flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 24px; }
@@ -693,11 +713,8 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .wa { width: 44px; height: 44px; font-size: 19px; bottom: 16px; right: 16px; }
     #scroll-bar { height: 2px; }
   }
-  
+
   @media (max-width: 480px) {
-    .hero-title { font-size: clamp(32px, 10vw, 52px); }
-    .trophy-scene { max-width: 280px; }
-    .trophy-img { max-width: 280px; }
     .liga-grid { grid-template-columns: repeat(2, 1fr); }
     .ft-grid { grid-template-columns: 1fr; gap: 24px; }
   }
