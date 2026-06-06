@@ -1,0 +1,69 @@
+{% comment %}
+  Tarjeta de producto Baúl del Capitán
+  Parámetros:
+  - product (requerido)
+  - rank: número de ranking (opcional)
+  - show_urgency: mostrar barra de urgencia (opcional)
+  - timer_idx: índice del timer (opcional)
+  - delay: transition-delay CSS (opcional)
+  - version_text: subtítulo del producto (opcional)
+{% endcomment %}
+
+{% liquid
+  assign card_delay = delay | default: ''
+  assign subtitle = version_text | default: 'Versión Hincha'
+  assign compare_price = product.compare_at_price
+  assign price = product.price
+%}
+
+<div class="pc rev-s"{% if card_delay != blank %} style="transition-delay:{{ card_delay }}"{% endif %}>
+  <a href="{{ product.url }}" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;flex:1;">
+    <div class="pc-img-wrap">
+      {% if product.featured_image %}
+        <img
+          src="{{ product.featured_image | image_url: width: 600 }}"
+          alt="{{ product.featured_image.alt | default: product.title | escape }}"
+          width="600"
+          height="600"
+          loading="lazy"
+        >
+      {% else %}
+        <div class="pc-bg">⚽</div>
+      {% endif %}
+      {% if rank %}
+        <div class="pc-num">{{ rank }}</div>
+      {% endif %}
+      <div class="fire-badge">🔥</div>
+      {% if show_urgency and product.available == false %}
+        <div class="badge-uu"><div class="badge-uu-dot"></div><span class="badge-uu-txt">Agotado</span></div>
+      {% elsif show_urgency %}
+        <div class="badge-uu"><div class="badge-uu-dot"></div><span class="badge-uu-txt">Últimas unidades</span></div>
+      {% endif %}
+    </div>
+    <div class="pc-info">
+      <div class="pc-name">{{ product.title }}</div>
+      <div class="pc-ver">{{ subtitle }}</div>
+    </div>
+    <div class="pc-price-row">
+      <div class="p-col">
+        {% if compare_price > price %}
+          <span class="p-old">{{ compare_price | money_without_trailing_zeros }}</span>
+        {% endif %}
+        <span class="p-new">{{ price | money_without_trailing_zeros }}</span>
+      </div>
+      <span class="btn-v">🛒 Ver</span>
+    </div>
+  </a>
+  {% if show_urgency %}
+    <div class="pc-urgency">
+      <div class="urg-top">
+        <div class="ult-dia"><div class="ult-dia-dot"></div><span class="ult-dia-txt">Último día</span></div>
+        <span class="urg-timer" data-idx="{{ timer_idx | default: 0 }}">--:--:--</span>
+      </div>
+      <div class="urg-bar">
+        <div class="urg-fill" style="width:80%;background:#22c55e;"></div>
+        <div class="urg-clk" style="left:calc(80% - 5px)">⏱</div>
+      </div>
+    </div>
+  {% endif %}
+</div>
