@@ -1,0 +1,243 @@
+{% comment %}
+  Barra de anuncio animada - Black Week
+  Archivo: sections/barra-anuncio.liquid
+  Colocar ARRIBA de todo en el landing
+{% endcomment %}
+
+<style>
+  .bar-section-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    height: {{ section.settings.bar_height }}px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .bar-track-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    animation: barScroll_{{ section.id }} {{ section.settings.speed }}s linear infinite;
+    gap: 0;
+  }
+
+  @keyframes barScroll_{{ section.id }} {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .bar-item-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 40px;
+    white-space: nowrap;
+  }
+
+  .bar-text-{{ section.id }} {
+    font-family: Arial, sans-serif;
+    font-size: {{ section.settings.font_size }}px;
+    font-weight: 700;
+    letter-spacing: {{ section.settings.letter_spacing }}px;
+    text-transform: uppercase;
+    color: {{ section.settings.text_color }};
+  }
+
+  .bar-text-{{ section.id }} span {
+    color: {{ section.settings.accent_color }};
+  }
+
+  /* Logo Copa del Mundo SVG inline */
+  .bar-logo-{{ section.id }} {
+    height: {{ section.settings.logo_size }}px;
+    width: auto;
+    flex-shrink: 0;
+    opacity: 0.95;
+  }
+
+  /* Separador */
+  .bar-sep-{{ section.id }} {
+    width: 5px;
+    height: 5px;
+    background: {{ section.settings.accent_color }};
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 768px) {
+    .bar-item-{{ section.id }} { padding: 0 24px; gap: 10px; }
+  }
+</style>
+
+<div class="bar-section-{{ section.id }}">
+  <div class="bar-track-{{ section.id }}">
+
+    {%- comment -%} Repetimos 8 veces para loop infinito fluido {%- endcomment -%}
+    {%- for i in (1..8) -%}
+      <div class="bar-item-{{ section.id }}">
+
+        {%- comment -%} Logo Copa del Mundo 2026 SVG {%- endcomment -%}
+        {%- if section.settings.show_logo -%}
+          {% if section.settings.logo != blank %}
+            <img
+              class="bar-logo-{{ section.id }}"
+              src="{{ section.settings.logo | img_url: '120x' }}"
+              alt="FIFA World Cup 2026"
+            >
+          {% else %}
+            {%- comment -%} SVG del trofeo Copa del Mundo como fallback {%- endcomment -%}
+            <svg class="bar-logo-{{ section.id }}" viewBox="0 0 60 80" xmlns="http://www.w3.org/2000/svg" fill="{{ section.settings.accent_color }}">
+              <path d="M10 5 h40 l-5 28 c0 10-8 18-15 22 v8 h10 v7 H20 v-7 h10 v-8 C23 52 15 44 15 34 Z"/>
+              <path d="M5 5 h7 v20 l-7-5 Z" opacity="0.7"/>
+              <path d="M55 5 h-7 v20 l7-5 Z" opacity="0.7"/>
+              <rect x="18" y="70" width="24" height="5" rx="2"/>
+            </svg>
+          {% endif %}
+        {%- endif -%}
+
+        <div class="bar-text-{{ section.id }}">
+          {{ section.settings.text_before }}
+          {%- if section.settings.highlight != blank -%}
+            <span> {{ section.settings.highlight }} </span>
+          {%- endif -%}
+          {{ section.settings.text_after }}
+        </div>
+
+        <div class="bar-sep-{{ section.id }}"></div>
+
+      </div>
+    {%- endfor -%}
+
+  </div>
+</div>
+
+
+{% schema %}
+{
+  "name": "Barra de Anuncio",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Texto"
+    },
+    {
+      "type": "text",
+      "id": "text_before",
+      "label": "Texto antes del resaltado",
+      "default": "BLACK WEEK -"
+    },
+    {
+      "type": "text",
+      "id": "highlight",
+      "label": "Texto resaltado (en color acento)",
+      "default": "DESCUENTOS DE HASTA 40%"
+    },
+    {
+      "type": "text",
+      "id": "text_after",
+      "label": "Texto despues del resaltado",
+      "default": "EN CAMISETAS DE LA COPA DEL MUNDO 2026"
+    },
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_logo",
+      "label": "Mostrar logo",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo Copa del Mundo (PNG sin fondo recomendado)"
+    },
+    {
+      "type": "range",
+      "id": "logo_size",
+      "label": "Tamano del logo",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "default": 28,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Colores"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Fondo",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Color del texto",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Color del texto resaltado",
+      "default": "#FFD700"
+    },
+    {
+      "type": "header",
+      "content": "Estilo"
+    },
+    {
+      "type": "range",
+      "id": "bar_height",
+      "label": "Alto de la barra",
+      "min": 32,
+      "max": 64,
+      "step": 2,
+      "default": 42,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "label": "Tamano del texto",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "default": 13,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "label": "Espaciado entre letras",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 3,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Velocidad (mas alto = mas lento)",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "default": 30,
+      "unit": "s"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Barra de Anuncio"
+    }
+  ]
+}
+{% endschema %}

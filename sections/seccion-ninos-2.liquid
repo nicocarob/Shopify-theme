@@ -1,0 +1,583 @@
+{% comment %}
+  Seccion Ninos - Seleccion manual de productos
+  Archivo: sections/seccion-ninos-2.liquid
+{% endcomment %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+<style>
+  .sn2-section-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sn2-bg-{{ section.id }} {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,200,81,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,81,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .sn2-header-{{ section.id }} {
+    text-align: center;
+    margin-bottom: 36px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .sn2-eyebrow-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: {{ section.settings.accent_color }};
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .sn2-title-{{ section.id }} {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 6vw, 64px);
+    letter-spacing: 2px;
+    color: {{ section.settings.title_color }};
+    margin: 0 0 6px 0;
+    line-height: 1;
+  }
+
+  .sn2-subtitle-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  /* Banner regalo */
+  .sn2-banner-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: #1a1a1a;
+    border: 1px solid {{ section.settings.accent_color }};
+    border-radius: 10px;
+    padding: 14px 24px;
+    margin: 0 auto 32px auto;
+    max-width: 680px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .sn2-banner-icon-{{ section.id }} { font-size: 22px; flex-shrink: 0; }
+
+  .sn2-banner-title-{{ section.id }} {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: {{ section.settings.accent_color }};
+    display: block;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .sn2-banner-desc-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.55);
+    display: block;
+  }
+
+  .sn2-banner-chip-{{ section.id }} {
+    background: {{ section.settings.accent_color }};
+    color: #000;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    padding: 5px 14px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  /* Grid */
+  .sn2-grid-{{ section.id }} {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.cols_desktop }}, 1fr);
+    gap: {{ section.settings.gap }}px;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .sn2-card-{{ section.id }} {
+    background: #161616;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    display: block;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .sn2-card-{{ section.id }}:hover {
+    transform: translateY(-5px);
+    border-color: {{ section.settings.accent_color }};
+    box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+    text-decoration: none;
+  }
+
+  .sn2-img-wrap-{{ section.id }} {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #1a1a1a;
+  }
+
+  .sn2-img-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+
+  .sn2-card-{{ section.id }}:hover .sn2-img-{{ section.id }} { transform: scale(1.05); }
+
+  .sn2-badge-gift-{{ section.id }} {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: {{ section.settings.accent_color }};
+    color: #000;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+    z-index: 2;
+  }
+
+  .sn2-badge-size-{{ section.id }} {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.8);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.85);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    z-index: 2;
+  }
+
+  .sn2-info-{{ section.id }} { padding: 14px 16px 16px; }
+
+  .sn2-name-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 3px 0;
+    line-height: 1.2;
+  }
+
+  .sn2-sub-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 0 0 10px 0;
+  }
+
+  .sn2-bottom-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .sn2-prices-{{ section.id }} { display: flex; flex-direction: column; gap: 1px; }
+
+  .sn2-compare-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+    text-decoration: line-through;
+    font-weight: 600;
+  }
+
+  .sn2-price-{{ section.id }} {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .sn2-ver-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: {{ section.settings.accent_color }};
+    color: #000;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    padding: 10px 16px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    transition: background 0.2s ease;
+  }
+
+  .sn2-ver-{{ section.id }}:hover { background: #fff; color: #000; }
+  .sn2-ver-{{ section.id }} svg { width: 13px; height: 13px; }
+
+  /* Boton ver coleccion */
+  .sn2-cta-wrap-{{ section.id }} {
+    text-align: center;
+    margin-top: 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .sn2-cta-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: #000;
+    background: {{ section.settings.accent_color }};
+    padding: 14px 44px;
+    border-radius: 4px;
+    text-decoration: none;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .sn2-cta-{{ section.id }}:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(0,0,0,0.4);
+    text-decoration: none;
+    color: #000;
+  }
+
+  .sn2-cta-{{ section.id }} svg { width: 16px; height: 16px; }
+
+  @media (max-width: 900px) {
+    .sn2-grid-{{ section.id }} { grid-template-columns: repeat({{ section.settings.cols_tablet }}, 1fr); }
+    .sn2-banner-{{ section.id }} { flex-wrap: wrap; text-align: center; }
+  }
+
+  @media (max-width: 560px) {
+    .sn2-grid-{{ section.id }} { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .sn2-info-{{ section.id }} { padding: 10px 12px 12px; }
+    .sn2-ver-{{ section.id }} { padding: 8px 12px; }
+    .sn2-cta-{{ section.id }} { width: 90%; justify-content: center; }
+    .sn2-banner-chip-{{ section.id }} { width: 100%; text-align: center; }
+  }
+</style>
+
+<section class="sn2-section-{{ section.id }}">
+  <div class="sn2-bg-{{ section.id }}"></div>
+
+  <div class="sn2-header-{{ section.id }}">
+    {% if section.settings.eyebrow != blank %}
+      <span class="sn2-eyebrow-{{ section.id }}">{{ section.settings.eyebrow }}</span>
+    {% endif %}
+    <h2 class="sn2-title-{{ section.id }}">{{ section.settings.title }}</h2>
+    {% if section.settings.subtitle != blank %}
+      <p class="sn2-subtitle-{{ section.id }}">{{ section.settings.subtitle }}</p>
+    {% endif %}
+  </div>
+
+  {% if section.settings.show_banner %}
+    <div class="sn2-banner-{{ section.id }}">
+      <span class="sn2-banner-icon-{{ section.id }}">🎁</span>
+      <div>
+        <span class="sn2-banner-title-{{ section.id }}">{{ section.settings.banner_title }}</span>
+        <span class="sn2-banner-desc-{{ section.id }}">{{ section.settings.banner_desc }}</span>
+      </div>
+      <span class="sn2-banner-chip-{{ section.id }}">{{ section.settings.banner_chip }}</span>
+    </div>
+  {% endif %}
+
+  <div class="sn2-grid-{{ section.id }}">
+    {%- for block in section.blocks -%}
+      {%- assign prod = block.settings.product -%}
+      <a class="sn2-card-{{ section.id }}" href="{{ prod.url | default: '#' }}" {{ block.shopify_attributes }}>
+
+        <div class="sn2-img-wrap-{{ section.id }}">
+          {%- if prod.featured_image != blank -%}
+            <img
+              class="sn2-img-{{ section.id }}"
+              src="{{ prod.featured_image | img_url: '600x600' }}"
+              alt="{{ prod.title }}"
+              loading="lazy"
+            >
+          {%- endif -%}
+
+          {%- if block.settings.show_gift -%}
+            <div class="sn2-badge-gift-{{ section.id }}">🎁 {{ block.settings.gift_text }}</div>
+          {%- endif -%}
+
+          {%- if block.settings.sizes != blank -%}
+            <div class="sn2-badge-size-{{ section.id }}">Tallas: {{ block.settings.sizes }}</div>
+          {%- endif -%}
+        </div>
+
+        <div class="sn2-info-{{ section.id }}">
+          <p class="sn2-name-{{ section.id }}">{{ prod.title }}</p>
+          {%- if block.settings.subtitle != blank -%}
+            <p class="sn2-sub-{{ section.id }}">{{ block.settings.subtitle }}</p>
+          {%- endif -%}
+
+          <div class="sn2-bottom-{{ section.id }}">
+            <div class="sn2-prices-{{ section.id }}">
+              {%- if prod.compare_at_price > prod.price -%}
+                <span class="sn2-compare-{{ section.id }}">{{ prod.compare_at_price | money }}</span>
+              {%- endif -%}
+              <span class="sn2-price-{{ section.id }}">{{ prod.price | money }}</span>
+            </div>
+            <span class="sn2-ver-{{ section.id }}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              </svg>
+              Ver
+            </span>
+          </div>
+        </div>
+      </a>
+    {%- endfor -%}
+  </div>
+
+  {% if section.settings.cta_url != blank %}
+    <div class="sn2-cta-wrap-{{ section.id }}">
+      <a href="{{ section.settings.cta_url }}" class="sn2-cta-{{ section.id }}">
+        {{ section.settings.cta_text }}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    </div>
+  {% endif %}
+
+</section>
+
+
+{% schema %}
+{
+  "name": "Seccion Ninos 2",
+  "tag": "section",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Encabezado"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Texto pequeno arriba",
+      "default": "Para los mas chicos"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titulo",
+      "default": "Favoritos de los Ninos"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitulo",
+      "default": "Camisetas para los hinchas del futuro"
+    },
+    {
+      "type": "header",
+      "content": "Banner regalo"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_banner",
+      "label": "Mostrar banner de regalo",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "banner_title",
+      "label": "Titulo del banner",
+      "default": "SHORT DE REGALO POR TIEMPO LIMITADO"
+    },
+    {
+      "type": "text",
+      "id": "banner_desc",
+      "label": "Descripcion",
+      "default": "Con cada camiseta nino llevas un short gratis"
+    },
+    {
+      "type": "text",
+      "id": "banner_chip",
+      "label": "Chip de tiempo",
+      "default": "Oferta limitada"
+    },
+    {
+      "type": "header",
+      "content": "Colores"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Fondo",
+      "default": "#0A0A0A"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color titulo",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Color acento",
+      "default": "#00C851"
+    },
+    {
+      "type": "header",
+      "content": "Columnas"
+    },
+    {
+      "type": "range",
+      "id": "cols_desktop",
+      "label": "Columnas desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "cols_tablet",
+      "label": "Columnas tablet",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Espacio entre tarjetas",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Boton ver coleccion"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Enlace del boton (puede ser coleccion, etiqueta, etc)"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Texto del boton",
+      "default": "VER TODA LA COLECCION NINOS"
+    },
+    {
+      "type": "header",
+      "content": "Espaciado"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding superior",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding inferior",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "producto",
+      "name": "Producto",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Producto"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitulo",
+          "default": "Version Hincha Nino"
+        },
+        {
+          "type": "text",
+          "id": "sizes",
+          "label": "Tallas",
+          "default": "4 - 16"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_gift",
+          "label": "Mostrar badge regalo",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "gift_text",
+          "label": "Texto badge regalo",
+          "default": "Short gratis"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Seccion Ninos 2"
+    }
+  ]
+}
+{% endschema %}

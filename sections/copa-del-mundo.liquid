@@ -1,0 +1,600 @@
+{% comment %}
+  Seccion Copa del Mundo 2026
+  Archivo: sections/copa-del-mundo.liquid
+{% endcomment %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+<style>
+  .cdm-section-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Fondo patron campo */
+  .cdm-bg-{{ section.id }} {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,200,81,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,81,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Luz decorativa */
+  .cdm-light-{{ section.id }} {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(255,215,0,0.07) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Header */
+  .cdm-header-{{ section.id }} {
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Logo */
+  .cdm-logo-{{ section.id }} {
+    max-height: {{ section.settings.logo_height }}px;
+    width: auto;
+    margin: 0 auto {{ section.settings.logo_gap }}px auto;
+    display: block;
+    filter: drop-shadow(0 4px 20px rgba(255,215,0,0.2));
+  }
+
+  /* Subtitulo */
+  .cdm-subtitle-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(15px, 2vw, 20px);
+    font-weight: 700;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin: 0 0 6px 0;
+  }
+
+  .cdm-desc-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(13px, 1.5vw, 16px);
+    font-weight: 400;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 1px;
+    margin: 0;
+  }
+
+  /* Divisor dorado */
+  .cdm-divider-{{ section.id }} {
+    width: 60px;
+    height: 2px;
+    background: {{ section.settings.accent_color }};
+    margin: 16px auto 0 auto;
+    border-radius: 2px;
+  }
+
+  /* Grid */
+  .cdm-grid-{{ section.id }} {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.cols_desktop }}, 1fr);
+    gap: {{ section.settings.gap }}px;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Tarjeta */
+  .cdm-card-{{ section.id }} {
+    background: #161616;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: {{ section.settings.border_radius }}px;
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+  }
+
+  .cdm-card-{{ section.id }}:hover {
+    transform: translateY(-6px);
+    border-color: {{ section.settings.accent_color }};
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px {{ section.settings.accent_color }};
+    text-decoration: none;
+  }
+
+  /* Imagen */
+  .cdm-card-img-wrap-{{ section.id }} {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    background: #1a1a1a;
+  }
+
+  .cdm-card-img-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  .cdm-card-{{ section.id }}:hover .cdm-card-img-{{ section.id }} {
+    transform: scale(1.06);
+  }
+
+  /* Badge pais */
+  .cdm-card-country-{{ section.id }} {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+    z-index: 2;
+  }
+
+  /* Badge copa */
+  .cdm-card-wc-badge-{{ section.id }} {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: {{ section.settings.accent_color }};
+    color: #000;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border-radius: 4px;
+    z-index: 2;
+  }
+
+  /* Info */
+  .cdm-card-info-{{ section.id }} {
+    padding: 14px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+  }
+
+  .cdm-card-title-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .cdm-card-sub-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .cdm-card-bottom-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    gap: 8px;
+  }
+
+  .cdm-card-price-wrap-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .cdm-card-compare-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+    text-decoration: line-through;
+    font-weight: 600;
+  }
+
+  .cdm-card-price-{{ section.id }} {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 1px;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .cdm-card-btn-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: {{ section.settings.accent_color }};
+    color: #000;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    padding: 10px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .cdm-card-btn-{{ section.id }}:hover {
+    background: #fff;
+    color: #000;
+    transform: scale(1.04);
+    text-decoration: none;
+  }
+
+  .cdm-card-btn-{{ section.id }} svg { width: 13px; height: 13px; }
+
+  /* Boton ver coleccion */
+  .cdm-btn-wrap-{{ section.id }} {
+    text-align: center;
+    margin-top: 44px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cdm-btn-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: #000;
+    background: {{ section.settings.accent_color }};
+    padding: 14px 44px;
+    border-radius: 4px;
+    text-decoration: none;
+    box-shadow: 0 6px 24px rgba(255,215,0,0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .cdm-btn-{{ section.id }}:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(255,215,0,0.35);
+    text-decoration: none;
+    color: #000;
+  }
+
+  .cdm-btn-{{ section.id }} svg { width: 16px; height: 16px; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .cdm-grid-{{ section.id }} {
+      grid-template-columns: repeat({{ section.settings.cols_tablet }}, 1fr);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .cdm-grid-{{ section.id }} {
+      grid-template-columns: repeat({{ section.settings.cols_mobile }}, 1fr);
+      gap: {{ section.settings.gap | minus: 8 }}px;
+    }
+    .cdm-card-info-{{ section.id }} { padding: 12px; }
+    .cdm-card-btn-{{ section.id }} { padding: 8px 12px; }
+  }
+</style>
+
+<section class="cdm-section-{{ section.id }}">
+  <div class="cdm-bg-{{ section.id }}"></div>
+  <div class="cdm-light-{{ section.id }}"></div>
+
+  <!-- Header -->
+  <div class="cdm-header-{{ section.id }}">
+
+    <!-- Logo Copa del Mundo -->
+    {% if section.settings.logo != blank %}
+      <img
+        class="cdm-logo-{{ section.id }}"
+        src="{{ section.settings.logo | img_url: '400x' }}"
+        alt="Copa del Mundo 2026"
+      >
+    {% endif %}
+
+    {% if section.settings.subtitle != blank %}
+      <p class="cdm-subtitle-{{ section.id }}">{{ section.settings.subtitle }}</p>
+    {% endif %}
+
+    {% if section.settings.description != blank %}
+      <p class="cdm-desc-{{ section.id }}">{{ section.settings.description }}</p>
+    {% endif %}
+
+    <div class="cdm-divider-{{ section.id }}"></div>
+
+  </div>
+
+  <!-- Grid de productos -->
+  <div class="cdm-grid-{{ section.id }}">
+    {%- for block in section.blocks -%}
+      {%- assign prod = all_products[block.settings.product] -%}
+
+      <a
+        class="cdm-card-{{ section.id }}"
+        href="{% if prod != blank %}{{ prod.url }}{% else %}#{% endif %}"
+        {{ block.shopify_attributes }}
+      >
+        <div class="cdm-card-img-wrap-{{ section.id }}">
+          {%- if prod != blank and prod.featured_image != blank -%}
+            <img
+              class="cdm-card-img-{{ section.id }}"
+              src="{{ prod.featured_image | img_url: '600x600' }}"
+              alt="{{ prod.title }}"
+              loading="lazy"
+            >
+          {%- endif -%}
+
+          {%- if block.settings.country != blank -%}
+            <div class="cdm-card-country-{{ section.id }}">{{ block.settings.country }}</div>
+          {%- endif -%}
+
+          <div class="cdm-card-wc-badge-{{ section.id }}">World Cup 2026</div>
+        </div>
+
+        <div class="cdm-card-info-{{ section.id }}">
+          <p class="cdm-card-title-{{ section.id }}">
+            {%- if prod != blank -%}{{ prod.title }}{%- else -%}{{ block.settings.card_title }}{%- endif -%}
+          </p>
+          {%- if block.settings.card_sub != blank -%}
+            <p class="cdm-card-sub-{{ section.id }}">{{ block.settings.card_sub }}</p>
+          {%- endif -%}
+
+          <div class="cdm-card-bottom-{{ section.id }}">
+            <div class="cdm-card-price-wrap-{{ section.id }}">
+              {%- if prod != blank -%}
+                {%- if prod.compare_at_price > prod.price -%}
+                  <span class="cdm-card-compare-{{ section.id }}">{{ prod.compare_at_price | money }}</span>
+                {%- endif -%}
+                <span class="cdm-card-price-{{ section.id }}">{{ prod.price | money }}</span>
+              {%- endif -%}
+            </div>
+            <span class="cdm-card-btn-{{ section.id }}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              </svg>
+              Ver
+            </span>
+          </div>
+        </div>
+      </a>
+    {%- endfor -%}
+  </div>
+
+  <!-- Boton ver coleccion -->
+  {%- if section.settings.button_url != blank -%}
+    <div class="cdm-btn-wrap-{{ section.id }}">
+      <a href="{{ section.settings.button_url }}" class="cdm-btn-{{ section.id }}">
+        {{ section.settings.button_text }}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    </div>
+  {%- endif -%}
+
+</section>
+
+
+{% schema %}
+{
+  "name": "Copa del Mundo",
+  "tag": "section",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo y textos"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo Copa del Mundo (PNG sin fondo)"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "Alto del logo",
+      "min": 40,
+      "max": 200,
+      "step": 4,
+      "default": 100,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "logo_gap",
+      "label": "Espacio logo a subtitulo",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitulo",
+      "default": "Coleccion Oficial FIFA World Cup 2026"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Descripcion",
+      "default": "Viste los colores de tu seleccion en el mundial"
+    },
+    {
+      "type": "header",
+      "content": "Colores"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Fondo",
+      "default": "#0A0A0A"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Color acento",
+      "default": "#FFD700"
+    },
+    {
+      "type": "header",
+      "content": "Grilla"
+    },
+    {
+      "type": "range",
+      "id": "cols_desktop",
+      "label": "Columnas desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "cols_tablet",
+      "label": "Columnas tablet",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "cols_mobile",
+      "label": "Columnas mobile",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Espacio entre tarjetas",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Redondeo de esquinas",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Boton ver coleccion"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Enlace de la coleccion Copa del Mundo"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Texto del boton",
+      "default": "VER TODA LA COLECCION COPA DEL MUNDO"
+    },
+    {
+      "type": "header",
+      "content": "Espaciado"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding superior",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding inferior",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "producto",
+      "name": "Camiseta",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Producto"
+        },
+        {
+          "type": "text",
+          "id": "card_title",
+          "label": "Nombre (si no hay producto)"
+        },
+        {
+          "type": "text",
+          "id": "card_sub",
+          "label": "Subtitulo de la tarjeta",
+          "default": "Version Hincha"
+        },
+        {
+          "type": "text",
+          "id": "country",
+          "label": "Pais (badge arriba izquierda)",
+          "default": "Chile"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Copa del Mundo"
+    }
+  ]
+}
+{% endschema %}

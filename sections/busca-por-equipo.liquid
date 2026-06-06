@@ -1,0 +1,549 @@
+{% comment %}
+  Seccion: Busca por Equipo
+  Archivo: sections/busca-por-equipo.liquid
+{% endcomment %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+<style>
+  .bpe-section-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bpe-bg-{{ section.id }} {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,200,81,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,81,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Header */
+  .bpe-header-{{ section.id }} {
+    text-align: center;
+    margin-bottom: 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .bpe-eyebrow-{{ section.id }} {
+    display: inline-block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: {{ section.settings.accent_color }};
+    margin-bottom: 8px;
+  }
+
+  .bpe-title-{{ section.id }} {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 6vw, 64px);
+    letter-spacing: 2px;
+    color: {{ section.settings.title_color }};
+    margin: 0 0 6px 0;
+    line-height: 1;
+  }
+
+  .bpe-subtitle-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  /* Buscador */
+  .bpe-search-wrap-{{ section.id }} {
+    position: relative;
+    max-width: 420px;
+    margin: 0 auto 32px auto;
+    z-index: 1;
+  }
+
+  .bpe-search-{{ section.id }} {
+    width: 100%;
+    background: #1a1a1a;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    padding: 12px 16px 12px 44px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 1px;
+    outline: none;
+    transition: border-color 0.2s ease;
+    box-sizing: border-box;
+  }
+
+  .bpe-search-{{ section.id }}::placeholder {
+    color: rgba(255,255,255,0.3);
+  }
+
+  .bpe-search-{{ section.id }}:focus {
+    border-color: {{ section.settings.accent_color }};
+  }
+
+  .bpe-search-icon-{{ section.id }} {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255,255,255,0.35);
+    pointer-events: none;
+  }
+
+  .bpe-search-icon-{{ section.id }} svg { width: 17px; height: 17px; }
+
+  /* Grid */
+  .bpe-grid-{{ section.id }} {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.cols_desktop }}, 1fr);
+    gap: {{ section.settings.gap }}px;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Tarjeta equipo */
+  .bpe-card-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.25s ease;
+    position: relative;
+  }
+
+  .bpe-card-{{ section.id }}:hover {
+    transform: translateY(-5px);
+    text-decoration: none;
+  }
+
+  .bpe-card-{{ section.id }}.bpe-hidden-{{ section.id }} {
+    display: none;
+  }
+
+  /* Circulo con escudo */
+  .bpe-logo-wrap-{{ section.id }} {
+    width: {{ section.settings.logo_size }}px;
+    height: {{ section.settings.logo_size }}px;
+    border-radius: 50%;
+    background: {{ section.settings.circle_bg }};
+    border: 2px solid {{ section.settings.circle_border }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    flex-shrink: 0;
+  }
+
+  .bpe-card-{{ section.id }}:hover .bpe-logo-wrap-{{ section.id }} {
+    border-color: {{ section.settings.accent_color }};
+    background: #222;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.4), 0 0 0 1px {{ section.settings.accent_color }};
+  }
+
+  .bpe-logo-wrap-{{ section.id }} img {
+    width: 68%;
+    height: 68%;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* Nombre del equipo */
+  .bpe-team-name-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: {{ section.settings.label_size }}px;
+    font-weight: 700;
+    color: {{ section.settings.label_color }};
+    text-align: center;
+    line-height: 1.2;
+    margin: 0;
+    letter-spacing: 0.5px;
+    transition: color 0.2s ease;
+  }
+
+  .bpe-card-{{ section.id }}:hover .bpe-team-name-{{ section.id }} {
+    color: {{ section.settings.accent_color }};
+  }
+
+  /* Liga badge opcional */
+  .bpe-league-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: -6px 0 0 0;
+  }
+
+  /* No resultados */
+  .bpe-empty-{{ section.id }} {
+    display: none;
+    text-align: center;
+    grid-column: 1 / -1;
+    padding: 40px 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .bpe-grid-{{ section.id }} {
+      grid-template-columns: repeat({{ section.settings.cols_tablet }}, 1fr);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .bpe-grid-{{ section.id }} {
+      grid-template-columns: repeat({{ section.settings.cols_mobile }}, 1fr);
+      gap: {{ section.settings.gap | minus: 8 }}px;
+    }
+    .bpe-logo-wrap-{{ section.id }} {
+      width: {{ section.settings.logo_size | minus: 20 }}px;
+      height: {{ section.settings.logo_size | minus: 20 }}px;
+    }
+  }
+</style>
+
+<section class="bpe-section-{{ section.id }}">
+  <div class="bpe-bg-{{ section.id }}"></div>
+
+  <!-- Header -->
+  <div class="bpe-header-{{ section.id }}">
+    {% if section.settings.eyebrow != blank %}
+      <div class="bpe-eyebrow-{{ section.id }}">{{ section.settings.eyebrow }}</div>
+    {% endif %}
+    <h2 class="bpe-title-{{ section.id }}">{{ section.settings.title }}</h2>
+    {% if section.settings.subtitle != blank %}
+      <p class="bpe-subtitle-{{ section.id }}">{{ section.settings.subtitle }}</p>
+    {% endif %}
+  </div>
+
+  <!-- Buscador -->
+  {% if section.settings.show_search %}
+    <div class="bpe-search-wrap-{{ section.id }}">
+      <div class="bpe-search-icon-{{ section.id }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </div>
+      <input
+        class="bpe-search-{{ section.id }}"
+        type="text"
+        placeholder="{{ section.settings.search_placeholder }}"
+        id="bpe-input-{{ section.id }}"
+        autocomplete="off"
+      >
+    </div>
+  {% endif %}
+
+  <!-- Grid equipos -->
+  <div class="bpe-grid-{{ section.id }}" id="bpe-grid-{{ section.id }}">
+
+    {%- for block in section.blocks -%}
+      {%- assign col = collections[block.settings.collection_handle] -%}
+      <a
+        class="bpe-card-{{ section.id }}"
+        href="{% if col != blank %}/collections/{{ col.handle }}{% else %}#{% endif %}"
+        data-name="{{ block.settings.team_name | downcase }}"
+        {{ block.shopify_attributes }}
+      >
+        <div class="bpe-logo-wrap-{{ section.id }}">
+          {%- if block.settings.logo != blank -%}
+            <img
+              src="{{ block.settings.logo | img_url: '200x200' }}"
+              alt="{{ block.settings.team_name }}"
+              loading="lazy"
+            >
+          {%- elsif col != blank and col.image != blank -%}
+            <img
+              src="{{ col.image | img_url: '200x200' }}"
+              alt="{{ block.settings.team_name | default: col.title }}"
+              loading="lazy"
+            >
+          {%- else -%}
+            ⚽
+          {%- endif -%}
+        </div>
+
+        <p class="bpe-team-name-{{ section.id }}">
+          {{ block.settings.team_name | default: col.title | default: 'Equipo' }}
+        </p>
+
+        {%- if block.settings.league != blank -%}
+          <p class="bpe-league-{{ section.id }}">{{ block.settings.league }}</p>
+        {%- endif -%}
+      </a>
+    {%- endfor -%}
+
+    <div class="bpe-empty-{{ section.id }}" id="bpe-empty-{{ section.id }}">
+      No se encontro el equipo
+    </div>
+
+  </div>
+</section>
+
+{% if section.settings.show_search %}
+<script>
+(function() {
+  var input = document.getElementById('bpe-input-{{ section.id }}');
+  var cards = document.querySelectorAll('.bpe-card-{{ section.id }}');
+  var empty = document.getElementById('bpe-empty-{{ section.id }}');
+
+  if (!input) return;
+
+  input.addEventListener('input', function() {
+    var query = this.value.toLowerCase().trim();
+    var visible = 0;
+
+    cards.forEach(function(card) {
+      var name = card.getAttribute('data-name') || '';
+      if (query === '' || name.indexOf(query) !== -1) {
+        card.classList.remove('bpe-hidden-{{ section.id }}');
+        visible++;
+      } else {
+        card.classList.add('bpe-hidden-{{ section.id }}');
+      }
+    });
+
+    empty.style.display = visible === 0 ? 'block' : 'none';
+  });
+})();
+</script>
+{% endif %}
+
+
+{% schema %}
+{
+  "name": "Busca por Equipo",
+  "tag": "section",
+  "max_blocks": 50,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Encabezado"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Texto pequeno arriba",
+      "default": "Encuentra tu camiseta"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titulo",
+      "default": "Busca por Equipo"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitulo",
+      "default": "Todos los equipos disponibles"
+    },
+    {
+      "type": "header",
+      "content": "Buscador"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Mostrar buscador",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Placeholder del buscador",
+      "default": "Buscar equipo..."
+    },
+    {
+      "type": "header",
+      "content": "Colores"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Fondo de la seccion",
+      "default": "#0A0A0A"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color del titulo",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Color de acento",
+      "default": "#00C851"
+    },
+    {
+      "type": "color",
+      "id": "circle_bg",
+      "label": "Fondo del circulo",
+      "default": "#1a1a1a"
+    },
+    {
+      "type": "color",
+      "id": "circle_border",
+      "label": "Borde del circulo",
+      "default": "#2a2a2a"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Color del nombre del equipo",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Tamanos"
+    },
+    {
+      "type": "range",
+      "id": "logo_size",
+      "label": "Tamano del circulo",
+      "min": 60,
+      "max": 160,
+      "step": 4,
+      "default": 88,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Tamano del nombre",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "default": 13,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Espacio entre equipos",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Columnas"
+    },
+    {
+      "type": "range",
+      "id": "cols_desktop",
+      "label": "Columnas desktop",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "cols_tablet",
+      "label": "Columnas tablet",
+      "min": 3,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "cols_mobile",
+      "label": "Columnas mobile",
+      "min": 3,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Espaciado"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding superior",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding inferior",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "equipo",
+      "name": "Equipo",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection_handle",
+          "label": "Coleccion del equipo"
+        },
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Escudo del equipo"
+        },
+        {
+          "type": "text",
+          "id": "team_name",
+          "label": "Nombre del equipo",
+          "default": "Real Madrid"
+        },
+        {
+          "type": "text",
+          "id": "league",
+          "label": "Liga (opcional)",
+          "default": "Liga Espanola"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Busca por Equipo"
+    }
+  ]
+}
+{% endschema %}

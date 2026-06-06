@@ -1,0 +1,596 @@
+{% comment %}
+  Seccion Futbol Femenino
+  Archivo: sections/futbol-femenino.liquid
+{% endcomment %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+<style>
+  .fem-section-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Fondo decorativo */
+  .fem-bg-{{ section.id }} {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,105,180,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,105,180,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .fem-light-{{ section.id }} {
+    position: absolute;
+    top: -80px;
+    right: -60px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(ellipse, rgba(255,105,180,0.06) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .fem-light2-{{ section.id }} {
+    position: absolute;
+    bottom: -60px;
+    left: -40px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(180,0,255,0.04) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Header */
+  .fem-header-{{ section.id }} {
+    text-align: center;
+    margin-bottom: 36px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .fem-eyebrow-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: {{ section.settings.accent_color }};
+    margin-bottom: 10px;
+  }
+
+  .fem-title-{{ section.id }} {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(38px, 6vw, 72px);
+    letter-spacing: 2px;
+    color: {{ section.settings.title_color }};
+    margin: 0 0 6px 0;
+    line-height: 0.95;
+  }
+
+  .fem-title-{{ section.id }} span {
+    color: {{ section.settings.accent_color }};
+  }
+
+  .fem-subtitle-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  /* Grid */
+  .fem-grid-{{ section.id }} {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.cols_desktop }}, 1fr);
+    gap: {{ section.settings.gap }}px;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Tarjeta */
+  .fem-card-{{ section.id }} {
+    background: #161616;
+    border: 1px solid rgba(255,105,180,0.12);
+    border-radius: 14px;
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+  }
+
+  .fem-card-{{ section.id }}:hover {
+    transform: translateY(-6px);
+    border-color: {{ section.settings.accent_color }};
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px {{ section.settings.accent_color }};
+    text-decoration: none;
+  }
+
+  /* Imagen */
+  .fem-img-wrap-{{ section.id }} {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #1a1a1a;
+  }
+
+  .fem-img-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  .fem-card-{{ section.id }}:hover .fem-img-{{ section.id }} {
+    transform: scale(1.06);
+  }
+
+  /* Badge mujer */
+  .fem-badge-{{ section.id }} {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: {{ section.settings.accent_color }};
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+    z-index: 2;
+  }
+
+  /* Badge nuevo */
+  .fem-badge-new-{{ section.id }} {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #fff;
+    color: #111;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border-radius: 4px;
+    z-index: 2;
+  }
+
+  /* Tallas disponibles */
+  .fem-sizes-{{ section.id }} {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.85);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    z-index: 2;
+  }
+
+  /* Info */
+  .fem-info-{{ section.id }} {
+    padding: 14px 16px 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .fem-name-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 3px 0;
+    line-height: 1.2;
+  }
+
+  .fem-sub-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 0 0 10px 0;
+  }
+
+  .fem-bottom-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: auto;
+  }
+
+  .fem-prices-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .fem-compare-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+    text-decoration: line-through;
+    font-weight: 600;
+  }
+
+  .fem-price-{{ section.id }} {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .fem-btn-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: {{ section.settings.accent_color }};
+    color: #fff;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    padding: 10px 16px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .fem-btn-{{ section.id }}:hover {
+    background: #fff;
+    color: {{ section.settings.accent_color }};
+    transform: scale(1.04);
+  }
+
+  .fem-btn-{{ section.id }} svg { width: 13px; height: 13px; }
+
+  /* Boton ver coleccion */
+  .fem-cta-wrap-{{ section.id }} {
+    text-align: center;
+    margin-top: 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .fem-cta-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: #fff;
+    background: transparent;
+    border: 2px solid {{ section.settings.accent_color }};
+    padding: 13px 44px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .fem-cta-{{ section.id }}:hover {
+    background: {{ section.settings.accent_color }};
+    color: #fff;
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+
+  .fem-cta-{{ section.id }} svg { width: 16px; height: 16px; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .fem-grid-{{ section.id }} { grid-template-columns: repeat({{ section.settings.cols_tablet }}, 1fr); }
+  }
+
+  @media (max-width: 560px) {
+    .fem-grid-{{ section.id }} { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .fem-info-{{ section.id }} { padding: 10px 12px 12px; }
+    .fem-btn-{{ section.id }} { padding: 8px 12px; }
+    .fem-cta-{{ section.id }} { width: 90%; justify-content: center; }
+  }
+</style>
+
+<section class="fem-section-{{ section.id }}">
+  <div class="fem-bg-{{ section.id }}"></div>
+  <div class="fem-light-{{ section.id }}"></div>
+  <div class="fem-light2-{{ section.id }}"></div>
+
+  <!-- Header -->
+  <div class="fem-header-{{ section.id }}">
+    {% if section.settings.eyebrow != blank %}
+      <div class="fem-eyebrow-{{ section.id }}">
+        ⚽ {{ section.settings.eyebrow }}
+      </div>
+    {% endif %}
+    <h2 class="fem-title-{{ section.id }}">
+      {{ section.settings.title_before }}
+      {% if section.settings.title_highlight != blank %}
+        <span>{{ section.settings.title_highlight }}</span>
+      {% endif %}
+      {{ section.settings.title_after }}
+    </h2>
+    {% if section.settings.subtitle != blank %}
+      <p class="fem-subtitle-{{ section.id }}">{{ section.settings.subtitle }}</p>
+    {% endif %}
+  </div>
+
+  <!-- Grid -->
+  <div class="fem-grid-{{ section.id }}">
+    {%- for block in section.blocks -%}
+      {%- assign prod = block.settings.product -%}
+      <a class="fem-card-{{ section.id }}" href="{{ prod.url | default: '#' }}" {{ block.shopify_attributes }}>
+
+        <div class="fem-img-wrap-{{ section.id }}">
+          {%- if prod.featured_image != blank -%}
+            <img
+              class="fem-img-{{ section.id }}"
+              src="{{ prod.featured_image | img_url: '600x600' }}"
+              alt="{{ prod.title }}"
+              loading="lazy"
+            >
+          {%- endif -%}
+
+          <div class="fem-badge-{{ section.id }}">{{ block.settings.badge_text }}</div>
+
+          {%- if block.settings.show_new -%}
+            <div class="fem-badge-new-{{ section.id }}">Nuevo</div>
+          {%- endif -%}
+
+          {%- if block.settings.sizes != blank -%}
+            <div class="fem-sizes-{{ section.id }}">Tallas: {{ block.settings.sizes }}</div>
+          {%- endif -%}
+        </div>
+
+        <div class="fem-info-{{ section.id }}">
+          <p class="fem-name-{{ section.id }}">{{ prod.title }}</p>
+          {%- if block.settings.subtitle != blank -%}
+            <p class="fem-sub-{{ section.id }}">{{ block.settings.subtitle }}</p>
+          {%- endif -%}
+
+          <div class="fem-bottom-{{ section.id }}">
+            <div class="fem-prices-{{ section.id }}">
+              {%- if prod.compare_at_price > prod.price -%}
+                <span class="fem-compare-{{ section.id }}">{{ prod.compare_at_price | money }}</span>
+              {%- endif -%}
+              <span class="fem-price-{{ section.id }}">{{ prod.price | money }}</span>
+            </div>
+            <span class="fem-btn-{{ section.id }}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              </svg>
+              Ver
+            </span>
+          </div>
+        </div>
+      </a>
+    {%- endfor -%}
+  </div>
+
+  <!-- Boton ver coleccion -->
+  {% if section.settings.cta_url != blank %}
+    <div class="fem-cta-wrap-{{ section.id }}">
+      <a href="{{ section.settings.cta_url }}" class="fem-cta-{{ section.id }}">
+        {{ section.settings.cta_text }}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    </div>
+  {% endif %}
+
+</section>
+
+
+{% schema %}
+{
+  "name": "Futbol Femenino",
+  "tag": "section",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Encabezado"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Texto pequeno arriba",
+      "default": "Para ellas"
+    },
+    {
+      "type": "text",
+      "id": "title_before",
+      "label": "Titulo parte 1",
+      "default": "Futbol"
+    },
+    {
+      "type": "text",
+      "id": "title_highlight",
+      "label": "Titulo resaltado en color acento",
+      "default": "Femenino"
+    },
+    {
+      "type": "text",
+      "id": "title_after",
+      "label": "Titulo parte 3"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitulo",
+      "default": "Camisetas para las hinchas de siempre"
+    },
+    {
+      "type": "header",
+      "content": "Colores"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Fondo",
+      "default": "#0A0A0A"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color titulo",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Color acento",
+      "default": "#E91E8C"
+    },
+    {
+      "type": "header",
+      "content": "Columnas"
+    },
+    {
+      "type": "range",
+      "id": "cols_desktop",
+      "label": "Columnas desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "cols_tablet",
+      "label": "Columnas tablet",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Espacio entre tarjetas",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Boton ver coleccion"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Enlace coleccion femenino"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Texto del boton",
+      "default": "VER TODA LA COLECCION FEMENINA"
+    },
+    {
+      "type": "header",
+      "content": "Espaciado"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding superior",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding inferior",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "producto",
+      "name": "Producto",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Producto"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitulo",
+          "default": "Version Mujer"
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Texto del badge",
+          "default": "Mujer"
+        },
+        {
+          "type": "text",
+          "id": "sizes",
+          "label": "Tallas disponibles",
+          "default": "S - XL"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_new",
+          "label": "Mostrar badge Nuevo",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Futbol Femenino"
+    }
+  ]
+}
+{% endschema %}

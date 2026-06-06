@@ -1,0 +1,662 @@
+{% comment %}
+  Seccion Liquidacion - 2 productos
+  Archivo: sections/liquidacion.liquid
+{% endcomment %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+<style>
+  .liq-section-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Fondo */
+  .liq-bg-{{ section.id }} {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,150,0,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,150,0,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .liq-light-{{ section.id }} {
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 300px;
+    background: radial-gradient(ellipse, rgba(255,150,0,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Header */
+  .liq-header-{{ section.id }} {
+    text-align: center;
+    margin-bottom: 36px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .liq-tag-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #ff6600;
+    color: #fff;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 3px;
+    padding: 6px 20px;
+    border-radius: 4px;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 20px rgba(255,100,0,0.4);
+  }
+
+  .liq-tag-dot-{{ section.id }} {
+    width: 7px;
+    height: 7px;
+    background: #fff;
+    border-radius: 50%;
+    animation: liqDot_{{ section.id }} 1s ease-in-out infinite;
+  }
+
+  @keyframes liqDot_{{ section.id }} {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .liq-title-{{ section.id }} {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(44px, 8vw, 90px);
+    letter-spacing: 3px;
+    color: #fff;
+    margin: 0 0 4px 0;
+    line-height: 0.95;
+  }
+
+  .liq-title-{{ section.id }} span {
+    color: #ff6600;
+  }
+
+  .liq-subtitle-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  /* Chips de info */
+  .liq-chips-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 16px 0 0 0;
+  }
+
+  .liq-chip-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid;
+  }
+
+  .liq-chip-orange-{{ section.id }} {
+    color: #ff6600;
+    border-color: rgba(255,100,0,0.3);
+    background: rgba(255,100,0,0.08);
+  }
+
+  .liq-chip-green-{{ section.id }} {
+    color: #00C851;
+    border-color: rgba(0,200,81,0.3);
+    background: rgba(0,200,81,0.08);
+  }
+
+  /* Grid 2 columnas */
+  .liq-grid-{{ section.id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: {{ section.settings.gap }}px;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Tarjeta */
+  .liq-card-{{ section.id }} {
+    background: #161616;
+    border: 1px solid rgba(255,100,0,0.2);
+    border-radius: 16px;
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+  }
+
+  .liq-card-{{ section.id }}:hover {
+    transform: translateY(-6px);
+    border-color: #ff6600;
+    box-shadow: 0 20px 50px rgba(255,100,0,0.15), 0 0 0 1px #ff6600;
+    text-decoration: none;
+  }
+
+  /* Imagen */
+  .liq-img-wrap-{{ section.id }} {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #1a1a1a;
+  }
+
+  .liq-img-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  .liq-card-{{ section.id }}:hover .liq-img-{{ section.id }} {
+    transform: scale(1.05);
+  }
+
+  /* Overlay */
+  .liq-img-overlay-{{ section.id }} {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 50%);
+    z-index: 1;
+  }
+
+  /* Badge liquidacion */
+  .liq-badge-main-{{ section.id }} {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: #ff6600;
+    color: #fff;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 2px;
+    padding: 5px 14px;
+    border-radius: 4px;
+    z-index: 2;
+    box-shadow: 0 4px 14px rgba(255,100,0,0.5);
+  }
+
+  /* Badge descuento */
+  .liq-badge-off-{{ section.id }} {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: #fff;
+    color: #ff6600;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1px;
+    padding: 4px 12px;
+    border-radius: 6px;
+    z-index: 2;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+  }
+
+  /* Badge envio */
+  .liq-badge-ship-{{ section.id }} {
+    position: absolute;
+    bottom: 14px;
+    left: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(0,200,81,0.9);
+    backdrop-filter: blur(4px);
+    color: #000;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 4px;
+    z-index: 2;
+  }
+
+  /* Info */
+  .liq-info-{{ section.id }} {
+    padding: 18px 20px 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .liq-name-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 4px 0;
+    line-height: 1.2;
+  }
+
+  .liq-sub-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 0 0 14px 0;
+  }
+
+  /* Precio grande */
+  .liq-price-block-{{ section.id }} {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .liq-price-{{ section.id }} {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 38px;
+    color: #ff6600;
+    line-height: 1;
+  }
+
+  .liq-compare-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    color: rgba(255,255,255,0.3);
+    text-decoration: line-through;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  /* Stock bar */
+  .liq-stock-{{ section.id }} {
+    margin-bottom: 16px;
+  }
+
+  .liq-stock-label-{{ section.id }} {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+
+  .liq-stock-label-{{ section.id }} span:last-child {
+    color: #ff6600;
+  }
+
+  .liq-stock-track-{{ section.id }} {
+    height: 5px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .liq-stock-fill-{{ section.id }} {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(to right, #ff4444, #ff8800);
+    animation: liqFill_{{ section.id }} 1.5s ease-out forwards;
+  }
+
+  @keyframes liqFill_{{ section.id }} {
+    from { width: 0%; }
+  }
+
+  /* Boton */
+  .liq-btn-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #ff6600;
+    color: #fff;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    padding: 14px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    margin-top: auto;
+    transition: background 0.2s ease, transform 0.2s ease;
+    box-shadow: 0 6px 20px rgba(255,100,0,0.35);
+  }
+
+  .liq-btn-{{ section.id }}:hover {
+    background: #ff4400;
+    transform: scale(1.02);
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .liq-btn-{{ section.id }} svg { width: 16px; height: 16px; }
+
+  /* Nota hasta agotar */
+  .liq-until-{{ section.id }} {
+    text-align: center;
+    margin-top: 20px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.25);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Mobile */
+  @media (max-width: 600px) {
+    .liq-grid-{{ section.id }} {
+      grid-template-columns: 1fr;
+      max-width: 420px;
+    }
+    .liq-title-{{ section.id }} { font-size: clamp(44px, 12vw, 72px); }
+    .liq-chips-{{ section.id }} { gap: 8px; }
+  }
+</style>
+
+<section class="liq-section-{{ section.id }}">
+  <div class="liq-bg-{{ section.id }}"></div>
+  <div class="liq-light-{{ section.id }}"></div>
+
+  <!-- Header -->
+  <div class="liq-header-{{ section.id }}">
+    <div class="liq-tag-{{ section.id }}">
+      <span class="liq-tag-dot-{{ section.id }}"></span>
+      {{ section.settings.tag_text }}
+    </div>
+    <h2 class="liq-title-{{ section.id }}">
+      {{ section.settings.title_before }}
+      {% if section.settings.title_highlight != blank %}
+        <span>{{ section.settings.title_highlight }}</span>
+      {% endif %}
+    </h2>
+    {% if section.settings.subtitle != blank %}
+      <p class="liq-subtitle-{{ section.id }}">{{ section.settings.subtitle }}</p>
+    {% endif %}
+
+    <div class="liq-chips-{{ section.id }}">
+      <span class="liq-chip-{{ section.id }} liq-chip-green-{{ section.id }}">
+        🚀 {{ section.settings.chip_shipping }}
+      </span>
+      <span class="liq-chip-{{ section.id }} liq-chip-orange-{{ section.id }}">
+        ⚡ {{ section.settings.chip_offer }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Grid 2 productos -->
+  <div class="liq-grid-{{ section.id }}">
+    {%- for block in section.blocks -%}
+      {%- assign prod = block.settings.product -%}
+      <a class="liq-card-{{ section.id }}" href="{{ prod.url | default: '#' }}" {{ block.shopify_attributes }}>
+
+        <div class="liq-img-wrap-{{ section.id }}">
+          {%- if prod.featured_image != blank -%}
+            <img
+              class="liq-img-{{ section.id }}"
+              src="{{ prod.featured_image | img_url: '700x700' }}"
+              alt="{{ prod.title }}"
+              loading="lazy"
+            >
+          {%- endif -%}
+          <div class="liq-img-overlay-{{ section.id }}"></div>
+
+          <div class="liq-badge-main-{{ section.id }}">LIQUIDACION</div>
+
+          {% if block.settings.discount_text != blank %}
+            <div class="liq-badge-off-{{ section.id }}">{{ block.settings.discount_text }}</div>
+          {% endif %}
+
+          <div class="liq-badge-ship-{{ section.id }}">
+            🚀 {{ section.settings.ship_badge }}
+          </div>
+        </div>
+
+        <div class="liq-info-{{ section.id }}">
+          <p class="liq-name-{{ section.id }}">{{ prod.title }}</p>
+          {% if block.settings.subtitle != blank %}
+            <p class="liq-sub-{{ section.id }}">{{ block.settings.subtitle }}</p>
+          {% endif %}
+
+          <div class="liq-price-block-{{ section.id }}">
+            <span class="liq-price-{{ section.id }}">{{ prod.price | money }}</span>
+            {%- if prod.compare_at_price > prod.price -%}
+              <span class="liq-compare-{{ section.id }}">{{ prod.compare_at_price | money }}</span>
+            {%- endif -%}
+          </div>
+
+          <!-- Barra de stock -->
+          {% if block.settings.show_stock %}
+            <div class="liq-stock-{{ section.id }}">
+              <div class="liq-stock-label-{{ section.id }}">
+                <span>Stock disponible</span>
+                <span>{{ block.settings.stock_text }}</span>
+              </div>
+              <div class="liq-stock-track-{{ section.id }}">
+                <div class="liq-stock-fill-{{ section.id }}" style="width:{{ block.settings.stock_percent }}%"></div>
+              </div>
+            </div>
+          {% endif %}
+
+          <a href="{{ prod.url | default: '#' }}" class="liq-btn-{{ section.id }}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            {{ section.settings.btn_text }}
+          </a>
+        </div>
+      </a>
+    {%- endfor -%}
+  </div>
+
+  <p class="liq-until-{{ section.id }}">{{ section.settings.until_text }}</p>
+
+</section>
+
+
+{% schema %}
+{
+  "name": "Liquidacion",
+  "tag": "section",
+  "max_blocks": 2,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Encabezado"
+    },
+    {
+      "type": "text",
+      "id": "tag_text",
+      "label": "Tag superior",
+      "default": "Oferta especial"
+    },
+    {
+      "type": "text",
+      "id": "title_before",
+      "label": "Titulo parte 1",
+      "default": "Gran"
+    },
+    {
+      "type": "text",
+      "id": "title_highlight",
+      "label": "Titulo resaltado en naranja",
+      "default": "Liquidacion"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitulo",
+      "default": "Precios unicos por tiempo limitado"
+    },
+    {
+      "type": "header",
+      "content": "Chips de info"
+    },
+    {
+      "type": "text",
+      "id": "chip_shipping",
+      "label": "Chip envio",
+      "default": "Envio inmediato - Llega en 2 a 3 dias"
+    },
+    {
+      "type": "text",
+      "id": "chip_offer",
+      "label": "Chip oferta",
+      "default": "Oferta hasta agotar stock"
+    },
+    {
+      "type": "text",
+      "id": "ship_badge",
+      "label": "Badge de envio en imagen",
+      "default": "Llega en 2-3 dias"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Texto del boton",
+      "default": "COMPRAR AHORA"
+    },
+    {
+      "type": "text",
+      "id": "until_text",
+      "label": "Nota al pie",
+      "default": "Oferta valida hasta agotar stock - Sin reposicion"
+    },
+    {
+      "type": "header",
+      "content": "Colores"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Fondo",
+      "default": "#0A0A0A"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Espacio entre productos",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "default": 20,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Espaciado"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding superior",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding inferior",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "producto",
+      "name": "Producto",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Producto"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitulo",
+          "default": "Liquidacion de stock"
+        },
+        {
+          "type": "text",
+          "id": "discount_text",
+          "label": "Badge de descuento (ej: -40%)",
+          "default": "-40%"
+        },
+        {
+          "type": "header",
+          "content": "Barra de stock"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_stock",
+          "label": "Mostrar barra de stock",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "stock_percent",
+          "label": "Stock restante (%)",
+          "min": 5,
+          "max": 95,
+          "step": 5,
+          "default": 10
+        },
+        {
+          "type": "text",
+          "id": "stock_text",
+          "label": "Texto de stock",
+          "default": "Ultimas unidades!"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Liquidacion"
+    }
+  ]
+}
+{% endschema %}

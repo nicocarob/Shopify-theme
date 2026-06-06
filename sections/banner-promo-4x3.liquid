@@ -1,0 +1,659 @@
+{% comment %}
+  Banner Promocional - Promo 4x3 Camisetas de Fútbol
+  Sección personalizada para Shopify
+  Agrega este archivo a: sections/banner-promo-4x3.liquid
+{% endcomment %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+<style>
+  .promo-banner-4x3 {
+    --color-primary: #{{ section.settings.color_primary | remove: '#' | default: '00C851' }};
+    --color-secondary: #{{ section.settings.color_secondary | remove: '#' | default: 'FFD700' }};
+    --color-bg: #{{ section.settings.color_bg | remove: '#' | default: '0A0A0A' }};
+    --color-text: #FFFFFF;
+
+    position: relative;
+    width: 100%;
+    min-height: {{ section.settings.banner_height }}px;
+    background-color: var(--color-bg);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+
+  /* Fondo con patrón de campo de fútbol */
+  .promo-banner-4x3__bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,200,81,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,81,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    z-index: 0;
+  }
+
+  /* Circulo central estilo campo */
+  .promo-banner-4x3__circle {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    border: 2px solid rgba(0,200,81,0.08);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+  }
+
+  .promo-banner-4x3__circle::before {
+    content: '';
+    position: absolute;
+    width: 800px;
+    height: 800px;
+    border-radius: 50%;
+    border: 2px solid rgba(0,200,81,0.04);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  /* Luz diagonal dramática */
+  .promo-banner-4x3__light {
+    position: absolute;
+    top: -100px;
+    right: -50px;
+    width: 400px;
+    height: 700px;
+    background: linear-gradient(135deg, rgba(255,215,0,0.12) 0%, transparent 60%);
+    transform: rotate(-15deg);
+    z-index: 0;
+  }
+
+  .promo-banner-4x3__light-2 {
+    position: absolute;
+    bottom: -100px;
+    left: -50px;
+    width: 300px;
+    height: 500px;
+    background: linear-gradient(315deg, rgba(0,200,81,0.1) 0%, transparent 60%);
+    transform: rotate(-15deg);
+    z-index: 0;
+  }
+
+  /* Contenedor principal */
+  .promo-banner-4x3__inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1200px;
+    padding: 40px 60px;
+    gap: 40px;
+  }
+
+  /* Lado izquierdo - imagen camiseta */
+  .promo-banner-4x3__visual {
+    flex: 0 0 auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .promo-banner-4x3__jerseys {
+    display: flex;
+    gap: -10px;
+    position: relative;
+  }
+
+  /* SVG camiseta inline */
+  .jersey-icon {
+    width: 70px;
+    height: 80px;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+    transition: transform 0.3s ease;
+    margin-left: -15px;
+  }
+
+  .jersey-icon:first-child { margin-left: 0; }
+
+  .jersey-icon:nth-child(1) { transform: rotate(-8deg); z-index: 1; }
+  .jersey-icon:nth-child(2) { transform: rotate(-3deg) translateY(-5px); z-index: 2; }
+  .jersey-icon:nth-child(3) { transform: rotate(3deg); z-index: 3; }
+  .jersey-icon:nth-child(4) {
+    transform: rotate(8deg) translateY(-5px);
+    z-index: 4;
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5)) brightness(0.5) sepia(1) saturate(0);
+    opacity: 0.55;
+    position: relative;
+  }
+
+  /* Tachado sobre la 4ta camiseta */
+  .jersey-free-badge {
+    position: absolute;
+    top: -14px;
+    right: -12px;
+    width: 44px;
+    height: 44px;
+    background: var(--color-secondary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    z-index: 10;
+    box-shadow: 0 4px 15px rgba(255,215,0,0.5);
+    animation: pulse-badge 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-badge {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+
+  .jersey-free-badge span {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    color: #000;
+    line-height: 1;
+    text-align: center;
+  }
+
+  .jersey-wrapper {
+    position: relative;
+    display: flex;
+  }
+
+  .jersey-wrapper:last-child .jersey-gratis-label {
+    display: block;
+  }
+
+  .jersey-gratis-label {
+    display: none;
+    position: absolute;
+    bottom: -22px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    color: var(--color-secondary);
+    white-space: nowrap;
+    letter-spacing: 1px;
+  }
+
+  /* Divisor vertical */
+  .promo-banner-4x3__divider {
+    width: 2px;
+    height: 120px;
+    background: linear-gradient(to bottom, transparent, rgba(0,200,81,0.6), transparent);
+    flex-shrink: 0;
+  }
+
+  /* Contenido central - texto principal */
+  .promo-banner-4x3__content {
+    flex: 1;
+    text-align: left;
+  }
+
+  .promo-banner-4x3__eyebrow {
+    display: inline-block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    margin-bottom: 8px;
+    opacity: 0.9;
+  }
+
+  .promo-banner-4x3__title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 7vw, 96px);
+    line-height: 0.9;
+    color: var(--color-text);
+    margin: 0 0 10px 0;
+    letter-spacing: 2px;
+  }
+
+  .promo-banner-4x3__title .highlight {
+    color: var(--color-secondary);
+    display: block;
+    font-size: clamp(72px, 10vw, 130px);
+    line-height: 0.85;
+    -webkit-text-stroke: 2px var(--color-secondary);
+  }
+
+  .promo-banner-4x3__subtitle {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(16px, 2vw, 22px);
+    font-weight: 600;
+    color: rgba(255,255,255,0.75);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+  }
+
+  .promo-banner-4x3__description {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(13px, 1.5vw, 16px);
+    font-weight: 400;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 1px;
+    margin-bottom: 0;
+  }
+
+  /* Lado derecho - CTA */
+  .promo-banner-4x3__cta-col {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  /* Precio / ahorro */
+  .promo-banner-4x3__saving {
+    text-align: center;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 16px 24px;
+    min-width: 160px;
+  }
+
+  .saving-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .saving-amount {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    color: var(--color-primary);
+    line-height: 1;
+    display: block;
+  }
+
+  .saving-suffix {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Botón CTA */
+  .promo-banner-4x3__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px 32px;
+    background: var(--color-primary);
+    color: #000;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 2px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    box-shadow: 0 6px 25px rgba(0,200,81,0.35);
+  }
+
+  .promo-banner-4x3__btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s ease;
+  }
+
+  .promo-banner-4x3__btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 35px rgba(0,200,81,0.5);
+    color: #000;
+    text-decoration: none;
+  }
+
+  .promo-banner-4x3__btn:hover::before {
+    left: 100%;
+  }
+
+  .promo-banner-4x3__btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  /* Barra inferior animada */
+  .promo-banner-4x3__ticker {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 36px;
+    background: var(--color-primary);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    z-index: 3;
+  }
+
+  .ticker-track {
+    display: flex;
+    gap: 0;
+    animation: ticker-scroll 18s linear infinite;
+    white-space: nowrap;
+  }
+
+  .ticker-item {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 15px;
+    letter-spacing: 3px;
+    color: #000;
+    padding: 0 30px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .ticker-item::after {
+    content: '⚽';
+    font-size: 12px;
+  }
+
+  @keyframes ticker-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .promo-banner-4x3 {
+      min-height: auto;
+    }
+
+    .promo-banner-4x3__inner {
+      flex-direction: column;
+      padding: 40px 24px 50px;
+      gap: 24px;
+      text-align: center;
+    }
+
+    .promo-banner-4x3__content {
+      text-align: center;
+    }
+
+    .promo-banner-4x3__divider {
+      width: 80px;
+      height: 2px;
+      background: linear-gradient(to right, transparent, rgba(0,200,81,0.6), transparent);
+    }
+
+    .promo-banner-4x3__cta-col {
+      width: 100%;
+    }
+
+    .promo-banner-4x3__btn {
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .jersey-icon {
+      width: 55px;
+      height: 65px;
+    }
+  }
+</style>
+
+<section class="promo-banner-4x3" id="banner-promo-4x3-{{ section.id }}">
+
+  <!-- Fondos decorativos -->
+  <div class="promo-banner-4x3__bg"></div>
+  <div class="promo-banner-4x3__circle"></div>
+  <div class="promo-banner-4x3__light"></div>
+  <div class="promo-banner-4x3__light-2"></div>
+
+  <div class="promo-banner-4x3__inner">
+
+    <!-- VISUAL: 4 camisetas -->
+    <div class="promo-banner-4x3__visual">
+      <div class="promo-banner-4x3__jerseys">
+
+        {% comment %} Camiseta 1 {% endcomment %}
+        <div class="jersey-wrapper">
+          <svg class="jersey-icon" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="jersey1-g" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#00C851;stop-opacity:1"/>
+                <stop offset="100%" style="stop-color:#007a32;stop-opacity:1"/>
+              </linearGradient>
+            </defs>
+            <path d="M30 10 L10 30 L20 35 L20 105 L80 105 L80 35 L90 30 L70 10 Q60 5 50 8 Q40 5 30 10Z" fill="url(#jersey1-g)"/>
+            <path d="M30 10 Q35 22 50 22 Q65 22 70 10" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+            <line x1="50" y1="22" x2="50" y2="50" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+          </svg>
+        </div>
+
+        {% comment %} Camiseta 2 {% endcomment %}
+        <div class="jersey-wrapper">
+          <svg class="jersey-icon" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="jersey2-g" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#1565C0;stop-opacity:1"/>
+                <stop offset="100%" style="stop-color:#0D47A1;stop-opacity:1"/>
+              </linearGradient>
+            </defs>
+            <path d="M30 10 L10 30 L20 35 L20 105 L80 105 L80 35 L90 30 L70 10 Q60 5 50 8 Q40 5 30 10Z" fill="url(#jersey2-g)"/>
+            <path d="M30 10 Q35 22 50 22 Q65 22 70 10" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+            <line x1="30" y1="35" x2="30" y2="90" stroke="rgba(255,255,255,0.15)" stroke-width="8"/>
+            <line x1="50" y1="35" x2="50" y2="90" stroke="rgba(255,255,255,0.15)" stroke-width="8"/>
+            <line x1="70" y1="35" x2="70" y2="90" stroke="rgba(255,255,255,0.15)" stroke-width="8"/>
+          </svg>
+        </div>
+
+        {% comment %} Camiseta 3 {% endcomment %}
+        <div class="jersey-wrapper">
+          <svg class="jersey-icon" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="jersey3-g" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#C62828;stop-opacity:1"/>
+                <stop offset="100%" style="stop-color:#8B0000;stop-opacity:1"/>
+              </linearGradient>
+            </defs>
+            <path d="M30 10 L10 30 L20 35 L20 105 L80 105 L80 35 L90 30 L70 10 Q60 5 50 8 Q40 5 30 10Z" fill="url(#jersey3-g)"/>
+            <path d="M30 10 Q35 22 50 22 Q65 22 70 10" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+            <path d="M20 60 L80 60" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+          </svg>
+        </div>
+
+        {% comment %} Camiseta 4 - LA GRATIS (atenuada con badge) {% endcomment %}
+        <div class="jersey-wrapper" style="position:relative;">
+          <svg class="jersey-icon" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" style="opacity:0.45;filter:grayscale(0.6) drop-shadow(0 4px 12px rgba(0,0,0,0.6));">
+            <path d="M30 10 L10 30 L20 35 L20 105 L80 105 L80 35 L90 30 L70 10 Q60 5 50 8 Q40 5 30 10Z" fill="#555"/>
+            <path d="M30 10 Q35 22 50 22 Q65 22 70 10" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+          </svg>
+          <div class="jersey-free-badge">
+            <span>¡</span>
+            <span style="font-size:14px;font-weight:900;">FREE</span>
+            <span>!</span>
+          </div>
+          <span class="jersey-gratis-label">GRATIS</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DIVISOR -->
+    <div class="promo-banner-4x3__divider"></div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="promo-banner-4x3__content">
+      <span class="promo-banner-4x3__eyebrow">⚽ Oferta Exclusiva</span>
+      <h2 class="promo-banner-4x3__title">
+        PROMO
+        <span class="highlight">4x3</span>
+      </h2>
+      <p class="promo-banner-4x3__subtitle">{{ section.settings.subtitle | default: 'Lleva 4 camisetas · Paga solo 3' }}</p>
+      <p class="promo-banner-4x3__description">{{ section.settings.description | default: 'La cuarta camiseta es completamente gratis. No acumulable con otras promociones.' }}</p>
+    </div>
+
+    <!-- CTA -->
+    <div class="promo-banner-4x3__cta-col">
+      {% if section.settings.show_saving %}
+      <div class="promo-banner-4x3__saving">
+        <span class="saving-label">Ahorrás</span>
+        <span class="saving-amount">25%</span>
+        <span class="saving-suffix">en tu compra</span>
+      </div>
+      {% endif %}
+
+      <a href="{{ section.settings.button_url | default: '/collections/camisetas' }}" class="promo-banner-4x3__btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        </svg>
+        {{ section.settings.button_text | default: 'VER CAMISETAS' }}
+      </a>
+    </div>
+
+  </div>
+
+  <!-- TICKER INFERIOR -->
+  {% if section.settings.show_ticker %}
+  <div class="promo-banner-4x3__ticker">
+    <div class="ticker-track">
+      {% assign ticker_text = section.settings.ticker_text | default: 'PROMO 4X3 · LLEVÁS 4 CAMISETAS Y PAGÁS SOLO 3 · OFERTA POR TIEMPO LIMITADO · ' %}
+      {% for i in (1..6) %}
+        <span class="ticker-item">{{ ticker_text }}</span>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</section>
+
+
+{% schema %}
+{
+  "name": "Banner Promo 4x3",
+  "tag": "section",
+  "class": "section-banner-promo-4x3",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colores"
+    },
+    {
+      "type": "color",
+      "id": "color_primary",
+      "label": "Color principal (acento)",
+      "default": "#00C851"
+    },
+    {
+      "type": "color",
+      "id": "color_secondary",
+      "label": "Color secundario (badge)",
+      "default": "#FFD700"
+    },
+    {
+      "type": "color",
+      "id": "color_bg",
+      "label": "Color de fondo",
+      "default": "#0A0A0A"
+    },
+    {
+      "type": "header",
+      "content": "Contenido"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtítulo",
+      "default": "Lleva 4 camisetas · Paga solo 3"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Descripción",
+      "default": "La cuarta camiseta es completamente gratis. No acumulable con otras promociones."
+    },
+    {
+      "type": "header",
+      "content": "Botón"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Texto del botón",
+      "default": "VER CAMISETAS"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Enlace del botón"
+    },
+    {
+      "type": "header",
+      "content": "Opciones"
+    },
+    {
+      "type": "range",
+      "id": "banner_height",
+      "label": "Altura del banner (desktop)",
+      "min": 280,
+      "max": 600,
+      "step": 20,
+      "default": 380,
+      "unit": "px"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_saving",
+      "label": "Mostrar bloque de ahorro (25%)",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Ticker inferior"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_ticker",
+      "label": "Mostrar ticker animado",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "ticker_text",
+      "label": "Texto del ticker",
+      "default": "PROMO 4X3 · LLEVÁS 4 CAMISETAS Y PAGÁS SOLO 3 · OFERTA POR TIEMPO LIMITADO · "
+    }
+  ],
+  "presets": [
+    {
+      "name": "Banner Promo 4x3"
+    }
+  ]
+}
+{% endschema %}

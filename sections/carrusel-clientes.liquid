@@ -1,0 +1,382 @@
+{% comment %}
+  Carrusel de Clientes - Fotos moviéndose hacia la derecha infinitamente
+  Archivo: sections/carrusel-clientes.liquid
+{% endcomment %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+<style>
+  .cda-section-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px 0;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Patron de campo de futbol */
+  .cda-bg-grid-{{ section.id }} {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,200,81,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,81,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Luz diagonal decorativa */
+  .cda-bg-light-{{ section.id }} {
+    position: absolute;
+    top: -60px;
+    right: -40px;
+    width: 320px;
+    height: 500px;
+    background: linear-gradient(135deg, rgba(255,215,0,0.07) 0%, transparent 60%);
+    transform: rotate(-15deg);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Encabezado */
+  .cda-header-{{ section.id }} {
+    text-align: center;
+    padding: 0 20px {{ section.settings.header_gap }}px 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cda-title-{{ section.id }} {
+    font-family: 'Bebas Neue', sans-serif;
+    color: {{ section.settings.title_color }};
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 400;
+    line-height: 1.05;
+    margin: 0 0 10px 0;
+    letter-spacing: 2px;
+  }
+
+  .cda-stars-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    color: {{ section.settings.subtitle_color }};
+    font-size: clamp(13px, 2vw, 17px);
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  /* Slider */
+  .cda-slider-wrap-{{ section.id }} {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Gradientes fade en los bordes */
+  .cda-slider-wrap-{{ section.id }}::before,
+  .cda-slider-wrap-{{ section.id }}::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 80px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .cda-slider-wrap-{{ section.id }}::before {
+    left: 0;
+    background: linear-gradient(to right, {{ section.settings.bg_color }}, transparent);
+  }
+
+  .cda-slider-wrap-{{ section.id }}::after {
+    right: 0;
+    background: linear-gradient(to left, {{ section.settings.bg_color }}, transparent);
+  }
+
+  .cda-slider-{{ section.id }} {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .cda-track-{{ section.id }} {
+    display: flex;
+    gap: {{ section.settings.gap }}px;
+    width: max-content;
+    animation: cdaScrollRight_{{ section.id }} {{ section.settings.speed }}s linear infinite;
+  }
+
+  /* Pausar al hover */
+  .cda-slider-{{ section.id }}:hover .cda-track-{{ section.id }} {
+    animation-play-state: paused;
+  }
+
+  .cda-track-{{ section.id }} img {
+    width: {{ section.settings.img_width }}px;
+    height: {{ section.settings.img_height }}px;
+    object-fit: cover;
+    border-radius: {{ section.settings.border_radius }}px;
+    flex-shrink: 0;
+    box-shadow: 0 10px 32px rgba(0,0,0,0.45);
+    background: #1a1a1a;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: block;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .cda-track-{{ section.id }} img:hover {
+    transform: scale(1.03) translateY(-4px);
+    box-shadow: 0 20px 48px rgba(0,200,81,0.2), 0 10px 24px rgba(0,0,0,0.5);
+  }
+
+  /* Animacion hacia la DERECHA */
+  @keyframes cdaScrollRight_{{ section.id }} {
+    0%   { transform: translateX(-50%); }
+    100% { transform: translateX(0); }
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .cda-track-{{ section.id }} {
+      gap: {{ section.settings.gap | minus: 6 }}px;
+    }
+
+    .cda-track-{{ section.id }} img {
+      width: {{ section.settings.img_width_mobile }}px;
+      height: {{ section.settings.img_height_mobile }}px;
+      border-radius: {{ section.settings.border_radius | minus: 4 }}px;
+    }
+
+    .cda-slider-wrap-{{ section.id }}::before,
+    .cda-slider-wrap-{{ section.id }}::after {
+      width: 40px;
+    }
+  }
+</style>
+
+<section class="cda-section-{{ section.id }}">
+
+  <div class="cda-bg-grid-{{ section.id }}"></div>
+  <div class="cda-bg-light-{{ section.id }}"></div>
+
+  <div class="cda-header-{{ section.id }}">
+    <div class="cda-title-{{ section.id }}">{{ section.settings.title }}</div>
+    <div class="cda-stars-{{ section.id }}">{{ section.settings.subtitle }}</div>
+  </div>
+
+  <div class="cda-slider-wrap-{{ section.id }}">
+    <div class="cda-slider-{{ section.id }}">
+      <div class="cda-track-{{ section.id }}">
+
+        {%- for block in section.blocks -%}
+          {%- if block.settings.image != blank -%}
+            <img
+              src="{{ block.settings.image | img_url: '600x' }}"
+              alt="{{ block.settings.image.alt | default: 'Cliente satisfecho' }}"
+              loading="lazy"
+              width="{{ section.settings.img_width }}"
+              height="{{ section.settings.img_height }}"
+            >
+          {%- endif -%}
+        {%- endfor -%}
+
+        {%- comment -%} Segunda copia para el loop infinito {%- endcomment -%}
+        {%- for block in section.blocks -%}
+          {%- if block.settings.image != blank -%}
+            <img
+              src="{{ block.settings.image | img_url: '600x' }}"
+              alt="{{ block.settings.image.alt | default: 'Cliente satisfecho' }}"
+              loading="lazy"
+              aria-hidden="true"
+              width="{{ section.settings.img_width }}"
+              height="{{ section.settings.img_height }}"
+            >
+          {%- endif -%}
+        {%- endfor -%}
+
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+{% schema %}
+{
+  "name": "Carrusel Clientes",
+  "tag": "section",
+  "max_blocks": 30,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Encabezado"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titulo",
+      "default": "Nuestros clientes nos avalan"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitulo",
+      "default": "Mas de 6 anos vendiendo a hinchas de todo Chile"
+    },
+    {
+      "type": "range",
+      "id": "header_gap",
+      "label": "Espacio entre titulo y carrusel",
+      "min": 8,
+      "max": 60,
+      "step": 4,
+      "default": 28,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Colores"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Color de fondo",
+      "default": "#0A0A0A"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color del titulo",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "subtitle_color",
+      "label": "Color del subtitulo",
+      "default": "#FFD700"
+    },
+    {
+      "type": "header",
+      "content": "Imagenes"
+    },
+    {
+      "type": "range",
+      "id": "img_width",
+      "label": "Ancho imagen desktop",
+      "min": 140,
+      "max": 400,
+      "step": 10,
+      "default": 260,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "img_height",
+      "label": "Alto imagen desktop",
+      "min": 200,
+      "max": 600,
+      "step": 10,
+      "default": 460,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "img_width_mobile",
+      "label": "Ancho imagen mobile",
+      "min": 100,
+      "max": 280,
+      "step": 5,
+      "default": 185,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "img_height_mobile",
+      "label": "Alto imagen mobile",
+      "min": 150,
+      "max": 500,
+      "step": 10,
+      "default": 330,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Espacio entre imagenes",
+      "min": 6,
+      "max": 40,
+      "step": 2,
+      "default": 18,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Redondeo de esquinas",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "default": 18,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Animacion"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Velocidad (mas alto = mas lento)",
+      "min": 15,
+      "max": 80,
+      "step": 1,
+      "default": 38,
+      "unit": "s"
+    },
+    {
+      "type": "header",
+      "content": "Espaciado seccion"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding superior",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 68,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding inferior",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 40,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "foto",
+      "name": "Foto de cliente",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Foto del cliente"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Carrusel Clientes"
+    }
+  ]
+}
+{% endschema %}

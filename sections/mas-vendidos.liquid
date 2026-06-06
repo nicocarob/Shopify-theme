@@ -1,0 +1,677 @@
+{% comment %}
+  Seccion: Mas Vendidos
+  Archivo: sections/mas-vendidos.liquid
+{% endcomment %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+<style>
+  .mv-section-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Fondo patron campo */
+  .mv-bg-{{ section.id }} {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,200,81,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,81,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Header */
+  .mv-header-{{ section.id }} {
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .mv-eyebrow-{{ section.id }} {
+    display: inline-block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: {{ section.settings.accent_color }};
+    margin-bottom: 8px;
+  }
+
+  .mv-title-{{ section.id }} {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 6vw, 64px);
+    letter-spacing: 2px;
+    color: {{ section.settings.title_color }};
+    margin: 0 0 6px 0;
+    line-height: 1;
+  }
+
+  .mv-subtitle-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  /* Grid */
+  .mv-grid-{{ section.id }} {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.cols_desktop }}, 1fr);
+    gap: {{ section.settings.gap }}px;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Tarjeta */
+  .mv-card-{{ section.id }} {
+    background: #161616;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: {{ section.settings.border_radius }}px;
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+  }
+
+  .mv-card-{{ section.id }}:hover {
+    transform: translateY(-6px);
+    border-color: {{ section.settings.accent_color }};
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px {{ section.settings.accent_color }};
+    text-decoration: none;
+  }
+
+  /* Imagen */
+  .mv-card-img-wrap-{{ section.id }} {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    background: #1a1a1a;
+  }
+
+  .mv-card-img-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  .mv-card-{{ section.id }}:hover .mv-card-img-{{ section.id }} {
+    transform: scale(1.06);
+  }
+
+  /* Badge numero de ranking */
+  .mv-rank-{{ section.id }} {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 32px;
+    height: 32px;
+    background: {{ section.settings.accent_color }};
+    color: #000;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  }
+
+  /* Badge pocas unidades */
+  .mv-stock-badge-{{ section.id }} {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(255, 60, 60, 0.92);
+    backdrop-filter: blur(4px);
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 4px;
+    z-index: 3;
+    animation: mvPulse_{{ section.id }} 2s ease-in-out infinite;
+  }
+
+  .mv-stock-dot-{{ section.id }} {
+    width: 6px;
+    height: 6px;
+    background: #fff;
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: mvDotPulse_{{ section.id }} 1.2s ease-in-out infinite;
+  }
+
+  @keyframes mvPulse_{{ section.id }} {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,60,60,0.5); }
+    50% { box-shadow: 0 0 0 5px rgba(255,60,60,0); }
+  }
+
+  @keyframes mvDotPulse_{{ section.id }} {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* Info de la tarjeta */
+  .mv-card-info-{{ section.id }} {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+  }
+
+  .mv-card-title-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #FFFFFF;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .mv-card-subtitle-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  /* Fila precio + boton */
+  .mv-card-bottom-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+    gap: 10px;
+  }
+
+  .mv-card-price-wrap-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .mv-card-price-{{ section.id }} {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 1px;
+    color: #FFFFFF;
+    line-height: 1;
+  }
+
+  .mv-card-compare-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.3);
+    text-decoration: line-through;
+  }
+
+  /* Boton agregar */
+  .mv-card-btn-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: {{ section.settings.accent_color }};
+    color: #000;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    padding: 10px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.2s ease, transform 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .mv-card-btn-{{ section.id }}:hover {
+    background: #fff;
+    color: #000;
+    transform: scale(1.04);
+    text-decoration: none;
+  }
+
+  .mv-card-btn-{{ section.id }} svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  /* Barra de stock visual */
+  .mv-stock-bar-wrap-{{ section.id }} {
+    margin-top: 10px;
+  }
+
+  .mv-stock-label-{{ section.id }} {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+
+  .mv-stock-label-{{ section.id }} span:last-child {
+    color: #ff4444;
+  }
+
+  .mv-stock-track-{{ section.id }} {
+    height: 4px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .mv-stock-fill-{{ section.id }} {
+    height: 100%;
+    border-radius: 2px;
+    background: linear-gradient(to right, #ff4444, #ff8800);
+    transition: width 0.6s ease;
+  }
+
+  /* Boton ver todos */
+  .mv-btn-wrap-{{ section.id }} {
+    text-align: center;
+    margin-top: 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .mv-btn-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: #000;
+    background: {{ section.settings.accent_color }};
+    padding: 14px 40px;
+    border-radius: 4px;
+    text-decoration: none;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .mv-btn-{{ section.id }}:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(0,0,0,0.5);
+    text-decoration: none;
+    color: #000;
+  }
+
+  .mv-btn-{{ section.id }} svg { width: 16px; height: 16px; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .mv-grid-{{ section.id }} {
+      grid-template-columns: repeat({{ section.settings.cols_tablet }}, 1fr);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .mv-grid-{{ section.id }} {
+      grid-template-columns: repeat({{ section.settings.cols_mobile }}, 1fr);
+      gap: {{ section.settings.gap | minus: 8 }}px;
+    }
+    .mv-card-info-{{ section.id }} { padding: 12px; }
+    .mv-card-btn-{{ section.id }} { padding: 8px 12px; font-size: 13px; }
+  }
+</style>
+
+<section class="mv-section-{{ section.id }}">
+  <div class="mv-bg-{{ section.id }}"></div>
+
+  <div class="mv-header-{{ section.id }}">
+    {% if section.settings.eyebrow != blank %}
+      <div class="mv-eyebrow-{{ section.id }}">{{ section.settings.eyebrow }}</div>
+    {% endif %}
+    <h2 class="mv-title-{{ section.id }}">{{ section.settings.title }}</h2>
+    {% if section.settings.subtitle != blank %}
+      <p class="mv-subtitle-{{ section.id }}">{{ section.settings.subtitle }}</p>
+    {% endif %}
+  </div>
+
+  <div class="mv-grid-{{ section.id }}">
+    {%- for block in section.blocks -%}
+      {%- assign prod = all_products[block.settings.product] -%}
+      {%- assign rank = forloop.index -%}
+
+      <a
+        class="mv-card-{{ section.id }}"
+        href="{% if prod != blank %}{{ prod.url }}{% else %}#{% endif %}"
+        {{ block.shopify_attributes }}
+      >
+        {%- comment -%} Imagen {%- endcomment -%}
+        <div class="mv-card-img-wrap-{{ section.id }}">
+          {%- if prod != blank and prod.featured_image != blank -%}
+            <img
+              class="mv-card-img-{{ section.id }}"
+              src="{{ prod.featured_image | img_url: '600x600' }}"
+              alt="{{ prod.title }}"
+              loading="lazy"
+            >
+          {%- endif -%}
+
+          {%- comment -%} Numero ranking {%- endcomment -%}
+          <div class="mv-rank-{{ section.id }}">{{ rank }}</div>
+
+          {%- comment -%} Badge pocas unidades {%- endcomment -%}
+          {%- if block.settings.show_stock_badge -%}
+            <div class="mv-stock-badge-{{ section.id }}">
+              <span class="mv-stock-dot-{{ section.id }}"></span>
+              {{ block.settings.stock_text }}
+            </div>
+          {%- endif -%}
+        </div>
+
+        {%- comment -%} Info {%- endcomment -%}
+        <div class="mv-card-info-{{ section.id }}">
+          <p class="mv-card-title-{{ section.id }}">
+            {%- if prod != blank -%}{{ prod.title }}{%- else -%}{{ block.settings.card_title }}{%- endif -%}
+          </p>
+
+          {%- if block.settings.card_subtitle != blank -%}
+            <p class="mv-card-subtitle-{{ section.id }}">{{ block.settings.card_subtitle }}</p>
+          {%- endif -%}
+
+          {%- comment -%} Barra de stock {%- endcomment -%}
+          {%- if block.settings.show_stock_bar -%}
+            <div class="mv-stock-bar-wrap-{{ section.id }}">
+              <div class="mv-stock-label-{{ section.id }}">
+                <span>Stock</span>
+                <span>{{ block.settings.stock_units_text }}</span>
+              </div>
+              <div class="mv-stock-track-{{ section.id }}">
+                <div
+                  class="mv-stock-fill-{{ section.id }}"
+                  style="width: {{ block.settings.stock_percent }}%"
+                ></div>
+              </div>
+            </div>
+          {%- endif -%}
+
+          <div class="mv-card-bottom-{{ section.id }}">
+            <div class="mv-card-price-wrap-{{ section.id }}">
+              {%- if prod != blank -%}
+                {%- if prod.compare_at_price > prod.price -%}
+                  <span class="mv-card-compare-{{ section.id }}">{{ prod.compare_at_price | money }}</span>
+                {%- endif -%}
+                <span class="mv-card-price-{{ section.id }}">{{ prod.price | money }}</span>
+              {%- endif -%}
+            </div>
+
+            <span class="mv-card-btn-{{ section.id }}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              </svg>
+              Ver
+            </span>
+          </div>
+        </div>
+
+      </a>
+    {%- endfor -%}
+  </div>
+
+  {%- if section.settings.button_url != blank -%}
+    <div class="mv-btn-wrap-{{ section.id }}">
+      <a href="{{ section.settings.button_url }}" class="mv-btn-{{ section.id }}">
+        {{ section.settings.button_text }}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    </div>
+  {%- endif -%}
+
+</section>
+
+
+{% schema %}
+{
+  "name": "Mas Vendidos",
+  "tag": "section",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Encabezado"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Texto pequeno arriba",
+      "default": "Lo que todos quieren"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titulo",
+      "default": "Mas Vendidos"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitulo",
+      "default": "Las camisetas favoritas de nuestros hinchas"
+    },
+    {
+      "type": "header",
+      "content": "Colores"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Fondo",
+      "default": "#0A0A0A"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color titulo",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Color acento",
+      "default": "#00C851"
+    },
+    {
+      "type": "header",
+      "content": "Grilla"
+    },
+    {
+      "type": "range",
+      "id": "cols_desktop",
+      "label": "Columnas desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "cols_tablet",
+      "label": "Columnas tablet",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "cols_mobile",
+      "label": "Columnas mobile",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Espacio entre tarjetas",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Redondeo de esquinas",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "default": 12,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Boton ver todos"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Enlace del boton"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Texto del boton",
+      "default": "VER TODOS LOS PRODUCTOS"
+    },
+    {
+      "type": "header",
+      "content": "Espaciado"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding superior",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding inferior",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "producto",
+      "name": "Producto",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Producto"
+        },
+        {
+          "type": "text",
+          "id": "card_title",
+          "label": "Nombre (si no hay producto)",
+          "default": "Camiseta"
+        },
+        {
+          "type": "text",
+          "id": "card_subtitle",
+          "label": "Subtitulo de la tarjeta",
+          "default": "Version Hincha"
+        },
+        {
+          "type": "header",
+          "content": "Badge pocas unidades"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_stock_badge",
+          "label": "Mostrar badge pocas unidades",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "stock_text",
+          "label": "Texto del badge",
+          "default": "Pocas unidades"
+        },
+        {
+          "type": "header",
+          "content": "Barra de stock"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_stock_bar",
+          "label": "Mostrar barra de stock",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "stock_percent",
+          "label": "Porcentaje de stock restante",
+          "min": 5,
+          "max": 95,
+          "step": 5,
+          "default": 20
+        },
+        {
+          "type": "text",
+          "id": "stock_units_text",
+          "label": "Texto de unidades",
+          "default": "Quedan pocas!"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Mas Vendidos"
+    }
+  ]
+}
+{% endschema %}

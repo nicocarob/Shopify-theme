@@ -1,0 +1,629 @@
+{% comment %}
+  Seccion Final Champions League - Arsenal vs PSG
+  Archivo: sections/final-champions.liquid
+{% endcomment %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+<style>
+  .fcl-section-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Fondo degradado bicolor Arsenal/PSG */
+  .fcl-bg-split-{{ section.id }} {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(239,1,7,0.06) 0%,
+      transparent 50%,
+      rgba(0,56,147,0.06) 100%
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .fcl-bg-grid-{{ section.id }} {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Header */
+  .fcl-header-{{ section.id }} {
+    text-align: center;
+    margin-bottom: 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Badge Champions */
+  .fcl-champions-badge-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #1a1200, #2a1f00);
+    border: 1px solid #c9a84c;
+    border-radius: 6px;
+    padding: 8px 20px;
+    margin-bottom: 16px;
+  }
+
+  .fcl-star-{{ section.id }} {
+    color: #c9a84c;
+    font-size: 14px;
+  }
+
+  .fcl-champions-text-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #c9a84c;
+  }
+
+  /* VS header */
+  .fcl-vs-wrap-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+
+  .fcl-club-name-{{ section.id }} {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(32px, 5vw, 64px);
+    letter-spacing: 3px;
+    line-height: 1;
+  }
+
+  .fcl-arsenal-{{ section.id }} { color: #EF0107; }
+  .fcl-psg-{{ section.id }} { color: #003893; }
+
+  .fcl-vs-{{ section.id }} {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(20px, 3vw, 36px);
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 4px;
+  }
+
+  .fcl-subtitle-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  /* Banner urgencia */
+  .fcl-urgency-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #1a0000, #220000);
+    border: 1px solid rgba(255,60,60,0.5);
+    border-radius: 8px;
+    padding: 10px 24px;
+    margin-top: 14px;
+    animation: fclPulse_{{ section.id }} 2s ease-in-out infinite;
+  }
+
+  @keyframes fclPulse_{{ section.id }} {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,60,60,0.3); }
+    50% { box-shadow: 0 0 0 6px rgba(255,60,60,0); }
+  }
+
+  .fcl-urgency-dot-{{ section.id }} {
+    width: 8px;
+    height: 8px;
+    background: #ff4444;
+    border-radius: 50%;
+    flex-shrink: 0;
+    animation: fclDot_{{ section.id }} 1s ease-in-out infinite;
+  }
+
+  @keyframes fclDot_{{ section.id }} {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+  }
+
+  .fcl-urgency-text-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 1px;
+  }
+
+  .fcl-urgency-text-{{ section.id }} span {
+    color: #ff4444;
+  }
+
+  /* Grid */
+  .fcl-grid-{{ section.id }} {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.cols_desktop }}, 1fr);
+    gap: {{ section.settings.gap }}px;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Separador VS en el medio */
+  .fcl-divider-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .fcl-divider-line-{{ section.id }} {
+    width: 1px;
+    flex: 1;
+    background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.15), transparent);
+  }
+
+  .fcl-divider-vs-{{ section.id }} {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 3px;
+    writing-mode: vertical-lr;
+    text-orientation: mixed;
+  }
+
+  /* Tarjeta */
+  .fcl-card-{{ section.id }} {
+    background: #161616;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px;
+    overflow: hidden;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+  }
+
+  .fcl-card-arsenal-{{ section.id }}:hover {
+    transform: translateY(-6px);
+    border-color: #EF0107;
+    box-shadow: 0 20px 50px rgba(239,1,7,0.2), 0 0 0 1px #EF0107;
+    text-decoration: none;
+  }
+
+  .fcl-card-psg-{{ section.id }}:hover {
+    transform: translateY(-6px);
+    border-color: #003893;
+    box-shadow: 0 20px 50px rgba(0,56,147,0.2), 0 0 0 1px #003893;
+    text-decoration: none;
+  }
+
+  /* Imagen */
+  .fcl-img-wrap-{{ section.id }} {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #1a1a1a;
+  }
+
+  .fcl-img-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  .fcl-card-{{ section.id }}:hover .fcl-img-{{ section.id }} {
+    transform: scale(1.05);
+  }
+
+  /* Badge club */
+  .fcl-badge-arsenal-{{ section.id }} {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: #EF0107;
+    color: #fff;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    padding: 4px 12px;
+    border-radius: 4px;
+    z-index: 2;
+  }
+
+  .fcl-badge-psg-{{ section.id }} {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: #003893;
+    color: #fff;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    padding: 4px 12px;
+    border-radius: 4px;
+    z-index: 2;
+  }
+
+  /* Badge agotando */
+  .fcl-badge-hot-{{ section.id }} {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,60,60,0.4);
+    color: #ff6644;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border-radius: 4px;
+    z-index: 2;
+  }
+
+  /* Info */
+  .fcl-info-{{ section.id }} {
+    padding: 14px 16px 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .fcl-name-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 3px 0;
+    line-height: 1.2;
+  }
+
+  .fcl-sub-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 0 0 10px 0;
+  }
+
+  .fcl-bottom-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: auto;
+  }
+
+  .fcl-prices-{{ section.id }} { display: flex; flex-direction: column; gap: 1px; }
+
+  .fcl-compare-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+    text-decoration: line-through;
+    font-weight: 600;
+  }
+
+  .fcl-price-{{ section.id }} {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .fcl-btn-arsenal-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #EF0107;
+    color: #fff !important;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    padding: 10px 16px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    transition: background 0.2s ease, transform 0.2s ease;
+    text-decoration: none;
+  }
+
+  .fcl-btn-arsenal-{{ section.id }}:hover {
+    background: #c00;
+    transform: scale(1.04);
+    color: #fff !important;
+  }
+
+  .fcl-btn-psg-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #003893;
+    color: #fff !important;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    padding: 10px 16px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    transition: background 0.2s ease, transform 0.2s ease;
+    text-decoration: none;
+  }
+
+  .fcl-btn-psg-{{ section.id }}:hover {
+    background: #002266;
+    transform: scale(1.04);
+    color: #fff !important;
+  }
+
+  .fcl-btn-arsenal-{{ section.id }} svg,
+  .fcl-btn-psg-{{ section.id }} svg { width: 13px; height: 13px; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .fcl-grid-{{ section.id }} {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .fcl-divider-{{ section.id }} { display: none; }
+    .fcl-vs-wrap-{{ section.id }} { gap: 10px; }
+    .fcl-info-{{ section.id }} { padding: 10px 12px 12px; }
+  }
+</style>
+
+<section class="fcl-section-{{ section.id }}">
+  <div class="fcl-bg-split-{{ section.id }}"></div>
+  <div class="fcl-bg-grid-{{ section.id }}"></div>
+
+  <!-- Header -->
+  <div class="fcl-header-{{ section.id }}">
+    <div class="fcl-champions-badge-{{ section.id }}">
+      <span class="fcl-star-{{ section.id }}">★</span>
+      <span class="fcl-champions-text-{{ section.id }}">{{ section.settings.competition_text }}</span>
+      <span class="fcl-star-{{ section.id }}">★</span>
+    </div>
+
+    <div class="fcl-vs-wrap-{{ section.id }}">
+      <span class="fcl-club-name-{{ section.id }} fcl-arsenal-{{ section.id }}">{{ section.settings.team1_name }}</span>
+      <span class="fcl-vs-{{ section.id }}">VS</span>
+      <span class="fcl-club-name-{{ section.id }} fcl-psg-{{ section.id }}">{{ section.settings.team2_name }}</span>
+    </div>
+
+    {% if section.settings.subtitle != blank %}
+      <p class="fcl-subtitle-{{ section.id }}">{{ section.settings.subtitle }}</p>
+    {% endif %}
+
+    <div>
+      <div class="fcl-urgency-{{ section.id }}">
+        <span class="fcl-urgency-dot-{{ section.id }}"></span>
+        <span class="fcl-urgency-text-{{ section.id }}">{{ section.settings.urgency_text }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grid productos -->
+  <div class="fcl-grid-{{ section.id }}">
+    {%- for block in section.blocks -%}
+      {%- assign prod = block.settings.product -%}
+      {%- assign club = block.settings.club -%}
+
+      <a
+        class="fcl-card-{{ section.id }} {% if club == 'arsenal' %}fcl-card-arsenal-{{ section.id }}{% else %}fcl-card-psg-{{ section.id }}{% endif %}"
+        href="{{ prod.url | default: '#' }}"
+        {{ block.shopify_attributes }}
+      >
+        <div class="fcl-img-wrap-{{ section.id }}">
+          {%- if prod.featured_image != blank -%}
+            <img class="fcl-img-{{ section.id }}" src="{{ prod.featured_image | img_url: '600x600' }}" alt="{{ prod.title }}" loading="lazy">
+          {%- endif -%}
+
+          {% if club == 'arsenal' %}
+            <div class="fcl-badge-arsenal-{{ section.id }}">Arsenal</div>
+          {% else %}
+            <div class="fcl-badge-psg-{{ section.id }}">PSG</div>
+          {% endif %}
+
+          {% if block.settings.hot_badge != blank %}
+            <div class="fcl-badge-hot-{{ section.id }}">🔥 {{ block.settings.hot_badge }}</div>
+          {% endif %}
+        </div>
+
+        <div class="fcl-info-{{ section.id }}">
+          <p class="fcl-name-{{ section.id }}">{{ prod.title }}</p>
+          {% if block.settings.subtitle != blank %}
+            <p class="fcl-sub-{{ section.id }}">{{ block.settings.subtitle }}</p>
+          {% endif %}
+
+          <div class="fcl-bottom-{{ section.id }}">
+            <div class="fcl-prices-{{ section.id }}">
+              {%- if prod.compare_at_price > prod.price -%}
+                <span class="fcl-compare-{{ section.id }}">{{ prod.compare_at_price | money }}</span>
+              {%- endif -%}
+              <span class="fcl-price-{{ section.id }}">{{ prod.price | money }}</span>
+            </div>
+            <span class="{% if club == 'arsenal' %}fcl-btn-arsenal-{{ section.id }}{% else %}fcl-btn-psg-{{ section.id }}{% endif %}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              </svg>
+              Ver
+            </span>
+          </div>
+        </div>
+      </a>
+    {%- endfor -%}
+  </div>
+
+</section>
+
+
+{% schema %}
+{
+  "name": "Final Champions",
+  "tag": "section",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Encabezado"
+    },
+    {
+      "type": "text",
+      "id": "competition_text",
+      "label": "Texto del badge dorado",
+      "default": "UEFA Champions League Final 2025"
+    },
+    {
+      "type": "text",
+      "id": "team1_name",
+      "label": "Equipo 1 (izquierda, rojo)",
+      "default": "Arsenal"
+    },
+    {
+      "type": "text",
+      "id": "team2_name",
+      "label": "Equipo 2 (derecha, azul)",
+      "default": "PSG"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitulo",
+      "default": "Munich · 31 de Mayo 2025"
+    },
+    {
+      "type": "text",
+      "id": "urgency_text",
+      "label": "Texto de urgencia",
+      "default": "Se agotan rapido · Solo por hoy"
+    },
+    {
+      "type": "header",
+      "content": "Colores"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Fondo",
+      "default": "#0A0A0A"
+    },
+    {
+      "type": "header",
+      "content": "Grilla"
+    },
+    {
+      "type": "range",
+      "id": "cols_desktop",
+      "label": "Columnas desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Espacio entre tarjetas",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Espaciado"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding superior",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding inferior",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "camiseta",
+      "name": "Camiseta",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Producto"
+        },
+        {
+          "type": "select",
+          "id": "club",
+          "label": "Club",
+          "options": [
+            { "value": "arsenal", "label": "Arsenal" },
+            { "value": "psg", "label": "PSG" }
+          ],
+          "default": "arsenal"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitulo",
+          "default": "Version Hincha"
+        },
+        {
+          "type": "text",
+          "id": "hot_badge",
+          "label": "Badge caliente (ej: Se agota)",
+          "default": "Se agota"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Final Champions"
+    }
+  ]
+}
+{% endschema %}

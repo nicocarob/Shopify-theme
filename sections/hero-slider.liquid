@@ -1,0 +1,328 @@
+{% comment %}
+  Hero Slider estilo FIFA Store - foto arriba, texto abajo
+  Archivo: sections/hero-slider.liquid
+{% endcomment %}
+
+<style>
+  .hs-wrap-{{ section.id }} {
+    width: 100%;
+    background: #000;
+  }
+
+  /* Contenedor de imagenes */
+  .hs-imgs-{{ section.id }} {
+    position: relative;
+    width: 100%;
+    height: {{ section.settings.img_height_desktop }}px;
+    overflow: hidden;
+  }
+
+  .hs-img-{{ section.id }} {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+
+  .hs-img-{{ section.id }}.hs-on-{{ section.id }} {
+    opacity: 1;
+  }
+
+  .hs-img-{{ section.id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+  }
+
+  /* Bloque de texto debajo */
+  .hs-info-{{ section.id }} {
+    background: #000;
+    padding: 32px 40px 36px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .hs-texts-{{ section.id }} {}
+
+  .hs-title-{{ section.id }} {
+    font-family: Arial, sans-serif;
+    font-size: clamp(22px, 3vw, 38px);
+    font-weight: 900;
+    color: #fff;
+    margin: 0 0 6px 0;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+  }
+
+  .hs-sub-{{ section.id }} {
+    font-family: Arial, sans-serif;
+    font-size: clamp(13px, 1.5vw, 16px);
+    font-weight: 400;
+    color: rgba(255,255,255,0.65);
+    margin: 0;
+    line-height: 1.5;
+    max-width: 560px;
+  }
+
+  .hs-btn-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #000;
+    background: #fff;
+    padding: 14px 32px;
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.2s ease, color 0.2s ease;
+    border: 2px solid #fff;
+  }
+
+  .hs-btn-{{ section.id }}:hover {
+    background: transparent;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  /* Dots */
+  .hs-dots-{{ section.id }} {
+    display: flex;
+    gap: 6px;
+    margin-top: 20px;
+  }
+
+  .hs-dot-{{ section.id }} {
+    width: 24px;
+    height: 3px;
+    background: rgba(255,255,255,0.25);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.3s ease, width 0.3s ease;
+  }
+
+  .hs-dot-{{ section.id }}.hs-dot-on-{{ section.id }} {
+    background: #fff;
+    width: 40px;
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .hs-imgs-{{ section.id }} {
+      height: {{ section.settings.img_height_mobile }}px;
+    }
+
+    .hs-info-{{ section.id }} {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 24px 20px 28px 20px;
+      gap: 20px;
+    }
+
+    .hs-btn-{{ section.id }} {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+<div class="hs-wrap-{{ section.id }}">
+
+  <!-- Fotos -->
+  <div class="hs-imgs-{{ section.id }}">
+    {%- for block in section.blocks -%}
+      <div class="hs-img-{{ section.id }}{% if forloop.first %} hs-on-{{ section.id }}{% endif %}" data-index="{{ forloop.index0 }}">
+        {%- if block.settings.image != blank -%}
+          <img
+            src="{{ block.settings.image | img_url: '1800x' }}"
+            alt="{{ block.settings.title | default: 'Slide' }}"
+            {% if forloop.first %}loading="eager"{% else %}loading="lazy"{% endif %}
+          >
+        {%- else -%}
+          <div style="width:100%;height:100%;background:#1a1a1a;"></div>
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+
+  <!-- Texto + boton debajo -->
+  <div class="hs-info-{{ section.id }}">
+    <div class="hs-texts-{{ section.id }}">
+      <h2 class="hs-title-{{ section.id }}" id="hs-title-{{ section.id }}">
+        {{ section.blocks.first.settings.title }}
+      </h2>
+      <p class="hs-sub-{{ section.id }}" id="hs-sub-{{ section.id }}">
+        {{ section.blocks.first.settings.subtitle }}
+      </p>
+      <div class="hs-dots-{{ section.id }}">
+        {%- for block in section.blocks -%}
+          <button
+            class="hs-dot-{{ section.id }}{% if forloop.first %} hs-dot-on-{{ section.id }}{% endif %}"
+            data-index="{{ forloop.index0 }}"
+            aria-label="Slide {{ forloop.index }}"
+          ></button>
+        {%- endfor -%}
+      </div>
+    </div>
+
+    <a href="{{ section.blocks.first.settings.button_url | default: '#' }}" class="hs-btn-{{ section.id }}" id="hs-btn-{{ section.id }}">
+      {{ section.blocks.first.settings.button_text | default: 'COMPRAR' }}
+    </a>
+  </div>
+
+</div>
+
+<script>
+(function() {
+  var id = '{{ section.id }}';
+  var speed = {{ section.settings.autoplay_speed }};
+  var fadeMs = {{ section.settings.fade_ms }};
+
+  var slides = document.querySelectorAll('.hs-img-' + id);
+  var dots   = document.querySelectorAll('.hs-dot-' + id);
+  var title  = document.getElementById('hs-title-' + id);
+  var sub    = document.getElementById('hs-sub-' + id);
+  var btn    = document.getElementById('hs-btn-' + id);
+  var current = 0;
+
+  var data = [
+    {%- for block in section.blocks -%}
+    {
+      title: {{ block.settings.title | default: '' | json }},
+      subtitle: {{ block.settings.subtitle | default: '' | json }},
+      url: {{ block.settings.button_url | default: '#' | json }},
+      btnText: {{ block.settings.button_text | default: 'COMPRAR' | json }}
+    }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ];
+
+  function goTo(index) {
+    slides[current].classList.remove('hs-on-' + id);
+    dots[current].classList.remove('hs-dot-on-' + id);
+    current = (index + slides.length) % slides.length;
+    slides[current].classList.add('hs-on-' + id);
+    dots[current].classList.add('hs-dot-on-' + id);
+
+    /* Actualizar texto */
+    title.style.opacity = '0';
+    sub.style.opacity = '0';
+    setTimeout(function() {
+      title.textContent = data[current].title;
+      sub.textContent = data[current].subtitle;
+      btn.href = data[current].url;
+      btn.textContent = data[current].btnText;
+      title.style.opacity = '1';
+      sub.style.opacity = '1';
+    }, fadeMs / 2);
+  }
+
+  dots.forEach(function(dot) {
+    dot.addEventListener('click', function() {
+      clearInterval(timer);
+      goTo(parseInt(this.getAttribute('data-index')));
+      timer = setInterval(function() { goTo(current + 1); }, speed);
+    });
+  });
+
+  var timer = setInterval(function() { goTo(current + 1); }, speed);
+})();
+</script>
+
+
+{% schema %}
+{
+  "name": "Hero Slider",
+  "tag": "section",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Tiempo entre slides (ms)",
+      "min": 1000,
+      "max": 8000,
+      "step": 500,
+      "default": 2500
+    },
+    {
+      "type": "range",
+      "id": "fade_ms",
+      "label": "Velocidad de transicion (ms)",
+      "min": 200,
+      "max": 1000,
+      "step": 100,
+      "default": 500
+    },
+    {
+      "type": "range",
+      "id": "img_height_desktop",
+      "label": "Alto imagen desktop",
+      "min": 300,
+      "max": 900,
+      "step": 20,
+      "default": 600,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "img_height_mobile",
+      "label": "Alto imagen mobile",
+      "min": 200,
+      "max": 600,
+      "step": 20,
+      "default": 400,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagen"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Titulo",
+          "default": "Nueva Coleccion"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitulo",
+          "default": "Las mejores camisetas para los hinchas."
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Enlace del boton"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Texto del boton",
+          "default": "COMPRAR"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Slider"
+    }
+  ]
+}
+{% endschema %}

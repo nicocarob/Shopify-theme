@@ -1,0 +1,677 @@
+{% comment %}
+  Seccion Edicion Limitada
+  Archivo: sections/edicion-limitada.liquid
+{% endcomment %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+<style>
+  .el-section-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Fondo */
+  .el-bg-{{ section.id }} {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,60,60,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,60,60,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .el-light-{{ section.id }} {
+    position: absolute;
+    top: -80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 700px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(255,60,60,0.07) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Header */
+  .el-header-{{ section.id }} {
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .el-eyebrow-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #ff4444;
+    margin-bottom: 10px;
+  }
+
+  .el-eyebrow-dot-{{ section.id }} {
+    width: 7px;
+    height: 7px;
+    background: #ff4444;
+    border-radius: 50%;
+    animation: elDotPulse_{{ section.id }} 1.2s ease-in-out infinite;
+  }
+
+  @keyframes elDotPulse_{{ section.id }} {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  .el-title-{{ section.id }} {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 7vw, 80px);
+    letter-spacing: 3px;
+    color: {{ section.settings.title_color }};
+    margin: 0 0 6px 0;
+    line-height: 0.95;
+  }
+
+  .el-title-{{ section.id }} span {
+    color: #ff4444;
+  }
+
+  .el-subtitle-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  /* Banner urgencia */
+  .el-urgency-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #1a0a0a, #220a0a);
+    border: 1px solid rgba(255,60,60,0.4);
+    border-radius: 10px;
+    padding: 12px 24px;
+    margin: 0 auto 36px auto;
+    max-width: 600px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .el-urgency-icon-{{ section.id }} {
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .el-urgency-text-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.85);
+    letter-spacing: 1px;
+  }
+
+  .el-urgency-text-{{ section.id }} span {
+    color: #ff4444;
+  }
+
+  /* Grid */
+  .el-grid-{{ section.id }} {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.cols_desktop }}, 1fr);
+    gap: {{ section.settings.gap }}px;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Tarjeta */
+  .el-card-{{ section.id }} {
+    background: #161616;
+    border: 1px solid rgba(255,60,60,0.15);
+    border-radius: 14px;
+    overflow: hidden;
+    text-decoration: none;
+    display: block;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+  }
+
+  .el-card-{{ section.id }}:hover {
+    transform: translateY(-6px);
+    border-color: #ff4444;
+    box-shadow: 0 20px 50px rgba(255,60,60,0.15), 0 0 0 1px #ff4444;
+    text-decoration: none;
+  }
+
+  /* Imagen */
+  .el-img-wrap-{{ section.id }} {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #1a1a1a;
+  }
+
+  .el-img-{{ section.id }} {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  .el-card-{{ section.id }}:hover .el-img-{{ section.id }} {
+    transform: scale(1.05);
+  }
+
+  /* Overlay gradiente */
+  .el-img-overlay-{{ section.id }} {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 50%);
+    z-index: 1;
+  }
+
+  /* Badge edicion limitada */
+  .el-badge-limited-{{ section.id }} {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #ff4444;
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+    z-index: 2;
+    box-shadow: 0 4px 12px rgba(255,60,60,0.5);
+  }
+
+  /* Badge unidades */
+  .el-badge-units-{{ section.id }} {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    z-index: 2;
+  }
+
+  .el-units-label-{{ section.id }} {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+
+  .el-units-label-{{ section.id }} span:last-child {
+    color: #ff6666;
+  }
+
+  .el-units-track-{{ section.id }} {
+    height: 4px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .el-units-fill-{{ section.id }} {
+    height: 100%;
+    border-radius: 2px;
+    background: linear-gradient(to right, #ff4444, #ff8800);
+  }
+
+  /* Info */
+  .el-info-{{ section.id }} {
+    padding: 16px 16px 18px;
+  }
+
+  .el-name-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 3px 0;
+    line-height: 1.2;
+  }
+
+  .el-sub-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin: 0 0 12px 0;
+  }
+
+  .el-bottom-{{ section.id }} {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .el-prices-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .el-compare-{{ section.id }} {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+    text-decoration: line-through;
+    font-weight: 600;
+  }
+
+  .el-price-{{ section.id }} {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .el-btn-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #ff4444;
+    color: #fff;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    padding: 10px 16px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .el-btn-{{ section.id }}:hover {
+    background: #ff2222;
+    transform: scale(1.04);
+    color: #fff;
+  }
+
+  .el-btn-{{ section.id }} svg { width: 13px; height: 13px; }
+
+  /* Boton ver todos */
+  .el-cta-wrap-{{ section.id }} {
+    text-align: center;
+    margin-top: 44px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .el-cta-{{ section.id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: #fff;
+    background: transparent;
+    border: 2px solid #ff4444;
+    padding: 13px 44px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .el-cta-{{ section.id }}:hover {
+    background: #ff4444;
+    color: #fff;
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+
+  .el-cta-{{ section.id }} svg { width: 16px; height: 16px; }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .el-grid-{{ section.id }} { grid-template-columns: repeat({{ section.settings.cols_tablet }}, 1fr); }
+    .el-urgency-{{ section.id }} { flex-wrap: wrap; text-align: center; }
+  }
+
+  @media (max-width: 560px) {
+    .el-grid-{{ section.id }} { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .el-info-{{ section.id }} { padding: 12px; }
+    .el-btn-{{ section.id }} { padding: 8px 12px; }
+    .el-cta-{{ section.id }} { width: 90%; justify-content: center; }
+  }
+</style>
+
+<section class="el-section-{{ section.id }}">
+  <div class="el-bg-{{ section.id }}"></div>
+  <div class="el-light-{{ section.id }}"></div>
+
+  <!-- Header -->
+  <div class="el-header-{{ section.id }}">
+    <div class="el-eyebrow-{{ section.id }}">
+      <span class="el-eyebrow-dot-{{ section.id }}"></span>
+      {{ section.settings.eyebrow }}
+    </div>
+    <h2 class="el-title-{{ section.id }}">
+      {{ section.settings.title_before }}
+      {% if section.settings.title_highlight != blank %}
+        <span>{{ section.settings.title_highlight }}</span>
+      {% endif %}
+      {{ section.settings.title_after }}
+    </h2>
+    {% if section.settings.subtitle != blank %}
+      <p class="el-subtitle-{{ section.id }}">{{ section.settings.subtitle }}</p>
+    {% endif %}
+  </div>
+
+  <!-- Banner urgencia -->
+  {% if section.settings.show_urgency %}
+    <div class="el-urgency-{{ section.id }}">
+      <span class="el-urgency-icon-{{ section.id }}">⚠️</span>
+      <p class="el-urgency-text-{{ section.id }}">{{ section.settings.urgency_text }}</p>
+    </div>
+  {% endif %}
+
+  <!-- Grid -->
+  <div class="el-grid-{{ section.id }}">
+    {%- for block in section.blocks -%}
+      {%- assign prod = block.settings.product -%}
+      <a class="el-card-{{ section.id }}" href="{{ prod.url | default: '#' }}" {{ block.shopify_attributes }}>
+
+        <div class="el-img-wrap-{{ section.id }}">
+          {%- if prod.featured_image != blank -%}
+            <img
+              class="el-img-{{ section.id }}"
+              src="{{ prod.featured_image | img_url: '600x600' }}"
+              alt="{{ prod.title }}"
+              loading="lazy"
+            >
+          {%- endif -%}
+          <div class="el-img-overlay-{{ section.id }}"></div>
+
+          <!-- Badge edicion limitada -->
+          <div class="el-badge-limited-{{ section.id }}">
+            🔥 {{ block.settings.badge_text }}
+          </div>
+
+          <!-- Barra de stock -->
+          {% if block.settings.show_stock_bar %}
+            <div class="el-badge-units-{{ section.id }}">
+              <div class="el-units-label-{{ section.id }}">
+                <span>Stock</span>
+                <span>{{ block.settings.units_text }}</span>
+              </div>
+              <div class="el-units-track-{{ section.id }}">
+                <div class="el-units-fill-{{ section.id }}" style="width:{{ block.settings.stock_percent }}%"></div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="el-info-{{ section.id }}">
+          <p class="el-name-{{ section.id }}">{{ prod.title }}</p>
+          {% if block.settings.subtitle != blank %}
+            <p class="el-sub-{{ section.id }}">{{ block.settings.subtitle }}</p>
+          {% endif %}
+
+          <div class="el-bottom-{{ section.id }}">
+            <div class="el-prices-{{ section.id }}">
+              {%- if prod.compare_at_price > prod.price -%}
+                <span class="el-compare-{{ section.id }}">{{ prod.compare_at_price | money }}</span>
+              {%- endif -%}
+              <span class="el-price-{{ section.id }}">{{ prod.price | money }}</span>
+            </div>
+            <span class="el-btn-{{ section.id }}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              </svg>
+              Ver
+            </span>
+          </div>
+        </div>
+      </a>
+    {%- endfor -%}
+  </div>
+
+  <!-- Boton ver coleccion -->
+  {% if section.settings.cta_url != blank %}
+    <div class="el-cta-wrap-{{ section.id }}">
+      <a href="{{ section.settings.cta_url }}" class="el-cta-{{ section.id }}">
+        {{ section.settings.cta_text }}
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    </div>
+  {% endif %}
+
+</section>
+
+
+{% schema %}
+{
+  "name": "Edicion Limitada",
+  "tag": "section",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Encabezado"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Texto pequeno arriba",
+      "default": "Stock limitado - Se agotan"
+    },
+    {
+      "type": "text",
+      "id": "title_before",
+      "label": "Titulo parte 1",
+      "default": "Edicion"
+    },
+    {
+      "type": "text",
+      "id": "title_highlight",
+      "label": "Titulo parte resaltada (en rojo)",
+      "default": "Limitada"
+    },
+    {
+      "type": "text",
+      "id": "title_after",
+      "label": "Titulo parte 3"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitulo",
+      "default": "Una vez agotadas no vuelven"
+    },
+    {
+      "type": "header",
+      "content": "Banner urgencia"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_urgency",
+      "label": "Mostrar banner de urgencia",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "urgency_text",
+      "label": "Texto del banner",
+      "default": "Ultimas unidades disponibles - Sin reposicion de stock"
+    },
+    {
+      "type": "header",
+      "content": "Colores"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Fondo",
+      "default": "#0A0A0A"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color titulo",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "Columnas"
+    },
+    {
+      "type": "range",
+      "id": "cols_desktop",
+      "label": "Columnas desktop",
+      "min": 2,
+      "max": 5,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "cols_tablet",
+      "label": "Columnas tablet",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Espacio entre tarjetas",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "default": 16,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Boton ver coleccion"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Enlace del boton"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Texto del boton",
+      "default": "VER EDICION LIMITADA COMPLETA"
+    },
+    {
+      "type": "header",
+      "content": "Espaciado"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding superior",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding inferior",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "producto",
+      "name": "Producto",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Producto"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitulo",
+          "default": "Edicion Limitada"
+        },
+        {
+          "type": "text",
+          "id": "badge_text",
+          "label": "Texto del badge",
+          "default": "Edicion Limitada"
+        },
+        {
+          "type": "header",
+          "content": "Barra de stock"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_stock_bar",
+          "label": "Mostrar barra de stock",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "stock_percent",
+          "label": "Porcentaje de stock restante",
+          "min": 5,
+          "max": 95,
+          "step": 5,
+          "default": 15
+        },
+        {
+          "type": "text",
+          "id": "units_text",
+          "label": "Texto de unidades",
+          "default": "Ultimas unidades!"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Edicion Limitada"
+    }
+  ]
+}
+{% endschema %}

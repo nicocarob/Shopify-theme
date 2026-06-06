@@ -1,0 +1,387 @@
+{% comment %}
+  Seccion: Busca por Liga
+  Archivo: sections/busca-por-liga.liquid
+{% endcomment %}
+
+<style>
+  .bpl-section-{{ section.id }} {
+    background: {{ section.settings.bg_color }};
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px 20px;
+  }
+
+  /* Encabezado */
+  .bpl-header-{{ section.id }} {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  .bpl-eyebrow-{{ section.id }} {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: {{ section.settings.accent_color }};
+    margin-bottom: 8px;
+  }
+
+  .bpl-title-{{ section.id }} {
+    font-size: clamp(26px, 4vw, 40px);
+    font-weight: 800;
+    color: {{ section.settings.title_color }};
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  .bpl-title-{{ section.id }} span {
+    color: {{ section.settings.accent_color }};
+  }
+
+  /* Grid de ligas */
+  .bpl-grid-{{ section.id }} {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.cols_desktop }}, 1fr);
+    gap: {{ section.settings.gap }}px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* Tarjeta */
+  .bpl-card-{{ section.id }} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.25s ease;
+  }
+
+  .bpl-card-{{ section.id }}:hover {
+    transform: translateY(-5px);
+    text-decoration: none;
+  }
+
+  /* Circulo con logo */
+  .bpl-logo-wrap-{{ section.id }} {
+    width: {{ section.settings.logo_size }}px;
+    height: {{ section.settings.logo_size }}px;
+    border-radius: 50%;
+    background: {{ section.settings.circle_bg }};
+    border: 2px solid {{ section.settings.circle_border }};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    flex-shrink: 0;
+  }
+
+  .bpl-card-{{ section.id }}:hover .bpl-logo-wrap-{{ section.id }} {
+    border-color: {{ section.settings.accent_color }};
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  }
+
+  .bpl-logo-wrap-{{ section.id }} img {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+    display: block;
+  }
+
+  /* Nombre de la liga */
+  .bpl-name-{{ section.id }} {
+    font-size: {{ section.settings.label_size }}px;
+    font-weight: 700;
+    color: {{ section.settings.label_color }};
+    text-align: center;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .bpl-grid-{{ section.id }} {
+      grid-template-columns: repeat({{ section.settings.cols_tablet }}, 1fr);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .bpl-section-{{ section.id }} {
+      padding-top: 24px !important;
+      padding-bottom: 24px !important;
+    }
+
+    .bpl-header-{{ section.id }} {
+      margin-bottom: 16px;
+    }
+
+    .bpl-title-{{ section.id }} {
+      font-size: 20px;
+    }
+
+    .bpl-eyebrow-{{ section.id }} {
+      font-size: 10px;
+      letter-spacing: 2px;
+      margin-bottom: 4px;
+    }
+
+    .bpl-grid-{{ section.id }} {
+      grid-template-columns: repeat({{ section.settings.cols_mobile }}, 1fr);
+      gap: 10px;
+    }
+
+    .bpl-logo-wrap-{{ section.id }} {
+      width: 60px;
+      height: 60px;
+    }
+
+    .bpl-name-{{ section.id }} {
+      font-size: 11px;
+    }
+  }
+</style>
+
+<section class="bpl-section-{{ section.id }}">
+
+  <div class="bpl-header-{{ section.id }}">
+    {% if section.settings.eyebrow != blank %}
+      <div class="bpl-eyebrow-{{ section.id }}">{{ section.settings.eyebrow }}</div>
+    {% endif %}
+    <h2 class="bpl-title-{{ section.id }}">
+      {{ section.settings.title_before }}
+      {% if section.settings.title_highlight != blank %}
+        <span>{{ section.settings.title_highlight }}</span>
+      {% endif %}
+      {{ section.settings.title_after }}
+    </h2>
+  </div>
+
+  <div class="bpl-grid-{{ section.id }}">
+    {%- for block in section.blocks -%}
+      {%- assign col = collections[block.settings.collection_handle] -%}
+      <a
+        class="bpl-card-{{ section.id }}"
+        href="{% if col != blank %}/collections/{{ col.handle }}{% else %}#{% endif %}"
+        {{ block.shopify_attributes }}
+      >
+        <div class="bpl-logo-wrap-{{ section.id }}">
+          {%- if block.settings.logo != blank -%}
+            <img
+              src="{{ block.settings.logo | img_url: '200x200' }}"
+              alt="{{ block.settings.liga_name | default: col.title }}"
+              loading="lazy"
+              width="{{ section.settings.logo_size }}"
+              height="{{ section.settings.logo_size }}"
+            >
+          {%- elsif col.image != blank -%}
+            <img
+              src="{{ col.image | img_url: '200x200' }}"
+              alt="{{ block.settings.liga_name | default: col.title }}"
+              loading="lazy"
+              width="{{ section.settings.logo_size }}"
+              height="{{ section.settings.logo_size }}"
+            >
+          {%- else -%}
+            ⚽
+          {%- endif -%}
+        </div>
+        <p class="bpl-name-{{ section.id }}">
+          {{ block.settings.liga_name | default: col.title | default: 'Liga' }}
+        </p>
+      </a>
+    {%- endfor -%}
+  </div>
+
+</section>
+
+
+{% schema %}
+{
+  "name": "Busca por Liga",
+  "tag": "section",
+  "max_blocks": 20,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Titulo"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Texto pequeno arriba",
+      "default": "Encuentra tu camiseta"
+    },
+    {
+      "type": "text",
+      "id": "title_before",
+      "label": "Titulo (parte 1)",
+      "default": "Busca por"
+    },
+    {
+      "type": "text",
+      "id": "title_highlight",
+      "label": "Titulo (parte resaltada en color)",
+      "default": "Liga"
+    },
+    {
+      "type": "text",
+      "id": "title_after",
+      "label": "Titulo (parte 3, opcional)"
+    },
+    {
+      "type": "header",
+      "content": "Colores"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Fondo de la seccion",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Color del titulo",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Color de acento (resaltado)",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "circle_bg",
+      "label": "Fondo del circulo",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "circle_border",
+      "label": "Borde del circulo",
+      "default": "#e8e8e8"
+    },
+    {
+      "type": "color",
+      "id": "label_color",
+      "label": "Color del nombre de liga",
+      "default": "#111111"
+    },
+    {
+      "type": "header",
+      "content": "Tamanos"
+    },
+    {
+      "type": "range",
+      "id": "logo_size",
+      "label": "Tamano del circulo/logo",
+      "min": 60,
+      "max": 160,
+      "step": 4,
+      "default": 100,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "label_size",
+      "label": "Tamano del nombre de liga",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "default": 13,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Espacio entre ligas",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24,
+      "unit": "px"
+    },
+    {
+      "type": "header",
+      "content": "Columnas"
+    },
+    {
+      "type": "range",
+      "id": "cols_desktop",
+      "label": "Columnas en desktop",
+      "min": 3,
+      "max": 8,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "cols_tablet",
+      "label": "Columnas en tablet",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "cols_mobile",
+      "label": "Columnas en mobile",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "header",
+      "content": "Espaciado"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding superior",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 36,
+      "label": "Padding inferior",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "liga",
+      "name": "Liga",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection_handle",
+          "label": "Coleccion de esta liga"
+        },
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Logo de la liga (opcional, si no usa la imagen de la coleccion)"
+        },
+        {
+          "type": "text",
+          "id": "liga_name",
+          "label": "Nombre de la liga",
+          "default": "Liga Espanola"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Busca por Liga"
+    }
+  ]
+}
+{% endschema %}

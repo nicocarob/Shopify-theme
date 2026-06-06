@@ -1,0 +1,329 @@
+{% comment %}
+  Guia de Tallas Universal - detecta Adultos / Mujer / Ninos por titulo del producto
+  Archivo: snippets/guia-de-tallas.liquid
+  Uso: {% render 'guia-de-tallas', product: product %}
+{% endcomment %}
+
+{% assign titulo = product.title | downcase %}
+{% assign tipo = 'adultos' %}
+{% if titulo contains 'mujer' %}
+  {% assign tipo = 'mujer' %}
+{% elsif titulo contains 'niño' or titulo contains 'nino' or titulo contains 'niños' or titulo contains 'ninos' %}
+  {% assign tipo = 'ninos' %}
+{% endif %}
+
+<style>
+  /* Forzar colores claros en el modal sin importar el tema */
+  #gdt-overlay-u-{{ product.id }} * {
+    box-sizing: border-box;
+  }
+  .gdt-modal-u,
+  .gdt-head-u,
+  .gdt-body-u {
+    background: #ffffff !important;
+    color: #111111 !important;
+  }
+  .gdt-modal-u p,
+  .gdt-modal-u span,
+  .gdt-modal-u h2,
+  .gdt-modal-u td,
+  .gdt-modal-u th,
+  .gdt-modal-u strong {
+    color: inherit;
+  }
+
+  .gdt-btn-u {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: none;
+    border: 1.5px solid #ddd;
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333 !important;
+    margin: 8px 0 16px 0;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .gdt-btn-u:hover { border-color: #111 !important; color: #111 !important; }
+  .gdt-btn-u svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+  .gdt-overlay-u {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    backdrop-filter: blur(3px);
+  }
+  .gdt-overlay-u.gdt-open-u { display: flex; }
+
+  .gdt-modal-u {
+    background: #ffffff !important;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 560px;
+    max-height: 92vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+    animation: gdtUp 0.22s ease;
+  }
+  @keyframes gdtUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .gdt-head-u {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    position: sticky;
+    top: 0;
+    background: #ffffff !important;
+    z-index: 1;
+  }
+  .gdt-head-left-u { display: flex; align-items: center; gap: 10px; }
+  .gdt-icon-wrap-u {
+    width: 34px; height: 34px;
+    background: #111; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .gdt-icon-wrap-u svg { width: 17px; height: 17px; color: #fff; }
+  .gdt-head-title-u { font-size: 16px; font-weight: 800; color: #111 !important; margin: 0; line-height: 1.1; }
+  .gdt-head-sub-u { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #999 !important; margin: 2px 0 0; }
+  .gdt-close-u {
+    background: #f5f5f5 !important; border: none; cursor: pointer;
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #666 !important; transition: background 0.15s, color 0.15s;
+  }
+  .gdt-close-u:hover { background: #111; color: #fff; }
+  .gdt-close-u svg { width: 14px; height: 14px; }
+
+  .gdt-body-u { padding: 20px 24px 24px; }
+
+  .gdt-version-u {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #f7f7f7 !important; border: 1px solid #ebebeb; border-radius: 20px;
+    padding: 5px 12px; font-size: 12px; font-weight: 700;
+    color: #444 !important; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px;
+  }
+  .gdt-version-dot-u { width: 7px; height: 7px; background: #111; border-radius: 50%; }
+
+  .gdt-scroll-hint-u {
+    display: none; align-items: center; gap: 5px;
+    font-size: 11px; color: #aaa; margin-bottom: 6px;
+  }
+  .gdt-scroll-hint-u svg { width: 12px; height: 12px; }
+
+  .gdt-table-wrap-u {
+    border-radius: 10px; border: 1px solid #ebebeb;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+  }
+  .gdt-table-u {
+    width: 100%; min-width: 360px;
+    border-collapse: collapse; font-size: 14px;
+  }
+  .gdt-table-u thead tr { background: #111; }
+  .gdt-table-u th {
+    padding: 11px 14px; text-align: center;
+    font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: #ffffff !important; white-space: nowrap;
+  }
+  .gdt-table-u th:first-child { text-align: left; padding-left: 16px; }
+  .gdt-table-u td {
+    padding: 12px 14px; text-align: center;
+    color: #222 !important; border-bottom: 1px solid #f3f3f3; white-space: nowrap;
+  }
+  .gdt-table-u td:first-child { text-align: left; font-weight: 800; font-size: 16px; color: #111 !important; padding-left: 16px; }
+  .gdt-table-u tbody tr:last-child td { border-bottom: none; }
+  .gdt-table-u tbody tr:nth-child(even) td { background: #fafafa !important; }
+  .gdt-table-u tbody tr:hover td { background: #f4f4f4 !important; }
+
+  /* Como medir - solo ninos */
+  .gdt-howto-title-u {
+    font-size: 12px; font-weight: 700; color: #111 !important;
+    margin: 18px 0 10px; text-transform: uppercase; letter-spacing: 1px;
+  }
+  .gdt-howto-grid-u { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+  .gdt-howto-card-u {
+    background: #f9f9f9 !important; border: 1px solid #ebebeb;
+    border-radius: 10px; padding: 12px 10px; text-align: center;
+  }
+  .gdt-howto-icon-u { font-size: 20px; margin-bottom: 5px; display: block; }
+  .gdt-howto-card-u strong { display: block; font-size: 12px; font-weight: 700; color: #111 !important; margin-bottom: 3px; }
+  .gdt-howto-card-u p { font-size: 11px; color: #888 !important; margin: 0; line-height: 1.4; }
+
+  .gdt-alert-u {
+    display: flex; align-items: center; gap: 10px;
+    margin: 14px 0 0; padding: 13px 16px;
+    background: #111; border-radius: 10px;
+  }
+  .gdt-alert-u svg { width: 18px; height: 18px; color: #fff; flex-shrink: 0; }
+  .gdt-alert-u p { margin: 0; font-size: 13px; font-weight: 700; color: #fff; }
+
+  .gdt-note-u {
+    display: flex; align-items: flex-start; gap: 7px;
+    margin: 12px 0 0; padding: 11px 14px;
+    background: #fafafa !important; border-radius: 8px; border: 1px solid #ebebeb;
+  }
+  .gdt-note-u svg { width: 14px; height: 14px; color: #999 !important; flex-shrink: 0; margin-top: 1px; }
+  .gdt-note-u p { margin: 0; font-size: 12px; color: #555 !important; line-height: 1.5; }
+
+  @media (max-width: 480px) {
+    .gdt-modal-u { border-radius: 14px; max-height: 95vh; }
+    .gdt-head-u, .gdt-body-u { padding-left: 16px; padding-right: 16px; }
+    .gdt-scroll-hint-u { display: flex; }
+    .gdt-howto-grid-u { grid-template-columns: repeat(3,1fr); }
+    .gdt-howto-card-u p { font-size: 10px; }
+  }
+</style>
+
+<!-- Boton trigger -->
+<button class="gdt-btn-u" onclick="document.getElementById('gdt-overlay-u-{{ product.id }}').classList.add('gdt-open-u')">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 7h4l2 10h6l2-10h4"/><line x1="1" y1="3" x2="23" y2="3"/>
+  </svg>
+  Guia de tallas
+</button>
+
+<!-- Modal -->
+<div class="gdt-overlay-u" id="gdt-overlay-u-{{ product.id }}" onclick="if(event.target===this)this.classList.remove('gdt-open-u')">
+  <div class="gdt-modal-u">
+
+    <div class="gdt-head-u">
+      <div class="gdt-head-left-u">
+        <div class="gdt-icon-wrap-u">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 7h4l2 10h6l2-10h4"/><line x1="1" y1="3" x2="23" y2="3"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="gdt-head-title-u">Guia de Tallas</h2>
+          <p class="gdt-head-sub-u">Camisetas de Futbol</p>
+        </div>
+      </div>
+      <button class="gdt-close-u" onclick="document.getElementById('gdt-overlay-u-{{ product.id }}').classList.remove('gdt-open-u')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="gdt-body-u">
+
+      {% if tipo == 'mujer' %}
+        <!-- ===== MUJER ===== -->
+        <div class="gdt-version-u">
+          <span class="gdt-version-dot-u"></span>
+          Version Fan – Mujer
+        </div>
+        <div class="gdt-scroll-hint-u">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          Desliza para ver todas las medidas
+        </div>
+        <div class="gdt-table-wrap-u">
+          <table class="gdt-table-u">
+            <thead><tr><th>Talla</th><th>Largo (cm)</th><th>Ancho (cm)</th><th>Altura (cm)</th></tr></thead>
+            <tbody>
+              <tr><td>S</td><td>65</td><td>44</td><td>150–160</td></tr>
+              <tr><td>M</td><td>67</td><td>46</td><td>160–170</td></tr>
+              <tr><td>L</td><td>69</td><td>48</td><td>170–180</td></tr>
+              <tr><td>XL</td><td>70</td><td>49</td><td>180–185</td></tr>
+              <tr><td>XXL</td><td>71</td><td>51</td><td>185–190</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      {% elsif tipo == 'ninos' %}
+        <!-- ===== NINOS ===== -->
+        <div class="gdt-version-u">
+          <span class="gdt-version-dot-u"></span>
+          Version Hincha – Ninos
+        </div>
+        <div class="gdt-scroll-hint-u">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          Desliza para ver todas las medidas
+        </div>
+        <div class="gdt-table-wrap-u">
+          <table class="gdt-table-u">
+            <thead><tr><th>Talla</th><th>Pecho (cm)</th><th>Altura (cm)</th><th>Largo (cm)</th></tr></thead>
+            <tbody>
+              <tr><td>4</td><td>64</td><td>95–105</td><td>43</td></tr>
+              <tr><td>6</td><td>68</td><td>105–115</td><td>47</td></tr>
+              <tr><td>8</td><td>72</td><td>115–125</td><td>50</td></tr>
+              <tr><td>10</td><td>76</td><td>125–135</td><td>53</td></tr>
+              <tr><td>12</td><td>80</td><td>135–145</td><td>56</td></tr>
+              <tr><td>14</td><td>84</td><td>145–155</td><td>58</td></tr>
+              <tr><td>16</td><td>88</td><td>155–165</td><td>60</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="gdt-howto-title-u">Como tomar tus medidas</p>
+        <div class="gdt-howto-grid-u">
+          <div class="gdt-howto-card-u">
+            <span class="gdt-howto-icon-u">👕</span>
+            <strong>Pecho</strong>
+            <p>Rodea con un centimetro la parte mas ancha del torax.</p>
+          </div>
+          <div class="gdt-howto-card-u">
+            <span class="gdt-howto-icon-u">📏</span>
+            <strong>Altura</strong>
+            <p>De pie, medir desde la cabeza hasta el piso.</p>
+          </div>
+          <div class="gdt-howto-card-u">
+            <span class="gdt-howto-icon-u">📐</span>
+            <strong>Largo</strong>
+            <p>Prenda estirada en superficie plana, mide el largo total.</p>
+          </div>
+        </div>
+        <div class="gdt-alert-u">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <p>CONSIDERE ELEGIR 1 TALLA MAS</p>
+        </div>
+
+      {% else %}
+        <!-- ===== ADULTOS (default) ===== -->
+        <div class="gdt-version-u">
+          <span class="gdt-version-dot-u"></span>
+          Version Fan – Adultos
+        </div>
+        <div class="gdt-scroll-hint-u">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          Desliza para ver todas las medidas
+        </div>
+        <div class="gdt-table-wrap-u">
+          <table class="gdt-table-u">
+            <thead><tr><th>Talla</th><th>Largo (cm)</th><th>Ancho (cm)</th><th>Altura (cm)</th></tr></thead>
+            <tbody>
+              <tr><td>S</td><td>68</td><td>50</td><td>165–170</td></tr>
+              <tr><td>M</td><td>70</td><td>52</td><td>170–175</td></tr>
+              <tr><td>L</td><td>72</td><td>54</td><td>175–180</td></tr>
+              <tr><td>XL</td><td>75</td><td>56</td><td>180–185</td></tr>
+              <tr><td>2XL</td><td>78</td><td>59</td><td>185–190</td></tr>
+              <tr><td>3XL</td><td>81</td><td>61</td><td>190–195</td></tr>
+              <tr><td>4XL</td><td>83</td><td>63</td><td>195–200</td></tr>
+            </tbody>
+          </table>
+        </div>
+      {% endif %}
+
+      <div class="gdt-note-u">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <p>Medidas aproximadas en centimetros. El ancho corresponde al ancho total de la camiseta. Las tallas pueden variar ligeramente segun el modelo.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
