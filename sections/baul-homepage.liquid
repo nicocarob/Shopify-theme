@@ -38,6 +38,11 @@
     assign ninos_collection = collections.all
   endif
 
+  assign femenina_collection = section.settings.femenina_collection
+  if femenina_collection == blank or femenina_collection.products_count == 0
+    assign femenina_collection = collections.all
+  endif
+
   assign cortavientos_collection = section.settings.cortavientos_collection
   if cortavientos_collection == blank or cortavientos_collection.products_count == 0
     assign cortavientos_collection = collections.all
@@ -286,7 +291,6 @@
 <div class="divider"></div>
 
 <section class="col-sec col-sec--pink">
-  {% assign fem_col = section.settings.femenina_collection %}
   <div class="sec-bg-grid"></div>
   <div class="sec-hdr rev">
     <div>
@@ -294,10 +298,10 @@
       <h2 class="sec-title">COLECCIÓN FEMENINA</h2>
       <div class="sec-sub">Corte y talla femenina, mismo estilo premium</div>
     </div>
-    <a href="{{ fem_col.url | default: section.settings.femenina_collection_url | default: '#' }}" class="lk-all">Ver toda →</a>
+    <a href="{{ femenina_collection.url | default: section.settings.femenina_collection_url }}" class="lk-all">Ver toda →</a>
   </div>
   <div class="prod-grid">
-    {% for product in fem_col.products limit: 8 %}
+    {% for product in femenina_collection.products limit: 8 %}
       {% case forloop.index0 %}
         {% when 1 %}{% assign delay_val = '0.07s' %}
         {% when 2 %}{% assign delay_val = '0.14s' %}
