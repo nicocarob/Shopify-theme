@@ -541,7 +541,66 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   .col-sec--pink .eyebrow::after { background: linear-gradient(90deg, var(--accent-pink), #fff); }
   .col-sec--pink .btn-v { background: var(--accent-pink); color: #fff; }
   .col-sec--pink .btn-v:hover { background: #fff; color: var(--accent-pink); }
-  
+
+  /* ── Cortavientos edición limitada ── */
+  .cw-sec { background: #0a0a0a; }
+  .cw-hdr {
+    text-align: center; max-width: 1200px; margin: 0 auto 40px;
+    position: relative; z-index: 1;
+  }
+  .cw-mega-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 8vw, 72px); line-height: 0.95;
+    color: #fff; letter-spacing: 0.04em; margin: 0 0 10px;
+  }
+  .cw-mega-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-muted); margin: 0;
+  }
+  .cw-pills {
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px; flex-wrap: wrap; margin-top: 18px;
+  }
+  .cw-pill {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 12px;
+    font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: #fff; padding: 8px 16px; border-radius: 100px;
+    border: 1px solid var(--border-hover); background: var(--bg-card);
+  }
+  .cw-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 16px; max-width: 1200px; margin: 0 auto;
+    position: relative; z-index: 1;
+  }
+  .cw-card .pc-img-wrap { aspect-ratio: 3 / 4; }
+  .cw-limited-badge {
+    position: absolute; top: 12px; left: 12px; z-index: 3;
+    background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(4px);
+    border: 1px solid var(--border-hover); color: #fff;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 10px;
+    font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 5px 10px; border-radius: var(--radius-sm);
+  }
+  .cw-stock-wrap {
+    position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
+    padding: 12px; background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%);
+  }
+  .cw-stock-label {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 10px;
+    font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.85); margin-bottom: 6px;
+  }
+  .cw-stock-track {
+    height: 4px; background: rgba(255, 255, 255, 0.15);
+    border-radius: 2px; overflow: hidden;
+  }
+  .cw-stock-fill {
+    height: 100%; border-radius: 2px;
+    background: linear-gradient(90deg, #ff4444, #ff8800);
+    transition: width 0.6s ease;
+  }
+
   /* ── Search / Liga section (light variant like busca-por-liga) ── */
   .srch-sec {
     padding: 60px 20px; background: var(--bg-light);
@@ -719,6 +778,11 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .trophy-img { width: 100%; max-width: 160px; height: auto; }
     .trophy-glow { width: 140px; height: 140px; }
     .mv-sec, .col-sec, .srch-sec, .testi-sec { padding: 40px 16px; }
+    .cw-grid { grid-template-columns: repeat(2, 1fr); }
+    .cw-grid .cw-card:nth-child(3):last-child {
+      grid-column: 1 / -1; max-width: calc(50% - 8px); justify-self: center;
+    }
+    .cw-mega-title { font-size: clamp(40px, 12vw, 64px); }
     .divider { margin: 0 16px; }
     .sec-hdr { flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 24px; }
     .sec-hdr--center { align-items: center; }

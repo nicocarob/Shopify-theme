@@ -176,6 +176,30 @@
             "liga_name": "Otras Ligas",
             "emoji": "🏆"
           }
+        },
+        "cw_01": {
+          "type": "cortaviento",
+          "settings": {
+            "subtitle": "Edición Limitada - 100 unidades",
+            "stock_current": 40,
+            "stock_max": 100
+          }
+        },
+        "cw_02": {
+          "type": "cortaviento",
+          "settings": {
+            "subtitle": "Edición Limitada - 100 unidades",
+            "stock_current": 35,
+            "stock_max": 100
+          }
+        },
+        "cw_03": {
+          "type": "cortaviento",
+          "settings": {
+            "subtitle": "Edición Limitada - 50 unidades",
+            "stock_current": 28,
+            "stock_max": 50
+          }
         }
       },
       "block_order": [
@@ -202,7 +226,10 @@
         "liga_07",
         "liga_08",
         "liga_09",
-        "liga_10"
+        "liga_10",
+        "cw_01",
+        "cw_02",
+        "cw_03"
       ],
       "settings": {
         "countdown_text": "ENVÍO GRATIS POR TIEMPO LIMITADO — TERMINA EN:",
@@ -228,6 +255,11 @@
         "ninos_collection_url": "",
         "fem_collection": "",
         "fem_collection_url": "",
+        "cw_title": "SOLO 100 UNIDADES",
+        "cw_subtitle": "CORTAVIENTOS DE EDICIÓN LIMITADA - SIN REPOSICIÓN DE STOCK",
+        "cw_pill_1": "🧥 SOLO 100 UNIDADES DISPONIBLES",
+        "cw_pill_2": "⚡ UNA VEZ AGOTADO NO VUELVE",
+        "cw_collection": "cortavientos",
         "footer_description": "Más de 10 años equipando hinchas en todo Chile. La mejor calidad, envío gratis y atención personalizada.",
         "instagram_url": "",
         "whatsapp_url": "https://wa.me/56951543485"

@@ -1,0 +1,119 @@
+{% comment %}
+  Bloque Cortavientos — reutilizable desde homepage o sección standalone
+  Parámetros: settings, blocks
+{% endcomment %}
+
+{% liquid
+  assign cw_title = settings.cw_title | default: settings.title | default: 'SOLO 100 UNIDADES'
+  assign cw_subtitle = settings.cw_subtitle | default: settings.subtitle | default: 'CORTAVIENTOS DE EDICIÓN LIMITADA - SIN REPOSICIÓN DE STOCK'
+  assign cw_pill_1 = settings.cw_pill_1 | default: settings.pill_1 | default: '🧥 SOLO 100 UNIDADES DISPONIBLES'
+  assign cw_pill_2 = settings.cw_pill_2 | default: settings.pill_2 | default: '⚡ UNA VEZ AGOTADO NO VUELVE'
+
+  assign cw_col = collections['cortavientos']
+  if settings.cw_collection != blank
+    assign cw_col = settings.cw_collection
+  elsif settings.collection != blank
+    assign cw_col = settings.collection
+  endif
+
+  if cw_col != blank and cw_col.products_count > 0
+    assign cw_products = cw_col.products
+  else
+    assign cw_products = collections.all.products
+  endif
+%}
+
+<section class="col-sec cw-sec" id="cortavientos">
+  <div class="sec-bg-grid"></div>
+  <div class="sec-bg-radial"></div>
+  <div class="cw-hdr rev">
+    <h2 class="cw-mega-title">{{ cw_title }}</h2>
+    <p class="cw-mega-sub">{{ cw_subtitle }}</p>
+    <div class="cw-pills">
+      <span class="cw-pill">{{ cw_pill_1 }}</span>
+      <span class="cw-pill">{{ cw_pill_2 }}</span>
+    </div>
+  </div>
+  <div class="cw-grid">
+    {% assign cw_product_idx = 0 %}
+    {% for product in cw_products limit: 3 %}
+      {% liquid
+        assign stock_current = 40
+        assign stock_max = 100
+        assign product_subtitle = 'Edición Limitada'
+        assign block_counter = 0
+
+        for block in blocks
+          if block.type == 'cortaviento'
+            if block_counter == cw_product_idx
+              assign stock_current = block.settings.stock_current | default: 40
+              assign stock_max = block.settings.stock_max | default: 100
+              if block.settings.subtitle != blank
+                assign product_subtitle = block.settings.subtitle
+              endif
+            endif
+            assign block_counter = block_counter | plus: 1
+          endif
+        endfor
+
+        if stock_max < 1
+          assign stock_max = 100
+        endif
+        if stock_current > stock_max
+          assign stock_current = stock_max
+        endif
+        assign stock_pct = stock_current | times: 100 | divided_by: stock_max
+        assign compare_price = product.compare_at_price
+        assign price = product.price
+
+        assign delay_val = ''
+        case cw_product_idx
+          when 1
+            assign delay_val = '0.07s'
+          when 2
+            assign delay_val = '0.14s'
+        endcase
+      %}
+      <div class="pc cw-card rev-s"{% if delay_val != blank %} style="transition-delay:{{ delay_val }}"{% endif %}>
+        <a href="{{ product.url }}" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;flex:1;">
+          <div class="pc-img-wrap">
+            {% if product.featured_image %}
+              <img
+                src="{{ product.featured_image | image_url: width: 600 }}"
+                alt="{{ product.featured_image.alt | default: product.title | escape }}"
+                width="600"
+                height="600"
+                loading="lazy"
+              >
+            {% else %}
+              <div class="pc-bg">🧥</div>
+            {% endif %}
+            <div class="cw-limited-badge">🔒 EDICIÓN LIMITADA</div>
+            <div class="cw-stock-wrap">
+              <div class="cw-stock-label">
+                <span>STOCK {{ stock_current }} DE {{ stock_max }} DISPONIBLES</span>
+              </div>
+              <div class="cw-stock-track">
+                <div class="cw-stock-fill" style="width: {{ stock_pct }}%;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="pc-info">
+            <div class="pc-name">{{ product.title }}</div>
+            <div class="pc-ver">{{ product_subtitle }}</div>
+          </div>
+          <div class="pc-price-row">
+            <div class="p-col">
+              {% if compare_price > price %}
+                <span class="p-old">{{ compare_price | money_without_trailing_zeros }}</span>
+              {% endif %}
+              <span class="p-new">{{ price | money_without_trailing_zeros }}</span>
+            </div>
+            <span class="btn-v">🛒 Ver</span>
+          </div>
+        </a>
+      </div>
+      {% assign cw_product_idx = cw_product_idx | plus: 1 %}
+    {% endfor %}
+  </div>
+</section>

@@ -1,0 +1,81 @@
+{% comment %}
+  Sección Cortavientos Edición Limitada — standalone
+{% endcomment %}
+
+{% render 'baul-cortavientos', settings: section.settings, blocks: section.blocks %}
+
+{% schema %}
+{
+  "name": "Baúl Cortavientos",
+  "tag": "section",
+  "class": "baul-cortavientos-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "SOLO 100 UNIDADES"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtítulo",
+      "default": "CORTAVIENTOS DE EDICIÓN LIMITADA - SIN REPOSICIÓN DE STOCK"
+    },
+    {
+      "type": "text",
+      "id": "pill_1",
+      "label": "Texto pill 1",
+      "default": "🧥 SOLO 100 UNIDADES DISPONIBLES"
+    },
+    {
+      "type": "text",
+      "id": "pill_2",
+      "label": "Texto pill 2",
+      "default": "⚡ UNA VEZ AGOTADO NO VUELVE"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Colección de productos"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "cortaviento",
+      "name": "Producto cortavientos",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtítulo del producto",
+          "default": "Edición Limitada"
+        },
+        {
+          "type": "number",
+          "id": "stock_current",
+          "label": "Stock actual (X)",
+          "default": 40
+        },
+        {
+          "type": "number",
+          "id": "stock_max",
+          "label": "Stock máximo (Y)",
+          "default": 100
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Baúl Cortavientos",
+      "blocks": [
+        { "type": "cortaviento", "settings": { "stock_current": 40, "stock_max": 100 } },
+        { "type": "cortaviento", "settings": { "stock_current": 35, "stock_max": 100 } },
+        { "type": "cortaviento", "settings": { "stock_current": 28, "stock_max": 100 } }
+      ]
+    }
+  ]
+}
+{% endschema %}

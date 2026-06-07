@@ -335,6 +335,10 @@
 
 <div class="divider"></div>
 
+{% render 'baul-cortavientos', settings: section.settings, blocks: section.blocks %}
+
+<div class="divider"></div>
+
 <section class="col-sec col-sec--pink">
   <div class="sec-bg-grid"></div>
   <div class="sec-hdr rev">
@@ -571,6 +575,39 @@
     },
     {
       "type": "header",
+      "content": "Cortavientos edición limitada"
+    },
+    {
+      "type": "text",
+      "id": "cw_title",
+      "label": "Título cortavientos",
+      "default": "SOLO 100 UNIDADES"
+    },
+    {
+      "type": "text",
+      "id": "cw_subtitle",
+      "label": "Subtítulo cortavientos",
+      "default": "CORTAVIENTOS DE EDICIÓN LIMITADA - SIN REPOSICIÓN DE STOCK"
+    },
+    {
+      "type": "text",
+      "id": "cw_pill_1",
+      "label": "Texto pill 1",
+      "default": "🧥 SOLO 100 UNIDADES DISPONIBLES"
+    },
+    {
+      "type": "text",
+      "id": "cw_pill_2",
+      "label": "Texto pill 2",
+      "default": "⚡ UNA VEZ AGOTADO NO VUELVE"
+    },
+    {
+      "type": "collection",
+      "id": "cw_collection",
+      "label": "Colección cortavientos"
+    },
+    {
+      "type": "header",
       "content": "Footer y contacto"
     },
     {
@@ -599,6 +636,31 @@
           "type": "image_picker",
           "id": "image",
           "label": "Imagen"
+        }
+      ]
+    },
+    {
+      "type": "cortaviento",
+      "name": "Cortavientos — stock",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtítulo del producto",
+          "default": "Edición Limitada"
+        },
+        {
+          "type": "number",
+          "id": "stock_current",
+          "label": "Stock actual (X)",
+          "default": 40
+        },
+        {
+          "type": "number",
+          "id": "stock_max",
+          "label": "Stock máximo (Y)",
+          "default": 100
         }
       ]
     },
