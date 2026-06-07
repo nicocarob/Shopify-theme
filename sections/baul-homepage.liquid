@@ -40,7 +40,7 @@
 
   assign fem_collection = section.settings.fem_collection
   if fem_collection == blank or fem_collection.products_count == 0
-    assign fem_collection = collections.all
+    assign fem_collection = collections['mujer']
   endif
 
   assign cortavientos_collection = section.settings.cortavientos_collection
