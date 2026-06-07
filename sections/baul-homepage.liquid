@@ -287,6 +287,9 @@
 
 <section class="col-sec col-sec--pink">
   {% assign fem_col = section.settings.femenina_collection %}
+  {% if fem_col == blank %}
+    {% assign fem_col = collections['mujer'] %}
+  {% endif %}
   {% if fem_col != blank %}
     {% assign fem_products = fem_col.products %}
   {% else %}
