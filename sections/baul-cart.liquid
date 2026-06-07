@@ -1,0 +1,153 @@
+{% comment %}
+  Carrito La Cábala
+{% endcomment %}
+
+{% liquid
+  assign wa_url = section.settings.whatsapp_url
+  if wa_url == blank
+    assign wa_url = 'https://wa.me/56951543485'
+  endif
+%}
+
+{% render 'baul-header', section: section %}
+
+<section class="bcart-page">
+  <div class="sec-bg-grid"></div>
+  <div class="bcart-layout">
+    <div class="bcart-main">
+      <h1 class="sec-title">TU CARRITO</h1>
+
+      {% if cart.item_count > 0 %}
+        <form action="{{ routes.cart_url }}" method="post" id="baul-cart-form" class="bcart-form">
+          <ul class="bcart-items">
+            {% for item in cart.items %}
+              <li class="bcart-item">
+                <a href="{{ item.url }}" class="bcart-item-img">
+                  {% if item.image %}
+                    <img
+                      src="{{ item.image | image_url: width: 200 }}"
+                      alt="{{ item.image.alt | default: item.product.title | escape }}"
+                      width="100"
+                      height="100"
+                      loading="lazy"
+                    >
+                  {% endif %}
+                </a>
+                <div class="bcart-item-info">
+                  <a href="{{ item.url }}" class="bcart-item-name">{{ item.product.title }}</a>
+                  {% unless item.variant.title == 'Default Title' %}
+                    <div class="bcart-item-variant">{{ item.variant.title }}</div>
+                  {% endunless %}
+                  <div class="bcart-item-price">{{ item.final_line_price | money_without_trailing_zeros }}</div>
+                  <div class="bcart-item-actions">
+                    <label class="bcart-qty-label">
+                      <span>Cant.</span>
+                      <input
+                        type="number"
+                        name="updates[{{ item.key }}]"
+                        value="{{ item.quantity }}"
+                        min="0"
+                        class="bcart-qty-input"
+                        aria-label="Cantidad"
+                      >
+                    </label>
+                    <a href="{{ item.url_to_remove }}" class="bcart-remove">Eliminar</a>
+                  </div>
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+          <button type="submit" name="update" class="bcart-update">Actualizar carrito</button>
+        </form>
+      {% else %}
+        <p class="bcart-empty">Tu carrito está vacío.</p>
+        <a href="{{ routes.root_url }}" class="btn-gold">Seguir comprando</a>
+      {% endif %}
+    </div>
+
+    {% if cart.item_count > 0 %}
+      <aside class="bcart-summary">
+        <h2 class="bcart-summary-title">Resumen</h2>
+        <div class="bcart-summary-row">
+          <span>Subtotal</span>
+          <span>{{ cart.total_price | money_without_trailing_zeros }}</span>
+        </div>
+        <div class="bcart-summary-row bcart-summary-ship">
+          <span>Envío</span>
+          <span>Gratis</span>
+        </div>
+        <div class="bcart-summary-total">
+          <span>Total</span>
+          <span class="bcart-total-price">{{ cart.total_price | money_without_trailing_zeros }}</span>
+        </div>
+        <form action="{{ routes.cart_url }}" method="post">
+          <button type="submit" name="checkout" class="bp-atc bcart-checkout">FINALIZAR COMPRA</button>
+        </form>
+      </aside>
+    {% endif %}
+  </div>
+</section>
+
+<section class="col-sec bp-related">
+  <div class="sec-bg-grid"></div>
+  <div class="sec-hdr rev sec-hdr--center">
+    <h2 class="sec-title">TAMBIÉN TE PUEDE GUSTAR</h2>
+  </div>
+  <div class="prod-grid">
+    {% for product in collections.all.products limit: 4 %}
+      {% render 'baul-product-card', product: product %}
+    {% endfor %}
+  </div>
+</section>
+
+<a class="wa" href="{{ wa_url }}" target="_blank" rel="noopener" aria-label="WhatsApp">💬</a>
+
+{% schema %}
+{
+  "name": "Baúl Carrito",
+  "tag": "section",
+  "class": "baul-cart-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Barra superior"
+    },
+    {
+      "type": "text",
+      "id": "countdown_text",
+      "label": "Texto countdown",
+      "default": "ENVÍO GRATIS POR TIEMPO LIMITADO — TERMINA EN:"
+    },
+    {
+      "type": "text",
+      "id": "promo_text",
+      "label": "Banner promo",
+      "default": "🎽 Lleva 3 camisetas y te llevas la 4ª a mitad de precio 🔥"
+    },
+    {
+      "type": "header",
+      "content": "Navbar"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_secundario",
+      "label": "Imagen junto al logo"
+    },
+    {
+      "type": "url",
+      "id": "whatsapp_url",
+      "label": "WhatsApp URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Baúl Carrito"
+    }
+  ]
+}
+{% endschema %}

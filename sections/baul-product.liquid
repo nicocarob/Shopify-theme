@@ -6,8 +6,6 @@
   assign current_variant = product.selected_or_first_available_variant
   assign compare_at_price = current_variant.compare_at_price
   assign price = current_variant.price
-  assign product_collection = product.collections.first
-
   assign wa_url = section.settings.whatsapp_url
   if wa_url == blank
     assign wa_url = 'https://wa.me/56951543485'
@@ -70,16 +68,6 @@
     </div>
 
     <div class="bp-info">
-      <nav class="bp-breadcrumb" aria-label="Breadcrumb">
-        <a href="{{ routes.root_url }}">Inicio</a>
-        <span>/</span>
-        {% if product_collection %}
-          <a href="{{ product_collection.url }}">{{ product_collection.title }}</a>
-          <span>/</span>
-        {% endif %}
-        <span class="bp-breadcrumb-current">{{ product.title }}</span>
-      </nav>
-
       <div class="bp-badges">
         <span class="bp-badge-urgency">🔥 ÚLTIMAS UNIDADES</span>
         <span class="bp-badge-ship">ENVÍO GRATIS</span>
@@ -169,20 +157,29 @@
   </div>
 </section>
 
-{% if product_collection != blank and product_collection.products_count > 1 %}
+{% liquid
+  assign related_collection = product.collections.first
+  assign related_count = 0
+%}
+{% if related_collection != blank %}
+  {% for related in related_collection.products %}
+    {% if related.id != product.id %}
+      {% assign related_count = related_count | plus: 1 %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+{% if related_count > 0 %}
   <section class="col-sec bp-related">
     <div class="sec-bg-grid"></div>
-    <div class="sec-hdr rev">
-      <div>
-        <h2 class="sec-title">TAMBIÉN TE PUEDE GUSTAR</h2>
-      </div>
+    <div class="sec-hdr rev sec-hdr--center">
+      <h2 class="sec-title">TAMBIÉN TE PUEDE GUSTAR</h2>
     </div>
     <div class="prod-grid">
-      {% assign related_count = 0 %}
-      {% for related in product_collection.products %}
-        {% if related.id != product.id and related_count < 4 %}
+      {% assign shown = 0 %}
+      {% for related in related_collection.products %}
+        {% if related.id != product.id and shown < 4 %}
           {% render 'baul-product-card', product: related %}
-          {% assign related_count = related_count | plus: 1 %}
+          {% assign shown = shown | plus: 1 %}
         {% endif %}
       {% endfor %}
     </div>

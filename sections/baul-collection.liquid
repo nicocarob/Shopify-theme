@@ -1,0 +1,113 @@
+{% comment %}
+  Página de colección La Cábala
+{% endcomment %}
+
+{% render 'baul-header', section: section %}
+
+<section class="bc-page">
+  <div class="sec-bg-grid"></div>
+
+  <div class="bc-hero rev">
+    {% if collection.image %}
+      <div class="bc-hero-banner">
+        <img
+          src="{{ collection.image | image_url: width: 1600 }}"
+          alt="{{ collection.image.alt | default: collection.title | escape }}"
+          width="1200"
+          height="400"
+          loading="eager"
+        >
+      </div>
+    {% endif %}
+    <div class="bc-hero-text">
+      <h1 class="sec-title">{{ collection.title }}</h1>
+      {% if collection.description != blank %}
+        <div class="bc-hero-desc">{{ collection.description }}</div>
+      {% endif %}
+    </div>
+  </div>
+
+  {% paginate collection.products by section.settings.products_per_page %}
+    <div class="prod-grid bc-grid">
+      {% for product in collection.products %}
+        {% render 'baul-product-card', product: product %}
+      {% endfor %}
+    </div>
+
+    {% if paginate.pages > 1 %}
+      <nav class="bc-pagination" aria-label="Paginación">
+        {% if paginate.previous %}
+          <a class="bc-page-link" href="{{ paginate.previous.url }}">← Anterior</a>
+        {% else %}
+          <span class="bc-page-link is-disabled">← Anterior</span>
+        {% endif %}
+
+        <span class="bc-page-info">{{ paginate.current_page }} / {{ paginate.pages }}</span>
+
+        {% if paginate.next %}
+          <a class="bc-page-link" href="{{ paginate.next.url }}">Siguiente →</a>
+        {% else %}
+          <span class="bc-page-link is-disabled">Siguiente →</span>
+        {% endif %}
+      </nav>
+    {% endif %}
+  {% endpaginate %}
+</section>
+
+{% schema %}
+{
+  "name": "Baúl Colección",
+  "tag": "section",
+  "class": "baul-collection-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Barra superior"
+    },
+    {
+      "type": "text",
+      "id": "countdown_text",
+      "label": "Texto countdown",
+      "default": "ENVÍO GRATIS POR TIEMPO LIMITADO — TERMINA EN:"
+    },
+    {
+      "type": "text",
+      "id": "promo_text",
+      "label": "Banner promo",
+      "default": "🎽 Lleva 3 camisetas y te llevas la 4ª a mitad de precio 🔥"
+    },
+    {
+      "type": "header",
+      "content": "Navbar"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_secundario",
+      "label": "Imagen junto al logo"
+    },
+    {
+      "type": "header",
+      "content": "Colección"
+    },
+    {
+      "type": "range",
+      "id": "products_per_page",
+      "label": "Productos por página",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    }
+  ],
+  "presets": [
+    {
+      "name": "Baúl Colección"
+    }
+  ]
+}
+{% endschema %}
