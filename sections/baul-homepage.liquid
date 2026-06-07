@@ -43,28 +43,6 @@
     assign cortavientos_collection = collections.all
   endif
 
-  assign femenina_handle = section.settings.femenina_collection_handle | default: 'mujer' | strip
-  assign femenina_collection = section.settings.femenina_collection
-  if femenina_collection != blank and femenina_collection.handle == blank
-    assign femenina_collection = collections[femenina_collection]
-  endif
-  if femenina_collection == blank and femenina_handle != blank
-    assign femenina_collection = collections[femenina_handle]
-  endif
-  if femenina_collection != blank and femenina_collection.handle != blank
-    assign femenina_handle = femenina_collection.handle
-  endif
-  assign femenina_use_product_fallback = false
-  if femenina_collection == blank or femenina_collection.products_count == 0
-    assign femenina_use_product_fallback = true
-  endif
-  assign femenina_url = section.settings.femenina_collection_url
-  if femenina_collection != blank
-    assign femenina_url = femenina_collection.url
-  elsif femenina_handle != blank
-    assign femenina_url = '/collections/' | append: femenina_handle
-  endif
-
   assign wa_url = section.settings.whatsapp_url
   if wa_url == blank
     assign wa_url = 'https://wa.me/56951543485'
@@ -308,6 +286,7 @@
 <div class="divider"></div>
 
 <section class="col-sec col-sec--pink">
+  {% assign fem_col = section.settings.femenina_collection %}
   <div class="sec-bg-grid"></div>
   <div class="sec-hdr rev">
     <div>
@@ -315,42 +294,18 @@
       <h2 class="sec-title">COLECCIÓN FEMENINA</h2>
       <div class="sec-sub">Corte y talla femenina, mismo estilo premium</div>
     </div>
-    <a href="{{ femenina_url | default: '#' }}" class="lk-all">Ver toda →</a>
+    <a href="{{ fem_col.url | default: section.settings.femenina_collection_url | default: '#' }}" class="lk-all">Ver toda →</a>
   </div>
   <div class="prod-grid">
-    {% if femenina_use_product_fallback %}
-      {% assign fem_shown = 0 %}
-      {% for product in collections.all.products %}
-        {% if fem_shown >= 8 %}{% break %}{% endif %}
-        {% assign in_fem_col = false %}
-        {% for pc in product.collections %}
-          {% if pc.handle == femenina_handle %}
-            {% assign in_fem_col = true %}
-            {% break %}
-          {% endif %}
-        {% endfor %}
-        {% if in_fem_col %}
-          {% case fem_shown %}
-            {% when 1 %}{% assign delay_val = '0.07s' %}
-            {% when 2 %}{% assign delay_val = '0.14s' %}
-            {% when 3 %}{% assign delay_val = '0.21s' %}
-            {% else %}{% assign delay_val = '' %}
-          {% endcase %}
-          {% render 'baul-product-card', product: product, delay: delay_val, version_text: 'Corte Mujer' %}
-          {% assign fem_shown = fem_shown | plus: 1 %}
-        {% endif %}
-      {% endfor %}
-    {% else %}
-      {% for product in femenina_collection.products limit: 8 %}
-        {% case forloop.index0 %}
-          {% when 1 %}{% assign delay_val = '0.07s' %}
-          {% when 2 %}{% assign delay_val = '0.14s' %}
-          {% when 3 %}{% assign delay_val = '0.21s' %}
-          {% else %}{% assign delay_val = '' %}
-        {% endcase %}
-        {% render 'baul-product-card', product: product, delay: delay_val, version_text: 'Corte Mujer' %}
-      {% endfor %}
-    {% endif %}
+    {% for product in fem_col.products limit: 8 %}
+      {% case forloop.index0 %}
+        {% when 1 %}{% assign delay_val = '0.07s' %}
+        {% when 2 %}{% assign delay_val = '0.14s' %}
+        {% when 3 %}{% assign delay_val = '0.21s' %}
+        {% else %}{% assign delay_val = '' %}
+      {% endcase %}
+      {% render 'baul-product-card', product: product, delay: delay_val, version_text: 'Corte Mujer' %}
+    {% endfor %}
   </div>
 </section>
 
@@ -560,13 +515,6 @@
       "type": "collection",
       "id": "femenina_collection",
       "label": "Colección Femenina"
-    },
-    {
-      "type": "text",
-      "id": "femenina_collection_handle",
-      "label": "Handle — Colección Femenina",
-      "default": "mujer",
-      "info": "Respaldo si el selector no carga productos. Ej: mujer"
     },
     {
       "type": "url",
