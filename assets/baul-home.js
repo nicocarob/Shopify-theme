@@ -110,12 +110,16 @@ const eyeObs = new IntersectionObserver(
 );
 document.querySelectorAll('.eyebrow').forEach((el) => eyeObs.observe(el));
 
-const searchForm = document.getElementById('baul-search-form');
-if (searchForm) {
-  searchForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const q = searchForm.querySelector('input[name="q"]')?.value?.trim();
-    if (q) window.location.href = '/search?q=' + encodeURIComponent(q);
+const navSearchToggle = document.getElementById('n-search-toggle');
+const navSearchForm = document.getElementById('n-search-form');
+if (navSearchToggle && navSearchForm) {
+  navSearchToggle.addEventListener('click', () => {
+    const isOpen = navSearchForm.classList.toggle('is-open');
+    navSearchToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    if (isOpen) {
+      const input = navSearchForm.querySelector('input[name="q"]');
+      if (input) input.focus();
+    }
   });
 }
 

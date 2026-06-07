@@ -150,6 +150,7 @@
     padding: 0 40px; display: flex; align-items: center;
     justify-content: space-between; height: 66px;
     box-shadow: 0 1px 0 rgba(0, 200, 81, 0.12), 0 8px 32px rgba(0, 0, 0, 0.5);
+    gap: 12px;
   }
   nav::after {
     content: ''; position: absolute; bottom: -1px; left: 10%; right: 10%; height: 1px;
@@ -161,8 +162,22 @@
     max-height: 40px; width: auto; object-fit: contain;
     filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
   }
+  .n-search {
+    flex: 1; max-width: 280px; margin: 0 8px 0 16px;
+    display: flex; align-items: center;
+  }
+  .n-search-in {
+    width: 100%; height: 32px; padding: 0 14px;
+    background: #fff; color: #000; border: 1px solid #fff;
+    border-radius: 20px; outline: none;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 13px;
+    font-weight: 600; letter-spacing: 0.02em;
+  }
+  .n-search-in::placeholder { color: #999; }
+  .n-search-in:focus { box-shadow: 0 0 0 2px rgba(0, 200, 81, 0.35); }
+  .n-search-toggle { display: none; }
   .n-hamburger { display: none; }
-  .n-links { display: flex; list-style: none; margin: 0; padding: 0; }
+  .n-links { display: flex; list-style: none; margin: 0; padding: 0; flex-shrink: 0; }
   .n-links a {
     font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
     font-size: 12px; letter-spacing: 0.1em; color: var(--text-muted);
@@ -1062,6 +1077,37 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   }
   .bm-products-actions { text-align: center; margin-top: 28px; }
 
+  /* ── Search results page ── */
+  .bs-page {
+    background: var(--bg); padding: 40px 20px 60px;
+    position: relative; overflow: hidden; min-height: 50vh;
+  }
+  .bs-inner {
+    position: relative; z-index: 1; max-width: 1200px; margin: 0 auto;
+  }
+  .bs-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(32px, 6vw, 56px); line-height: 1.05;
+    color: #fff; letter-spacing: 0.04em; margin-bottom: 32px;
+    text-align: center;
+  }
+  .bs-title span { color: var(--accent-gold); }
+  .bs-empty {
+    text-align: center; max-width: 480px; margin: 0 auto;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 16px;
+    line-height: 1.6; color: var(--text-muted);
+  }
+  .bs-empty strong { color: #fff; font-weight: 700; }
+  .bs-wa {
+    display: inline-block; margin-top: 20px;
+    font-family: 'Bebas Neue', sans-serif; font-size: 16px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: #000; background: var(--accent); text-decoration: none;
+    padding: 12px 24px; border-radius: var(--radius-sm);
+    transition: background 0.2s;
+  }
+  .bs-wa:hover { background: #fff; }
+
   /* ── Search / Liga section (light variant like busca-por-liga) ── */
   .srch-sec {
     padding: 60px 20px; background: var(--bg-light);
@@ -1191,15 +1237,27 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .tick-it { padding: 0 10px; font-size: 9px; letter-spacing: 0.1em; }
     nav {
       padding: 0 8px; height: auto; min-height: 50px;
-      overflow: visible; gap: 8px; flex-wrap: nowrap;
+      overflow: visible; gap: 8px; flex-wrap: wrap;
       position: sticky; z-index: 199;
     }
     .n-logo { gap: 6px; flex-shrink: 0; min-width: 0; }
     .n-logo img { width: 32px; height: 32px; }
     .n-logo-sec { max-height: 32px; }
-    .n-hamburger {
+    .n-search {
+      display: none; flex: 1 1 100%; order: 10;
+      max-width: none; margin: 0; padding: 0 0 8px;
+    }
+    .n-search.is-open { display: flex; }
+    .n-search-toggle {
       display: flex; align-items: center; justify-content: center;
       width: 38px; height: 38px; margin-left: auto;
+      background: transparent; border: 1px solid var(--border);
+      border-radius: var(--radius-sm); color: #fff;
+      font-size: 18px; line-height: 1; cursor: pointer; flex-shrink: 0;
+    }
+    .n-hamburger {
+      display: flex; align-items: center; justify-content: center;
+      width: 38px; height: 38px; margin-left: 0;
       background: transparent; border: 1px solid var(--border);
       border-radius: var(--radius-sm); color: #fff;
       font-size: 20px; line-height: 1; cursor: pointer; flex-shrink: 0;
@@ -1257,6 +1315,8 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .bcart-summary { position: static; }
     .bcart-item { grid-template-columns: 80px 1fr; gap: 12px; padding: 12px; }
     .bcart-item-name { font-size: 18px; }
+    .bs-page { padding: 24px 16px 40px; }
+    .bs-title { margin-bottom: 24px; }
     .bm-hero { padding: 40px 16px 36px; }
     .bm-logo { max-height: 100px; }
     .bm-group-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }

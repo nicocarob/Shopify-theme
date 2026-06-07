@@ -1,0 +1,93 @@
+{% comment %}
+  Resultados de búsqueda La Cábala
+{% endcomment %}
+
+{% liquid
+  assign wa_url = section.settings.whatsapp_url
+  if wa_url == blank
+    assign wa_url = 'https://wa.me/56951543485'
+  endif
+
+  assign search_terms = search.terms | escape
+%}
+
+{% render 'baul-header', section: section %}
+
+<section class="bs-page">
+  <div class="sec-bg-grid"></div>
+  <div class="bs-inner">
+    <h1 class="bs-title rev">
+      RESULTADOS PARA: <span>{{ search_terms }}</span>
+    </h1>
+
+    {% if search.results_count > 0 %}
+      {% paginate search.results by 24 %}
+        <div class="prod-grid">
+          {% for item in search.results %}
+            {% if item.object_type == 'product' %}
+              {% render 'baul-product-card', product: item %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endpaginate %}
+    {% else %}
+      <div class="bs-empty rev">
+        <p>No encontramos camisetas de <strong>{{ search_terms }}</strong>.</p>
+        <p>¿Buscas algo específico? Escríbenos por WhatsApp y te ayudamos a encontrarlo.</p>
+        <a class="bs-wa" href="{{ wa_url }}" target="_blank" rel="noopener">Contactar por WhatsApp</a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<a class="wa" href="{{ wa_url }}" target="_blank" rel="noopener" aria-label="WhatsApp">💬</a>
+
+{% schema %}
+{
+  "name": "Baúl Búsqueda",
+  "tag": "section",
+  "class": "baul-search-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Barra superior"
+    },
+    {
+      "type": "text",
+      "id": "countdown_text",
+      "label": "Texto countdown",
+      "default": "ENVÍO GRATIS POR TIEMPO LIMITADO — TERMINA EN:"
+    },
+    {
+      "type": "text",
+      "id": "promo_text",
+      "label": "Banner promo",
+      "default": "🎽 Lleva 3 camisetas y te llevas la 4ª a mitad de precio 🔥"
+    },
+    {
+      "type": "header",
+      "content": "Navbar"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_secundario",
+      "label": "Imagen junto al logo"
+    },
+    {
+      "type": "url",
+      "id": "whatsapp_url",
+      "label": "WhatsApp URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Baúl Búsqueda"
+    }
+  ]
+}
+{% endschema %}

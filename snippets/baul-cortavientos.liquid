@@ -9,17 +9,20 @@
   assign cw_pill_1 = settings.cw_pill_1 | default: settings.pill_1 | default: '🧥 SOLO 100 UNIDADES DISPONIBLES'
   assign cw_pill_2 = settings.cw_pill_2 | default: settings.pill_2 | default: '⚡ UNA VEZ AGOTADO NO VUELVE'
 
-  assign cw_col = collections['cortavientos']
-  if settings.cw_collection != blank
+  if collection != blank
+    assign cw_col = collection
+  elsif settings.cortavientos_collection != blank
+    assign cw_col = settings.cortavientos_collection
+  elsif settings.cw_collection != blank
     assign cw_col = settings.cw_collection
   elsif settings.collection != blank
     assign cw_col = settings.collection
+  else
+    assign cw_col = collections.all
   endif
 
-  if cw_col != blank and cw_col.products_count > 0
-    assign cw_products = cw_col.products
-  else
-    assign cw_products = collections.all.products
+  if cw_col == blank or cw_col.products_count == 0
+    assign cw_col = collections.all
   endif
 %}
 
@@ -36,7 +39,7 @@
   </div>
   <div class="cw-grid">
     {% assign cw_product_idx = 0 %}
-    {% for product in cw_products limit: 3 %}
+    {% for product in cw_col.products limit: 3 %}
       {% liquid
         assign stock_current = 40
         assign stock_max = 100

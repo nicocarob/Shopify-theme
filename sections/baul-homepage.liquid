@@ -18,39 +18,34 @@
     assign trophy_src = trophy_img | image_url: width: 800
   endif
 
-  assign mv_collection = collections['mas-vendidos']
-  if mv_collection != blank and mv_collection.products_count > 0
-    assign mv_products = mv_collection.products
-  else
-    assign mv_products = collections.all.products
+  assign mv_collection = section.settings.mv_collection
+  if mv_collection == blank or mv_collection.products_count == 0
+    assign mv_collection = collections.all
   endif
 
-  assign wc_collection = collections['copa-del-mundo']
-  if wc_collection != blank and wc_collection.products_count > 0
-    assign wc_products = wc_collection.products
-  else
-    assign wc_products = collections.all.products
+  assign mundial_collection = section.settings.mundial_collection
+  if mundial_collection == blank or mundial_collection.products_count == 0
+    assign mundial_collection = collections.all
   endif
 
-  assign retro_collection = collections[section.settings.retro_collection]
-  if retro_collection != blank and retro_collection.products_count > 0
-    assign retro_products = retro_collection.products
-  else
-    assign retro_products = collections.all.products
+  assign retro_collection = section.settings.retro_collection
+  if retro_collection == blank or retro_collection.products_count == 0
+    assign retro_collection = collections.all
   endif
 
-  assign ninos_collection = collections['ninos']
-  if ninos_collection != blank and ninos_collection.products_count > 0
-    assign ninos_products = ninos_collection.products
-  else
-    assign ninos_products = collections.all.products
+  assign ninos_collection = section.settings.ninos_collection
+  if ninos_collection == blank or ninos_collection.products_count == 0
+    assign ninos_collection = collections.all
   endif
 
-  assign fem_collection = collections['femenino']
-  if fem_collection != blank and fem_collection.products_count > 0
-    assign fem_products = fem_collection.products
-  else
-    assign fem_products = collections.all.products
+  assign femenina_collection = section.settings.femenina_collection
+  if femenina_collection == blank or femenina_collection.products_count == 0
+    assign femenina_collection = collections.all
+  endif
+
+  assign cortavientos_collection = section.settings.cortavientos_collection
+  if cortavientos_collection == blank or cortavientos_collection.products_count == 0
+    assign cortavientos_collection = collections.all
   endif
 
   assign wa_url = section.settings.whatsapp_url
@@ -58,9 +53,12 @@
     assign wa_url = 'https://wa.me/56951543485'
   endif
 
-  assign wc_url = wc_collection.url | default: section.settings.wc_collection_url
-  if wc_url == blank
-    assign wc_url = '/collections/copa-del-mundo'
+  assign mundial_url = section.settings.mundial_collection_url
+  if section.settings.mundial_collection != blank
+    assign mundial_url = section.settings.mundial_collection.url
+  endif
+  if mundial_url == blank
+    assign mundial_url = '/collections/copa-del-mundo'
   endif
 %}
 
@@ -76,7 +74,7 @@
       <div class="hero-sub-line">{{ section.settings.hero_subtitle }}</div>
       <p class="hero-desc">{{ section.settings.hero_description }}</p>
       <div class="hero-btns">
-        <a href="{{ wc_url }}" class="btn-gold">{{ section.settings.hero_btn_primary }}</a>
+        <a href="{{ mundial_url }}" class="btn-gold">{{ section.settings.hero_btn_primary }}</a>
         <a href="#buscar" class="btn-ghost">{{ section.settings.hero_btn_secondary }}</a>
       </div>
       <div class="hero-flags">
@@ -152,7 +150,7 @@
     <a href="{{ mv_collection.url | default: routes.all_products_collection_url }}" class="lk-all">Ver todo →</a>
   </div>
   <div class="prod-grid">
-    {% for product in mv_products limit: 8 %}
+    {% for product in mv_collection.products limit: 8 %}
       {% case forloop.index0 %}
         {% when 1 %}{% assign delay_val = '0.07s' %}
         {% when 2 %}{% assign delay_val = '0.14s' %}
@@ -181,15 +179,15 @@
     <div class="eyebrow">Encuentra tu camiseta</div>
     <h2 class="sec-title">BUSCA POR EQUIPO O LIGA</h2>
     <form class="srch-box" id="baul-search-form" action="{{ routes.search_url }}" method="get" role="search">
-      <input class="srch-in" type="search" name="q" placeholder="Ej: Real Madrid, Chile, Barcelona..." autocomplete="off">
+      <input type="hidden" name="type" value="product">
+      <input class="srch-in" type="search" name="q" placeholder="Ej: Real Madrid, Chile, Barcelona..." autocomplete="off" required>
       <button class="srch-btn" type="submit" aria-label="Buscar">🔍</button>
     </form>
   </div>
   <div class="liga-grid rev">
     {% for block in section.blocks %}
       {% if block.type == 'liga' %}
-        {% assign liga_col = collections[block.settings.collection_handle] %}
-        <a class="lg-c" href="{{ liga_col.url | default: '#' }}" {{ block.shopify_attributes }}>
+        <a class="lg-c" href="{{ routes.search_url }}?q={{ block.settings.liga_name | url_encode }}&amp;type=product" {{ block.shopify_attributes }}>
           <div class="lg-circle">
             {% if block.settings.logo != blank %}
               <img
@@ -221,10 +219,10 @@
       <h2 class="sec-title">FIFA WORLD CUP 2026</h2>
       <div class="sec-sub">Las camisetas del evento más grande del fútbol</div>
     </div>
-    <a href="{{ wc_url }}" class="lk-all">Ver toda la colección →</a>
+    <a href="{{ mundial_url }}" class="lk-all">Ver toda la colección →</a>
   </div>
   <div class="prod-grid">
-    {% for product in wc_products limit: 10 %}
+    {% for product in mundial_collection.products limit: 10 %}
       {% case forloop.index0 %}
         {% when 1 %}{% assign delay_val = '0.07s' %}
         {% when 2 %}{% assign delay_val = '0.14s' %}
@@ -249,7 +247,7 @@
     <a href="{{ retro_collection.url | default: section.settings.retro_collection_url }}" class="lk-all">Ver toda →</a>
   </div>
   <div class="prod-grid">
-    {% for product in retro_products limit: 4 %}
+    {% for product in retro_collection.products limit: 4 %}
       {% case forloop.index0 %}
         {% when 1 %}{% assign delay_val = '0.07s' %}
         {% when 2 %}{% assign delay_val = '0.14s' %}
@@ -274,7 +272,7 @@
     <a href="{{ ninos_collection.url | default: section.settings.ninos_collection_url }}" class="lk-all">Ver toda →</a>
   </div>
   <div class="prod-grid">
-    {% for product in ninos_products limit: 8 %}
+    {% for product in ninos_collection.products limit: 8 %}
       {% case forloop.index0 %}
         {% when 1 %}{% assign delay_val = '0.07s' %}
         {% when 2 %}{% assign delay_val = '0.14s' %}
@@ -288,7 +286,7 @@
 
 <div class="divider"></div>
 
-{% render 'baul-cortavientos', settings: section.settings, blocks: section.blocks %}
+{% render 'baul-cortavientos', settings: section.settings, blocks: section.blocks, collection: cortavientos_collection %}
 
 <div class="divider"></div>
 
@@ -300,10 +298,10 @@
       <h2 class="sec-title">COLECCIÓN FEMENINA</h2>
       <div class="sec-sub">Corte y talla femenina, mismo estilo premium</div>
     </div>
-    <a href="{{ fem_collection.url | default: section.settings.fem_collection_url }}" class="lk-all">Ver toda →</a>
+    <a href="{{ femenina_collection.url | default: section.settings.femenina_collection_url }}" class="lk-all">Ver toda →</a>
   </div>
   <div class="prod-grid">
-    {% for product in fem_products limit: 8 %}
+    {% for product in femenina_collection.products limit: 8 %}
       {% case forloop.index0 %}
         {% when 1 %}{% assign delay_val = '0.07s' %}
         {% when 2 %}{% assign delay_val = '0.14s' %}
@@ -488,12 +486,12 @@
     },
     {
       "type": "collection",
-      "id": "wc_collection",
+      "id": "mundial_collection",
       "label": "Colección Copa del Mundo"
     },
     {
       "type": "url",
-      "id": "wc_collection_url",
+      "id": "mundial_collection_url",
       "label": "URL Ver toda — Copa del Mundo",
       "default": "/collections/copa-del-mundo"
     },
@@ -519,12 +517,12 @@
     },
     {
       "type": "collection",
-      "id": "fem_collection",
+      "id": "femenina_collection",
       "label": "Colección Femenina"
     },
     {
       "type": "url",
-      "id": "fem_collection_url",
+      "id": "femenina_collection_url",
       "label": "URL Ver toda — Femenina"
     },
     {
@@ -557,8 +555,8 @@
     },
     {
       "type": "collection",
-      "id": "cw_collection",
-      "label": "Colección cortavientos"
+      "id": "cortavientos_collection",
+      "label": "Colección Cortavientos"
     },
     {
       "type": "header",
