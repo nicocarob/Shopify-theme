@@ -711,13 +711,17 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     font-family: 'Barlow Condensed', sans-serif; font-size: 13px;
     font-weight: 600; color: var(--text-soft); letter-spacing: 0.06em;
   }
+  .bp-desc-wrap {
+    max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;
+    padding-top: 20px;
+  }
   .bp-desc {
     font-family: 'Barlow Condensed', sans-serif; font-size: 15px;
     line-height: 1.7; color: var(--text-muted);
     border-top: 1px solid var(--border); padding-top: 24px;
   }
   .bp-desc p { margin: 0 0 12px; }
-  .bp-related { padding-top: 20px; }
+  .bp-related { padding-top: 40px; padding-bottom: 20px; }
   .btn-cart { text-decoration: none; display: inline-flex; align-items: center; }
 
   /* ── Collection page ── */

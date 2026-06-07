@@ -147,44 +147,46 @@
         <span>🚚 Envío gratis</span>
         <span>🔒 Pago seguro</span>
       </div>
-
-      {% if product.description != blank %}
-        <div class="bp-desc rte">
-          {{ product.description }}
-        </div>
-      {% endif %}
     </div>
   </div>
-</section>
 
-{% liquid
-  assign related_collection = product.collections.first
-  assign related_count = 0
-%}
-{% if related_collection != blank %}
-  {% for related in related_collection.products %}
-    {% if related.id != product.id %}
-      {% assign related_count = related_count | plus: 1 %}
-    {% endif %}
-  {% endfor %}
-{% endif %}
-{% if related_count > 0 %}
-  <section class="col-sec bp-related">
-    <div class="sec-bg-grid"></div>
-    <div class="sec-hdr rev sec-hdr--center">
-      <h2 class="sec-title">TAMBIÉN TE PUEDE GUSTAR</h2>
+  {% assign related = product.collections.first %}
+  {% assign related_count = 0 %}
+  {% if related != blank %}
+    {% for p in related.products %}
+      {% unless p.id == product.id %}
+        {% assign related_count = related_count | plus: 1 %}
+      {% endunless %}
+    {% endfor %}
+  {% endif %}
+  {% if related_count > 0 %}
+    <section class="col-sec bp-related">
+      <div class="sec-bg-grid"></div>
+      <div class="sec-hdr rev sec-hdr--center">
+        <h2 class="sec-title">TAMBIÉN TE PUEDE GUSTAR</h2>
+      </div>
+      <div class="prod-grid">
+        {% assign shown = 0 %}
+        {% for p in related.products %}
+          {% unless p.id == product.id %}
+            {% if shown < 4 %}
+              {% render 'baul-product-card', product: p %}
+              {% assign shown = shown | plus: 1 %}
+            {% endif %}
+          {% endunless %}
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}
+
+  {% if product.description != blank %}
+    <div class="bp-desc-wrap">
+      <div class="bp-desc rte">
+        {{ product.description }}
+      </div>
     </div>
-    <div class="prod-grid">
-      {% assign shown = 0 %}
-      {% for related in related_collection.products %}
-        {% if related.id != product.id and shown < 4 %}
-          {% render 'baul-product-card', product: related %}
-          {% assign shown = shown | plus: 1 %}
-        {% endif %}
-      {% endfor %}
-    </div>
-  </section>
-{% endif %}
+  {% endif %}
+</section>
 
 <script type="application/json" id="baul-product-json">
   {
