@@ -1,5 +1,5 @@
 {% comment %}
-  Baúl del Capitán — Homepage completa
+  La Cábala — Homepage completa
   Réplica visual del HTML de referencia con productos Shopify
 {% endcomment %}
 
@@ -60,10 +60,14 @@
 %}
 
 <div id="cbar">
-  <span>🔥</span>
-  <span style="font-size:12px;letter-spacing:.1em;color:rgba(255,255,255,0.7);">{{ section.settings.countdown_text }}</span>
-  <span class="ctimer" id="mainTimer">05:00:00</span>
-  <span class="cb-pill">📦 GRATIS A TODO CHILE</span>
+  <div class="cbar-line cbar-line--text">
+    <span>🔥</span>
+    <span class="cbar-text">{{ section.settings.countdown_text }}</span>
+  </div>
+  <div class="cbar-line cbar-line--timer">
+    <span class="ctimer" id="mainTimer">05:00:00</span>
+    <span class="cb-pill">📦 GRATIS A TODO CHILE</span>
+  </div>
 </div>
 
 <div class="ticker">
@@ -85,8 +89,20 @@
 <nav>
   <a class="n-logo" href="{{ routes.root_url }}">
     <img src="{{ logo_src }}" alt="{{ shop.name | escape }}" width="52" height="52">
+    {% if section.settings.logo_secundario != blank %}
+      <img
+        class="n-logo-sec"
+        src="{{ section.settings.logo_secundario | image_url: height: 80 }}"
+        alt=""
+        width="40"
+        height="40"
+        loading="lazy"
+      >
+    {% endif %}
     <span class="n-brand">LA CÁBALA</span>
   </a>
+  <input type="checkbox" id="n-toggle" class="n-toggle" hidden>
+  <label for="n-toggle" class="n-hamburger" aria-label="Abrir menú de navegación">☰</label>
   <ul class="n-links">
     <li><a href="{{ collections['liga-chilena'].url | default: '/collections/liga-chilena' }}">🇨🇱 Liga Chilena</a></li>
     <li><a href="{{ collections['liga-espanola'].url | default: '/collections/liga-espanola' }}">🇪🇸 Española</a></li>
@@ -345,7 +361,7 @@
     <div>
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
         <img src="{{ logo_src }}" style="width:44px;height:44px;object-fit:contain;" alt="{{ shop.name | escape }}" width="44" height="44">
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:26px;color:#fff;letter-spacing:.05em;">BAÚL DEL CAPITÁN</span>
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:26px;color:#fff;letter-spacing:.05em;">LA CÁBALA</span>
       </div>
       <p class="ft-desc">{{ section.settings.footer_description }}</p>
       <div class="ft-soc">
@@ -387,7 +403,7 @@
     </div>
   </div>
   <div class="ft-bot">
-    <span class="ft-copy">© {{ 'now' | date: '%Y' }} Baúl del Capitán — Todos los derechos reservados</span>
+    <span class="ft-copy">© {{ 'now' | date: '%Y' }} La Cábala — Todos los derechos reservados</span>
     <span class="ft-copy">Hecho con ⚽ en Chile</span>
   </div>
 </footer>
@@ -396,7 +412,7 @@
 
 {% schema %}
 {
-  "name": "Baúl Homepage",
+  "name": "La Cábala Homepage",
   "tag": "section",
   "class": "baul-homepage-section",
   "settings": [
@@ -415,6 +431,15 @@
       "id": "promo_text",
       "label": "Banner promo",
       "default": "🎽 Lleva 3 camisetas y te llevas la 4ª a mitad de precio 🔥"
+    },
+    {
+      "type": "header",
+      "content": "Navbar"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_secundario",
+      "label": "Imagen junto al logo"
     },
     {
       "type": "header",
@@ -607,7 +632,7 @@
   ],
   "presets": [
     {
-      "name": "Baúl Homepage",
+      "name": "La Cábala Homepage",
       "blocks": [
         { "type": "liga", "settings": { "collection_handle": "liga-chilena", "liga_name": "Liga Chilena", "emoji": "🇨🇱" } },
         { "type": "liga", "settings": { "collection_handle": "liga-espanola", "liga_name": "Liga Española", "emoji": "🇪🇸" } },
