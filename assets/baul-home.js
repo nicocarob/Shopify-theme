@@ -1,7 +1,7 @@
 const TOTAL = 5 * 3600000;
 const MAIN_DURATION_MS = 5 * 3600 * 1000;
 const MAIN_TIMER_KEY = 'bdc_main5';
-const CARD_FLOORS = [270 * 60000, 190 * 60000, 80 * 60000, 45 * 60000];
+const CARD_FLOORS = [45, 65, 85, 105, 125, 155, 190, 270].map((m) => m * 60000);
 
 function getEnd(key, floor) {
   let v = parseInt(localStorage.getItem(key) || '0', 10);
@@ -116,5 +116,34 @@ if (searchForm) {
     e.preventDefault();
     const q = searchForm.querySelector('input[name="q"]')?.value?.trim();
     if (q) window.location.href = '/search?q=' + encodeURIComponent(q);
+  });
+}
+
+function syncCbarHeight() {
+  const cbar = document.getElementById('cbar');
+  if (!cbar) return;
+  document.documentElement.style.setProperty('--baul-cbar-h', cbar.offsetHeight + 'px');
+}
+syncCbarHeight();
+window.addEventListener('resize', syncCbarHeight);
+if (typeof ResizeObserver !== 'undefined') {
+  const cbarEl = document.getElementById('cbar');
+  if (cbarEl) new ResizeObserver(syncCbarHeight).observe(cbarEl);
+}
+
+const navToggle = document.getElementById('n-hamburger');
+const navLinks = document.getElementById('n-links');
+if (navToggle && navLinks) {
+  navToggle.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('is-open');
+    navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    navToggle.textContent = isOpen ? '✕' : '☰';
+  });
+  navLinks.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('is-open');
+      navToggle.setAttribute('aria-expanded', 'false');
+      navToggle.textContent = '☰';
+    });
   });
 }

@@ -18,14 +18,14 @@
     assign trophy_src = trophy_img | image_url: width: 800
   endif
 
-  assign mv_collection = collections[section.settings.mv_collection]
+  assign mv_collection = collections['mas-vendidos']
   if mv_collection != blank and mv_collection.products_count > 0
     assign mv_products = mv_collection.products
   else
     assign mv_products = collections.all.products
   endif
 
-  assign wc_collection = collections[section.settings.wc_collection]
+  assign wc_collection = collections['copa-del-mundo']
   if wc_collection != blank and wc_collection.products_count > 0
     assign wc_products = wc_collection.products
   else
@@ -39,14 +39,14 @@
     assign retro_products = collections.all.products
   endif
 
-  assign ninos_collection = collections[section.settings.ninos_collection]
+  assign ninos_collection = collections['ninos']
   if ninos_collection != blank and ninos_collection.products_count > 0
     assign ninos_products = ninos_collection.products
   else
     assign ninos_products = collections.all.products
   endif
 
-  assign fem_collection = collections[section.settings.fem_collection]
+  assign fem_collection = collections['femenino']
   if fem_collection != blank and fem_collection.products_count > 0
     assign fem_products = fem_collection.products
   else
@@ -99,11 +99,9 @@
         loading="lazy"
       >
     {% endif %}
-    <span class="n-brand">LA CÁBALA</span>
   </a>
-  <input type="checkbox" id="n-toggle" class="n-toggle" hidden>
-  <label for="n-toggle" class="n-hamburger" aria-label="Abrir menú de navegación">☰</label>
-  <ul class="n-links">
+  <button type="button" class="n-hamburger" id="n-hamburger" aria-expanded="false" aria-label="Abrir menú de navegación">☰</button>
+  <ul class="n-links" id="n-links">
     <li><a href="{{ collections['liga-chilena'].url | default: '/collections/liga-chilena' }}">🇨🇱 Liga Chilena</a></li>
     <li><a href="{{ collections['liga-espanola'].url | default: '/collections/liga-espanola' }}">🇪🇸 Española</a></li>
     <li><a href="{{ collections['premier-league'].url | default: '/collections/premier-league' }}">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier</a></li>
@@ -198,14 +196,18 @@
       <h2 class="sec-title">MÁS VENDIDOS</h2>
       <div class="sec-sub">Las camisetas favoritas de nuestros hinchas</div>
     </div>
-    <a href="{{ section.settings.mv_collection_url | default: routes.all_products_collection_url }}" class="lk-all">Ver todo →</a>
+    <a href="{{ mv_collection.url | default: routes.all_products_collection_url }}" class="lk-all">Ver todo →</a>
   </div>
   <div class="prod-grid">
-    {% for product in mv_products limit: 4 %}
+    {% for product in mv_products limit: 8 %}
       {% case forloop.index0 %}
         {% when 1 %}{% assign delay_val = '0.07s' %}
         {% when 2 %}{% assign delay_val = '0.14s' %}
         {% when 3 %}{% assign delay_val = '0.21s' %}
+        {% when 4 %}{% assign delay_val = '0.28s' %}
+        {% when 5 %}{% assign delay_val = '0.35s' %}
+        {% when 6 %}{% assign delay_val = '0.42s' %}
+        {% when 7 %}{% assign delay_val = '0.49s' %}
         {% else %}{% assign delay_val = '' %}
       {% endcase %}
       {% render 'baul-product-card',
@@ -269,7 +271,7 @@
     <a href="{{ wc_collection.url | default: section.settings.wc_collection_url }}" class="lk-all">Ver toda →</a>
   </div>
   <div class="prod-grid">
-    {% for product in wc_products limit: 4 %}
+    {% for product in wc_products limit: 10 %}
       {% case forloop.index0 %}
         {% when 1 %}{% assign delay_val = '0.07s' %}
         {% when 2 %}{% assign delay_val = '0.14s' %}
@@ -319,7 +321,7 @@
     <a href="{{ ninos_collection.url | default: section.settings.ninos_collection_url }}" class="lk-all">Ver toda →</a>
   </div>
   <div class="prod-grid">
-    {% for product in ninos_products limit: 4 %}
+    {% for product in ninos_products limit: 8 %}
       {% case forloop.index0 %}
         {% when 1 %}{% assign delay_val = '0.07s' %}
         {% when 2 %}{% assign delay_val = '0.14s' %}
@@ -344,7 +346,7 @@
     <a href="{{ fem_collection.url | default: section.settings.fem_collection_url }}" class="lk-all">Ver toda →</a>
   </div>
   <div class="prod-grid">
-    {% for product in fem_products limit: 4 %}
+    {% for product in fem_products limit: 8 %}
       {% case forloop.index0 %}
         {% when 1 %}{% assign delay_val = '0.07s' %}
         {% when 2 %}{% assign delay_val = '0.14s' %}
