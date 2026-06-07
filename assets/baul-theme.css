@@ -1244,16 +1244,11 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .n-logo img { width: 32px; height: 32px; }
     .n-logo-sec { max-height: 32px; }
     .n-search {
-      display: none; flex: 1 1 100%; order: 10;
-      max-width: none; margin: 0; padding: 0 0 8px;
+      display: flex; flex: 1 1 auto; min-width: 0;
+      max-width: 110px; margin: 0 4px; padding: 0;
     }
-    .n-search.is-open { display: flex; }
-    .n-search-toggle {
-      display: flex; align-items: center; justify-content: center;
-      width: 38px; height: 38px; margin-left: auto;
-      background: transparent; border: 1px solid var(--border);
-      border-radius: var(--radius-sm); color: #fff;
-      font-size: 18px; line-height: 1; cursor: pointer; flex-shrink: 0;
+    .n-search-in {
+      height: 30px; padding: 0 8px; font-size: 11px;
     }
     .n-hamburger {
       display: flex; align-items: center; justify-content: center;
