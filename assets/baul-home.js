@@ -147,3 +147,93 @@ if (navToggle && navLinks) {
     });
   });
 }
+
+const mainImg = document.getElementById('bp-main-img');
+if (mainImg) {
+  document.querySelectorAll('.bp-thumb').forEach((thumb) => {
+    thumb.addEventListener('click', () => {
+      const src = thumb.dataset.src;
+      if (!src) return;
+      mainImg.src = src;
+      document.querySelectorAll('.bp-thumb').forEach((t) => t.classList.remove('is-active'));
+      thumb.classList.add('is-active');
+    });
+  });
+}
+
+const productJsonEl = document.getElementById('baul-product-json');
+const productForm = document.getElementById('baul-product-form');
+if (productJsonEl && productForm) {
+  const productData = JSON.parse(productJsonEl.textContent);
+  const variantInput = document.getElementById('baul-variant-id');
+  const atcBtn = document.getElementById('bp-atc-btn');
+  const priceEl = document.getElementById('bp-price');
+  const compareEl = document.getElementById('bp-compare-price');
+  const discountEl = document.querySelector('.bp-discount-badge');
+  const optionCount = productData.options.length;
+  const selected = productData.variants[0]?.options?.slice() || [];
+
+  function formatMoney(cents) {
+    if (typeof Shopify !== 'undefined' && Shopify.formatMoney) {
+      return Shopify.formatMoney(cents, productData.moneyFormat);
+    }
+    return '$' + Math.round(cents / 100).toLocaleString('es-CL');
+  }
+
+  function findVariant() {
+    return productData.variants.find((v) =>
+      v.options.every((opt, i) => opt === selected[i])
+    );
+  }
+
+  function updateUI() {
+    const variant = findVariant();
+    if (!variant || !variantInput) return;
+    variantInput.value = variant.id;
+    if (priceEl) priceEl.textContent = formatMoney(variant.price);
+    if (compareEl) {
+      if (variant.compare_at_price > variant.price) {
+        compareEl.textContent = formatMoney(variant.compare_at_price);
+        compareEl.style.display = '';
+        const pct = Math.round(
+          ((variant.compare_at_price - variant.price) / variant.compare_at_price) * 100
+        );
+        if (discountEl) {
+          discountEl.textContent = '−' + pct + '%';
+          discountEl.style.display = '';
+        }
+      } else {
+        compareEl.style.display = 'none';
+        if (discountEl) discountEl.style.display = 'none';
+      }
+    }
+    if (atcBtn) {
+      atcBtn.disabled = !variant.available;
+      atcBtn.textContent = variant.available ? 'AGREGAR AL CARRO' : 'AGOTADO';
+    }
+  }
+
+  document.querySelectorAll('.bp-variant-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (btn.classList.contains('is-unavailable')) return;
+      const idx = parseInt(btn.dataset.optionIndex, 10);
+      selected[idx] = btn.dataset.value;
+      document
+        .querySelectorAll('.bp-variant-btn[data-option-index="' + idx + '"]')
+        .forEach((b) => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      updateUI();
+    });
+  });
+
+  const initialVariant = productData.variants.find((v) => v.id === parseInt(variantInput.value, 10));
+  if (initialVariant) {
+    initialVariant.options.forEach((val, i) => {
+      selected[i] = val;
+      document.querySelectorAll('.bp-variant-btn[data-option-index="' + i + '"]').forEach((b) => {
+        b.classList.toggle('is-active', b.dataset.value === val);
+      });
+    });
+  }
+  updateUI();
+}

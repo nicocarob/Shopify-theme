@@ -1,0 +1,250 @@
+{% comment %}
+  Página de producto La Cábala
+{% endcomment %}
+
+{% liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign compare_at_price = current_variant.compare_at_price
+  assign price = current_variant.price
+  assign product_collection = product.collections.first
+
+  assign wa_url = section.settings.whatsapp_url
+  if wa_url == blank
+    assign wa_url = 'https://wa.me/56951543485'
+  endif
+
+  if compare_at_price > price
+    assign discount_amount = compare_at_price | minus: price
+    assign discount_pct = discount_amount | times: 100 | divided_by: compare_at_price
+  else
+    assign discount_pct = 0
+  endif
+
+  assign vendor_label = product.vendor
+  if vendor_label == blank
+    assign vendor_label = product.type
+  endif
+%}
+
+{% render 'baul-header', section: section %}
+
+<section class="bp-page">
+  <div class="sec-bg-grid"></div>
+  <div class="bp-grid">
+    <div class="bp-gallery">
+      <div class="bp-main-img-wrap">
+        {% if product.featured_image %}
+          <img
+            id="bp-main-img"
+            class="bp-main-img"
+            src="{{ product.featured_image | image_url: width: 1200 }}"
+            alt="{{ product.featured_image.alt | default: product.title | escape }}"
+            width="800"
+            height="800"
+            loading="eager"
+          >
+        {% else %}
+          <div class="pc-bg">⚽</div>
+        {% endif %}
+      </div>
+      {% if product.images.size > 1 %}
+        <div class="bp-thumbs">
+          {% for image in product.images %}
+            <button
+              type="button"
+              class="bp-thumb{% if forloop.first %} is-active{% endif %}"
+              data-src="{{ image | image_url: width: 1200 }}"
+              aria-label="Ver imagen {{ forloop.index }}"
+            >
+              <img
+                src="{{ image | image_url: width: 200 }}"
+                alt="{{ image.alt | default: product.title | escape }}"
+                width="80"
+                height="80"
+                loading="lazy"
+              >
+            </button>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="bp-info">
+      <nav class="bp-breadcrumb" aria-label="Breadcrumb">
+        <a href="{{ routes.root_url }}">Inicio</a>
+        <span>/</span>
+        {% if product_collection %}
+          <a href="{{ product_collection.url }}">{{ product_collection.title }}</a>
+          <span>/</span>
+        {% endif %}
+        <span class="bp-breadcrumb-current">{{ product.title }}</span>
+      </nav>
+
+      <div class="bp-badges">
+        <span class="bp-badge-urgency">🔥 ÚLTIMAS UNIDADES</span>
+        <span class="bp-badge-ship">ENVÍO GRATIS</span>
+      </div>
+
+      <h1 class="bp-title">{{ product.title }}</h1>
+      {% if vendor_label != blank or product.type != blank %}
+        <p class="bp-subtitle">
+          {% if product.vendor != blank %}{{ product.vendor }}{% endif %}
+          {% if product.vendor != blank and product.type != blank %} · {% endif %}
+          {% if product.type != blank %}{{ product.type }}{% endif %}
+        </p>
+      {% endif %}
+
+      <div class="bp-price-row" id="bp-price-row">
+        {% if compare_at_price > price %}
+          <span class="p-old" id="bp-compare-price">{{ compare_at_price | money_without_trailing_zeros }}</span>
+          <span class="p-new" id="bp-price">{{ price | money_without_trailing_zeros }}</span>
+          <span class="bp-discount-badge">−{{ discount_pct }}%</span>
+        {% else %}
+          <span class="p-new" id="bp-price">{{ price | money_without_trailing_zeros }}</span>
+        {% endif %}
+      </div>
+
+      <div class="bp-stock">
+        <div class="urg-top">
+          <div class="ult-dia">
+            <div class="ult-dia-dot"></div>
+            <span class="ult-dia-txt">ÚLTIMO DÍA — QUEDAN POCAS UNIDADES</span>
+          </div>
+        </div>
+        <div class="urg-bar">
+          <div class="urg-fill" style="width:28%;background:#ef4444;"></div>
+          <div class="urg-clk" style="left:calc(28% - 5px)">⏱</div>
+        </div>
+      </div>
+
+      {% form 'product', product, id: 'baul-product-form', class: 'bp-form' %}
+        <input type="hidden" name="id" id="baul-variant-id" value="{{ current_variant.id }}">
+
+        {% unless product.has_only_default_variant %}
+          {% for option in product.options_with_values %}
+            <div class="bp-option">
+              <div class="bp-option-label">{{ option.name }}</div>
+              <div class="bp-variants" data-option-index="{{ forloop.index0 }}">
+                {% for value in option.values %}
+                  {% assign opt_available = false %}
+                  {% for variant in product.variants %}
+                    {% if option.position == 1 and variant.option1 == value and variant.available %}
+                      {% assign opt_available = true %}
+                    {% elsif option.position == 2 and variant.option2 == value and variant.available %}
+                      {% assign opt_available = true %}
+                    {% elsif option.position == 3 and variant.option3 == value and variant.available %}
+                      {% assign opt_available = true %}
+                    {% endif %}
+                  {% endfor %}
+                  <button
+                    type="button"
+                    class="bp-variant-btn{% if current_variant.options[forloop.parentloop.index0] == value %} is-active{% endif %}{% unless opt_available %} is-unavailable{% endunless %}"
+                    data-option-index="{{ forloop.parentloop.index0 }}"
+                    data-value="{{ value | escape }}"
+                  >
+                    {{ value }}
+                  </button>
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+        {% endunless %}
+
+        <button type="submit" name="add" class="bp-atc" id="bp-atc-btn"{% unless current_variant.available %} disabled{% endunless %}>
+          AGREGAR AL CARRO
+        </button>
+      {% endform %}
+
+      <div class="bp-trust">
+        <span>🚚 Envío gratis</span>
+        <span>🔒 Pago seguro</span>
+      </div>
+
+      {% if product.description != blank %}
+        <div class="bp-desc rte">
+          {{ product.description }}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% if product_collection != blank and product_collection.products_count > 1 %}
+  <section class="col-sec bp-related">
+    <div class="sec-bg-grid"></div>
+    <div class="sec-hdr rev">
+      <div>
+        <h2 class="sec-title">TAMBIÉN TE PUEDE GUSTAR</h2>
+      </div>
+    </div>
+    <div class="prod-grid">
+      {% assign related_count = 0 %}
+      {% for related in product_collection.products %}
+        {% if related.id != product.id and related_count < 4 %}
+          {% render 'baul-product-card', product: related %}
+          {% assign related_count = related_count | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
+
+<script type="application/json" id="baul-product-json">
+  {
+    "variants": {{ product.variants | json }},
+    "options": {{ product.options | json }},
+    "moneyFormat": {{ shop.money_format | json }}
+  }
+</script>
+
+<a class="wa" href="{{ wa_url }}" target="_blank" rel="noopener" aria-label="WhatsApp">💬</a>
+
+{% schema %}
+{
+  "name": "Baúl Producto",
+  "tag": "section",
+  "class": "baul-product-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Barra superior"
+    },
+    {
+      "type": "text",
+      "id": "countdown_text",
+      "label": "Texto countdown",
+      "default": "ENVÍO GRATIS POR TIEMPO LIMITADO — TERMINA EN:"
+    },
+    {
+      "type": "text",
+      "id": "promo_text",
+      "label": "Banner promo",
+      "default": "🎽 Lleva 3 camisetas y te llevas la 4ª a mitad de precio 🔥"
+    },
+    {
+      "type": "header",
+      "content": "Navbar"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_secundario",
+      "label": "Imagen junto al logo"
+    },
+    {
+      "type": "url",
+      "id": "whatsapp_url",
+      "label": "WhatsApp URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Baúl Producto"
+    }
+  ]
+}
+{% endschema %}

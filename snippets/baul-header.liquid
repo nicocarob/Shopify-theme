@@ -1,0 +1,70 @@
+{% comment %}
+  Header compartido: countdown, ticker, promo y navbar
+  Parámetro: section (settings del bloque padre)
+{% endcomment %}
+
+{% liquid
+  assign logo_img = section.settings.logo
+  if logo_img == blank
+    assign logo_src = 'baul-logo.png' | asset_url
+  else
+    assign logo_src = logo_img | image_url: width: 104
+  endif
+
+  assign countdown_text = section.settings.countdown_text | default: 'ENVÍO GRATIS POR TIEMPO LIMITADO — TERMINA EN:'
+  assign promo_text = section.settings.promo_text | default: '🎽 Lleva 3 camisetas y te llevas la 4ª a mitad de precio 🔥'
+%}
+
+<div id="cbar">
+  <div class="cbar-line cbar-line--text">
+    <span>🔥</span>
+    <span class="cbar-text">{{ countdown_text }}</span>
+  </div>
+  <div class="cbar-line cbar-line--timer">
+    <span class="ctimer" id="mainTimer">05:00:00</span>
+    <span class="cb-pill">📦 GRATIS A TODO CHILE</span>
+  </div>
+</div>
+
+<div class="ticker">
+  <div class="tick-tr">
+    {% for i in (1..2) %}
+      <span class="tick-it"><b>⚽</b>ENVÍO GRATIS A TODO CHILE</span>
+      <span class="tick-it"><b>🎽</b>PERSONALIZA TU CAMISETA</span>
+      <span class="tick-it"><b>⭐</b>MÁS DE 10 AÑOS DE EXPERIENCIA</span>
+      <span class="tick-it"><b>🔥</b>LLEVA 3, LA 4ª A MITAD DE PRECIO</span>
+      <span class="tick-it"><b>🏆</b>COPA DEL MUNDO 2026</span>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="promo-banner">
+  <p>{{ promo_text }}</p>
+</div>
+
+<nav>
+  <a class="n-logo" href="{{ routes.root_url }}">
+    <img src="{{ logo_src }}" alt="{{ shop.name | escape }}" width="52" height="52">
+    {% if section.settings.logo_secundario != blank %}
+      <img
+        class="n-logo-sec"
+        src="{{ section.settings.logo_secundario | image_url: height: 80 }}"
+        alt=""
+        width="40"
+        height="40"
+        loading="lazy"
+      >
+    {% endif %}
+  </a>
+  <button type="button" class="n-hamburger" id="n-hamburger" aria-expanded="false" aria-label="Abrir menú de navegación">☰</button>
+  <ul class="n-links" id="n-links">
+    <li><a href="{{ collections['liga-chilena'].url | default: '/collections/liga-chilena' }}">🇨🇱 Liga Chilena</a></li>
+    <li><a href="{{ collections['liga-espanola'].url | default: '/collections/liga-espanola' }}">🇪🇸 Española</a></li>
+    <li><a href="{{ collections['premier-league'].url | default: '/collections/premier-league' }}">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier</a></li>
+    <li><a href="{{ collections['selecciones'].url | default: '/collections/selecciones' }}">🌍 Selecciones</a></li>
+    <li><a href="{{ collections['retro'].url | default: '/collections/retro' }}">🕰️ Retro</a></li>
+    <li><a href="{{ collections['ninos'].url | default: '/collections/ninos' }}">👦 Niños</a></li>
+    <li><a href="{{ collections['mujer'].url | default: '/collections/mujer' }}">👩 Mujer</a></li>
+  </ul>
+  <a href="{{ routes.cart_url }}" class="btn-cart">🛒 Carrito ({{ cart.item_count }})</a>
+</nav>
