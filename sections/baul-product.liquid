@@ -150,6 +150,14 @@
     </div>
   </div>
 
+  {% if product.description != blank %}
+    <div class="bp-desc-wrap">
+      <div class="bp-desc rte">
+        {{ product.description }}
+      </div>
+    </div>
+  {% endif %}
+
   {% liquid
     assign related_collection = product.collections.first
     if related_collection
@@ -208,14 +216,6 @@
         {% endif %}
       </div>
     </section>
-  {% endif %}
-
-  {% if product.description != blank %}
-    <div class="bp-desc-wrap">
-      <div class="bp-desc rte">
-        {{ product.description }}
-      </div>
-    </div>
   {% endif %}
 </section>
 
