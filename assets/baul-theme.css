@@ -912,6 +912,156 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   }
   .bcart-checkout { margin-bottom: 0; }
 
+  /* ── Mundial 2026 collection page ── */
+  .bm-hero {
+    position: relative; overflow: hidden; background: var(--bg);
+    padding: 60px 20px 50px; text-align: center;
+  }
+  .bm-hero-radial {
+    position: absolute; inset: 0; pointer-events: none; z-index: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(255, 215, 0, 0.13) 0%, transparent 60%);
+  }
+  .bm-particles {
+    position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .bm-particle {
+    position: absolute; bottom: -10px; width: 4px; height: 4px;
+    border-radius: 50%; background: var(--accent-gold);
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+    opacity: 0; animation: bm-float 8s ease-in infinite;
+  }
+  .bm-particle--1 { left: 8%; animation-delay: 0s; animation-duration: 7s; }
+  .bm-particle--2 { left: 18%; animation-delay: 1.2s; animation-duration: 9s; width: 3px; height: 3px; }
+  .bm-particle--3 { left: 28%; animation-delay: 2.4s; animation-duration: 8s; }
+  .bm-particle--4 { left: 38%; animation-delay: 0.8s; animation-duration: 10s; width: 5px; height: 5px; }
+  .bm-particle--5 { left: 50%; animation-delay: 3s; animation-duration: 7.5s; }
+  .bm-particle--6 { left: 62%; animation-delay: 1.8s; animation-duration: 9.5s; width: 3px; height: 3px; }
+  .bm-particle--7 { left: 72%; animation-delay: 2.8s; animation-duration: 8.5s; }
+  .bm-particle--8 { left: 82%; animation-delay: 0.5s; animation-duration: 11s; width: 5px; height: 5px; }
+  .bm-particle--9 { left: 90%; animation-delay: 4s; animation-duration: 8s; }
+  .bm-particle--10 { left: 95%; animation-delay: 2s; animation-duration: 9s; width: 3px; height: 3px; }
+  @keyframes bm-float {
+    0% { transform: translateY(0) scale(0.4); opacity: 0; }
+    15% { opacity: 0.85; }
+    85% { opacity: 0.6; }
+    100% { transform: translateY(-110vh) scale(1); opacity: 0; }
+  }
+  .bm-hero-inner {
+    position: relative; z-index: 1; max-width: 720px; margin: 0 auto;
+  }
+  .bm-logo {
+    display: block; margin: 0 auto 20px; max-height: 140px; width: auto;
+    filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.4));
+    animation: bm-logo-float 4s ease-in-out infinite;
+  }
+  @keyframes bm-logo-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .bm-badge {
+    display: inline-block; margin-bottom: 14px;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 11px;
+    font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #000; background: var(--accent-gold);
+    padding: 5px 12px; border-radius: 100px;
+  }
+  .bm-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 8vw, 72px); line-height: 0.95;
+    color: #fff; letter-spacing: 0.04em; margin-bottom: 12px;
+  }
+  .bm-title em { font-style: normal; color: var(--accent-gold); }
+  .bm-subtitle {
+    font-family: 'Barlow Condensed', sans-serif; font-size: clamp(13px, 2vw, 16px);
+    font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 16px;
+  }
+  .bm-divider {
+    width: 60px; height: 2px; margin: 0 auto 16px;
+    background: var(--accent-gold); border-radius: 2px;
+  }
+  .bm-hint {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 14px;
+    font-weight: 600; letter-spacing: 0.08em; color: var(--text-soft);
+  }
+  .bm-groups {
+    position: relative; background: var(--bg);
+    padding: 20px 20px 60px; overflow: hidden;
+  }
+  .bm-groups-inner {
+    position: relative; z-index: 1; max-width: 1200px; margin: 0 auto;
+  }
+  .bm-filter-banner {
+    display: flex; align-items: center; justify-content: center;
+    flex-wrap: wrap; gap: 12px 16px;
+    background: var(--accent); color: #000;
+    padding: 14px 20px; border-radius: var(--radius-md);
+    margin-bottom: 24px; font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .bm-filter-flag { font-size: 24px; line-height: 1; }
+  .bm-filter-name { font-size: 15px; }
+  .bm-filter-clear {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 12px;
+    font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    background: rgba(0, 0, 0, 0.15); color: #000; border: none;
+    border-radius: var(--radius-sm); padding: 8px 14px; cursor: pointer;
+    transition: background 0.2s;
+  }
+  .bm-filter-clear:hover { background: rgba(0, 0, 0, 0.28); }
+  .bm-group-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  }
+  .bm-group-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius-md); overflow: hidden;
+    opacity: 0; transform: translateY(20px);
+    animation: bm-card-in 0.65s ease forwards;
+    animation-delay: var(--bm-delay, 0ms);
+  }
+  @keyframes bm-card-in {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .bm-group-hdr {
+    font-family: 'Bebas Neue', sans-serif; font-size: 20px;
+    letter-spacing: 0.1em; text-align: center; color: #000;
+    background: linear-gradient(90deg, var(--accent-gold), #fff3a0);
+    padding: 10px 12px;
+  }
+  .bm-group-body { padding: 8px; display: flex; flex-direction: column; gap: 4px; }
+  .bm-country {
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    padding: 10px 12px; border: none; border-radius: var(--radius-sm);
+    background: transparent; color: #fff; cursor: pointer; text-align: left;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 14px;
+    font-weight: 600; letter-spacing: 0.04em;
+    transition: transform 0.2s, background 0.2s;
+  }
+  .bm-country:hover,
+  .bm-country.is-active {
+    transform: translateX(3px);
+    background: rgba(255, 215, 0, 0.1);
+  }
+  .bm-flag {
+    width: 36px; height: 36px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; background: var(--bg-img);
+    border: 1px solid var(--border); border-radius: 50%;
+  }
+  .bm-country-name { flex: 1; }
+  .bm-arrow { color: var(--text-muted); font-size: 16px; transition: color 0.2s; }
+  .bm-country:hover .bm-arrow { color: var(--accent-gold); }
+  .bm-products { padding-top: 20px; }
+  .bm-products-inner {
+    position: relative; z-index: 1; max-width: 1200px; margin: 0 auto;
+  }
+  .bm-product-item[hidden] { display: none !important; }
+  .bm-empty {
+    text-align: center; font-family: 'Barlow Condensed', sans-serif;
+    font-size: 15px; color: var(--text-muted); margin-top: 20px;
+  }
+  .bm-products-actions { text-align: center; margin-top: 28px; }
+
   /* ── Search / Liga section (light variant like busca-por-liga) ── */
   .srch-sec {
     padding: 60px 20px; background: var(--bg-light);
@@ -1107,6 +1257,11 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .bcart-summary { position: static; }
     .bcart-item { grid-template-columns: 80px 1fr; gap: 12px; padding: 12px; }
     .bcart-item-name { font-size: 18px; }
+    .bm-hero { padding: 40px 16px 36px; }
+    .bm-logo { max-height: 100px; }
+    .bm-group-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .bm-groups { padding: 16px 16px 40px; }
+    .bm-filter-banner { padding: 12px 14px; }
     .bp-grid { grid-template-columns: 1fr; gap: 24px; }
     .bp-title { font-size: clamp(32px, 8vw, 44px); }
     .bp-price-row .p-new { font-size: 28px; }

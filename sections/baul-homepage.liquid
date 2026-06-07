@@ -57,6 +57,11 @@
   if wa_url == blank
     assign wa_url = 'https://wa.me/56951543485'
   endif
+
+  assign wc_url = wc_collection.url | default: section.settings.wc_collection_url
+  if wc_url == blank
+    assign wc_url = '/collections/copa-del-mundo'
+  endif
 %}
 
 {% render 'baul-header', section: section %}
@@ -71,7 +76,7 @@
       <div class="hero-sub-line">{{ section.settings.hero_subtitle }}</div>
       <p class="hero-desc">{{ section.settings.hero_description }}</p>
       <div class="hero-btns">
-        <a href="#colsec" class="btn-gold">{{ section.settings.hero_btn_primary }}</a>
+        <a href="{{ wc_url }}" class="btn-gold">{{ section.settings.hero_btn_primary }}</a>
         <a href="#buscar" class="btn-ghost">{{ section.settings.hero_btn_secondary }}</a>
       </div>
       <div class="hero-flags">
@@ -216,7 +221,7 @@
       <h2 class="sec-title">FIFA WORLD CUP 2026</h2>
       <div class="sec-sub">Las camisetas del evento más grande del fútbol</div>
     </div>
-    <a href="{{ wc_collection.url | default: section.settings.wc_collection_url }}" class="lk-all">Ver toda →</a>
+    <a href="{{ wc_url }}" class="lk-all">Ver toda la colección →</a>
   </div>
   <div class="prod-grid">
     {% for product in wc_products limit: 10 %}
@@ -489,7 +494,8 @@
     {
       "type": "url",
       "id": "wc_collection_url",
-      "label": "URL Ver toda — Copa del Mundo"
+      "label": "URL Ver toda — Copa del Mundo",
+      "default": "/collections/copa-del-mundo"
     },
     {
       "type": "collection",
