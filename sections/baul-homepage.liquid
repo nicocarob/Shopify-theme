@@ -38,7 +38,7 @@
     assign ninos_collection = collections.all
   endif
 
-  assign femenina_collection = section.settings.femenina_collection
+  assign femenina_collection = section.settings.fem_collection
   if femenina_collection == blank or femenina_collection.products_count == 0
     assign femenina_collection = collections.all
   endif
@@ -298,7 +298,7 @@
       <h2 class="sec-title">COLECCIÓN FEMENINA</h2>
       <div class="sec-sub">Corte y talla femenina, mismo estilo premium</div>
     </div>
-    <a href="{{ femenina_collection.url | default: section.settings.femenina_collection_url }}" class="lk-all">Ver toda →</a>
+    <a href="{{ femenina_collection.url | default: section.settings.fem_collection_url }}" class="lk-all">Ver toda →</a>
   </div>
   <div class="prod-grid">
     {% for product in femenina_collection.products limit: 8 %}
@@ -517,12 +517,12 @@
     },
     {
       "type": "collection",
-      "id": "femenina_collection",
+      "id": "fem_collection",
       "label": "Colección Femenina"
     },
     {
       "type": "url",
-      "id": "femenina_collection_url",
+      "id": "fem_collection_url",
       "label": "URL Ver toda — Femenina"
     },
     {
