@@ -1,0 +1,23 @@
+{% comment %}
+  Página 404 — La Cábala
+{% endcomment %}
+
+{% render 'baul-header' %}
+
+<section class="b404-page">
+  <div class="sec-bg-grid"></div>
+  <div class="b404-content rev">
+    <h1 class="b404-title">404</h1>
+    <p class="b404-subtitle">Página no encontrada</p>
+    <a href="{{ routes.root_url }}" class="btn-green b404-btn">Volver al inicio</a>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Baúl 404",
+  "tag": "section",
+  "class": "baul-404-section",
+  "settings": []
+}
+{% endschema %}

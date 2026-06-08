@@ -310,60 +310,6 @@
   </div>
 </section>
 
-<footer>
-  <div class="ft-grid">
-    <div>
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-        <img src="{{ logo_src }}" style="width:44px;height:44px;object-fit:contain;" alt="{{ shop.name | escape }}" width="44" height="44">
-        <span style="font-family:'Bebas Neue',sans-serif;font-size:26px;color:#fff;letter-spacing:.05em;">LA CÁBALA</span>
-      </div>
-      <p class="ft-desc">{{ section.settings.footer_description }}</p>
-      <div class="ft-soc">
-        {% if section.settings.instagram_url != blank %}
-          <a class="ft-s" href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener">📸</a>
-        {% endif %}
-        <a class="ft-s" href="{{ wa_url }}" target="_blank" rel="noopener">💬</a>
-      </div>
-    </div>
-    <div>
-      <div class="ft-col-t">Ligas</div>
-      <ul class="ft-links">
-        <li><a href="{{ collections['liga-chilena'].url | default: '#' }}">Liga Chilena</a></li>
-        <li><a href="{{ collections['liga-espanola'].url | default: '#' }}">Liga Española</a></li>
-        <li><a href="{{ collections['premier-league'].url | default: '#' }}">Premier League</a></li>
-        <li><a href="{{ collections['serie-a'].url | default: '#' }}">Serie A</a></li>
-        <li><a href="{{ collections['selecciones'].url | default: '#' }}">Selecciones</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="ft-col-t">Colecciones</div>
-      <ul class="ft-links">
-        <li><a href="#colsec">Copa del Mundo 2026</a></li>
-        <li><a href="{{ collections['retro'].url | default: '#' }}">Retro</a></li>
-        <li><a href="{{ collections['ninos'].url | default: '#' }}">Niños</a></li>
-        <li><a href="{{ collections['mujer'].url | default: '#' }}">Femenino</a></li>
-        <li><a href="{{ collections['liquidacion'].url | default: '#' }}">Liquidación</a></li>
-      </ul>
-    </div>
-    <div>
-      <div class="ft-col-t">Ayuda</div>
-      <ul class="ft-links">
-        <li><a href="{{ pages['politica-de-envios'].url | default: '/pages/politica-de-envios' }}">Política de envíos</a></li>
-        <li><a href="{{ pages['devoluciones'].url | default: '/pages/devoluciones' }}">Devoluciones</a></li>
-        <li><a href="{{ pages['guia-de-tallas'].url | default: '/pages/guia-de-tallas' }}">Guía de tallas</a></li>
-        <li><a href="{{ pages['personalizacion'].url | default: '/pages/personalizacion' }}">Personalización</a></li>
-        <li><a href="{{ wa_url }}" target="_blank" rel="noopener">WhatsApp</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="ft-bot">
-    <span class="ft-copy">© {{ 'now' | date: '%Y' }} La Cábala — Todos los derechos reservados</span>
-    <span class="ft-copy">Hecho con ⚽ en Chile</span>
-  </div>
-</footer>
-
-<a class="wa" href="{{ wa_url }}" target="_blank" rel="noopener" aria-label="WhatsApp">💬</a>
-
 {% schema %}
 {
   "name": "La Cábala Homepage",

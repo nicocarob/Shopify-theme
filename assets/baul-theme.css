@@ -1223,10 +1223,70 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   .ft-links { list-style: none; display: flex; flex-direction: column; gap: 9px; }
   .ft-links a { font-size: 13px; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
   .ft-links a:hover { color: var(--accent); }
-  .ft-bot { border-top: 1px solid var(--border); padding-top: 22px; display: flex; align-items: center; justify-content: space-between; }
+  .ft-bot { border-top: 1px solid var(--border); padding-top: 22px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .ft-copy-row { display: flex; align-items: center; gap: 10px; }
+  .ft-copy-logo { width: 24px; height: 24px; object-fit: contain; flex-shrink: 0; }
   .ft-copy {
     font-family: 'Barlow Condensed', sans-serif; font-size: 11px;
     letter-spacing: 0.1em; color: var(--text-muted); text-transform: uppercase;
+  }
+
+  /* ── 404 page ── */
+  .b404-page {
+    background: var(--bg);
+    min-height: 70vh;
+    padding: 80px 20px 100px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .b404-content {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    max-width: 560px;
+  }
+  .b404-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(120px, 20vw, 200px);
+    color: var(--accent-gold);
+    line-height: 1;
+    margin-bottom: 16px;
+    letter-spacing: 0.04em;
+  }
+  .b404-subtitle {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-soft);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+  .btn-green {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #ffffff;
+    background: #00c851;
+    border: 1px solid #00c851;
+    border-radius: var(--radius-sm);
+    padding: 14px 28px;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  .btn-green:hover {
+    background: #00a844;
+    border-color: #00a844;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(0, 200, 81, 0.35);
   }
   
   /* WhatsApp floating */
