@@ -94,20 +94,35 @@ const BAULRULETA = (() => {
     return idx === -1 ? 0 : TOP_TEAMS.length - idx;
   }
 
+  function getMatchDateKey(match) {
+    return match.utcDate ? match.utcDate.split('T')[0] : '';
+  }
+
   function selectBestMatches(allMatches) {
-    const now = Date.now();
-    const upcoming = allMatches
-      .filter((m) => m.utcDate && new Date(m.utcDate).getTime() >= now - 3600000)
-      .sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate));
-    const pool = upcoming.length ? upcoming : [...allMatches].sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate));
-    return pool
-      .sort((a, b) => {
-        const scoreA = scoreTeam(a.homeTeam.name) + scoreTeam(a.awayTeam.name);
-        const scoreB = scoreTeam(b.homeTeam.name) + scoreTeam(b.awayTeam.name);
-        if (scoreB !== scoreA) return scoreB - scoreA;
-        return new Date(a.utcDate) - new Date(b.utcDate);
-      })
-      .slice(0, 1)
+    const today = getToday();
+    const byDate = {};
+
+    allMatches.forEach((m) => {
+      const dateKey = getMatchDateKey(m);
+      if (!dateKey || dateKey < today) return;
+      if (!byDate[dateKey]) byDate[dateKey] = [];
+      byDate[dateKey].push(m);
+    });
+
+    const dates = Object.keys(byDate).sort();
+    if (!dates.length) return [];
+
+    const nearestDate = dates[0];
+    const dayMatches = byDate[nearestDate];
+
+    const best = [...dayMatches].sort((a, b) => {
+      const scoreA = scoreTeam(a.homeTeam.name) + scoreTeam(a.awayTeam.name);
+      const scoreB = scoreTeam(b.homeTeam.name) + scoreTeam(b.awayTeam.name);
+      if (scoreB !== scoreA) return scoreB - scoreA;
+      return new Date(a.utcDate) - new Date(b.utcDate);
+    })[0];
+
+    return best ? [best] : [];
   }
 
   function getFlag(teamName) {
