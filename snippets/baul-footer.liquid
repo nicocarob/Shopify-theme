@@ -5,14 +5,13 @@
 {% liquid
   assign footer_description = 'Más de 10 años equipando hinchas en todo Chile. La mejor calidad, envío gratis y atención personalizada.'
   assign wa_url = 'https://wa.me/56951543485'
-  assign logo_src = 'baul-logo.png' | asset_url
 %}
 
 <footer>
   <div class="ft-grid">
     <div>
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-        <img src="{{ logo_src }}" style="width:44px;height:44px;object-fit:contain;" alt="{{ shop.name | escape }}" width="44" height="44">
+        <img src="https://www.lacabala.cl/cdn/shop/files/ANUNCIOS_5.png" width="44" height="44" style="object-fit:contain;" alt="{{ shop.name | escape }}">
         <span style="font-family:'Bebas Neue',sans-serif;font-size:26px;color:#fff;letter-spacing:.05em;">LA CÁBALA</span>
       </div>
       <p class="ft-desc">{{ footer_description }}</p>
@@ -55,10 +54,11 @@
     <div class="ft-copy-row">
       <img
         class="ft-copy-logo"
-        src="{{ logo_src }}"
+        src="https://www.lacabala.cl/cdn/shop/files/ANUNCIOS_5.png"
         alt="{{ shop.name | escape }}"
         width="24"
         height="24"
+        style="object-fit:contain;"
         loading="lazy"
       >
       <span class="ft-copy">© 2026 {{ shop.name }} — Todos los derechos reservados</span>
