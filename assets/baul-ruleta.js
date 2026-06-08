@@ -107,8 +107,7 @@ const BAULRULETA = (() => {
         if (scoreB !== scoreA) return scoreB - scoreA;
         return new Date(a.utcDate) - new Date(b.utcDate);
       })
-      .slice(0, 3)
-      .sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate));
+      .slice(0, 1)
   }
 
   function getFlag(teamName) {
