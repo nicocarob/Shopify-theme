@@ -4,13 +4,11 @@
 {% endcomment %}
 
 {% liquid
-  assign logo_img = blank
   assign footer_description = 'Más de 10 años equipando hinchas en todo Chile. La mejor calidad, envío gratis y atención personalizada.'
   assign instagram_url = blank
   assign wa_url = 'https://wa.me/56951543485'
 
   if section != blank
-    assign logo_img = section.settings.logo
     if section.settings.footer_description != blank
       assign footer_description = section.settings.footer_description
     endif
@@ -19,15 +17,10 @@
       assign wa_url = section.settings.whatsapp_url
     endif
   endif
-
-  if logo_img == blank
-    assign logo_src = 'baul-logo.png' | asset_url
-    assign copyright_logo_src = logo_src
-  else
-    assign logo_src = logo_img | image_url: width: 44
-    assign copyright_logo_src = logo_img | image_url: width: 48
-  endif
 %}
+
+{% capture logo_src %}{% render 'baul-logo-url', section: section, width: 104 %}{% endcapture %}
+{% capture copyright_logo_src %}{% render 'baul-logo-url', section: section, width: 104 %}{% endcapture %}
 
 <footer>
   <div class="ft-grid">

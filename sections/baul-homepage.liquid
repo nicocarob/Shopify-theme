@@ -4,13 +4,6 @@
 {% endcomment %}
 
 {% liquid
-  assign logo_img = section.settings.logo
-  if logo_img == blank
-    assign logo_src = 'baul-logo.png' | asset_url
-  else
-    assign logo_src = logo_img | image_url: width: 104
-  endif
-
   assign trophy_img = section.settings.trophy_image
   if trophy_img == blank
     assign trophy_src = 'baul-trophy.png' | asset_url

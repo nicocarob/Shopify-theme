@@ -2,7 +2,7 @@
   Página 404 — La Cábala
 {% endcomment %}
 
-{% render 'baul-header' %}
+{% render 'baul-header', section: section %}
 
 <section class="b404-page">
   <div class="sec-bg-grid"></div>
@@ -13,11 +13,44 @@
   </div>
 </section>
 
+{% render 'baul-footer', section: section %}
+
 {% schema %}
 {
   "name": "Baúl 404",
   "tag": "section",
   "class": "baul-404-section",
-  "settings": []
+  "settings": [
+    {
+      "type": "header",
+      "content": "Barra superior"
+    },
+    {
+      "type": "text",
+      "id": "countdown_text",
+      "label": "Texto countdown",
+      "default": "ENVÍO GRATIS POR TIEMPO LIMITADO — TERMINA EN:"
+    },
+    {
+      "type": "text",
+      "id": "promo_text",
+      "label": "Banner promo",
+      "default": "🎽 Lleva 3 camisetas y te llevas la 4ª a mitad de precio 🔥"
+    },
+    {
+      "type": "header",
+      "content": "Navbar"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_secundario",
+      "label": "Imagen junto al logo"
+    }
+  ]
 }
 {% endschema %}

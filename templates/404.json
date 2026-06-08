@@ -3,7 +3,12 @@
   "sections": {
     "main": {
       "type": "baul-404",
-      "settings": {}
+      "settings": {
+        "countdown_text": "ENVÍO GRATIS POR TIEMPO LIMITADO — TERMINA EN:",
+        "promo_text": "🎽 Lleva 3 camisetas y te llevas la 4ª a mitad de precio 🔥",
+        "logo_secundario": "shopify://shop_images/ANUNCIOS_5_343e85a0-0c4d-40df-b716-03f16b3bd7b9.png",
+        "logo": "shopify://shop_images/ANUNCIOS_5.png"
+      }
     }
   },
   "order": ["main"]

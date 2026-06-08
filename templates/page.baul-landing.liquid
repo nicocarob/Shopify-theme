@@ -3,6 +3,8 @@
   Template: page.baul-landing.liquid
 {% endcomment %}
 
+{% capture logo_src %}{% render 'baul-logo-url', section: blank, width: 104 %}{% endcapture %}
+
 {{ 'baul-theme.css' | asset_url | stylesheet_tag }}
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,8 +39,8 @@
 </div>
 
 <nav>
-  <a class="n-logo" href="#">
-    <img src=""https://placehold.co/260x460/161616/00c851?text=Foto+Cliente"" alt="Baúl del Capitán">
+  <a class="n-logo" href="{{ routes.root_url }}">
+    <img src="{{ logo_src }}" alt="{{ shop.name | escape }}" width="52" height="52">
     <span class="n-brand">BAÚL DEL CAPITÁN</span>
   </a>
   <ul class="n-links">
@@ -285,7 +287,7 @@
   <div class="ft-grid">
     <div>
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-        <img src=""https://placehold.co/260x460/161616/00c851?text=Foto+Cliente"" style="width:44px;height:44px;object-fit:contain;" alt="logo">
+        <img src="{{ logo_src }}" style="width:44px;height:44px;object-fit:contain;" alt="{{ shop.name | escape }}" width="44" height="44">
         <span style="font-family:'Bebas Neue',sans-serif;font-size:26px;color:#fff;letter-spacing:.05em;">BAÚL DEL CAPITÁN</span>
       </div>
       <p class="ft-desc">Más de 10 años equipando hinchas en todo Chile. La mejor calidad, envío gratis y atención personalizada.</p>

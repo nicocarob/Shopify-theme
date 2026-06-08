@@ -1,0 +1,13 @@
+{% comment %}
+  URL del logo La Cábala
+  Parámetros: section (opcional), width (opcional, default 104)
+{% endcomment %}
+{%- liquid
+  assign logo_width = width | default: 104
+  if section != blank and section.settings.logo != blank
+    assign baul_logo_url = section.settings.logo | image_url: width: logo_width
+  else
+    assign baul_logo_url = 'baul-logo.png' | asset_url
+  endif
+-%}
+{{- baul_logo_url -}}

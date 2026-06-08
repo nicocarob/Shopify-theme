@@ -42,10 +42,6 @@
       {{ content_for_layout }}
     </main>
 
-    {% unless template.name == 'index' %}
-      {% render 'baul-footer' %}
-    {% endunless %}
-
     <script src="{{ 'baul-home.js' | asset_url }}" defer></script>
     {% render 'baul-ruleta' %}
   </body>
