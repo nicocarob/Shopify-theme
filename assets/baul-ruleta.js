@@ -40,25 +40,14 @@ const BAULRULETA = (() => {
   async function fetchMatches() {
     try {
       const today = getToday();
+      const in30 = new Date();
+      in30.setDate(in30.getDate() + 30);
       const res = await fetch(
-        `https://api.football-data.org/v4/competitions/WC/matches?dateFrom=${today}&dateTo=${today}`,
+        `https://api.football-data.org/v4/competitions/WC/matches?dateFrom=${today}&dateTo=${in30.toISOString().split('T')[0]}&status=SCHEDULED`,
         { headers: { 'X-Auth-Token': FOOTBALL_API_KEY } }
       );
       const data = await res.json();
-      if (data.matches && data.matches.length > 0) {
-        return data.matches;
-      }
-      // Si no hay partidos hoy, buscar los próximos 3 días
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      const in3days = new Date();
-      in3days.setDate(in3days.getDate() + 3);
-      const res2 = await fetch(
-        `https://api.football-data.org/v4/competitions/WC/matches?dateFrom=${tomorrow.toISOString().split('T')[0]}&dateTo=${in3days.toISOString().split('T')[0]}`,
-        { headers: { 'X-Auth-Token': FOOTBALL_API_KEY } }
-      );
-      const data2 = await res2.json();
-      return data2.matches || [];
+      return data.matches || [];
     } catch(e) {
       return [];
     }
