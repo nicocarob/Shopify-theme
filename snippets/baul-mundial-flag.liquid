@@ -1,0 +1,18 @@
+{% comment %}
+  Bandera país — Copa del Mundo
+  Parámetros: name, tag, flag
+{% endcomment %}
+<li class="bm-flag-item">
+  <button
+    type="button"
+    class="bm-flag-btn"
+    data-name="{{ name }}"
+    data-tag="{{ tag }}"
+    data-flag="{{ flag }}"
+  >
+    <span class="bm-flag-circle">
+      <span class="bm-flag-emoji">{{ flag }}</span>
+    </span>
+    <span class="bm-flag-label">{{ name }}</span>
+  </button>
+</li>

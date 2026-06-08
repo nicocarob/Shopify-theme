@@ -1,10 +1,10 @@
 {% comment %}
-  Copa del Mundo 2026 — Colección personalizada con grupos y filtro por país
+  Copa del Mundo 2026 — Selección por continente con buscador
 {% endcomment %}
 
 {% liquid
   assign hero_title = section.settings.hero_title | default: 'FIFA WORLD CUP 2026'
-  assign hero_subtitle = section.settings.hero_subtitle | default: 'USA · CANADÁ · MÉXICO — 48 SELECCIONES · 12 GRUPOS'
+  assign hero_subtitle = section.settings.hero_subtitle | default: 'USA · CANADÁ · MÉXICO — 48 SELECCIONES'
   assign mundial_logo = section.settings.mundial_logo
 %}
 
@@ -39,159 +39,106 @@
     </h1>
     <p class="bm-subtitle">{{ hero_subtitle }}</p>
     <div class="bm-divider"></div>
-    <p class="bm-hint">Selecciona tu selección para ver la colección</p>
+    <p class="bm-hint">Busca tu selección o elige por continente</p>
   </div>
 </section>
 
-<section class="bm-groups" id="bm-groups">
+<section class="bm-world" id="bm-mundial">
   <div class="sec-bg-grid"></div>
-  <div class="bm-groups-inner">
-    <div class="bm-filter-banner" id="bm-filter-banner" hidden>
-      <span class="bm-filter-flag" id="bm-filter-flag"></span>
-      <span class="bm-filter-name" id="bm-filter-name"></span>
-      <button type="button" class="bm-filter-clear" id="bm-filter-clear">Ver todos los grupos</button>
+  <div class="bm-world-inner">
+    <div class="bm-selected-banner" id="bm-selected-banner" hidden>
+      <span class="bm-selected-flag" id="bm-selected-flag"></span>
+      <span class="bm-selected-text">Buscando camisetas de <strong id="bm-selected-name"></strong>…</span>
     </div>
 
-    <div class="bm-group-grid" id="bm-group-grid">
-      <div class="bm-group-card" style="--bm-delay: 0ms">
-        <div class="bm-group-hdr">GRUPO A</div>
-        <div class="bm-group-body">
-          <button type="button" class="bm-country" data-tag="mexico" data-name="México" data-flag="🇲🇽"><span class="bm-flag">🇲🇽</span><span class="bm-country-name">México</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="sudafrica" data-name="Sudáfrica" data-flag="🇿🇦"><span class="bm-flag">🇿🇦</span><span class="bm-country-name">Sudáfrica</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="corea-del-sur" data-name="Corea del Sur" data-flag="🇰🇷"><span class="bm-flag">🇰🇷</span><span class="bm-country-name">Corea del Sur</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="chequia" data-name="Chequia" data-flag="🇨🇿"><span class="bm-flag">🇨🇿</span><span class="bm-country-name">Chequia</span><span class="bm-arrow">→</span></button>
-        </div>
+    <div class="bm-search-wrap">
+      <label class="bm-search-label" for="bm-search">Buscar selección</label>
+      <div class="bm-search-field">
+        <span class="bm-search-icon" aria-hidden="true">🔍</span>
+        <input
+          type="search"
+          id="bm-search"
+          class="bm-search-input"
+          placeholder="Ej: Argentina, España, Japón…"
+          autocomplete="off"
+          aria-label="Buscar selección por país"
+        >
       </div>
-      <div class="bm-group-card" style="--bm-delay: 60ms">
-        <div class="bm-group-hdr">GRUPO B</div>
-        <div class="bm-group-body">
-          <button type="button" class="bm-country" data-tag="canada" data-name="Canadá" data-flag="🇨🇦"><span class="bm-flag">🇨🇦</span><span class="bm-country-name">Canadá</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="bosnia" data-name="Bosnia" data-flag="🇧🇦"><span class="bm-flag">🇧🇦</span><span class="bm-country-name">Bosnia</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="qatar" data-name="Qatar" data-flag="🇶🇦"><span class="bm-flag">🇶🇦</span><span class="bm-country-name">Qatar</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="suiza" data-name="Suiza" data-flag="🇨🇭"><span class="bm-flag">🇨🇭</span><span class="bm-country-name">Suiza</span><span class="bm-arrow">→</span></button>
-        </div>
-      </div>
-      <div class="bm-group-card" style="--bm-delay: 120ms">
-        <div class="bm-group-hdr">GRUPO C</div>
-        <div class="bm-group-body">
-          <button type="button" class="bm-country" data-tag="brasil" data-name="Brasil" data-flag="🇧🇷"><span class="bm-flag">🇧🇷</span><span class="bm-country-name">Brasil</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="marruecos" data-name="Marruecos" data-flag="🇲🇦"><span class="bm-flag">🇲🇦</span><span class="bm-country-name">Marruecos</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="haiti" data-name="Haití" data-flag="🇭🇹"><span class="bm-flag">🇭🇹</span><span class="bm-country-name">Haití</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="escocia" data-name="Escocia" data-flag="🏴󠁧󠁢󠁳󠁣󠁴󠁿"><span class="bm-flag">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span><span class="bm-country-name">Escocia</span><span class="bm-arrow">→</span></button>
-        </div>
-      </div>
-      <div class="bm-group-card" style="--bm-delay: 180ms">
-        <div class="bm-group-hdr">GRUPO D</div>
-        <div class="bm-group-body">
-          <button type="button" class="bm-country" data-tag="usa" data-name="USA" data-flag="🇺🇸"><span class="bm-flag">🇺🇸</span><span class="bm-country-name">USA</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="paraguay" data-name="Paraguay" data-flag="🇵🇾"><span class="bm-flag">🇵🇾</span><span class="bm-country-name">Paraguay</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="australia" data-name="Australia" data-flag="🇦🇺"><span class="bm-flag">🇦🇺</span><span class="bm-country-name">Australia</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="turquia" data-name="Turquía" data-flag="🇹🇷"><span class="bm-flag">🇹🇷</span><span class="bm-country-name">Turquía</span><span class="bm-arrow">→</span></button>
-        </div>
-      </div>
-      <div class="bm-group-card" style="--bm-delay: 240ms">
-        <div class="bm-group-hdr">GRUPO E</div>
-        <div class="bm-group-body">
-          <button type="button" class="bm-country" data-tag="alemania" data-name="Alemania" data-flag="🇩🇪"><span class="bm-flag">🇩🇪</span><span class="bm-country-name">Alemania</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="curazao" data-name="Curazao" data-flag="🇨🇼"><span class="bm-flag">🇨🇼</span><span class="bm-country-name">Curazao</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="costa-de-marfil" data-name="Costa de Marfil" data-flag="🇨🇮"><span class="bm-flag">🇨🇮</span><span class="bm-country-name">Costa de Marfil</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="ecuador" data-name="Ecuador" data-flag="🇪🇨"><span class="bm-flag">🇪🇨</span><span class="bm-country-name">Ecuador</span><span class="bm-arrow">→</span></button>
-        </div>
-      </div>
-      <div class="bm-group-card" style="--bm-delay: 300ms">
-        <div class="bm-group-hdr">GRUPO F</div>
-        <div class="bm-group-body">
-          <button type="button" class="bm-country" data-tag="paises-bajos" data-name="Países Bajos" data-flag="🇳🇱"><span class="bm-flag">🇳🇱</span><span class="bm-country-name">Países Bajos</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="japon" data-name="Japón" data-flag="🇯🇵"><span class="bm-flag">🇯🇵</span><span class="bm-country-name">Japón</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="suecia" data-name="Suecia" data-flag="🇸🇪"><span class="bm-flag">🇸🇪</span><span class="bm-country-name">Suecia</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="tunez" data-name="Túnez" data-flag="🇹🇳"><span class="bm-flag">🇹🇳</span><span class="bm-country-name">Túnez</span><span class="bm-arrow">→</span></button>
-        </div>
-      </div>
-      <div class="bm-group-card" style="--bm-delay: 360ms">
-        <div class="bm-group-hdr">GRUPO G</div>
-        <div class="bm-group-body">
-          <button type="button" class="bm-country" data-tag="belgica" data-name="Bélgica" data-flag="🇧🇪"><span class="bm-flag">🇧🇪</span><span class="bm-country-name">Bélgica</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="egipto" data-name="Egipto" data-flag="🇪🇬"><span class="bm-flag">🇪🇬</span><span class="bm-country-name">Egipto</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="iran" data-name="Irán" data-flag="🇮🇷"><span class="bm-flag">🇮🇷</span><span class="bm-country-name">Irán</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="nueva-zelanda" data-name="Nueva Zelanda" data-flag="🇳🇿"><span class="bm-flag">🇳🇿</span><span class="bm-country-name">Nueva Zelanda</span><span class="bm-arrow">→</span></button>
-        </div>
-      </div>
-      <div class="bm-group-card" style="--bm-delay: 420ms">
-        <div class="bm-group-hdr">GRUPO H</div>
-        <div class="bm-group-body">
-          <button type="button" class="bm-country" data-tag="espana" data-name="España" data-flag="🇪🇸"><span class="bm-flag">🇪🇸</span><span class="bm-country-name">España</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="cabo-verde" data-name="Cabo Verde" data-flag="🇨🇻"><span class="bm-flag">🇨🇻</span><span class="bm-country-name">Cabo Verde</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="arabia-saudi" data-name="Arabia Saudí" data-flag="🇸🇦"><span class="bm-flag">🇸🇦</span><span class="bm-country-name">Arabia Saudí</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="uruguay" data-name="Uruguay" data-flag="🇺🇾"><span class="bm-flag">🇺🇾</span><span class="bm-country-name">Uruguay</span><span class="bm-arrow">→</span></button>
-        </div>
-      </div>
-      <div class="bm-group-card" style="--bm-delay: 480ms">
-        <div class="bm-group-hdr">GRUPO I</div>
-        <div class="bm-group-body">
-          <button type="button" class="bm-country" data-tag="francia" data-name="Francia" data-flag="🇫🇷"><span class="bm-flag">🇫🇷</span><span class="bm-country-name">Francia</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="senegal" data-name="Senegal" data-flag="🇸🇳"><span class="bm-flag">🇸🇳</span><span class="bm-country-name">Senegal</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="irak" data-name="Irak" data-flag="🇮🇶"><span class="bm-flag">🇮🇶</span><span class="bm-country-name">Irak</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="noruega" data-name="Noruega" data-flag="🇳🇴"><span class="bm-flag">🇳🇴</span><span class="bm-country-name">Noruega</span><span class="bm-arrow">→</span></button>
-        </div>
-      </div>
-      <div class="bm-group-card" style="--bm-delay: 540ms">
-        <div class="bm-group-hdr">GRUPO J</div>
-        <div class="bm-group-body">
-          <button type="button" class="bm-country" data-tag="argentina" data-name="Argentina" data-flag="🇦🇷"><span class="bm-flag">🇦🇷</span><span class="bm-country-name">Argentina</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="argelia" data-name="Argelia" data-flag="🇩🇿"><span class="bm-flag">🇩🇿</span><span class="bm-country-name">Argelia</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="austria" data-name="Austria" data-flag="🇦🇹"><span class="bm-flag">🇦🇹</span><span class="bm-country-name">Austria</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="jordania" data-name="Jordania" data-flag="🇯🇴"><span class="bm-flag">🇯🇴</span><span class="bm-country-name">Jordania</span><span class="bm-arrow">→</span></button>
-        </div>
-      </div>
-      <div class="bm-group-card" style="--bm-delay: 600ms">
-        <div class="bm-group-hdr">GRUPO K</div>
-        <div class="bm-group-body">
-          <button type="button" class="bm-country" data-tag="portugal" data-name="Portugal" data-flag="🇵🇹"><span class="bm-flag">🇵🇹</span><span class="bm-country-name">Portugal</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="congo" data-name="DR Congo" data-flag="🇨🇩"><span class="bm-flag">🇨🇩</span><span class="bm-country-name">DR Congo</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="uzbekistan" data-name="Uzbekistán" data-flag="🇺🇿"><span class="bm-flag">🇺🇿</span><span class="bm-country-name">Uzbekistán</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="colombia" data-name="Colombia" data-flag="🇨🇴"><span class="bm-flag">🇨🇴</span><span class="bm-country-name">Colombia</span><span class="bm-arrow">→</span></button>
-        </div>
-      </div>
-      <div class="bm-group-card" style="--bm-delay: 660ms">
-        <div class="bm-group-hdr">GRUPO L</div>
-        <div class="bm-group-body">
-          <button type="button" class="bm-country" data-tag="inglaterra" data-name="Inglaterra" data-flag="🏴󠁧󠁢󠁥󠁮󠁧󠁿"><span class="bm-flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span><span class="bm-country-name">Inglaterra</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="croacia" data-name="Croacia" data-flag="🇭🇷"><span class="bm-flag">🇭🇷</span><span class="bm-country-name">Croacia</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="ghana" data-name="Ghana" data-flag="🇬🇭"><span class="bm-flag">🇬🇭</span><span class="bm-country-name">Ghana</span><span class="bm-arrow">→</span></button>
-          <button type="button" class="bm-country" data-tag="panama" data-name="Panamá" data-flag="🇵🇦"><span class="bm-flag">🇵🇦</span><span class="bm-country-name">Panamá</span><span class="bm-arrow">→</span></button>
-        </div>
-      </div>
+      <p class="bm-search-hint" id="bm-search-hint" hidden>Sin resultados. Presiona Enter para buscar igual.</p>
     </div>
-  </div>
-</section>
 
-<section class="bm-products col-sec" id="bm-products" hidden>
-  <div class="sec-bg-grid"></div>
-  <div class="bm-products-inner">
-    <div class="sec-hdr rev sec-hdr--center">
-      <h2 class="sec-title" id="bm-products-title">CAMISETAS</h2>
-    </div>
-    <div class="prod-grid" id="bm-products-grid">
-      {% for product in collection.products %}
-        {% liquid
-          assign tag_slugs = ''
-          for tag in product.tags
-            assign tag_norm = tag | downcase | handleize
-            if tag_slugs == blank
-              assign tag_slugs = tag_norm
-            else
-              assign tag_slugs = tag_slugs | append: '|' | append: tag_norm
-            endif
-          endfor
-        %}
-        <div class="bm-product-item" data-tags="{{ tag_slugs }}">
-          {% render 'baul-product-card', product: product %}
-        </div>
-      {% endfor %}
-    </div>
-    <p class="bm-empty" id="bm-empty" hidden>No hay camisetas para esta selección.</p>
-    <div class="bm-products-actions">
-      <button type="button" class="btn-v" id="bm-clear-all">Ver todos</button>
+    <div class="bm-continents" id="bm-continents">
+      <article class="bm-continent rev">
+        <h2 class="bm-continent-title">América</h2>
+        <ul class="bm-flag-grid">
+          {% render 'baul-mundial-flag', name: 'Argentina', tag: 'argentina', flag: '🇦🇷' %}
+          {% render 'baul-mundial-flag', name: 'Brasil', tag: 'brasil', flag: '🇧🇷' %}
+          {% render 'baul-mundial-flag', name: 'Colombia', tag: 'colombia', flag: '🇨🇴' %}
+          {% render 'baul-mundial-flag', name: 'Canadá', tag: 'canada', flag: '🇨🇦' %}
+          {% render 'baul-mundial-flag', name: 'Ecuador', tag: 'ecuador', flag: '🇪🇨' %}
+          {% render 'baul-mundial-flag', name: 'USA', tag: 'usa', flag: '🇺🇸' %}
+          {% render 'baul-mundial-flag', name: 'México', tag: 'mexico', flag: '🇲🇽' %}
+          {% render 'baul-mundial-flag', name: 'Paraguay', tag: 'paraguay', flag: '🇵🇾' %}
+          {% render 'baul-mundial-flag', name: 'Uruguay', tag: 'uruguay', flag: '🇺🇾' %}
+          {% render 'baul-mundial-flag', name: 'Panamá', tag: 'panama', flag: '🇵🇦' %}
+          {% render 'baul-mundial-flag', name: 'Haití', tag: 'haiti', flag: '🇭🇹' %}
+        </ul>
+      </article>
+
+      <article class="bm-continent rev">
+        <h2 class="bm-continent-title">Europa</h2>
+        <ul class="bm-flag-grid">
+          {% render 'baul-mundial-flag', name: 'España', tag: 'espana', flag: '🇪🇸' %}
+          {% render 'baul-mundial-flag', name: 'Francia', tag: 'francia', flag: '🇫🇷' %}
+          {% render 'baul-mundial-flag', name: 'Alemania', tag: 'alemania', flag: '🇩🇪' %}
+          {% render 'baul-mundial-flag', name: 'Portugal', tag: 'portugal', flag: '🇵🇹' %}
+          {% render 'baul-mundial-flag', name: 'Inglaterra', tag: 'inglaterra', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' %}
+          {% render 'baul-mundial-flag', name: 'Países Bajos', tag: 'paises-bajos', flag: '🇳🇱' %}
+          {% render 'baul-mundial-flag', name: 'Bélgica', tag: 'belgica', flag: '🇧🇪' %}
+          {% render 'baul-mundial-flag', name: 'Croacia', tag: 'croacia', flag: '🇭🇷' %}
+          {% render 'baul-mundial-flag', name: 'Suiza', tag: 'suiza', flag: '🇨🇭' %}
+          {% render 'baul-mundial-flag', name: 'Austria', tag: 'austria', flag: '🇦🇹' %}
+          {% render 'baul-mundial-flag', name: 'Suecia', tag: 'suecia', flag: '🇸🇪' %}
+          {% render 'baul-mundial-flag', name: 'Noruega', tag: 'noruega', flag: '🇳🇴' %}
+          {% render 'baul-mundial-flag', name: 'Escocia', tag: 'escocia', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿' %}
+          {% render 'baul-mundial-flag', name: 'Chequia', tag: 'chequia', flag: '🇨🇿' %}
+          {% render 'baul-mundial-flag', name: 'Bosnia', tag: 'bosnia', flag: '🇧🇦' %}
+        </ul>
+      </article>
+
+      <article class="bm-continent rev">
+        <h2 class="bm-continent-title">África</h2>
+        <ul class="bm-flag-grid">
+          {% render 'baul-mundial-flag', name: 'Marruecos', tag: 'marruecos', flag: '🇲🇦' %}
+          {% render 'baul-mundial-flag', name: 'Senegal', tag: 'senegal', flag: '🇸🇳' %}
+          {% render 'baul-mundial-flag', name: 'Sudáfrica', tag: 'sudafrica', flag: '🇿🇦' %}
+          {% render 'baul-mundial-flag', name: 'Ghana', tag: 'ghana', flag: '🇬🇭' %}
+          {% render 'baul-mundial-flag', name: 'Egipto', tag: 'egipto', flag: '🇪🇬' %}
+          {% render 'baul-mundial-flag', name: 'Costa de Marfil', tag: 'costa-de-marfil', flag: '🇨🇮' %}
+          {% render 'baul-mundial-flag', name: 'DR Congo', tag: 'congo', flag: '🇨🇩' %}
+          {% render 'baul-mundial-flag', name: 'Cabo Verde', tag: 'cabo-verde', flag: '🇨🇻' %}
+        </ul>
+      </article>
+
+      <article class="bm-continent rev">
+        <h2 class="bm-continent-title">Asia y Oceanía</h2>
+        <ul class="bm-flag-grid">
+          {% render 'baul-mundial-flag', name: 'Japón', tag: 'japon', flag: '🇯🇵' %}
+          {% render 'baul-mundial-flag', name: 'Corea del Sur', tag: 'corea-del-sur', flag: '🇰🇷' %}
+          {% render 'baul-mundial-flag', name: 'Australia', tag: 'australia', flag: '🇦🇺' %}
+          {% render 'baul-mundial-flag', name: 'Arabia Saudí', tag: 'arabia-saudi', flag: '🇸🇦' %}
+          {% render 'baul-mundial-flag', name: 'Irán', tag: 'iran', flag: '🇮🇷' %}
+          {% render 'baul-mundial-flag', name: 'Qatar', tag: 'qatar', flag: '🇶🇦' %}
+          {% render 'baul-mundial-flag', name: 'Uzbekistán', tag: 'uzbekistan', flag: '🇺🇿' %}
+          {% render 'baul-mundial-flag', name: 'Jordania', tag: 'jordania', flag: '🇯🇴' %}
+          {% render 'baul-mundial-flag', name: 'Irak', tag: 'irak', flag: '🇮🇶' %}
+          {% render 'baul-mundial-flag', name: 'Nueva Zelanda', tag: 'nueva-zelanda', flag: '🇳🇿' %}
+          {% render 'baul-mundial-flag', name: 'Túnez', tag: 'tunez', flag: '🇹🇳' %}
+          {% render 'baul-mundial-flag', name: 'Curazao', tag: 'curazao', flag: '🇨🇼' %}
+          {% render 'baul-mundial-flag', name: 'Argelia', tag: 'argelia', flag: '🇩🇿' %}
+          {% render 'baul-mundial-flag', name: 'Turquía', tag: 'turquia', flag: '🇹🇷' %}
+        </ul>
+      </article>
     </div>
   </div>
 </section>
@@ -253,7 +200,7 @@
       "type": "text",
       "id": "hero_subtitle",
       "label": "Subtítulo",
-      "default": "USA · CANADÁ · MÉXICO — 48 SELECCIONES · 12 GRUPOS"
+      "default": "USA · CANADÁ · MÉXICO — 48 SELECCIONES"
     }
   ],
   "presets": [
