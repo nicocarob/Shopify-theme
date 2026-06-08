@@ -49,5 +49,5 @@
 .br-timer-txt{font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:12px;}
 #br-timer-count{color:#00c851;font-weight:700;}
 .br-btn-shop{width:100%;padding:11px;background:#00c851;color:#000;border:none;border-radius:8px;font-size:16px;font-weight:700;cursor:pointer;font-family:'Bebas Neue',sans-serif;margin-bottom:8px;}
-.br-pred-note{font-size:10px;color:rgba(255,255,255,0.2);line-height:1.5;}
-@media(max-width:480px){#br-popup{max-height:95vh;}.br-title{font-size:18px;}}
+.br-pred-note{font-size:10px;color:rgba(255,255,255,0.2);line-height:1.5;margin-top:12px;padding-bottom:20px;}
+@media(max-width:480px){#br-popup{max-height:90vh;overflow-y:auto;}.br-title{font-size:18px;}}

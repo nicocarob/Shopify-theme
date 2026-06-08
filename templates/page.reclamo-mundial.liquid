@@ -1,0 +1,159 @@
+{% layout 'baul' %}
+
+{{ 'baul-theme.css' | asset_url | stylesheet_tag }}
+
+{% render 'baul-header' %}
+
+<style>
+  .rm-page {
+    background: #0a0a0a;
+    min-height: 60vh;
+    padding: 48px 16px 80px;
+  }
+  .rm-inner {
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .rm-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 8vw, 52px);
+    color: #fff;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    margin: 0 0 12px;
+    text-align: center;
+  }
+  .rm-sub {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.45);
+    text-align: center;
+    line-height: 1.5;
+    margin: 0 0 32px;
+  }
+  .rm-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .rm-field label {
+    display: block;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+  .rm-field input {
+    width: 100%;
+    background: #161616;
+    border: 0.5px solid #333;
+    border-radius: 8px;
+    color: #fff;
+    padding: 12px 14px;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+  .rm-field input::placeholder { color: rgba(255, 255, 255, 0.3); }
+  .rm-field input:focus {
+    outline: none;
+    border-color: #00c851;
+  }
+  .rm-btn {
+    margin-top: 8px;
+    width: 100%;
+    padding: 14px;
+    background: #00c851;
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+  }
+  .rm-btn:hover { opacity: 0.9; }
+  .rm-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .rm-msg {
+    display: none;
+    margin-top: 16px;
+    padding: 14px;
+    background: rgba(0, 200, 81, 0.12);
+    border: 0.5px solid rgba(0, 200, 81, 0.35);
+    border-radius: 8px;
+    color: #00c851;
+    font-size: 14px;
+    text-align: center;
+    line-height: 1.5;
+  }
+  .rm-msg.is-visible { display: block; }
+</style>
+
+<section class="rm-page">
+  <div class="rm-inner">
+    <h1 class="rm-title">RECLAMA TU PREMIO</h1>
+    <p class="rm-sub">Si acertaste el resultado exacto y compraste con tu cupón, reclama aquí tus $5.000</p>
+
+    <form class="rm-form" id="rm-form">
+      <div class="rm-field">
+        <label for="rm-email">Email</label>
+        <input type="email" id="rm-email" name="email" placeholder="tu@email.com" required>
+      </div>
+      <div class="rm-field">
+        <label for="rm-order">Número de orden</label>
+        <input type="text" id="rm-order" name="order" placeholder="Ej: #1234" required>
+      </div>
+      <div class="rm-field">
+        <label for="rm-match">Partido predicho</label>
+        <input type="text" id="rm-match" name="match" placeholder="Ej: Argentina vs Colombia" required>
+      </div>
+      <div class="rm-field">
+        <label for="rm-score">Resultado predicho</label>
+        <input type="text" id="rm-score" name="score" placeholder="Ej: 2-0" required>
+      </div>
+      <button type="submit" class="rm-btn" id="rm-submit">Enviar reclamo</button>
+    </form>
+
+    <div class="rm-msg" id="rm-msg" role="status">
+      Tu reclamo fue enviado. Te contactaremos en 48 horas si acertaste.
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxHp9GAd7kk36_jcEZCKapeH_6ixu9ddxfRe13_8jn51cz4ezf7JJobCwMLn7WxqfKbaA/exec';
+    const form = document.getElementById('rm-form');
+    const msg = document.getElementById('rm-msg');
+    const submitBtn = document.getElementById('rm-submit');
+
+    if (!form) return;
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Enviando...';
+
+      const body = {
+        type: 'reclamo',
+        email: document.getElementById('rm-email').value.trim(),
+        order: document.getElementById('rm-order').value.trim(),
+        match: document.getElementById('rm-match').value.trim(),
+        score: document.getElementById('rm-score').value.trim()
+      };
+
+      try {
+        await fetch(SHEET_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: JSON.stringify(body)
+        });
+        form.style.display = 'none';
+        msg.classList.add('is-visible');
+      } catch (err) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Enviar reclamo';
+        alert('No se pudo enviar el reclamo. Intenta de nuevo.');
+      }
+    });
+  })();
+</script>

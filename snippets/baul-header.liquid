@@ -4,15 +4,23 @@
 {% endcomment %}
 
 {% liquid
-  assign logo_img = section.settings.logo
+  assign logo_img = blank
+  assign logo_secundario = blank
+  assign countdown_text = 'ENVÍO GRATIS POR TIEMPO LIMITADO — TERMINA EN:'
+  assign promo_text = '🎽 Lleva 3 camisetas y te llevas la 4ª a mitad de precio 🔥'
+
+  if section != blank
+    assign logo_img = section.settings.logo
+    assign logo_secundario = section.settings.logo_secundario
+    assign countdown_text = section.settings.countdown_text | default: countdown_text
+    assign promo_text = section.settings.promo_text | default: promo_text
+  endif
+
   if logo_img == blank
     assign logo_src = 'baul-logo.png' | asset_url
   else
     assign logo_src = logo_img | image_url: width: 104
   endif
-
-  assign countdown_text = section.settings.countdown_text | default: 'ENVÍO GRATIS POR TIEMPO LIMITADO — TERMINA EN:'
-  assign promo_text = section.settings.promo_text | default: '🎽 Lleva 3 camisetas y te llevas la 4ª a mitad de precio 🔥'
 %}
 
 <div id="cbar">
@@ -45,10 +53,10 @@
 <nav>
   <a class="n-logo" href="{{ routes.root_url }}">
     <img src="{{ logo_src }}" alt="{{ shop.name | escape }}" width="52" height="52">
-    {% if section.settings.logo_secundario != blank %}
+    {% if logo_secundario != blank %}
       <img
         class="n-logo-sec"
-        src="{{ section.settings.logo_secundario | image_url: height: 80 }}"
+        src="{{ logo_secundario | image_url: height: 80 }}"
         alt=""
         width="40"
         height="40"
