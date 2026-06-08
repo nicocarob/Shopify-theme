@@ -19,23 +19,6 @@
   if vendor_label == blank
     assign vendor_label = product.type
   endif
-
-  assign title_down = product.title | downcase
-  assign show_custom = true
-  if title_down contains 'cortavientos' or title_down contains 'chaqueta'
-    assign show_custom = false
-  endif
-
-  assign in_chilena = false
-  assign in_libertadores = false
-  for col in product.collections
-    if col.handle == 'liga-chilena'
-      assign in_chilena = true
-    endif
-    if col.handle == 'liga-chilena' or col.handle == 'liga-argentina-1' or col.handle == 'liga-brasilena'
-      assign in_libertadores = true
-    endif
-  endfor
 %}
 
 {% render 'baul-header', section: section %}
@@ -152,138 +135,6 @@
           {% endfor %}
         {% endunless %}
 
-        {% if show_custom %}
-          <div class="custom-section" id="bp-custom-section">
-            <h2 class="custom-section-title">PERSONALIZA TU CAMISETA</h2>
-
-            <div class="custom-field">
-              <label class="custom-label" for="bp-custom-name">Nombre en la camiseta +$990</label>
-              <input
-                type="text"
-                id="bp-custom-name"
-                class="custom-input"
-                name="properties[Nombre]"
-                maxlength="12"
-                placeholder="Ej: MESSI"
-                autocomplete="off"
-              >
-            </div>
-
-            <div class="custom-field">
-              <label class="custom-label" for="bp-custom-number">Número en la camiseta +$990</label>
-              <input
-                type="number"
-                id="bp-custom-number"
-                class="custom-input"
-                name="properties[Número]"
-                min="1"
-                max="99"
-                placeholder="1–99"
-                inputmode="numeric"
-              >
-            </div>
-
-            <div class="custom-patch">
-              <label class="custom-patch-label">
-                <input
-                  type="checkbox"
-                  class="custom-checkbox"
-                  name="properties[Parche Mundial 2026]"
-                  value="Sí (+$4.990)"
-                  data-addon="mundial"
-                >
-                <img
-                  class="custom-patch-img"
-                  src="https://cdn.shopify.com/s/files/1/0801/5098/6775/files/Mundial_2026webp.webp?v=1780897910"
-                  alt="Parche Mundial 2026"
-                  width="60"
-                  height="60"
-                  loading="lazy"
-                >
-                <span class="custom-patch-text">Parche Mundial 2026 <strong>+$4.990</strong></span>
-              </label>
-            </div>
-
-            {% if in_chilena %}
-              <div class="custom-patch">
-                <label class="custom-patch-label">
-                  <input
-                    type="checkbox"
-                    class="custom-checkbox"
-                    name="properties[Parche Liga Chilena]"
-                    value="Sí (+$2.990)"
-                    data-addon="ligaChilena"
-                  >
-                  <img
-                    class="custom-patch-img"
-                    src="https://cdn.shopify.com/s/files/1/0801/5098/6775/files/Liga_Chilena.webp?v=1780897910"
-                    alt="Parche Liga Chilena"
-                    width="60"
-                    height="60"
-                    loading="lazy"
-                  >
-                  <span class="custom-patch-text">Parche Liga Chilena <strong>+$2.990</strong></span>
-                </label>
-              </div>
-            {% endif %}
-
-            {% if in_libertadores %}
-              <fieldset class="custom-fieldset">
-                <legend class="custom-label">Parche Libertadores</legend>
-                <div class="custom-radio-group">
-                  <label class="custom-radio-label">
-                    <input
-                      type="radio"
-                      class="custom-radio"
-                      name="properties[Parche Libertadores]"
-                      value="No gracias"
-                      data-addon="libertadoresNone"
-                      checked
-                    >
-                    <span class="custom-radio-text">No gracias</span>
-                  </label>
-                  <label class="custom-radio-label">
-                    <input
-                      type="radio"
-                      class="custom-radio"
-                      name="properties[Parche Libertadores]"
-                      value="Libertadores no campeón +$2.990"
-                      data-addon="libertadoresNo"
-                    >
-                    <img
-                      class="custom-patch-img"
-                      src="https://cdn.shopify.com/s/files/1/0801/5098/6775/files/Libertadores_no_campeon.webp?v=1780897910"
-                      alt="Libertadores no campeón"
-                      width="60"
-                      height="60"
-                      loading="lazy"
-                    >
-                    <span class="custom-radio-text">Libertadores no campeón <strong>+$2.990</strong></span>
-                  </label>
-                  <label class="custom-radio-label">
-                    <input
-                      type="radio"
-                      class="custom-radio"
-                      name="properties[Parche Libertadores]"
-                      value="Libertadores campeón +$4.990"
-                      data-addon="libertadoresSi"
-                    >
-                    <img
-                      class="custom-patch-img"
-                      src="https://cdn.shopify.com/s/files/1/0801/5098/6775/files/Libertadores_Campeon.webp?v=1780897910"
-                      alt="Libertadores campeón"
-                      width="60"
-                      height="60"
-                      loading="lazy"
-                    >
-                    <span class="custom-radio-text">Libertadores campeón <strong>+$4.990</strong></span>
-                  </label>
-                </div>
-              </fieldset>
-            {% endif %}
-          </div>
-        {% endif %}
-
         <button type="submit" name="add" class="bp-atc" id="bp-atc-btn"{% unless current_variant.available %} disabled{% endunless %}>
           AGREGAR AL CARRO
         </button>
@@ -369,16 +220,7 @@
   {
     "variants": {{ product.variants | json }},
     "options": {{ product.options | json }},
-    "moneyFormat": {{ shop.money_format | json }},
-    "showCustom": {{ show_custom | json }},
-    "addonPrices": {
-      "nombre": 990,
-      "numero": 990,
-      "mundial": 4990,
-      "ligaChilena": 2990,
-      "libertadoresNo": 2990,
-      "libertadoresSi": 4990
-    }
+    "moneyFormat": {{ shop.money_format | json }}
   }
 </script>
 

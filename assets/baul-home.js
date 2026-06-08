@@ -190,34 +190,6 @@ if (productJsonEl && productForm) {
     );
   }
 
-  function getCustomExtra() {
-    if (!productData.showCustom || !productData.addonPrices) return 0;
-    const section = document.getElementById('bp-custom-section');
-    if (!section) return 0;
-
-    const prices = productData.addonPrices;
-    let extra = 0;
-
-    const nameInput = section.querySelector('[name="properties[Nombre]"]');
-    const numInput = section.querySelector('[name="properties[Número]"]');
-    if (nameInput && nameInput.value.trim()) extra += prices.nombre;
-    if (numInput && numInput.value.trim()) extra += prices.numero;
-
-    section.querySelectorAll('[data-addon]').forEach((el) => {
-      if (el.type === 'checkbox' && el.checked) {
-        extra += prices[el.dataset.addon] || 0;
-      }
-      if (el.type === 'radio' && el.checked) {
-        const key = el.dataset.addon;
-        if (key && key !== 'libertadoresNone') {
-          extra += prices[key] || 0;
-        }
-      }
-    });
-
-    return extra;
-  }
-
   function updateUI() {
     const variant = findVariant();
     if (!variant || !variantInput) return;
@@ -240,37 +212,9 @@ if (productJsonEl && productForm) {
       }
     }
     if (atcBtn) {
-      const extra = getCustomExtra();
-      const total = variant.price + extra;
       atcBtn.disabled = !variant.available;
-      if (!variant.available) {
-        atcBtn.textContent = 'AGOTADO';
-      } else if (productData.showCustom) {
-        atcBtn.textContent = 'AGREGAR AL CARRO — ' + formatMoney(total);
-      } else {
-        atcBtn.textContent = 'AGREGAR AL CARRO';
-      }
+      atcBtn.textContent = variant.available ? 'AGREGAR AL CARRO' : 'AGOTADO';
     }
-  }
-
-  function bindCustomization() {
-    const section = document.getElementById('bp-custom-section');
-    if (!section) return;
-
-    section.querySelectorAll('input').forEach((input) => {
-      input.addEventListener('input', updateUI);
-      input.addEventListener('change', updateUI);
-    });
-
-    productForm.addEventListener('submit', () => {
-      const nameInput = section.querySelector('[name="properties[Nombre]"]');
-      const numInput = section.querySelector('[name="properties[Número]"]');
-      if (nameInput && !nameInput.value.trim()) nameInput.disabled = true;
-      if (numInput && !numInput.value.trim()) numInput.disabled = true;
-
-      const libNone = section.querySelector('[data-addon="libertadoresNone"]');
-      if (libNone && libNone.checked) libNone.disabled = true;
-    });
   }
 
   document.querySelectorAll('.bp-variant-btn').forEach((btn) => {
@@ -295,6 +239,5 @@ if (productJsonEl && productForm) {
       });
     });
   }
-  bindCustomization();
   updateUI();
 }
