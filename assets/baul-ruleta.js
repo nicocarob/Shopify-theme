@@ -37,19 +37,55 @@ const BAULRULETA = (() => {
     sessionStorage.setItem('baulRuletaShown', '1');
   }
 
+  function getFallbackMatches() {
+    return [
+      { homeTeam: { name: 'Mexico' }, awayTeam: { name: 'South Africa' }, utcDate: '2026-06-11T19:00:00Z', group: 'Grupo A' },
+      { homeTeam: { name: 'Brazil' }, awayTeam: { name: 'Morocco' }, utcDate: '2026-06-12T19:00:00Z', group: 'Grupo B' },
+      { homeTeam: { name: 'Argentina' }, awayTeam: { name: 'Colombia' }, utcDate: '2026-06-13T22:00:00Z', group: 'Grupo C' },
+      { homeTeam: { name: 'USA' }, awayTeam: { name: 'Paraguay' }, utcDate: '2026-06-12T22:00:00Z', group: 'Grupo D' },
+      { homeTeam: { name: 'France' }, awayTeam: { name: 'Senegal' }, utcDate: '2026-06-14T19:00:00Z', group: 'Grupo E' },
+      { homeTeam: { name: 'England' }, awayTeam: { name: 'Croatia' }, utcDate: '2026-06-14T22:00:00Z', group: 'Grupo F' }
+    ];
+  }
+
+  async function fetchMatchesFromApi(url) {
+    const res = await fetch(url, { headers: { 'X-Auth-Token': FOOTBALL_API_KEY } });
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.matches || [];
+  }
+
   async function fetchMatches() {
+    const today = getToday();
+    const in30 = new Date();
+    in30.setDate(in30.getDate() + 30);
+    const to30 = in30.toISOString().split('T')[0];
+    const in365 = new Date();
+    in365.setDate(in365.getDate() + 365);
+    const to365 = in365.toISOString().split('T')[0];
+
     try {
-      const today = getToday();
-      const in30 = new Date();
-      in30.setDate(in30.getDate() + 30);
-      const res = await fetch(
-        `https://api.football-data.org/v4/competitions/WC/matches?dateFrom=${today}&dateTo=${in30.toISOString().split('T')[0]}&status=SCHEDULED`,
-        { headers: { 'X-Auth-Token': FOOTBALL_API_KEY } }
+      let matches = await fetchMatchesFromApi(
+        `https://api.football-data.org/v4/competitions/WC/matches?dateFrom=${today}&dateTo=${to30}&status=SCHEDULED`
       );
-      const data = await res.json();
-      return data.matches || [];
-    } catch(e) {
-      return [];
+      if (!matches.length) {
+        matches = await fetchMatchesFromApi(
+          `https://api.football-data.org/v4/competitions/WC/matches?dateFrom=${today}&dateTo=${to365}&status=SCHEDULED`
+        );
+      }
+      if (!matches.length) {
+        matches = await fetchMatchesFromApi(
+          `https://api.football-data.org/v4/competitions/WC/matches?dateFrom=2026-06-11&dateTo=${to365}&status=SCHEDULED`
+        );
+      }
+      if (!matches.length) {
+        matches = await fetchMatchesFromApi(
+          `https://api.football-data.org/v4/competitions/WC/matches?dateFrom=${today}&dateTo=${to365}`
+        );
+      }
+      return matches.length ? matches : getFallbackMatches();
+    } catch (e) {
+      return getFallbackMatches();
     }
   }
 
@@ -59,12 +95,20 @@ const BAULRULETA = (() => {
   }
 
   function selectBestMatches(allMatches) {
-    const sorted = [...allMatches].sort((a, b) => {
-      const scoreA = scoreTeam(a.homeTeam.name) + scoreTeam(a.awayTeam.name);
-      const scoreB = scoreTeam(b.homeTeam.name) + scoreTeam(b.awayTeam.name);
-      return scoreB - scoreA;
-    });
-    return sorted.slice(0, 3);
+    const now = Date.now();
+    const upcoming = allMatches
+      .filter((m) => m.utcDate && new Date(m.utcDate).getTime() >= now - 3600000)
+      .sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate));
+    const pool = upcoming.length ? upcoming : [...allMatches].sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate));
+    return pool
+      .sort((a, b) => {
+        const scoreA = scoreTeam(a.homeTeam.name) + scoreTeam(a.awayTeam.name);
+        const scoreB = scoreTeam(b.homeTeam.name) + scoreTeam(b.awayTeam.name);
+        if (scoreB !== scoreA) return scoreB - scoreA;
+        return new Date(a.utcDate) - new Date(b.utcDate);
+      })
+      .slice(0, 3)
+      .sort((a, b) => new Date(a.utcDate) - new Date(b.utcDate));
   }
 
   function getFlag(teamName) {
@@ -89,10 +133,12 @@ const BAULRULETA = (() => {
   function buildMatchHTML(match, idx) {
     const home = match.homeTeam.name;
     const away = match.awayTeam.name;
-    const time = new Date(match.utcDate).toLocaleTimeString('es-CL', {hour:'2-digit',minute:'2-digit'});
+    const dateObj = new Date(match.utcDate);
+    const dateStr = dateObj.toLocaleDateString('es-CL', { day: 'numeric', month: 'short' });
+    const time = dateObj.toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' });
     return `
       <div class="br-match">
-        <div class="br-match-top">${match.group || 'Fase de grupos'} · ${time} hrs</div>
+        <div class="br-match-top">${match.group || 'Fase de grupos'} · ${dateStr} · ${time} hrs</div>
         <div class="br-match-row">
           <div class="br-team">
             <span class="br-flag">${getFlag(home)}</span>
@@ -246,11 +292,17 @@ const BAULRULETA = (() => {
     const allMatches = await fetchMatches();
     selectedMatches = selectBestMatches(allMatches);
     const matchesContainer = document.getElementById('br-matches');
+    const emailWrap = document.getElementById('br-email-wrap');
+    const predictBtn = document.getElementById('br-btn-predict');
     if (matchesContainer) {
       if (selectedMatches.length > 0) {
         matchesContainer.innerHTML = selectedMatches.map((m, i) => buildMatchHTML(m, i)).join('');
+        if (emailWrap) emailWrap.style.display = 'block';
+        if (predictBtn) predictBtn.style.display = 'block';
       } else {
-        matchesContainer.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:13px;text-align:center;">No hay partidos disponibles hoy. ¡Vuelve el 11 de junio!</p>';
+        matchesContainer.innerHTML = '<p style="color:rgba(255,255,255,0.4);font-size:13px;text-align:center;">No hay partidos disponibles por ahora. Intenta más tarde.</p>';
+        if (emailWrap) emailWrap.style.display = 'none';
+        if (predictBtn) predictBtn.style.display = 'none';
       }
     }
     if (loadingEl) loadingEl.style.display = 'none';
