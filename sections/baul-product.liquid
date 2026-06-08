@@ -135,6 +135,8 @@
           {% endfor %}
         {% endunless %}
 
+        {% render 'easify-pof__product-option' %}
+
         <button type="submit" name="add" class="bp-atc" id="bp-atc-btn"{% unless current_variant.available %} disabled{% endunless %}>
           AGREGAR AL CARRO
         </button>
