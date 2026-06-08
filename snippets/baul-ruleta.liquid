@@ -1,0 +1,58 @@
+{{ 'baul-ruleta.css' | asset_url | stylesheet_tag }}
+
+<div id="br-overlay">
+  <div id="br-popup">
+    <button id="br-btn-close" aria-label="Cerrar">✕</button>
+
+    <div class="br-hero">
+      <div class="br-tag">⚽ Mundial 2026</div>
+      <div class="br-title">Predice y gana un <em>descuento</em></div>
+      <div class="br-subtitle">Gira la ruleta y llévate un cupón ahora mismo</div>
+    </div>
+
+    <div class="br-body">
+      <div id="br-loading">Cargando partidos del día...</div>
+
+      <div id="br-content" style="display:none;">
+        <div id="br-s1">
+          <div id="br-matches"></div>
+          <div class="br-email-wrap">
+            <input type="email" id="br-email" placeholder="tu@email.com">
+            <div class="br-email-note">Para enviarte el cupón extra de $5.000 si aciertas el resultado exacto</div>
+          </div>
+          <button class="br-btn-primary" id="br-btn-predict">Guardar y girar la ruleta →</button>
+        </div>
+
+        <div id="br-s2" style="display:none;">
+          <div class="br-wheel-sub">Predicciones guardadas. ¡Ahora gira y gana!</div>
+          <div class="br-wheel-wrap">
+            <div class="br-wheel-ptr">▼</div>
+            <canvas id="br-wheel-canvas" width="220" height="220"></canvas>
+          </div>
+          <br>
+          <button class="br-btn-spin" id="br-btn-spin">Girar ruleta</button>
+        </div>
+
+        <div id="br-s3" style="display:none;">
+          <div class="br-res-emoji" id="br-res-emoji"></div>
+          <div class="br-res-title" id="br-res-title"></div>
+          <div class="br-res-sub">Úsalo en los próximos 30 minutos</div>
+          <div class="br-coupon-box">
+            <div class="br-c-label">Tu cupón de descuento</div>
+            <div class="br-c-code" id="br-res-code"></div>
+            <div class="br-c-val" id="br-res-val"></div>
+          </div>
+          <div class="br-timer-bar"><div id="br-timer-fill"></div></div>
+          <div class="br-timer-txt">Expira en <span id="br-timer-count">30:00</span></div>
+          <a href="/" class="br-btn-shop">Comprar ahora con el descuento</a>
+          <div class="br-pred-note">
+            🏆 Para reclamar los $5.000 si aciertas, debes haber comprado usando este cupón.<br>
+            Después del partido visita <strong>lacabala.cl/pages/reclamo-mundial</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{ 'baul-ruleta.js' | asset_url | script_tag }}
