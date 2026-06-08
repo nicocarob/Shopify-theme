@@ -172,7 +172,7 @@
         "liga_10": {
           "type": "liga",
           "settings": {
-            "collection_handle": "liga-argentina",
+            "collection_handle": "otras-ligas",
             "liga_name": "Otras Ligas",
             "emoji": "🏆"
           }
