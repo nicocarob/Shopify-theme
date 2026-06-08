@@ -4,9 +4,6 @@
 
   const searchInput = document.getElementById('bm-search');
   const searchHint = document.getElementById('bm-search-hint');
-  const banner = document.getElementById('bm-selected-banner');
-  const bannerFlag = document.getElementById('bm-selected-flag');
-  const bannerName = document.getElementById('bm-selected-name');
   const flagBtns = root.querySelectorAll('.bm-flag-btn');
   const continents = root.querySelectorAll('.bm-continent');
   const REDIRECT_DELAY = 750;
@@ -32,13 +29,6 @@
     if (btn) btn.classList.add('is-active');
   }
 
-  function showBanner(name, flag) {
-    bannerFlag.textContent = flag || '⚽';
-    bannerName.textContent = name;
-    banner.hidden = false;
-    banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-
   function redirectToSearch(name) {
     if (redirectTimer) clearTimeout(redirectTimer);
     redirectTimer = setTimeout(function () {
@@ -48,9 +38,7 @@
 
   function selectCountry(btn) {
     const name = btn.dataset.name;
-    const flag = btn.dataset.flag;
     setActive(btn);
-    showBanner(name, flag);
     redirectToSearch(name);
   }
 
@@ -99,7 +87,6 @@
     }
 
     setActive(null);
-    showBanner(query, '⚽');
     redirectToSearch(query);
   }
 
