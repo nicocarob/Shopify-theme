@@ -1215,6 +1215,7 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
   }
   .ft-s:hover { background: var(--accent); color: #000; border-color: var(--accent); transform: translateY(-2px); }
+  .ft-s--wa svg { width: 18px; height: 18px; display: block; }
   .ft-col-t {
     font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
     font-size: 11px; letter-spacing: 0.2em; color: #fff;
@@ -1223,7 +1224,7 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   .ft-links { list-style: none; display: flex; flex-direction: column; gap: 9px; }
   .ft-links a { font-size: 13px; color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
   .ft-links a:hover { color: var(--accent); }
-  .ft-bot { border-top: 1px solid var(--border); padding-top: 22px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .ft-bot { border-top: 1px solid var(--border); padding-top: 22px; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 12px; }
   .ft-copy-row { display: flex; align-items: center; gap: 10px; }
   .ft-copy-logo { width: 24px; height: 24px; object-fit: contain; flex-shrink: 0; }
   .ft-copy {
@@ -1294,10 +1295,11 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     position: fixed; bottom: 22px; right: 22px;
     background: #25d366; color: #fff; width: 52px; height: 52px;
     border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-size: 22px; text-decoration: none; z-index: 300;
+    text-decoration: none; z-index: 300;
     transition: transform 0.2s;
     animation: waPulse 2.5s ease-in-out infinite;
   }
+  .wa svg { width: 28px; height: 28px; display: block; }
   .wa:hover { transform: scale(1.1); }
   @keyframes waPulse {
     0%, 100% { box-shadow: 0 4px 20px rgba(37, 211, 102, 0.35); }
@@ -1422,12 +1424,15 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .lg-ico { font-size: 26px; }
     .lg-nm { font-size: 11px; }
     footer { padding: 40px 16px 28px; }
-    .ft-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
-    .wa { width: 44px; height: 44px; font-size: 19px; bottom: 16px; right: 16px; }
+    .ft-grid { grid-template-columns: 1fr 1fr; gap: 20px 16px; }
+    .ft-bot { justify-content: center; text-align: center; }
+    .ft-copy-row { justify-content: center; }
+    .wa { width: 44px; height: 44px; bottom: 16px; right: 16px; }
+    .wa svg { width: 24px; height: 24px; }
     #scroll-bar { height: 2px; }
   }
 
   @media (max-width: 480px) {
     .liga-grid { grid-template-columns: repeat(2, 1fr); }
-    .ft-grid { grid-template-columns: 1fr; gap: 24px; }
+    .ft-grid { grid-template-columns: 1fr 1fr; gap: 18px 12px; }
   }

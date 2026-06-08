@@ -4,7 +4,7 @@
 
 {% liquid
   assign footer_description = 'Más de 10 años equipando hinchas en todo Chile. La mejor calidad, envío gratis y atención personalizada.'
-  assign wa_url = 'https://wa.me/56951543485'
+  assign wa_url = 'https://wa.me/56948685507?text=Tengo%20una%20pregunta'
 %}
 
 <footer>
@@ -16,7 +16,9 @@
       </div>
       <p class="ft-desc">{{ footer_description }}</p>
       <div class="ft-soc">
-        <a class="ft-s" href="{{ wa_url }}" target="_blank" rel="noopener">💬</a>
+        <a class="ft-s ft-s--wa" href="{{ wa_url }}" target="_blank" rel="noopener" aria-label="WhatsApp">
+          {% render 'baul-whatsapp-icon' %}
+        </a>
       </div>
     </div>
     <div>
@@ -61,10 +63,11 @@
         style="object-fit:contain;"
         loading="lazy"
       >
-      <span class="ft-copy">© 2026 {{ shop.name }} — Todos los derechos reservados</span>
+      <span class="ft-copy">© 2026 La Cábala — Todos los derechos reservados</span>
     </div>
-    <span class="ft-copy">Hecho con ⚽ en Chile</span>
   </div>
 </footer>
 
-<a class="wa" href="{{ wa_url }}" target="_blank" rel="noopener" aria-label="WhatsApp">💬</a>
+<a class="wa" href="{{ wa_url }}" target="_blank" rel="noopener" aria-label="WhatsApp">
+  {% render 'baul-whatsapp-icon' %}
+</a>
