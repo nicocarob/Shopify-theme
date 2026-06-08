@@ -148,7 +148,7 @@
         "liga_07": {
           "type": "liga",
           "settings": {
-            "collection_handle": "selecciones",
+            "collection_handle": "copa-del-mundo",
             "liga_name": "Selecciones",
             "emoji": "🌍"
           }
