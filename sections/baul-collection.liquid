@@ -27,7 +27,7 @@
     </div>
   </div>
 
-  {% paginate collection.products by section.settings.products_per_page %}
+  {% paginate collection.products by 250 %}
     <div class="prod-grid bc-grid">
       {% for product in collection.products %}
         {% render 'baul-product-card', product: product %}
@@ -35,19 +35,19 @@
     </div>
 
     {% if paginate.pages > 1 %}
-      <nav class="bc-pagination" aria-label="Paginación">
+      <nav class="pagination" aria-label="Paginación">
         {% if paginate.previous %}
-          <a class="bc-page-link" href="{{ paginate.previous.url }}">← Anterior</a>
+          <a href="{{ paginate.previous.url }}">← Anterior</a>
         {% else %}
-          <span class="bc-page-link is-disabled">← Anterior</span>
+          <span class="is-disabled">← Anterior</span>
         {% endif %}
 
-        <span class="bc-page-info">{{ paginate.current_page }} / {{ paginate.pages }}</span>
+        <span class="pagination__info">{{ paginate.current_page }} / {{ paginate.pages }}</span>
 
         {% if paginate.next %}
-          <a class="bc-page-link" href="{{ paginate.next.url }}">Siguiente →</a>
+          <a href="{{ paginate.next.url }}">Siguiente →</a>
         {% else %}
-          <span class="bc-page-link is-disabled">Siguiente →</span>
+          <span class="is-disabled">Siguiente →</span>
         {% endif %}
       </nav>
     {% endif %}

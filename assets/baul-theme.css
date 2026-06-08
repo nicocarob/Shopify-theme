@@ -763,25 +763,51 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     margin: 0 auto;
   }
   .bc-grid { margin-bottom: 40px; }
-  .bc-pagination {
-    display: flex; align-items: center; justify-content: center;
-    gap: 20px; flex-wrap: wrap; max-width: 1200px; margin: 0 auto;
-    position: relative; z-index: 1;
+
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+    background: var(--bg-mid);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    position: relative;
+    z-index: 1;
   }
-  .bc-page-link {
-    font-family: 'Barlow Condensed', sans-serif; font-size: 13px;
-    font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--text-soft); text-decoration: none;
-    padding: 10px 18px; border: 1px solid var(--border);
-    border-radius: var(--radius-sm); transition: border-color 0.2s, color 0.2s;
+  .pagination a,
+  .pagination span:not(.pagination__info) {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 10px 18px;
+    border: 1px solid #00c851;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    transition: background 0.2s, border-color 0.2s;
   }
-  .bc-page-link:hover:not(.is-disabled) {
-    color: var(--accent); border-color: var(--accent);
+  .pagination a:hover {
+    background: rgba(0, 200, 81, 0.15);
+    border-color: #00c851;
   }
-  .bc-page-link.is-disabled { opacity: 0.35; cursor: default; }
-  .bc-page-info {
-    font-family: 'Bebas Neue', sans-serif; font-size: 20px;
-    color: var(--text-muted); letter-spacing: 0.06em;
+  .pagination span.is-disabled {
+    opacity: 0.35;
+    cursor: default;
+    border-color: rgba(0, 200, 81, 0.35);
+  }
+  .pagination__info {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: #ffffff;
+    letter-spacing: 0.06em;
   }
 
   /* ── List collections page ── */
