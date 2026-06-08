@@ -1,26 +1,12 @@
 {% comment %}
-  Footer compartido La Cábala
-  Parámetro opcional: section (settings del bloque padre)
+  Footer compartido La Cábala — funciona sin section (layout global)
 {% endcomment %}
 
 {% liquid
   assign footer_description = 'Más de 10 años equipando hinchas en todo Chile. La mejor calidad, envío gratis y atención personalizada.'
-  assign instagram_url = blank
   assign wa_url = 'https://wa.me/56951543485'
-
-  if section != blank
-    if section.settings.footer_description != blank
-      assign footer_description = section.settings.footer_description
-    endif
-    assign instagram_url = section.settings.instagram_url
-    if section.settings.whatsapp_url != blank
-      assign wa_url = section.settings.whatsapp_url
-    endif
-  endif
+  assign logo_src = 'baul-logo.png' | asset_url
 %}
-
-{% capture logo_src %}{% render 'baul-logo-url', section: section, width: 104 %}{% endcapture %}
-{% capture copyright_logo_src %}{% render 'baul-logo-url', section: section, width: 104 %}{% endcapture %}
 
 <footer>
   <div class="ft-grid">
@@ -31,9 +17,6 @@
       </div>
       <p class="ft-desc">{{ footer_description }}</p>
       <div class="ft-soc">
-        {% if instagram_url != blank %}
-          <a class="ft-s" href="{{ instagram_url }}" target="_blank" rel="noopener">📸</a>
-        {% endif %}
         <a class="ft-s" href="{{ wa_url }}" target="_blank" rel="noopener">💬</a>
       </div>
     </div>
@@ -72,13 +55,13 @@
     <div class="ft-copy-row">
       <img
         class="ft-copy-logo"
-        src="{{ copyright_logo_src }}"
+        src="{{ logo_src }}"
         alt="{{ shop.name | escape }}"
         width="24"
         height="24"
         loading="lazy"
       >
-      <span class="ft-copy">© 2026 La Cábala — Todos los derechos reservados</span>
+      <span class="ft-copy">© 2026 {{ shop.name }} — Todos los derechos reservados</span>
     </div>
     <span class="ft-copy">Hecho con ⚽ en Chile</span>
   </div>

@@ -42,6 +42,8 @@
       {{ content_for_layout }}
     </main>
 
+    {% render 'baul-footer' %}
+
     <script src="{{ 'baul-home.js' | asset_url }}" defer></script>
     {% render 'baul-ruleta' %}
   </body>
