@@ -1,0 +1,87 @@
+<section class="pc-page">
+  <div class="sec-bg-grid"></div>
+  <div class="pc-wrap">
+    <h1 class="page-title">{{ page.title }}</h1>
+    <div class="rte">
+      {{ page.content }}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .pc-page {
+    background: #0a0a0a;
+    min-height: 60vh;
+    padding: 48px 20px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pc-wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .pc-page .page-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 6vw, 56px);
+    line-height: 1.05;
+    letter-spacing: 0.04em;
+    color: #00c851;
+    margin: 0 0 32px;
+    text-transform: uppercase;
+  }
+
+  .pc-page .rte {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 17px;
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .pc-page .rte :is(h1, h2, h3, h4, h5, h6) {
+    font-family: 'Bebas Neue', sans-serif;
+    color: #ffffff;
+    letter-spacing: 0.03em;
+    margin: 1.75em 0 0.75em;
+  }
+
+  .pc-page .rte :first-child {
+    margin-top: 0;
+  }
+
+  .pc-page .rte p {
+    margin: 0 0 1em;
+  }
+
+  .pc-page .rte a {
+    color: #00c851;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .pc-page .rte a:hover {
+    color: #00e85a;
+  }
+
+  .pc-page .rte ul,
+  .pc-page .rte ol {
+    margin: 0 0 1em;
+    padding-left: 1.25em;
+  }
+
+  .pc-page .rte li {
+    margin-bottom: 0.35em;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Contenido de página",
+  "tag": "section",
+  "class": "page-content-section",
+  "presets": []
+}
+{% endschema %}
