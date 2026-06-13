@@ -862,6 +862,19 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   .tallas-warn {
     color: #ffb347;
   }
+  @media (max-width: 768px) {
+    .tallas-modal {
+      top: 0;
+      align-items: center;
+      padding: 16px;
+    }
+    .tallas-popup {
+      width: 100%;
+      max-height: calc(100vh - 32px);
+      overflow-y: auto;
+      margin: auto;
+    }
+  }
   .bp-atc {
     width: 100%; margin-top: 8px; margin-bottom: 20px;
     background: #00c851; color: #000; border: none;
