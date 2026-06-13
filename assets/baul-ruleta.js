@@ -60,7 +60,7 @@ const BAULRULETA = (() => {
                   },
                 },
               },
-              list_id: 'RULETA2026',
+              list_id: 'Uij28M',
             },
           },
         }),
