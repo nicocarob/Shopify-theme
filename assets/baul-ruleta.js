@@ -1,20 +1,30 @@
 const BAULRULETA = (() => {
   const PRIZES = [
-    { label: '$500', code: 'MUNDIAL500', val: '$500 de descuento' },
-    { label: '$750', code: 'MUNDIAL750', val: '$750 de descuento' },
-    { label: '$1.000', code: 'MUNDIAL1K', val: '$1.000 de descuento' },
-    { label: '$1.500', code: 'MUNDIAL1500', val: '$1.500 de descuento' },
-    { label: '$2.000', code: 'MUNDIAL2K', val: '$2.000 de descuento' },
-    { label: '5% OFF', code: 'MUNDIAL5OFF', val: '5% de descuento en toda la tienda' },
-    { label: 'Número gratis', code: 'NUM26CAB', val: 'Número en la camiseta gratis ($990)' },
-    { label: 'Nombre gratis', code: 'NOM26CAB', val: 'Nombre en la camiseta gratis ($990)' },
+    { label: '$500', code: 'MUNDIAL500', val: '$500 de descuento', emoji: '🎉' },
+    { label: '$750', code: 'MUNDIAL750', val: '$750 de descuento', emoji: '⚽' },
+    { label: '$1.000', code: 'MUNDIAL1K', val: '$1.000 de descuento', emoji: '🔥' },
+    { label: '$1.500', code: 'MUNDIAL1500', val: '$1.500 de descuento', emoji: '🏆' },
+    { label: '$2.000', code: 'MUNDIAL2K', val: '$2.000 de descuento', emoji: '👑' },
+    { label: '5% OFF', code: 'MUNDIAL5OFF', val: '5% en toda la tienda', emoji: '🌟' },
+    { label: 'Número', code: 'NUM26CAB', val: 'Número en camiseta gratis', emoji: '🎽' },
+    { label: 'Nombre', code: 'NOM26CAB', val: 'Nombre en camiseta gratis', emoji: '✨' },
   ];
 
-  const WHEEL_COLORS = ['#00c851', '#ffd700', '#e91e8c', '#00c851', '#ff6b35', '#ffd700', '#00c851', '#ffd700'];
+  const COLORS = ['#00c851', '#1a1a1a', '#e91e8c', '#1a1a1a', '#ffd700', '#1a1a1a', '#ff6b35', '#1a1a1a'];
+
+  const SPIN_DURATION = 7000;
+  const SHAKE_WINDOW = 800;
+  const SHAKE_DELAY = 300;
+  const FIREWORK_DURATION = 4000;
 
   let spinning = false;
-  let finalAngle = 0;
   let timerInterval = null;
+  let fireworksRaf = null;
+  let fireworksCanvas = null;
+
+  function easeOutQuintic(t) {
+    return 1 - Math.pow(1 - t, 8);
+  }
 
   function getPopupShown() {
     const data = localStorage.getItem('baulRuletaDate');
@@ -33,29 +43,34 @@ const BAULRULETA = (() => {
     const cx = 110;
     const cy = 110;
     const r = 105;
-    ctx.clearRect(0, 0, 220, 220);
     const slice = (2 * Math.PI) / PRIZES.length;
-    PRIZES.forEach((p, i) => {
-      const s = angle + i * slice;
-      const e = s + slice;
+
+    ctx.clearRect(0, 0, 220, 220);
+
+    PRIZES.forEach((prize, i) => {
+      const start = angle + i * slice;
+      const end = start + slice;
+
       ctx.beginPath();
       ctx.moveTo(cx, cy);
-      ctx.arc(cx, cy, r, s, e);
+      ctx.arc(cx, cy, r, start, end);
       ctx.closePath();
-      ctx.fillStyle = WHEEL_COLORS[i];
+      ctx.fillStyle = COLORS[i];
       ctx.fill();
       ctx.strokeStyle = '#0a0a0a';
       ctx.lineWidth = 2;
       ctx.stroke();
+
       ctx.save();
       ctx.translate(cx, cy);
-      ctx.rotate(s + slice / 2);
+      ctx.rotate(start + slice / 2);
       ctx.textAlign = 'right';
-      ctx.fillStyle = '#000';
-      ctx.font = '600 12px sans-serif';
-      ctx.fillText(p.label, r - 8, 4);
+      ctx.fillStyle = COLORS[i] === '#1a1a1a' ? '#ffffff' : '#000000';
+      ctx.font = '600 11px sans-serif';
+      ctx.fillText(prize.label, r - 10, 4);
       ctx.restore();
     });
+
     ctx.beginPath();
     ctx.arc(cx, cy, 14, 0, 2 * Math.PI);
     ctx.fillStyle = '#0a0a0a';
@@ -65,28 +80,157 @@ const BAULRULETA = (() => {
     ctx.stroke();
   }
 
+  function clearWheelShake(canvas, shakeInterval) {
+    if (shakeInterval) clearInterval(shakeInterval);
+    if (canvas) canvas.style.transform = '';
+    return null;
+  }
+
   function spinWheel() {
     if (spinning) return;
     spinning = true;
-    document.getElementById('br-btn-spin').disabled = true;
-    const winnerIdx = Math.floor(Math.random() * PRIZES.length);
+
+    const spinBtn = document.getElementById('br-btn-spin');
+    if (spinBtn) spinBtn.disabled = true;
+
+    const canvas = document.getElementById('br-wheel-canvas');
+    const wi = Math.floor(Math.random() * PRIZES.length);
     const slice = (2 * Math.PI) / PRIZES.length;
-    const target = 2 * Math.PI * 6 + (2 * Math.PI - winnerIdx * slice - slice / 2);
+    const targetAngle = 2 * Math.PI * 10 - wi * slice - slice / 2 - Math.PI / 2;
+
     let start = null;
+    let shakeInterval = null;
+    let shakeStarted = false;
+
+    function finishSpin() {
+      shakeInterval = clearWheelShake(canvas, shakeInterval);
+      console.log('Winner index:', wi, '| Prize:', PRIZES[wi].label);
+      setTimeout(() => {
+        spinning = false;
+        showResult(PRIZES[wi]);
+      }, SHAKE_DELAY);
+    }
+
     function anim(ts) {
       if (!start) start = ts;
-      const p = Math.min((ts - start) / 4000, 1);
-      const ease = 1 - Math.pow(1 - p, 4);
-      drawWheel(finalAngle + target * ease);
-      if (p < 1) {
+      const elapsed = ts - start;
+      const progress = Math.min(elapsed / SPIN_DURATION, 1);
+      const eased = easeOutQuintic(progress);
+
+      drawWheel(targetAngle * eased);
+
+      const remaining = SPIN_DURATION - elapsed;
+      if (!shakeStarted && remaining <= SHAKE_WINDOW && progress < 1) {
+        shakeStarted = true;
+        let flip = 1;
+        shakeInterval = setInterval(() => {
+          if (canvas) canvas.style.transform = 'translateX(' + flip * 2 + 'px)';
+          flip *= -1;
+        }, 35);
+      }
+
+      if (progress < 1) {
         requestAnimationFrame(anim);
       } else {
-        finalAngle = (finalAngle + target) % (2 * Math.PI);
-        spinning = false;
-        showResult(PRIZES[winnerIdx]);
+        finishSpin();
       }
     }
+
     requestAnimationFrame(anim);
+  }
+
+  function ensureFireworksCanvas() {
+    const popup = document.getElementById('br-popup');
+    if (!popup) return null;
+
+    if (!fireworksCanvas) {
+      fireworksCanvas = document.createElement('canvas');
+      fireworksCanvas.id = 'br-fireworks';
+      fireworksCanvas.width = popup.offsetWidth || 420;
+      fireworksCanvas.height = popup.offsetHeight || 560;
+      fireworksCanvas.style.cssText =
+        'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:20;border-radius:inherit;';
+      if (getComputedStyle(popup).position === 'static') {
+        popup.style.position = 'relative';
+      }
+      popup.appendChild(fireworksCanvas);
+    }
+
+    fireworksCanvas.width = popup.offsetWidth || 420;
+    fireworksCanvas.height = popup.offsetHeight || 560;
+    return fireworksCanvas;
+  }
+
+  function launchFireworks() {
+    const canvas = ensureFireworksCanvas();
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    const colors = ['#ffd700', '#00c851', '#e91e8c', '#ffffff', '#ff6b35'];
+    const particles = [];
+    const startTime = performance.now();
+
+    if (fireworksRaf) cancelAnimationFrame(fireworksRaf);
+
+    function spawnBurst(count) {
+      const cx = canvas.width * 0.5;
+      const cy = canvas.height * 0.38;
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 2 + Math.random() * 7;
+        const life = 0.7 + Math.random() * 1.1;
+        particles.push({
+          x: cx + (Math.random() - 0.5) * 60,
+          y: cy + (Math.random() - 0.5) * 30,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - (1.5 + Math.random() * 2),
+          color: colors[Math.floor(Math.random() * colors.length)],
+          life,
+          maxLife: life,
+          decay: 0.01 + Math.random() * 0.015,
+          size: 2 + Math.random() * 3.5,
+        });
+      }
+    }
+
+    spawnBurst(120);
+    setTimeout(() => spawnBurst(80), 600);
+
+    function tick(now) {
+      const elapsed = now - startTime;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.vy += 0.08;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vx *= 0.985;
+        p.life -= p.decay;
+
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+
+        ctx.globalAlpha = Math.max(p.life / p.maxLife, 0);
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.globalAlpha = 1;
+
+      if (elapsed < FIREWORK_DURATION) {
+        fireworksRaf = requestAnimationFrame(tick);
+      } else {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        fireworksRaf = null;
+      }
+    }
+
+    fireworksRaf = requestAnimationFrame(tick);
   }
 
   function formatTime(secs) {
@@ -99,9 +243,11 @@ const BAULRULETA = (() => {
     let secs = 1800;
     const fill = document.getElementById('br-timer-fill');
     const txt = document.getElementById('br-timer-count');
+
     if (txt) txt.textContent = '30:00';
     if (fill) fill.style.width = '100%';
     if (timerInterval) clearInterval(timerInterval);
+
     timerInterval = setInterval(() => {
       secs--;
       if (txt) txt.textContent = formatTime(Math.max(secs, 0));
@@ -118,12 +264,13 @@ const BAULRULETA = (() => {
   }
 
   function showResult(prize) {
-    document.getElementById('br-res-emoji').textContent = prize.label.includes('%') ? '🎉' : '🏆';
+    document.getElementById('br-res-emoji').textContent = prize.emoji;
     document.getElementById('br-res-title').textContent = '¡Ganaste ' + prize.label + '!';
     document.getElementById('br-res-code').textContent = prize.code;
     document.getElementById('br-res-val').textContent = prize.val;
     showStep(3);
     startTimer();
+    launchFireworks();
     setPopupShown();
   }
 
@@ -131,11 +278,17 @@ const BAULRULETA = (() => {
     const overlay = document.getElementById('br-overlay');
     if (overlay) overlay.style.display = 'none';
     if (timerInterval) clearInterval(timerInterval);
+    if (fireworksRaf) cancelAnimationFrame(fireworksRaf);
+    if (fireworksCanvas) {
+      const ctx = fireworksCanvas.getContext('2d');
+      ctx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+    }
     setPopupShown();
   }
 
   function init() {
     if (getPopupShown()) return;
+
     const overlay = document.getElementById('br-overlay');
     if (!overlay) return;
 
