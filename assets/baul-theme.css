@@ -734,23 +734,30 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   }
   .tallas-modal {
     display: none;
-    position: fixed;
-    inset: 0;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
     z-index: 99998;
-    background: rgba(0, 0, 0, 0.78);
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 16px;
+    box-sizing: border-box;
+    background: rgba(0, 0, 0, 0.78);
   }
   .tallas-popup {
     position: relative;
     width: 100%;
     max-width: 580px;
-    max-height: 85vh;
+    max-height: calc(100dvh - 32px);
     overflow-y: auto;
+    margin: 0 auto;
+    border-radius: 12px;
     background: #0f0f0f;
     border: 1px solid var(--border);
-    border-radius: 12px;
     padding: 28px 24px 24px;
     box-shadow: var(--shadow-card);
   }
@@ -861,19 +868,6 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   }
   .tallas-warn {
     color: #ffb347;
-  }
-  @media (max-width: 768px) {
-    .tallas-modal {
-      top: 0;
-      align-items: center;
-      padding: 16px;
-    }
-    .tallas-popup {
-      width: 100%;
-      max-height: calc(100vh - 32px);
-      overflow-y: auto;
-      margin: auto;
-    }
   }
   .bp-atc {
     width: 100%; margin-top: 8px; margin-bottom: 20px;
