@@ -122,6 +122,7 @@ const BAULRULETA = (() => {
     document.getElementById('br-res-val').textContent = prize.val;
     showStep(3);
     startTimer();
+    setPopupShown();
   }
 
   function closePopup() {
