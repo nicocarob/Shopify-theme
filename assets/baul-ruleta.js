@@ -6,9 +6,11 @@ const BAULRULETA = (() => {
     { label: '$1.500', code: 'MUNDIAL1500', val: '$1.500 de descuento' },
     { label: '$2.000', code: 'MUNDIAL2K', val: '$2.000 de descuento' },
     { label: '5% OFF', code: 'MUNDIAL5OFF', val: '5% de descuento en toda la tienda' },
+    { label: 'Número gratis', code: 'NUM26CAB', val: 'Número en la camiseta gratis ($990)' },
+    { label: 'Nombre gratis', code: 'NOM26CAB', val: 'Nombre en la camiseta gratis ($990)' },
   ];
 
-  const WHEEL_COLORS = ['#00c851', '#ffd700', '#e91e8c', '#00c851', '#ff6b35', '#ffd700'];
+  const WHEEL_COLORS = ['#00c851', '#ffd700', '#e91e8c', '#00c851', '#ff6b35', '#ffd700', '#00c851', '#ffd700'];
 
   let spinning = false;
   let finalAngle = 0;
