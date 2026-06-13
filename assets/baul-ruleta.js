@@ -16,8 +16,10 @@ const BAULRULETA = (() => {
   const SHAKE_WINDOW = 800;
   const SHAKE_DELAY = 300;
   const FIREWORK_DURATION = 4000;
+  const KLAVIYO_API_KEY = 'RMwPCt';
 
   let spinning = false;
+  let pendingPrize = null;
   let timerInterval = null;
   let fireworksRaf = null;
   let fireworksCanvas = null;
@@ -34,6 +36,38 @@ const BAULRULETA = (() => {
 
   function setPopupShown() {
     localStorage.setItem('baulRuletaDate', new Date().toISOString().split('T')[0]);
+  }
+
+  async function subscribeToKlaviyo(email, prize) {
+    try {
+      await fetch('https://a.klaviyo.com/client/subscriptions/?company_id=' + KLAVIYO_API_KEY, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', revision: '2023-12-15' },
+        body: JSON.stringify({
+          data: {
+            type: 'subscription',
+            attributes: {
+              profile: {
+                data: {
+                  type: 'profile',
+                  attributes: {
+                    email: email,
+                    properties: {
+                      coupon_code: prize.code,
+                      coupon_value: prize.val,
+                      source: 'ruleta_mundial_2026',
+                    },
+                  },
+                },
+              },
+              list_id: 'RULETA2026',
+            },
+          },
+        }),
+      });
+    } catch (e) {
+      console.log('Klaviyo error:', e);
+    }
   }
 
   function drawWheel(angle) {
@@ -107,7 +141,7 @@ const BAULRULETA = (() => {
       console.log('Winner index:', wi, '| Prize:', PRIZES[wi].label);
       setTimeout(() => {
         spinning = false;
-        showResult(PRIZES[wi]);
+        showEmailStep(PRIZES[wi]);
       }, SHAKE_DELAY);
     }
 
@@ -256,11 +290,42 @@ const BAULRULETA = (() => {
     }, 1000);
   }
 
-  function showStep(n) {
+  function showStep(step) {
     const s2 = document.getElementById('br-s2');
+    const s2b = document.getElementById('br-s2b');
     const s3 = document.getElementById('br-s3');
-    if (s2) s2.style.display = n === 2 ? 'block' : 'none';
-    if (s3) s3.style.display = n === 3 ? 'block' : 'none';
+    if (s2) s2.style.display = step === 2 ? 'block' : 'none';
+    if (s2b) s2b.style.display = step === '2b' ? 'block' : 'none';
+    if (s3) s3.style.display = step === 3 ? 'block' : 'none';
+  }
+
+  function showEmailStep(prize) {
+    pendingPrize = prize;
+    showStep('2b');
+  }
+
+  async function handleReveal() {
+    const emailInput = document.getElementById('br-email-reveal');
+    const email = emailInput ? emailInput.value.trim() : '';
+    if (!email || !email.includes('@')) {
+      alert('Ingresa un email válido para ver tu cupón');
+      return;
+    }
+
+    const btn = document.getElementById('br-btn-reveal');
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Enviando...';
+    }
+
+    await subscribeToKlaviyo(email, pendingPrize);
+
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = 'Ver mi cupón →';
+    }
+
+    showResult(pendingPrize);
   }
 
   function showResult(prize) {
@@ -300,6 +365,7 @@ const BAULRULETA = (() => {
     }, 100);
 
     document.getElementById('br-btn-spin').addEventListener('click', spinWheel);
+    document.getElementById('br-btn-reveal').addEventListener('click', handleReveal);
     document.getElementById('br-btn-close').addEventListener('click', closePopup);
     document.getElementById('br-overlay').addEventListener('click', function (e) {
       if (e.target === this) closePopup();
