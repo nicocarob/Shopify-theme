@@ -39,34 +39,67 @@ const BAULRULETA = (() => {
   }
 
   async function subscribeToKlaviyo(email, prize) {
+    if (!email || !prize) return false;
+
     try {
-      await fetch('https://a.klaviyo.com/client/subscriptions/?company_id=' + KLAVIYO_API_KEY, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json', revision: '2023-12-15' },
-        body: JSON.stringify({
-          data: {
-            type: 'subscription',
-            attributes: {
-              profile: {
-                data: {
-                  type: 'profile',
-                  attributes: {
-                    email: email,
-                    properties: {
-                      coupon_code: prize.code,
-                      coupon_value: prize.val,
-                      source: 'ruleta_mundial_2026',
+      const response = await fetch(
+        'https://a.klaviyo.com/client/subscriptions/?company_id=' + KLAVIYO_API_KEY,
+        {
+          method: 'POST',
+          headers: {
+            accept: 'application/json',
+            'content-type': 'application/json',
+            revision: '2023-12-15',
+          },
+          body: JSON.stringify({
+            data: {
+              type: 'subscription',
+              attributes: {
+                custom_source: 'ruleta_mundial_2026',
+                profile: {
+                  data: {
+                    type: 'profile',
+                    attributes: {
+                      email: email,
+                      properties: {
+                        coupon_code: prize.code,
+                        coupon_value: prize.val,
+                        source: 'ruleta_mundial_2026',
+                      },
+                      subscriptions: {
+                        email: {
+                          marketing: {
+                            consent: 'SUBSCRIBED',
+                          },
+                        },
+                      },
                     },
                   },
                 },
               },
-              list_id: 'Uij28M',
+              relationships: {
+                list: {
+                  data: {
+                    type: 'list',
+                    id: 'Uij28M',
+                  },
+                },
+              },
             },
-          },
-        }),
-      });
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.log('Klaviyo error:', response.status, errorText);
+        return false;
+      }
+
+      return true;
     } catch (e) {
       console.log('Klaviyo error:', e);
+      return false;
     }
   }
 
