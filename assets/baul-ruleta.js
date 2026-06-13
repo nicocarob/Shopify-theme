@@ -64,14 +64,6 @@ const BAULRULETA = (() => {
                       properties: {
                         coupon_code: prize.code,
                         coupon_value: prize.val,
-                        source: 'ruleta_mundial_2026',
-                      },
-                      subscriptions: {
-                        email: {
-                          marketing: {
-                            consent: 'SUBSCRIBED',
-                          },
-                        },
                       },
                     },
                   },
