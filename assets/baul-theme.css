@@ -711,6 +711,157 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   .bp-variant-btn.is-unavailable {
     opacity: 0.3; text-decoration: line-through; cursor: not-allowed;
   }
+  #btn-tallas {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 18px;
+    padding: 9px 16px;
+    background: transparent;
+    border: 1px solid #333;
+    border-radius: var(--radius-sm);
+    color: #fff;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  #btn-tallas:hover {
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+  }
+  .tallas-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99998;
+    background: rgba(0, 0, 0, 0.78);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .tallas-popup {
+    position: relative;
+    width: 100%;
+    max-width: 580px;
+    max-height: 85vh;
+    overflow-y: auto;
+    background: #0f0f0f;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 24px 24px;
+    box-shadow: var(--shadow-card);
+  }
+  .tallas-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid #333;
+    border-radius: var(--radius-sm);
+    color: #fff;
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .tallas-close:hover {
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+  }
+  .tallas-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.06em;
+    color: var(--accent-gold);
+    margin: 0 36px 20px 0;
+    text-transform: uppercase;
+  }
+  .tallas-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .tallas-tab {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+    background: #0a0a0a;
+    border: 1px solid #333;
+    border-radius: 999px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+  .tallas-tab.is-active {
+    background: var(--accent-gold);
+    border-color: var(--accent-gold);
+    color: #0a0a0a;
+  }
+  .tallas-tab:hover:not(.is-active) {
+    border-color: rgba(255, 215, 0, 0.45);
+    color: #fff;
+  }
+  .tallas-panel {
+    display: none;
+  }
+  .tallas-panel.is-active {
+    display: block;
+  }
+  .tallas-table-wrap {
+    overflow-x: auto;
+    margin-bottom: 12px;
+  }
+  .tallas-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.85);
+  }
+  .tallas-table th {
+    background: var(--accent-gold);
+    color: #0a0a0a;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 10px 8px;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .tallas-table td {
+    padding: 9px 8px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .tallas-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+  .tallas-table tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.03);
+  }
+  .tallas-note,
+  .tallas-warn {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-muted);
+    margin: 0;
+  }
+  .tallas-warn {
+    color: #ffb347;
+  }
   .bp-atc {
     width: 100%; margin-top: 8px; margin-bottom: 20px;
     background: #00c851; color: #000; border: none;

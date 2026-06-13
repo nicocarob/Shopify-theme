@@ -241,3 +241,44 @@ if (productJsonEl && productForm) {
   }
   updateUI();
 }
+
+(function initTallasModal() {
+  const modal = document.getElementById('modal-tallas');
+  if (!modal) return;
+
+  const defaultTab = modal.dataset.defaultTab || 'fan';
+  const tabs = modal.querySelectorAll('.tallas-tab');
+  const panels = modal.querySelectorAll('.tallas-panel');
+  const closeBtn = modal.querySelector('.tallas-close');
+
+  function setTab(tabId) {
+    tabs.forEach((tab) => {
+      tab.classList.toggle('is-active', tab.dataset.tab === tabId);
+    });
+    panels.forEach((panel) => {
+      panel.classList.toggle('is-active', panel.dataset.panel === tabId);
+    });
+  }
+
+  function closeModal() {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  setTab(defaultTab);
+
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => setTab(tab.dataset.tab));
+  });
+
+  closeBtn?.addEventListener('click', closeModal);
+
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) closeModal();
+  });
+
+  document.getElementById('btn-tallas')?.addEventListener('click', () => {
+    setTab(defaultTab);
+    document.body.style.overflow = 'hidden';
+  });
+})();
