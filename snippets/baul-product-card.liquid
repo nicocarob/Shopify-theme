@@ -17,7 +17,7 @@
 %}
 
 <div class="pc rev-s"{% if card_delay != blank %} style="transition-delay:{{ card_delay }}"{% endif %}>
-  <a href="{{ product.url }}" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;flex:1;">
+  <a href="{{ product.url }}" class="pc-link" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;flex:1;">
     <div class="pc-img-wrap">
       {% if product.featured_image %}
         <img
@@ -51,9 +51,24 @@
         {% endif %}
         <span class="p-new">{{ price | money_without_trailing_zeros }}</span>
       </div>
-      <span class="btn-v">🛒 Ver</span>
     </div>
   </a>
+
+  <div class="btn-row">
+    <button
+      type="button"
+      class="btn-add"
+      data-baul-add
+      data-product-id="{{ product.id }}"
+      data-product-title="{{ product.title | escape }}"
+      data-product-url="{{ product.url }}"
+      data-variants='{{ product.variants | json }}'
+    >
+      + Agregar
+    </button>
+    <a href="{{ product.url }}" class="btn-custom">✏️ Personalizar</a>
+  </div>
+
   {% if show_urgency %}
     <div class="pc-urgency">
       <div class="urg-top">

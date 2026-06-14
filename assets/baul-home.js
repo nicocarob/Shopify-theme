@@ -389,3 +389,124 @@ if (productJsonEl && productForm) {
     document.body.style.overflow = 'hidden';
   });
 })();
+
+(function initBaulSizePopup() {
+  const overlay = document.getElementById('baul-size-overlay');
+  if (!overlay) return;
+
+  const grid = document.getElementById('baul-size-grid');
+  const nameEl = overlay.querySelector('.baul-size-product-name');
+  const confirmBtn = document.getElementById('baul-size-confirm');
+  const productLink = document.getElementById('baul-size-product-link');
+  const closeBtn = overlay.querySelector('.baul-size-close');
+  const confirmDefaultText = confirmBtn ? confirmBtn.textContent : 'Agregar al carrito';
+
+  let selectedVariantId = null;
+
+  function closePopup() {
+    overlay.style.display = 'none';
+    document.body.style.overflow = '';
+    selectedVariantId = null;
+    if (confirmBtn) {
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = confirmDefaultText;
+    }
+    if (grid) grid.innerHTML = '';
+  }
+
+  function renderVariants(variants) {
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    variants.forEach((variant) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'size-btn' + (variant.available ? '' : ' out');
+      btn.textContent = variant.option1 || variant.title;
+      btn.disabled = !variant.available;
+
+      if (variant.available) {
+        btn.addEventListener('click', () => {
+          grid.querySelectorAll('.size-btn').forEach((el) => el.classList.remove('selected'));
+          btn.classList.add('selected');
+          selectedVariantId = variant.id;
+          if (confirmBtn) confirmBtn.disabled = false;
+        });
+      }
+
+      grid.appendChild(btn);
+    });
+  }
+
+  window.baulOpenSizePopup = function (productId, variants, productTitle, productUrl) {
+    selectedVariantId = null;
+    if (confirmBtn) {
+      confirmBtn.disabled = true;
+      confirmBtn.textContent = confirmDefaultText;
+    }
+    if (nameEl) nameEl.textContent = productTitle || '';
+    if (productLink) productLink.href = productUrl || '#';
+    renderVariants(Array.isArray(variants) ? variants : []);
+    overlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.baulAddToCart = async function (variantId) {
+    const response = await fetch('/cart/add.js', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({ id: variantId, quantity: 1 }),
+    });
+
+    if (!response.ok) throw new Error('Cart add failed');
+    return response.json();
+  };
+
+  confirmBtn?.addEventListener('click', async () => {
+    if (!selectedVariantId) return;
+
+    confirmBtn.disabled = true;
+
+    try {
+      await window.baulAddToCart(selectedVariantId);
+      confirmBtn.textContent = '✅ ¡Agregado!';
+      setTimeout(closePopup, 1200);
+    } catch (e) {
+      confirmBtn.textContent = 'Error, intenta de nuevo';
+      confirmBtn.disabled = false;
+      setTimeout(() => {
+        confirmBtn.textContent = confirmDefaultText;
+      }, 2000);
+    }
+  });
+
+  closeBtn?.addEventListener('click', closePopup);
+  overlay.addEventListener('click', (event) => {
+    if (event.target === overlay) closePopup();
+  });
+
+  document.addEventListener('click', (event) => {
+    const addBtn = event.target.closest('[data-baul-add]');
+    if (!addBtn) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    let variants = [];
+    try {
+      variants = JSON.parse(addBtn.dataset.variants || '[]');
+    } catch (e) {
+      variants = [];
+    }
+
+    window.baulOpenSizePopup(
+      addBtn.dataset.productId,
+      variants,
+      addBtn.dataset.productTitle,
+      addBtn.dataset.productUrl
+    );
+  });
+})();
