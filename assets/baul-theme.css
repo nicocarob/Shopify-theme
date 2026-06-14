@@ -284,7 +284,7 @@
     transition: border-color 0.2s, background 0.2s;
   }
   .btn-ghost:hover { border-color: var(--accent); background: rgba(0, 200, 81, 0.08); }
-  @keyframes shimmer { 0% { left: -100%; } 60%, 100% { left: 160%; } }
+  @keyframes shimmer { 0% { left: -100%; } 100% { left: 200%; } }
   
   .hero-flags { display: flex; gap: 8px; margin-top: 22px; flex-wrap: wrap; }
   .flag-b {
@@ -532,6 +532,8 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     padding: 0 16px 14px;
   }
   .btn-add {
+    position: relative;
+    overflow: hidden;
     flex: 1;
     background: #00c851;
     color: #000;
@@ -544,6 +546,16 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     text-transform: uppercase;
     cursor: pointer;
     transition: background 0.2s, transform 0.2s;
+  }
+  .btn-add::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+    animation: shimmer 2s infinite;
   }
   .btn-add:hover { background: #fff; transform: scale(1.02); }
   .btn-custom {
@@ -1768,7 +1780,18 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .prod-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .pc-name { font-size: 13px; }
     .p-new { font-size: 20px; }
-    .btn-add, .btn-custom { padding: 8px 10px; font-size: 12px; }
+    .btn-row {
+      flex-direction: column;
+    }
+    .btn-add {
+      width: 100%;
+      padding: 10px;
+    }
+    .btn-custom {
+      width: 100%;
+      padding: 7px;
+      font-size: 11px;
+    }
     .liga-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }
     .lg-circle { width: 72px; height: 72px; }
     .lg-ico { font-size: 26px; }
