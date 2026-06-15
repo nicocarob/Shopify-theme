@@ -510,3 +510,150 @@ if (productJsonEl && productForm) {
     );
   });
 })();
+
+(function initCustomizeJersey() {
+  const section = document.querySelector('.bp-customize');
+  if (!section) return;
+
+  const stage = section.querySelector('.bp-customize-stage');
+  const overlay = section.querySelector('.bp-customize-overlay');
+  const nameEl = section.querySelector('.bp-customize-name');
+  const numberEl = section.querySelector('.bp-customize-number');
+  const nameInput = section.querySelector('#bp-customize-name-input');
+  const numberInput = section.querySelector('#bp-customize-number-input');
+
+  let loopTimer = null;
+  let loopRunning = false;
+
+  function fitText(el, containerWidth, maxWidthRatio) {
+    const maxWidth = containerWidth * maxWidthRatio;
+    let size = 48;
+    el.style.fontSize = `${size}px`;
+    while (el.scrollWidth > maxWidth && size > 12) {
+      size -= 1;
+      el.style.fontSize = `${size}px`;
+    }
+  }
+
+  function hasUserInput() {
+    return Boolean(nameInput?.value.trim() || numberInput?.value.trim());
+  }
+
+  function clearLoopTimer() {
+    if (loopTimer) {
+      clearTimeout(loopTimer);
+      loopTimer = null;
+    }
+  }
+
+  function showA() {
+    stage.classList.remove('is-show-b');
+  }
+
+  function showB() {
+    stage.classList.add('is-show-b');
+  }
+
+  function triggerPop(el) {
+    if (!el || !el.textContent) return;
+    el.classList.remove('bp-customize-pop');
+    void el.offsetWidth;
+    el.classList.add('bp-customize-pop');
+  }
+
+  function updateOverlay() {
+    const name = nameInput?.value.trim().toUpperCase() || '';
+    const num = numberInput?.value.trim() || '';
+
+    if (!hasUserInput()) {
+      overlay.classList.remove('is-visible');
+      overlay.setAttribute('aria-hidden', 'true');
+      nameEl.textContent = '';
+      numberEl.textContent = '';
+      return;
+    }
+
+    overlay.classList.add('is-visible');
+    overlay.setAttribute('aria-hidden', 'false');
+    nameEl.textContent = name;
+    numberEl.textContent = num;
+
+    if (name && stage) {
+      fitText(nameEl, stage.offsetWidth, 0.7);
+    }
+
+    triggerPop(nameEl);
+    triggerPop(numberEl);
+  }
+
+  function stopLoop() {
+    loopRunning = false;
+    clearLoopTimer();
+  }
+
+  function scheduleLoopStep(showImageB, delay) {
+    loopTimer = setTimeout(() => {
+      if (!loopRunning || hasUserInput()) return;
+
+      if (showImageB) {
+        showB();
+        scheduleLoopStep(false, 3000);
+      } else {
+        showA();
+        scheduleLoopStep(true, 2000);
+      }
+    }, delay);
+  }
+
+  function startLoop() {
+    if (hasUserInput()) return;
+
+    stopLoop();
+    loopRunning = true;
+    stage.classList.remove('is-user-mode');
+    overlay.classList.remove('is-visible');
+    overlay.setAttribute('aria-hidden', 'true');
+    showA();
+    scheduleLoopStep(true, 2000);
+  }
+
+  function onInput() {
+    if (nameInput) {
+      nameInput.value = nameInput.value.slice(0, 12).toUpperCase();
+    }
+
+    if (numberInput) {
+      const digits = numberInput.value.replace(/\D/g, '').slice(0, 2);
+      if (!digits) {
+        numberInput.value = '';
+      } else {
+        let num = parseInt(digits, 10);
+        if (num > 99) num = 99;
+        if (num < 1) num = 1;
+        numberInput.value = String(num);
+      }
+    }
+
+    if (hasUserInput()) {
+      stopLoop();
+      stage.classList.add('is-user-mode');
+      showA();
+      updateOverlay();
+      return;
+    }
+
+    stage.classList.remove('is-user-mode');
+    updateOverlay();
+    startLoop();
+  }
+
+  nameInput?.addEventListener('input', onInput);
+  numberInput?.addEventListener('input', onInput);
+  window.addEventListener('resize', () => {
+    if (hasUserInput() && nameEl.textContent && stage) {
+      fitText(nameEl, stage.offsetWidth, 0.7);
+    }
+  });
+
+  startLoop();
+})();
