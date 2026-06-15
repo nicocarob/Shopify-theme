@@ -516,6 +516,7 @@ if (productJsonEl && productForm) {
   if (!section) return;
 
   const stage = section.querySelector('.bp-customize-stage');
+  const imgA = section.querySelector('.bp-customize-img--a');
   const overlay = section.querySelector('.bp-customize-overlay');
   const nameEl = section.querySelector('.bp-customize-name');
   const numberEl = section.querySelector('.bp-customize-number');
@@ -525,8 +526,12 @@ if (productJsonEl && productForm) {
   let loopTimer = null;
   let loopRunning = false;
 
-  function fitText(el, containerWidth, maxWidthRatio) {
-    const maxWidth = containerWidth * maxWidthRatio;
+  function getImageWidth() {
+    return imgA?.clientWidth || stage?.clientWidth || 0;
+  }
+
+  function fitText(el, imageWidth, maxWidthRatio) {
+    const maxWidth = imageWidth * maxWidthRatio;
     let size = 48;
     el.style.fontSize = `${size}px`;
     while (el.scrollWidth > maxWidth && size > 12) {
@@ -578,8 +583,11 @@ if (productJsonEl && productForm) {
     nameEl.textContent = name;
     numberEl.textContent = num;
 
-    if (name && stage) {
-      fitText(nameEl, stage.offsetWidth, 0.7);
+    if (name) {
+      const imageWidth = getImageWidth();
+      fitText(nameEl, imageWidth, 0.55);
+      const nameSize = parseFloat(nameEl.style.fontSize) || 48;
+      numberEl.style.fontSize = `${Math.round(nameSize * 1.15)}px`;
     }
 
     triggerPop(nameEl);
@@ -650,8 +658,11 @@ if (productJsonEl && productForm) {
   nameInput?.addEventListener('input', onInput);
   numberInput?.addEventListener('input', onInput);
   window.addEventListener('resize', () => {
-    if (hasUserInput() && nameEl.textContent && stage) {
-      fitText(nameEl, stage.offsetWidth, 0.7);
+    if (hasUserInput() && nameEl.textContent) {
+      const imageWidth = getImageWidth();
+      fitText(nameEl, imageWidth, 0.55);
+      const nameSize = parseFloat(nameEl.style.fontSize) || 48;
+      numberEl.style.fontSize = `${Math.round(nameSize * 1.15)}px`;
     }
   });
 

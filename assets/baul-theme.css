@@ -593,11 +593,17 @@
   }
   .bp-customize-overlay {
     position: absolute;
-    top: 30%;
+    top: 25%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     z-index: 2;
-    width: 70%;
+    width: 55%;
+    height: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
     text-align: center;
     pointer-events: none;
     opacity: 0;
@@ -620,10 +626,11 @@
   }
   .bp-customize-name {
     font-size: 48px;
-    margin-bottom: 4px;
+    max-width: 100%;
   }
   .bp-customize-number {
     font-size: 56px;
+    max-width: 100%;
   }
   .bp-customize-pop {
     animation: bpCustomizePop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
