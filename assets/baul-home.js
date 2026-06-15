@@ -510,38 +510,3 @@ if (productJsonEl && productForm) {
     );
   });
 })();
-
-(function initRelatedTrackLoop() {
-  const track = document.querySelector('.related-track');
-  if (!track) return;
-
-  track.innerHTML += track.innerHTML;
-  track.querySelectorAll('.rev-s').forEach((el) => el.classList.add('in'));
-  const totalWidth = track.scrollWidth / 2;
-  let pos = 0;
-  let running = true;
-
-  function loop() {
-    if (running) {
-      pos += 0.5;
-      if (pos >= totalWidth) pos = 0;
-      track.scrollLeft = pos;
-    }
-    requestAnimationFrame(loop);
-  }
-
-  track.addEventListener('mouseenter', () => {
-    running = false;
-  });
-  track.addEventListener('mouseleave', () => {
-    running = true;
-  });
-  track.addEventListener('touchstart', () => {
-    running = false;
-  });
-  track.addEventListener('touchend', () => {
-    running = true;
-  });
-
-  loop();
-})();

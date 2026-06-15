@@ -1059,22 +1059,37 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   }
   .bp-desc p { margin: 0 0 12px; }
   .bp-related { padding-top: 40px; padding-bottom: 20px; }
-  .related-track {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 12px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x mandatory;
-    padding-bottom: 12px;
+  .related-wrap {
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
     max-width: 1200px;
     margin: 0 auto;
   }
+  .related-wrap::before,
+  .related-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .related-wrap::before { left: 0; background: linear-gradient(90deg, var(--bg), transparent); }
+  .related-wrap::after { right: 0; background: linear-gradient(-90deg, var(--bg), transparent); }
+  .related-track {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    gap: 12px;
+    animation: slL 50s linear infinite;
+    padding: 0 20px 12px;
+  }
+  .related-track:hover { animation-play-state: paused; }
   .related-track .prod-card,
   .related-track .pc {
     flex: 0 0 180px;
     min-width: 180px;
-    scroll-snap-align: start;
     opacity: 1;
     transform: none;
   }
@@ -1090,16 +1105,6 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     width: 100%;
     padding: 6px;
     font-size: 10px;
-  }
-  .related-track::-webkit-scrollbar {
-    height: 4px;
-  }
-  .related-track::-webkit-scrollbar-track {
-    background: #1a1a1a;
-  }
-  .related-track::-webkit-scrollbar-thumb {
-    background: #00c851;
-    border-radius: 2px;
   }
   .related-actions {
     max-width: 1200px;

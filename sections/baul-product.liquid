@@ -328,6 +328,16 @@
     assign shown = 0
     assign tag_count = 0
     assign shown_ids = ','
+
+    assign team_link = team_tag
+    if team_link == blank
+      assign related_col_for_link = product.collections.first
+      if related_col_for_link != blank
+        unless related_col_for_link.handle == 'all' or related_col_for_link.handle == 'frontpage'
+          assign team_link = related_col_for_link.handle
+        endunless
+      endif
+    endif
   %}
 
   {% capture related_cards %}
@@ -386,13 +396,16 @@
       <div class="sec-hdr rev sec-hdr--center">
         <h2 class="sec-title">TAMBIÉN TE PUEDE GUSTAR</h2>
       </div>
-      <div class="related-track">
-        {{ related_cards }}
+      <div class="related-wrap">
+        <div class="related-track">
+          {{ related_cards }}
+          {{ related_cards }}
+        </div>
       </div>
-      {% if team_tag != blank %}
-        {% assign team_name = team_tag | replace: '-', ' ' | capitalize %}
+      {% if team_link != blank %}
+        {% assign team_name = team_link | replace: '-', ' ' | capitalize %}
         <div class="related-actions">
-          <a href="/search?q={{ team_tag | url_encode }}&type=product" class="btn-ver-mas">
+          <a href="/search?q={{ team_link | url_encode }}&type=product" class="btn-ver-mas">
             Ver todo de {{ team_name }} →
           </a>
         </div>
