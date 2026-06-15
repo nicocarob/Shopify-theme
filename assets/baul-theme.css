@@ -1,8 +1,16 @@
 /* ═══════════════════════════════════════════════════════════
    BAÚL DEL CAPITÁN — Premium Theme (cloned from Shopify Horizon)
    Paleta: #0a0a0a · #00c851 · #ffd700 · #e91e8c
-   Tipografías: Bebas Neue + Barlow Condensed
+   Tipografías: Bebas Neue + Barlow Condensed + PORTUGAL_FWC_2026
    ═══════════════════════════════════════════════════════════ */
+
+@font-face {
+  font-family: 'PORTUGAL_FWC_2026';
+  src: url('PORTUGAL_FWC_2026.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
    :root {
     --bg: #0a0a0a;
@@ -593,18 +601,8 @@
   }
   .bp-customize-overlay {
     position: absolute;
-    top: 25%;
-    left: 50%;
-    transform: translateX(-50%);
+    inset: 0;
     z-index: 2;
-    width: 55%;
-    height: 40%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    text-align: center;
     pointer-events: none;
     opacity: 0;
     visibility: hidden;
@@ -616,32 +614,40 @@
   }
   .bp-customize-name,
   .bp-customize-number {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     display: block;
     color: #ffd700;
-    font-weight: 900;
-    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 400;
+    font-family: 'PORTUGAL_FWC_2026', 'Barlow Condensed', sans-serif;
     text-shadow: 0 2px 8px #000, 0 0 6px #000, 0 0 2px #000;
-    line-height: 1;
+    line-height: 0.9;
     white-space: nowrap;
+    text-align: center;
+    letter-spacing: 0.04em;
   }
   .bp-customize-name {
-    font-size: 48px;
-    max-width: 100%;
+    top: 28%;
+    font-size: 42px;
+    max-width: 55%;
   }
   .bp-customize-number {
-    font-size: 56px;
-    max-width: 100%;
+    top: 39%;
+    font-size: 130px;
+    max-width: 28%;
   }
-  .bp-customize-pop {
+  .bp-customize-name.bp-customize-pop,
+  .bp-customize-number.bp-customize-pop {
     animation: bpCustomizePop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   }
   @keyframes bpCustomizePop {
     from {
-      transform: scale(0.5);
+      transform: translateX(-50%) scale(0.5);
       opacity: 0;
     }
     to {
-      transform: scale(1);
+      transform: translateX(-50%) scale(1);
       opacity: 1;
     }
   }

@@ -530,13 +530,31 @@ if (productJsonEl && productForm) {
     return imgA?.clientWidth || stage?.clientWidth || 0;
   }
 
-  function fitText(el, imageWidth, maxWidthRatio) {
+  function fitText(el, imageWidth, maxWidthRatio, startSize = 48) {
+    if (!el) return;
     const maxWidth = imageWidth * maxWidthRatio;
-    let size = 48;
+    let size = startSize;
     el.style.fontSize = `${size}px`;
-    while (el.scrollWidth > maxWidth && size > 12) {
+    while (el.scrollWidth > maxWidth && size > 10) {
       size -= 1;
       el.style.fontSize = `${size}px`;
+    }
+  }
+
+  function fitOverlayText() {
+    const imageWidth = getImageWidth();
+    if (!imageWidth) return;
+
+    if (nameEl.textContent) {
+      fitText(nameEl, imageWidth, 0.55, 42);
+    } else {
+      nameEl.style.fontSize = '';
+    }
+
+    if (numberEl.textContent) {
+      fitText(numberEl, imageWidth, 0.28, 130);
+    } else {
+      numberEl.style.fontSize = '';
     }
   }
 
@@ -583,12 +601,7 @@ if (productJsonEl && productForm) {
     nameEl.textContent = name;
     numberEl.textContent = num;
 
-    if (name) {
-      const imageWidth = getImageWidth();
-      fitText(nameEl, imageWidth, 0.55);
-      const nameSize = parseFloat(nameEl.style.fontSize) || 48;
-      numberEl.style.fontSize = `${Math.round(nameSize * 1.15)}px`;
-    }
+    fitOverlayText();
 
     triggerPop(nameEl);
     triggerPop(numberEl);
@@ -658,12 +671,7 @@ if (productJsonEl && productForm) {
   nameInput?.addEventListener('input', onInput);
   numberInput?.addEventListener('input', onInput);
   window.addEventListener('resize', () => {
-    if (hasUserInput() && nameEl.textContent) {
-      const imageWidth = getImageWidth();
-      fitText(nameEl, imageWidth, 0.55);
-      const nameSize = parseFloat(nameEl.style.fontSize) || 48;
-      numberEl.style.fontSize = `${Math.round(nameSize * 1.15)}px`;
-    }
+    if (hasUserInput()) fitOverlayText();
   });
 
   startLoop();
