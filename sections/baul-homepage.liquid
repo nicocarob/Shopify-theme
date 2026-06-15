@@ -46,7 +46,7 @@
     assign fem_products = collections.all.products
   endif
 
-  assign wa_url = 'https://wa.me/56948685507?text=Tengo%20una%20pregunta'
+  assign wa_url = section.settings.whatsapp_url | default: 'https://wa.me/56948685507?text=Tengo%20una%20pregunta'
 %}
 
 {% render 'baul-header', section: section %}
@@ -301,6 +301,14 @@
     {% endfor %}
   </div>
 </section>
+
+<script>
+  (function () {
+    var wa = document.querySelector('.wa');
+    var url = {{ wa_url | json }};
+    if (wa && url) wa.href = url;
+  })();
+</script>
 
 {% schema %}
 {

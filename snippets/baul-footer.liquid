@@ -5,6 +5,9 @@
 {% liquid
   assign footer_description = 'Más de 10 años equipando hinchas en todo Chile. La mejor calidad, envío gratis y atención personalizada.'
   assign wa_url = 'https://wa.me/56948685507?text=Tengo%20una%20pregunta'
+  if whatsapp_url != blank
+    assign wa_url = whatsapp_url
+  endif
 %}
 
 <footer>
@@ -68,6 +71,4 @@
   </div>
 </footer>
 
-<a class="wa" href="{{ wa_url }}" target="_blank" rel="noopener" aria-label="WhatsApp">
-  {% render 'baul-whatsapp-icon' %}
-</a>
+{% render 'baul-whatsapp-float', wa_url: wa_url %}

@@ -1727,18 +1727,45 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   
   /* WhatsApp floating */
   .wa {
-    position: fixed; bottom: 22px; right: 22px;
-    background: #25d366; color: #fff; width: 52px; height: 52px;
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    text-decoration: none; z-index: 300;
+    position: fixed;
+    bottom: 22px;
+    right: 22px;
+    background: #00c851;
+    color: #000;
+    width: auto;
+    height: auto;
+    min-height: 52px;
+    padding: 12px 20px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    z-index: 300;
     transition: transform 0.2s;
     animation: waPulse 2.5s ease-in-out infinite;
+    box-shadow: 0 4px 20px rgba(0, 200, 81, 0.35);
+  }
+  .wa-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .wa svg { width: 28px; height: 28px; display: block; }
-  .wa:hover { transform: scale(1.1); }
+  .wa-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #000;
+    white-space: nowrap;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+  }
+  .wa:hover { transform: scale(1.03); }
   @keyframes waPulse {
-    0%, 100% { box-shadow: 0 4px 20px rgba(37, 211, 102, 0.35); }
-    50% { box-shadow: 0 4px 32px rgba(37, 211, 102, 0.6), 0 0 0 6px rgba(37, 211, 102, 0.1); }
+    0%, 100% { box-shadow: 0 4px 20px rgba(0, 200, 81, 0.35); }
+    50% { box-shadow: 0 4px 32px rgba(0, 200, 81, 0.6), 0 0 0 6px rgba(0, 200, 81, 0.1); }
   }
   
   /* ── Mobile ── */
@@ -1875,7 +1902,17 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .ft-grid { grid-template-columns: 1fr 1fr; gap: 20px 16px; }
     .ft-bot { justify-content: center; text-align: center; }
     .ft-copy-row { justify-content: center; }
-    .wa { width: 44px; height: 44px; bottom: 16px; right: 16px; }
+    .wa {
+      width: 44px;
+      height: 44px;
+      min-height: 44px;
+      padding: 0;
+      border-radius: 50%;
+      justify-content: center;
+      bottom: 16px;
+      right: 16px;
+    }
+    .wa-text { display: none; }
     .wa svg { width: 24px; height: 24px; }
     #scroll-bar { height: 2px; }
   }

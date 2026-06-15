@@ -1,0 +1,15 @@
+{% comment %}
+  Botón flotante WhatsApp
+  Parámetro: wa_url (requerido)
+{% endcomment %}
+
+<a
+  class="wa"
+  href="{{ wa_url }}"
+  target="_blank"
+  rel="noopener"
+  aria-label="WhatsApp — No encuentro mi camiseta / Tengo una duda"
+>
+  <span class="wa-icon" aria-hidden="true">{% render 'baul-whatsapp-icon' %}</span>
+  <span class="wa-text">No encuentro mi camiseta / Tengo una duda</span>
+</a>
