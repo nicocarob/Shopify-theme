@@ -516,6 +516,7 @@ if (productJsonEl && productForm) {
   if (!track) return;
 
   track.innerHTML += track.innerHTML;
+  track.querySelectorAll('.rev-s').forEach((el) => el.classList.add('in'));
   const totalWidth = track.scrollWidth / 2;
   let pos = 0;
   let running = true;
