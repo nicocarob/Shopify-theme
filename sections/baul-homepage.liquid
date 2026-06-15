@@ -119,49 +119,10 @@
 <section class="col-sec bp-customize" id="personaliza">
   <div class="sec-bg-grid"></div>
   <div class="bp-customize-grid">
-    <div class="bp-customize-copy rev">
+    <div class="bp-customize-intro rev">
       <span class="bp-customize-tag">✏️ Personalización</span>
       <h2 class="bp-customize-title">Tu nombre en tu <em>CAMISETA</em></h2>
       <p class="bp-customize-sub">Estampado oficial con tu nombre y número favorito. Envío a todo Chile.</p>
-
-      <div class="bp-customize-fields">
-        <label class="bp-customize-label" for="bp-customize-name-input">Nombre en camiseta</label>
-        <input
-          type="text"
-          id="bp-customize-name-input"
-          class="bp-customize-input"
-          maxlength="12"
-          placeholder="Ej: RONALDO"
-          autocomplete="off"
-        >
-
-        <label class="bp-customize-label" for="bp-customize-number-input">Número</label>
-        <input
-          type="text"
-          id="bp-customize-number-input"
-          class="bp-customize-input"
-          inputmode="numeric"
-          maxlength="2"
-          placeholder="Ej: 7"
-          autocomplete="off"
-        >
-      </div>
-
-      <form class="pers-search-wrap" action="/search" method="get" role="search">
-        <input type="hidden" name="type" value="product">
-        <div class="pers-search-inner">
-          <span class="pers-search-icon" aria-hidden="true">⚽</span>
-          <input
-            class="pers-search-input"
-            type="search"
-            name="q"
-            placeholder="Busca tu equipo... ej: Argentina, Real Madrid"
-            autocomplete="off"
-            required
-          >
-          <button class="pers-search-btn" type="submit">BUSCAR</button>
-        </div>
-      </form>
     </div>
 
     <div class="bp-customize-visual rev">
@@ -187,6 +148,51 @@
           <span class="bp-customize-number"></span>
         </div>
       </div>
+    </div>
+
+    <div class="bp-customize-controls rev">
+      <div class="bp-customize-fields">
+        <div class="bp-customize-field">
+          <label class="bp-customize-label" for="bp-customize-name-input">Nombre en camiseta</label>
+          <input
+            type="text"
+            id="bp-customize-name-input"
+            class="bp-customize-input"
+            maxlength="12"
+            placeholder="Ej: RONALDO"
+            autocomplete="off"
+          >
+        </div>
+
+        <div class="bp-customize-field bp-customize-field--num">
+          <label class="bp-customize-label" for="bp-customize-number-input">Número</label>
+          <input
+            type="text"
+            id="bp-customize-number-input"
+            class="bp-customize-input"
+            inputmode="numeric"
+            maxlength="2"
+            placeholder="Ej: 7"
+            autocomplete="off"
+          >
+        </div>
+      </div>
+
+      <form class="pers-search-wrap" action="/search" method="get" role="search">
+        <input type="hidden" name="type" value="product">
+        <div class="pers-search-inner">
+          <span class="pers-search-icon" aria-hidden="true">⚽</span>
+          <input
+            class="pers-search-input"
+            type="search"
+            name="q"
+            placeholder="Busca tu equipo... ej: Argentina, Real Madrid"
+            autocomplete="off"
+            required
+          >
+          <button class="pers-search-btn" type="submit">BUSCAR</button>
+        </div>
+      </form>
     </div>
   </div>
 </section>

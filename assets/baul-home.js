@@ -670,6 +670,11 @@ if (productJsonEl && productForm) {
 
   nameInput?.addEventListener('input', onInput);
   numberInput?.addEventListener('input', onInput);
+  [nameInput, numberInput].forEach((input) => {
+    input?.addEventListener('focus', () => {
+      window.setTimeout(fitOverlayText, 280);
+    });
+  });
   window.addEventListener('resize', () => {
     if (hasUserInput()) fitOverlayText();
   });
