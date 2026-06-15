@@ -313,34 +313,92 @@
 
   {% liquid
     assign team_tag = ''
+    assign team_collection = blank
+    assign skip_tags = 'player-version,privado' | split: ','
+
     for tag in product.tags
-      if tag contains '-' and tag != 'player-version'
-        assign team_tag = tag
-        break
-      endif
+      unless skip_tags contains tag
+        assign tag_col = collections[tag]
+        if tag_col != blank and tag_col.products_count > 1
+          assign team_tag = tag
+          assign team_collection = tag_col
+          break
+        endif
+      endunless
     endfor
+
+    if team_tag == blank
+      for tag in product.tags
+        unless skip_tags contains tag
+          if tag contains '-'
+            assign is_season_tag = false
+            if tag contains '25-26' or tag contains '24-25' or tag contains '26-27'
+              assign is_season_tag = true
+            endif
+            unless is_season_tag
+              assign team_tag = tag
+              assign team_collection = collections[tag]
+              break
+            endunless
+          endif
+        endunless
+      endfor
+    endif
+
+    if team_tag == blank
+      for col in product.collections
+        if col.handle != 'all' and col.handle != 'frontpage' and col.products_count > 1
+          assign team_tag = col.handle
+          assign team_collection = col
+          break
+        endif
+      endfor
+    endif
 
     assign related_count = 0
   %}
-  {% if team_tag != blank %}
+
+  {% capture related_cards %}
+    {% if team_collection != blank %}
+      {% for p in team_collection.products %}
+        {% unless p.id == product.id %}
+          {% render 'baul-product-card', product: p %}
+          {% assign related_count = related_count | plus: 1 %}
+          {% if related_count >= 8 %}{% break %}{% endif %}
+        {% endunless %}
+      {% endfor %}
+    {% endif %}
+
+    {% if related_count < 8 and team_tag != blank and team_collection == blank %}
+      {% for p in collections.all.products limit: 250 %}
+        {% if p.tags contains team_tag and p.id != product.id %}
+          {% render 'baul-product-card', product: p %}
+          {% assign related_count = related_count | plus: 1 %}
+          {% if related_count >= 8 %}{% break %}{% endif %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  {% endcapture %}
+
+  {% if related_count > 0 %}
     <section class="col-sec bp-related">
       <div class="sec-bg-grid"></div>
       <div class="sec-hdr rev sec-hdr--center">
         <h2 class="sec-title">TAMBIÉN TE PUEDE GUSTAR</h2>
       </div>
       <div class="related-track">
-        {% for p in collections.all.products %}
-          {% if p.tags contains team_tag and p.id != product.id %}
-            {% render 'baul-product-card', product: p %}
-            {% assign related_count = related_count | plus: 1 %}
-            {% if related_count >= 8 %}{% break %}{% endif %}
-          {% endif %}
-        {% endfor %}
+        {{ related_cards }}
       </div>
       <div class="related-actions">
-        <a href="/search?q={{ team_tag | url_encode }}&type=product" class="btn-ver-mas">
-          Ver toda la colección de {{ team_tag | replace: '-', ' ' | capitalize }} →
-        </a>
+        {% if team_collection != blank %}
+          <a href="{{ team_collection.url }}" class="btn-ver-mas">
+            Ver toda la colección de {{ team_tag | replace: '-', ' ' | capitalize }} →
+          </a>
+        {% else %}
+          <a href="/search?q={{ team_tag | url_encode }}&type=product" class="btn-ver-mas">
+            Ver toda la colección de {{ team_tag | replace: '-', ' ' | capitalize }} →
+          </a>
+        {% endif %}
       </div>
     </section>
   {% endif %}
