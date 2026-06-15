@@ -359,22 +359,12 @@
   %}
 
   {% capture related_cards %}
-    {% if team_collection != blank %}
-      {% for p in team_collection.products %}
-        {% unless p.id == product.id %}
-          {% render 'baul-product-card', product: p %}
-          {% assign related_count = related_count | plus: 1 %}
-          {% if related_count >= 8 %}{% break %}{% endif %}
-        {% endunless %}
-      {% endfor %}
-    {% endif %}
-
-    {% if related_count < 8 and team_tag != blank and team_collection == blank %}
+    {% if team_tag != blank %}
       {% for p in collections.all.products limit: 250 %}
         {% if p.tags contains team_tag and p.id != product.id %}
           {% render 'baul-product-card', product: p %}
           {% assign related_count = related_count | plus: 1 %}
-          {% if related_count >= 8 %}{% break %}{% endif %}
+          {% if related_count >= 12 %}{% break %}{% endif %}
         {% endif %}
       {% endfor %}
     {% endif %}
