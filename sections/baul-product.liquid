@@ -312,61 +312,35 @@
   {% endif %}
 
   {% liquid
-    assign related_collection = product.collections.first
-    if related_collection
-      assign related_products = related_collection.products
-    else
-      assign related_products = collections.all.products
-    endif
+    assign team_tag = ''
+    for tag in product.tags
+      if tag contains '-' and tag != 'player-version'
+        assign team_tag = tag
+        break
+      endif
+    endfor
 
-    assign has_other_in_collection = false
-    if related_collection
-      for p in related_collection.products
-        unless p.id == product.id
-          assign has_other_in_collection = true
-        endunless
-      endfor
-      unless has_other_in_collection
-        assign related_products = collections.all.products
-      endunless
-    endif
-
-    assign shown = 0
-    assign shown_ids = ','
+    assign related_count = 0
   %}
-  {% if shop.products_count > 1 %}
+  {% if team_tag != blank %}
     <section class="col-sec bp-related">
       <div class="sec-bg-grid"></div>
       <div class="sec-hdr rev sec-hdr--center">
         <h2 class="sec-title">TAMBIÉN TE PUEDE GUSTAR</h2>
       </div>
-      <div class="prod-grid">
-        {% for p in related_products %}
-          {% unless p.id == product.id %}
-            {% if shown < 4 %}
-              {% assign pid_marker = ',' | append: p.id | append: ',' %}
-              {% unless shown_ids contains pid_marker %}
-                {% render 'baul-product-card', product: p %}
-                {% assign shown = shown | plus: 1 %}
-                {% assign shown_ids = shown_ids | append: p.id | append: ',' %}
-              {% endunless %}
-            {% endif %}
-          {% endunless %}
+      <div class="related-track">
+        {% for p in collections.all.products %}
+          {% if p.tags contains team_tag and p.id != product.id %}
+            {% render 'baul-product-card', product: p %}
+            {% assign related_count = related_count | plus: 1 %}
+            {% if related_count >= 8 %}{% break %}{% endif %}
+          {% endif %}
         {% endfor %}
-        {% if shown < 4 %}
-          {% for p in collections.all.products %}
-            {% unless p.id == product.id %}
-              {% if shown < 4 %}
-                {% assign pid_marker = ',' | append: p.id | append: ',' %}
-                {% unless shown_ids contains pid_marker %}
-                  {% render 'baul-product-card', product: p %}
-                  {% assign shown = shown | plus: 1 %}
-                  {% assign shown_ids = shown_ids | append: p.id | append: ',' %}
-                {% endunless %}
-              {% endif %}
-            {% endunless %}
-          {% endfor %}
-        {% endif %}
+      </div>
+      <div class="related-actions">
+        <a href="/search?q={{ team_tag | url_encode }}&type=product" class="btn-ver-mas">
+          Ver toda la colección de {{ team_tag | replace: '-', ' ' | capitalize }} →
+        </a>
       </div>
     </section>
   {% endif %}
