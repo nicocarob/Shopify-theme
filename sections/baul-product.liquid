@@ -312,62 +312,90 @@
   {% endif %}
 
   {% liquid
-    assign related_collection = product.collections.first
-    if related_collection
-      assign related_products = related_collection.products
-    else
-      assign related_products = collections.all.products
-    endif
+    assign team_tag = ''
+    assign skip_tags = 'adultos,ninos,niños,local,visitante,mujer,player-version' | split: ','
 
-    assign has_other_in_collection = false
-    if related_collection
-      for p in related_collection.products
-        unless p.id == product.id
-          assign has_other_in_collection = true
-        endunless
-      endfor
-      unless has_other_in_collection
-        assign related_products = collections.all.products
+    for tag in product.tags
+      assign tag_key = tag | downcase
+      unless skip_tags contains tag_key
+        if collections[tag] != blank or tag contains '-'
+          assign team_tag = tag
+          break
+        endif
       endunless
-    endif
+    endfor
 
     assign shown = 0
+    assign tag_count = 0
     assign shown_ids = ','
   %}
-  {% if shop.products_count > 1 %}
+
+  {% capture related_cards %}
+    {% if team_tag != blank %}
+      {% for p in collections.all.products limit: 250 %}
+        {% if p.tags contains team_tag and p.id != product.id %}
+          {% assign pid_marker = ',' | append: p.id | append: ',' %}
+          {% unless shown_ids contains pid_marker %}
+            {% render 'baul-product-card', product: p %}
+            {% assign shown = shown | plus: 1 %}
+            {% assign tag_count = tag_count | plus: 1 %}
+            {% assign shown_ids = shown_ids | append: p.id | append: ',' %}
+            {% if shown >= 8 %}{% break %}{% endif %}
+          {% endunless %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+
+    {% if tag_count < 4 %}
+      {% assign related_collection = product.collections.first %}
+      {% if related_collection != blank %}
+        {% for p in related_collection.products %}
+          {% unless p.id == product.id %}
+            {% if shown < 8 %}
+              {% assign pid_marker = ',' | append: p.id | append: ',' %}
+              {% unless shown_ids contains pid_marker %}
+                {% render 'baul-product-card', product: p %}
+                {% assign shown = shown | plus: 1 %}
+                {% assign shown_ids = shown_ids | append: p.id | append: ',' %}
+                {% if shown >= 8 %}{% break %}{% endif %}
+              {% endunless %}
+            {% endif %}
+          {% endunless %}
+        {% endfor %}
+      {% endif %}
+    {% endif %}
+
+    {% if shown == 0 %}
+      {% for p in collections.all.products limit: 8 %}
+        {% unless p.id == product.id %}
+          {% assign pid_marker = ',' | append: p.id | append: ',' %}
+          {% unless shown_ids contains pid_marker %}
+            {% render 'baul-product-card', product: p %}
+            {% assign shown = shown | plus: 1 %}
+            {% assign shown_ids = shown_ids | append: p.id | append: ',' %}
+            {% if shown >= 8 %}{% break %}{% endif %}
+          {% endunless %}
+        {% endunless %}
+      {% endfor %}
+    {% endif %}
+  {% endcapture %}
+
+  {% if shown > 0 %}
     <section class="col-sec bp-related">
       <div class="sec-bg-grid"></div>
       <div class="sec-hdr rev sec-hdr--center">
         <h2 class="sec-title">TAMBIÉN TE PUEDE GUSTAR</h2>
       </div>
       <div class="related-track">
-        {% for p in related_products %}
-          {% unless p.id == product.id %}
-            {% if shown < 4 %}
-              {% assign pid_marker = ',' | append: p.id | append: ',' %}
-              {% unless shown_ids contains pid_marker %}
-                {% render 'baul-product-card', product: p %}
-                {% assign shown = shown | plus: 1 %}
-                {% assign shown_ids = shown_ids | append: p.id | append: ',' %}
-              {% endunless %}
-            {% endif %}
-          {% endunless %}
-        {% endfor %}
-        {% if shown < 4 %}
-          {% for p in collections.all.products %}
-            {% unless p.id == product.id %}
-              {% if shown < 4 %}
-                {% assign pid_marker = ',' | append: p.id | append: ',' %}
-                {% unless shown_ids contains pid_marker %}
-                  {% render 'baul-product-card', product: p %}
-                  {% assign shown = shown | plus: 1 %}
-                  {% assign shown_ids = shown_ids | append: p.id | append: ',' %}
-                {% endunless %}
-              {% endif %}
-            {% endunless %}
-          {% endfor %}
-        {% endif %}
+        {{ related_cards }}
       </div>
+      {% if team_tag != blank %}
+        <div class="related-actions">
+          <a href="/search?q={{ team_tag | url_encode }}&type=product" class="btn-ver-mas">
+            Ver más →
+          </a>
+        </div>
+      {% endif %}
     </section>
   {% endif %}
 </section>

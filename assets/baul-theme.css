@@ -1063,12 +1063,13 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     display: flex;
     flex-wrap: nowrap;
     gap: 12px;
-    overflow-x: scroll;
+    overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scroll-snap-type: x mandatory;
     padding-bottom: 12px;
     max-width: 1200px;
     margin: 0 auto;
+    cursor: grab;
   }
   .related-track .prod-card,
   .related-track .pc {
@@ -1085,6 +1086,32 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   .related-track::-webkit-scrollbar-thumb {
     background: #00c851;
     border-radius: 2px;
+  }
+  .related-actions {
+    max-width: 1200px;
+    margin: 16px auto 0;
+    text-align: center;
+  }
+  .btn-ver-mas {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    background: transparent;
+    border: 1px solid #333;
+    border-radius: var(--radius-sm);
+    color: var(--text-soft);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-ver-mas:hover {
+    border-color: var(--accent);
+    color: var(--accent);
   }
   .btn-cart { text-decoration: none; display: inline-flex; align-items: center; }
 
