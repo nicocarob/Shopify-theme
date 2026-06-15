@@ -2252,11 +2252,10 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .bp-customize-visual {
       grid-column: 1;
       grid-row: 2;
-      position: sticky;
-      top: 0;
-      z-index: 3;
-      padding: 8px 0 12px;
-      background: linear-gradient(180deg, #101c14 78%, rgba(16, 28, 20, 0));
+      position: static;
+      z-index: auto;
+      padding: 0;
+      background: none;
     }
     .bp-customize-controls {
       grid-column: 1;
@@ -2287,7 +2286,10 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .bp-customize-stage {
       max-width: min(72vw, 280px);
       margin: 0 auto;
-      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+      border: none;
+      box-shadow: none;
+      border-radius: 0;
+      background: transparent;
     }
     .pers-search-wrap { max-width: none; }
     .pers-search-input {
