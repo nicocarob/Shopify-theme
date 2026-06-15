@@ -707,12 +707,10 @@
   .bp-customize-name {
     top: 28%;
     font-size: 42px;
-    max-width: 55%;
   }
   .bp-customize-number {
     top: 39%;
     font-size: 130px;
-    max-width: 28%;
   }
   .bp-customize-name.bp-customize-pop,
   .bp-customize-number.bp-customize-pop {
@@ -2264,8 +2262,6 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
       margin: 0 auto;
       box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
     }
-    .bp-customize-name { top: 27%; }
-    .bp-customize-number { top: 38%; font-size: 110px; }
     .pers-search-wrap { max-width: none; }
     .pers-search-input {
       font-size: 16px;

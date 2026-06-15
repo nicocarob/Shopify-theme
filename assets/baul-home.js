@@ -523,16 +523,22 @@ if (productJsonEl && productForm) {
   const nameInput = section.querySelector('#bp-customize-name-input');
   const numberInput = section.querySelector('#bp-customize-number-input');
 
+  const STAGE_REF_WIDTH = 480;
+
   let loopTimer = null;
   let loopRunning = false;
+  let fitRaf = 0;
 
-  function getImageWidth() {
-    return imgA?.clientWidth || stage?.clientWidth || 0;
+  function getStageMetrics() {
+    const width = imgA?.clientWidth || stage?.clientWidth || 0;
+    const scale = width ? Math.min(Math.max(width / STAGE_REF_WIDTH, 0.42), 1.15) : 1;
+    return { width, scale };
   }
 
   function fitText(el, imageWidth, maxWidthRatio, startSize = 48) {
-    if (!el) return;
+    if (!el || !imageWidth) return;
     const maxWidth = imageWidth * maxWidthRatio;
+    el.style.maxWidth = `${maxWidth}px`;
     let size = startSize;
     el.style.fontSize = `${size}px`;
     while (el.scrollWidth > maxWidth && size > 10) {
@@ -542,20 +548,32 @@ if (productJsonEl && productForm) {
   }
 
   function fitOverlayText() {
-    const imageWidth = getImageWidth();
-    if (!imageWidth) return;
+    const { width, scale } = getStageMetrics();
+    if (!width) return;
+
+    const nameStart = Math.max(12, Math.round(42 * scale));
+    const numberStart = Math.max(18, Math.round(130 * scale));
 
     if (nameEl.textContent) {
-      fitText(nameEl, imageWidth, 0.55, 42);
+      fitText(nameEl, width, 0.55, nameStart);
     } else {
       nameEl.style.fontSize = '';
+      nameEl.style.maxWidth = '';
     }
 
     if (numberEl.textContent) {
-      fitText(numberEl, imageWidth, 0.28, 130);
+      fitText(numberEl, width, 0.28, numberStart);
     } else {
       numberEl.style.fontSize = '';
+      numberEl.style.maxWidth = '';
     }
+  }
+
+  function scheduleFitOverlay() {
+    cancelAnimationFrame(fitRaf);
+    fitRaf = requestAnimationFrame(() => {
+      if (hasUserInput()) fitOverlayText();
+    });
   }
 
   function hasUserInput() {
@@ -672,12 +690,19 @@ if (productJsonEl && productForm) {
   numberInput?.addEventListener('input', onInput);
   [nameInput, numberInput].forEach((input) => {
     input?.addEventListener('focus', () => {
-      window.setTimeout(fitOverlayText, 280);
+      window.setTimeout(scheduleFitOverlay, 280);
     });
   });
-  window.addEventListener('resize', () => {
-    if (hasUserInput()) fitOverlayText();
-  });
+  window.addEventListener('resize', scheduleFitOverlay);
+  window.visualViewport?.addEventListener('resize', scheduleFitOverlay);
+  window.visualViewport?.addEventListener('scroll', scheduleFitOverlay);
+
+  if (stage && typeof ResizeObserver !== 'undefined') {
+    const stageObserver = new ResizeObserver(scheduleFitOverlay);
+    stageObserver.observe(stage);
+  }
+
+  imgA?.addEventListener('load', scheduleFitOverlay);
 
   startLoop();
 })();
