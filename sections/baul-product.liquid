@@ -313,17 +313,60 @@
 
   {% liquid
     assign team_tag = ''
-    assign skip_tags = 'adultos,ninos,niños,local,visitante,mujer,player-version' | split: ','
+    assign skip_tags = 'adultos,ninos,niños,local,visitante,mujer,player-version,retro,mundial,cortavientos' | split: ','
 
     for tag in product.tags
-      assign tag_key = tag | downcase
+      assign tag_key = tag | downcase | strip
+      assign tag_handle = tag | handleize
       unless skip_tags contains tag_key
-        if collections[tag] != blank or tag contains '-'
-          assign team_tag = tag
-          break
+        assign is_season = false
+        if tag_key contains '25-26' or tag_key contains '24-25' or tag_key contains '26-27'
+          assign is_season = true
         endif
+        unless is_season
+          if collections[tag] != blank
+            assign team_tag = tag_handle
+            break
+          elsif collections[tag_handle] != blank
+            assign team_tag = tag_handle
+            break
+          elsif collections[tag_key] != blank
+            assign team_tag = tag_key
+            break
+          endif
+        endunless
       endunless
     endfor
+
+    if team_tag == blank
+      for tag in product.tags
+        assign tag_key = tag | downcase | strip
+        assign tag_handle = tag | handleize
+        unless skip_tags contains tag_key
+          assign is_season = false
+          if tag_key contains '25-26' or tag_key contains '24-25' or tag_key contains '26-27'
+            assign is_season = true
+          endif
+          if is_season == false and tag contains '-'
+            assign team_tag = tag_handle
+            break
+          endif
+        endunless
+      endfor
+    endif
+
+    if team_tag == blank
+      for tag in product.tags
+        assign tag_key = tag | downcase | strip
+        assign tag_handle = tag | handleize
+        unless skip_tags contains tag_key
+          if tag_handle.size > 2
+            assign team_tag = tag_handle
+            break
+          endif
+        endunless
+      endfor
+    endif
 
     assign shown = 0
     assign tag_count = 0

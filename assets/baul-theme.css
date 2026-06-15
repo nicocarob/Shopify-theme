@@ -1107,6 +1107,8 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     font-size: 10px;
   }
   .related-actions {
+    position: relative;
+    z-index: 1;
     max-width: 1200px;
     margin: 16px auto 0;
     text-align: center;
