@@ -1069,13 +1069,25 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     padding-bottom: 12px;
     max-width: 1200px;
     margin: 0 auto;
-    cursor: grab;
   }
   .related-track .prod-card,
   .related-track .pc {
     flex: 0 0 180px;
     min-width: 180px;
     scroll-snap-align: start;
+  }
+  .related-track .btn-row {
+    flex-direction: column;
+  }
+  .related-track .btn-add {
+    width: 100%;
+    padding: 8px;
+    font-size: 11px;
+  }
+  .related-track .btn-custom {
+    width: 100%;
+    padding: 6px;
+    font-size: 10px;
   }
   .related-track::-webkit-scrollbar {
     height: 4px;

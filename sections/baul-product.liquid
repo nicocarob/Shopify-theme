@@ -390,9 +390,10 @@
         {{ related_cards }}
       </div>
       {% if team_tag != blank %}
+        {% assign team_name = team_tag | replace: '-', ' ' | capitalize %}
         <div class="related-actions">
           <a href="/search?q={{ team_tag | url_encode }}&type=product" class="btn-ver-mas">
-            Ver más →
+            Ver todo de {{ team_name }} →
           </a>
         </div>
       {% endif %}
