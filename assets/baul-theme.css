@@ -1754,13 +1754,23 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   }
   .wa svg { width: 28px; height: 28px; display: block; }
   .wa-text {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 4px;
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 14px;
     font-weight: 700;
     color: #000;
-    white-space: nowrap;
     line-height: 1.2;
     letter-spacing: 0.02em;
+  }
+  .wa-line--muted::before {
+    content: '/';
+    margin-right: 4px;
+    font-weight: 600;
+    opacity: 0.65;
   }
   .wa:hover { transform: scale(1.03); }
   @keyframes waPulse {
@@ -1903,17 +1913,32 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .ft-bot { justify-content: center; text-align: center; }
     .ft-copy-row { justify-content: center; }
     .wa {
-      width: 44px;
-      height: 44px;
-      min-height: 44px;
-      padding: 0;
-      border-radius: 50%;
-      justify-content: center;
       bottom: 16px;
-      right: 16px;
+      right: 12px;
+      left: auto;
+      max-width: calc(100vw - 24px);
+      min-height: 44px;
+      padding: 8px 12px 8px 10px;
+      gap: 8px;
+      border-radius: 22px;
     }
-    .wa-text { display: none; }
-    .wa svg { width: 24px; height: 24px; }
+    .wa-text {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      font-size: 11px;
+      line-height: 1.15;
+      max-width: 118px;
+    }
+    .wa-line--muted::before {
+      display: none;
+    }
+    .wa-line--muted {
+      font-size: 10px;
+      font-weight: 600;
+      opacity: 0.85;
+    }
+    .wa svg { width: 22px; height: 22px; }
     #scroll-bar { height: 2px; }
   }
 
