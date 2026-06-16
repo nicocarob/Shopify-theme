@@ -773,7 +773,7 @@ if (productJsonEl && productForm) {
 
   function loop() {
     if (running && loopWidth > 0) {
-      pos += 0.3;
+      pos += 0.8;
       if (pos >= loopWidth) pos = 0;
       track.scrollLeft = pos;
     }
