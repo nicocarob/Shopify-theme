@@ -706,3 +706,100 @@ if (productJsonEl && productForm) {
 
   startLoop();
 })();
+
+(function initEstampadosCarousel() {
+  const ESTAMPADOS = [
+    { img: 'https://cdn.shopify.com/s/files/1/0801/5098/6775/files/1.png?v=1781579431', pais: 'Alemania' },
+    { img: 'https://cdn.shopify.com/s/files/1/0801/5098/6775/files/2.png?v=1781579431', pais: 'Países Bajos' },
+    { img: 'https://cdn.shopify.com/s/files/1/0801/5098/6775/files/11.png?v=1781579431', pais: 'Uruguay' },
+    { img: 'https://cdn.shopify.com/s/files/1/0801/5098/6775/files/13.png?v=1781579431', pais: 'Inglaterra' },
+    { img: 'https://cdn.shopify.com/s/files/1/0801/5098/6775/files/10.png?v=1781579431', pais: 'España' },
+    { img: 'https://cdn.shopify.com/s/files/1/0801/5098/6775/files/3.png?v=1781579431', pais: 'Chile' },
+    { img: 'https://cdn.shopify.com/s/files/1/0801/5098/6775/files/6.png?v=1781579431', pais: 'Argentina' },
+    { img: 'https://cdn.shopify.com/s/files/1/0801/5098/6775/files/9.png?v=1781579433', pais: 'Brasil' },
+    { img: 'https://cdn.shopify.com/s/files/1/0801/5098/6775/files/8_9e00729d-c530-4b1b-b0db-bea8f384cfe6.png?v=1781579431', pais: 'Portugal' },
+    { img: 'https://cdn.shopify.com/s/files/1/0801/5098/6775/files/4.png?v=1781579431', pais: 'Colombia' },
+    { img: 'https://cdn.shopify.com/s/files/1/0801/5098/6775/files/7_56320c6f-3284-4051-afee-35fe276cf1a6.png?v=1781579431', pais: 'Portugal' },
+    { img: 'https://cdn.shopify.com/s/files/1/0801/5098/6775/files/12.png?v=1781579431', pais: 'Noruega' },
+    { img: 'https://cdn.shopify.com/s/files/1/0801/5098/6775/files/5.png?v=1781579432', pais: 'Francia' },
+  ];
+
+  const wrap = document.querySelector('.bp-stamps-wrap');
+  const track = document.querySelector('.bp-stamps-track');
+  if (!wrap || !track) return;
+
+  function createCard(item) {
+    const link = document.createElement('a');
+    link.className = 'bp-stamp-card';
+    link.href = `/search?q=${encodeURIComponent(item.pais)}&type=product`;
+
+    const badge = document.createElement('span');
+    badge.className = 'bp-stamp-badge';
+    badge.textContent = 'NUEVO';
+
+    const img = document.createElement('img');
+    img.className = 'bp-stamp-img';
+    img.src = item.img;
+    img.alt = item.pais;
+    img.width = 200;
+    img.height = 200;
+    img.loading = 'lazy';
+
+    const name = document.createElement('span');
+    name.className = 'bp-stamp-name';
+    name.textContent = item.pais;
+
+    link.append(badge, img, name);
+    return link;
+  }
+
+  function renderTrack() {
+    track.innerHTML = '';
+    [...ESTAMPADOS, ...ESTAMPADOS].forEach((item) => {
+      track.appendChild(createCard(item));
+    });
+  }
+
+  renderTrack();
+
+  let pos = 0;
+  let running = true;
+  let loopWidth = 0;
+
+  function measureLoopWidth() {
+    loopWidth = track.scrollWidth / 2;
+    if (pos >= loopWidth) pos = 0;
+  }
+
+  function loop() {
+    if (running && loopWidth > 0) {
+      pos += 0.3;
+      if (pos >= loopWidth) pos = 0;
+      track.scrollLeft = pos;
+    }
+    requestAnimationFrame(loop);
+  }
+
+  measureLoopWidth();
+  loop();
+
+  wrap.addEventListener('mouseenter', () => {
+    running = false;
+  });
+  wrap.addEventListener('mouseleave', () => {
+    running = true;
+  });
+  track.addEventListener('touchstart', () => {
+    running = false;
+  }, { passive: true });
+  track.addEventListener('touchend', () => {
+    running = true;
+  });
+
+  window.addEventListener('resize', measureLoopWidth);
+
+  if (typeof ResizeObserver !== 'undefined') {
+    const observer = new ResizeObserver(measureLoopWidth);
+    observer.observe(track);
+  }
+})();
