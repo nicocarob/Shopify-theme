@@ -2286,10 +2286,14 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .bp-customize-stage {
       max-width: min(72vw, 280px);
       margin: 0 auto;
-      border: none;
-      box-shadow: none;
-      border-radius: 0;
-      background: transparent;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--bg-img);
+      box-shadow: var(--shadow-card);
+    }
+    .bp-customize-img {
+      border-radius: 16px;
     }
     .pers-search-wrap { max-width: none; }
     .pers-search-input {
