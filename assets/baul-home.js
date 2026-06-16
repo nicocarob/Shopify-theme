@@ -762,18 +762,26 @@ if (productJsonEl && productForm) {
 
   renderTrack();
 
+  const STAMPS_SCROLL_SPEED = 1.2;
+  const STAMPS_FRAME_MS = 1000 / 60;
+
   let pos = 0;
   let running = true;
   let loopWidth = 0;
+  let lastFrameTime = 0;
 
   function measureLoopWidth() {
     loopWidth = track.scrollWidth / 2;
     if (pos >= loopWidth) pos = 0;
   }
 
-  function loop() {
+  function loop(timestamp) {
+    if (!lastFrameTime) lastFrameTime = timestamp;
+    const elapsed = timestamp - lastFrameTime;
+    lastFrameTime = timestamp;
+
     if (running && loopWidth > 0) {
-      pos += 1.2;
+      pos += STAMPS_SCROLL_SPEED * (elapsed / STAMPS_FRAME_MS);
       if (pos >= loopWidth) pos = 0;
       track.scrollLeft = pos;
     }
@@ -781,7 +789,7 @@ if (productJsonEl && productForm) {
   }
 
   measureLoopWidth();
-  loop();
+  requestAnimationFrame(loop);
 
   wrap.addEventListener('mouseenter', () => {
     running = false;
@@ -794,7 +802,12 @@ if (productJsonEl && productForm) {
   }, { passive: true });
   track.addEventListener('touchend', () => {
     running = true;
-  });
+    lastFrameTime = 0;
+  }, { passive: true });
+  track.addEventListener('touchcancel', () => {
+    running = true;
+    lastFrameTime = 0;
+  }, { passive: true });
 
   window.addEventListener('resize', measureLoopWidth);
 
