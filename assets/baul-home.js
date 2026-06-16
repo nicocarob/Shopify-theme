@@ -414,6 +414,12 @@ if (productJsonEl && productForm) {
     if (grid) grid.innerHTML = '';
   }
 
+  function getVariantSizeLabel(variant) {
+    const title = variant?.title?.trim();
+    if (title && title !== 'Default Title') return title;
+    return variant?.option1 || title || '';
+  }
+
   function renderVariants(variants) {
     if (!grid) return;
     grid.innerHTML = '';
@@ -422,7 +428,7 @@ if (productJsonEl && productForm) {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'size-btn' + (variant.available ? '' : ' out');
-      btn.textContent = variant.option1 || variant.title;
+      btn.textContent = getVariantSizeLabel(variant);
       btn.disabled = !variant.available;
 
       if (variant.available) {
