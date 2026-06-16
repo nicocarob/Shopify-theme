@@ -873,38 +873,15 @@
     align-items: center;
     gap: 12px;
   }
-  .bp-video-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: linear-gradient(135deg, rgba(0, 200, 81, 0.18), rgba(255, 215, 0, 0.08));
-    border: 1px solid rgba(0, 200, 81, 0.45);
-    color: #fff;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    padding: 6px 14px;
-    border-radius: 100px;
-    margin-bottom: 4px;
-  }
   .bp-video-title {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(36px, 6vw, 56px);
-    line-height: 0.95;
-    letter-spacing: 0.06em;
+    font-size: clamp(32px, 5.5vw, 52px);
+    line-height: 1;
+    letter-spacing: 0.04em;
     color: #fff;
-    margin: 0;
-  }
-  .bp-video-sub {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    color: var(--text-muted);
-    margin: 0 0 8px;
-    max-width: 420px;
+    text-align: center;
+    margin: 0 0 4px;
+    max-width: 640px;
   }
   .bp-video-wrap {
     position: relative;
