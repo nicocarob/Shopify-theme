@@ -822,3 +822,19 @@ if (productJsonEl && productForm) {
     observer.observe(track);
   }
 })();
+
+const videoEl = document.querySelector('.quality-video');
+if (videoEl) {
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          videoEl.play();
+          observer.unobserve(videoEl);
+        }
+      });
+    },
+    { threshold: 0.3 }
+  );
+  observer.observe(videoEl);
+}
