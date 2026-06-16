@@ -232,42 +232,6 @@
 
 <div class="divider"></div>
 
-<section class="srch-sec" id="buscar">
-  <div class="rev sec-hdr--center" style="text-align:center;">
-    <div class="eyebrow">Encuentra tu camiseta</div>
-    <h2 class="sec-title">BUSCA POR EQUIPO O LIGA</h2>
-    <form class="srch-box" id="baul-search-form" action="{{ routes.search_url }}" method="get" role="search">
-      <input class="srch-in" type="search" name="q" placeholder="Ej: Real Madrid, Chile, Barcelona..." autocomplete="off">
-      <button class="srch-btn" type="submit" aria-label="Buscar">🔍</button>
-    </form>
-  </div>
-  <div class="liga-grid rev">
-    {% for block in section.blocks %}
-      {% if block.type == 'liga' %}
-        {% assign liga_col = collections[block.settings.collection_handle] %}
-        <a class="lg-c" href="{{ liga_col.url | default: '#' }}" {{ block.shopify_attributes }}>
-          <div class="lg-circle">
-            {% if block.settings.logo != blank %}
-              <img
-                src="{{ block.settings.logo | image_url: width: 120 }}"
-                alt="{{ block.settings.liga_name | escape }}"
-                width="60"
-                height="60"
-                style="width:60px;height:60px;object-fit:contain;"
-              >
-            {% else %}
-              <div class="lg-ico">{{ block.settings.emoji | default: '⚽' }}</div>
-            {% endif %}
-          </div>
-          <div class="lg-nm">{{ block.settings.liga_name }}</div>
-        </a>
-      {% endif %}
-    {% endfor %}
-  </div>
-</section>
-
-<div class="divider"></div>
-
 <section class="testi-sec">
   <div class="sec-bg-grid"></div>
   <div class="sec-bg-light"></div>
@@ -308,6 +272,42 @@
         {% endif %}
       {% endfor %}
     </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="srch-sec" id="buscar">
+  <div class="rev sec-hdr--center" style="text-align:center;">
+    <div class="eyebrow">Encuentra tu camiseta</div>
+    <h2 class="sec-title">BUSCA POR EQUIPO O LIGA</h2>
+    <form class="srch-box" id="baul-search-form" action="{{ routes.search_url }}" method="get" role="search">
+      <input class="srch-in" type="search" name="q" placeholder="Ej: Real Madrid, Chile, Barcelona..." autocomplete="off">
+      <button class="srch-btn" type="submit" aria-label="Buscar">🔍</button>
+    </form>
+  </div>
+  <div class="liga-grid rev">
+    {% for block in section.blocks %}
+      {% if block.type == 'liga' %}
+        {% assign liga_col = collections[block.settings.collection_handle] %}
+        <a class="lg-c" href="{{ liga_col.url | default: '#' }}" {{ block.shopify_attributes }}>
+          <div class="lg-circle">
+            {% if block.settings.logo != blank %}
+              <img
+                src="{{ block.settings.logo | image_url: width: 120 }}"
+                alt="{{ block.settings.liga_name | escape }}"
+                width="60"
+                height="60"
+                style="width:60px;height:60px;object-fit:contain;"
+              >
+            {% else %}
+              <div class="lg-ico">{{ block.settings.emoji | default: '⚽' }}</div>
+            {% endif %}
+          </div>
+          <div class="lg-nm">{{ block.settings.liga_name }}</div>
+        </a>
+      {% endif %}
+    {% endfor %}
   </div>
 </section>
 
