@@ -2184,6 +2184,74 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     letter-spacing: 0.1em; color: var(--text-muted); text-transform: uppercase;
   }
 
+  /* ── Terms of service page ── */
+  .terms-page {
+    background: #0a0a0a;
+    min-height: 60vh;
+    padding: 48px 20px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .terms-wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .terms-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 6vw, 56px);
+    line-height: 1.05;
+    letter-spacing: 0.06em;
+    color: #fff;
+    text-align: center;
+    margin: 0 0 32px;
+    text-transform: uppercase;
+  }
+  .terms-content {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 17px;
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.85);
+  }
+  .terms-updated {
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 0 0 28px;
+  }
+  .terms-block {
+    margin-bottom: 28px;
+  }
+  .terms-block h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(22px, 3.5vw, 28px);
+    letter-spacing: 0.04em;
+    color: #fff;
+    margin: 0 0 12px;
+    line-height: 1.1;
+  }
+  .terms-block p {
+    margin: 0 0 1em;
+  }
+  .terms-block ul {
+    margin: 0 0 1em;
+    padding-left: 1.25em;
+  }
+  .terms-block li {
+    margin-bottom: 0.35em;
+  }
+  .terms-block a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .terms-block a:hover {
+    color: #00e85a;
+  }
+
   /* ── 404 page ── */
   .b404-page {
     background: var(--bg);
