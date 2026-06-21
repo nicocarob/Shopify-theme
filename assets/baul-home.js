@@ -952,6 +952,18 @@ if (productJsonEl && productForm) {
     hideToast();
   });
 
+  async function addToCartFromForm(form) {
+    const formData = new FormData(form);
+    const response = await fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { Accept: 'application/json' },
+      body: formData,
+    });
+
+    if (!response.ok) throw new Error('Cart add failed');
+    return response.json();
+  }
+
   document.addEventListener('submit', async (event) => {
     const form = event.target;
     if (!(form instanceof HTMLFormElement)) return;
@@ -962,22 +974,10 @@ if (productJsonEl && productForm) {
     event.preventDefault();
 
     const formData = new FormData(form);
-    const id = formData.get('id');
-    if (!id) return;
-
-    const quantity = Number(formData.get('quantity') || 1);
+    if (!formData.get('id')) return;
 
     try {
-      const response = await fetch('/cart/add.js', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify({ id, quantity }),
-      });
-
-      if (!response.ok) throw new Error('Cart add failed');
+      await addToCartFromForm(form);
       scheduleToastUpdate();
     } catch (e) {
       form.submit();
