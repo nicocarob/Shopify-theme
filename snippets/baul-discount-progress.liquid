@@ -1,0 +1,57 @@
+{% comment %}
+  Barra de progreso de descuentos por cantidad
+  Parámetro: count (requerido)
+{% endcomment %}
+
+{% liquid
+  assign count = count | default: 0
+  if count >= 4
+    assign progress = 100
+  elsif count == 3
+    assign progress = 68
+  elsif count == 2
+    assign progress = 40
+  elsif count == 1
+    assign progress = 15
+  else
+    assign progress = 0
+  endif
+%}
+
+<div class="bdp-cart-bar">
+  <h3 class="bdp-cart-bar-title">🎁 Descuentos por cantidad</h3>
+
+  <div class="bdp-progress bdp-progress--cart">
+    <div class="bdp-progress-track">
+      <div class="bdp-progress-fill" style="width: {{ progress }}%">
+        <span class="bdp-progress-dot" aria-hidden="true"></span>
+      </div>
+    </div>
+    <div class="bdp-milestones">
+      <div class="bdp-milestone{% if count >= 2 %} is-reached{% endif %}">
+        <span class="bdp-milestone-icon">🎽</span>
+        <span class="bdp-milestone-label">10% off en la 3ra</span>
+      </div>
+      <div class="bdp-milestone{% if count >= 3 %} is-reached{% endif %}">
+        <span class="bdp-milestone-icon">🔥</span>
+        <span class="bdp-milestone-label">½ precio en la 4ta</span>
+      </div>
+      <div class="bdp-milestone{% if count >= 4 %} is-reached{% endif %}">
+        <span class="bdp-milestone-icon">🎁</span>
+        <span class="bdp-milestone-label">Gratis la 5ta</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="bdp-cart-bar-message">
+    {% if count == 1 %}
+      Agrega 1 camiseta más y la 3ra te sale con 10% off 🎽
+    {% elsif count == 2 %}
+      Agrega 1 más y la 4ta te sale a mitad de precio 🔥
+    {% elsif count == 3 %}
+      Agrega 1 más y la 5ta es completamente gratis 🎁
+    {% elsif count >= 4 %}
+      ✅ ¡Descuentos activos! Se aplican automáticamente al hacer checkout
+    {% endif %}
+  </div>
+</div>

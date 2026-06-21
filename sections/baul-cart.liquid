@@ -64,6 +64,7 @@
 
     {% if cart.item_count > 0 %}
       <aside class="bcart-summary">
+        {% render 'baul-discount-progress', count: cart.item_count %}
         <h2 class="bcart-summary-title">Resumen</h2>
         <div class="bcart-summary-row">
           <span>Subtotal</span>

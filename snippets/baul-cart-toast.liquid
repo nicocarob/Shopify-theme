@@ -1,0 +1,37 @@
+<div id="baul-cart-toast" class="baul-cart-toast" hidden aria-live="polite" aria-atomic="true">
+  <div class="bct-inner">
+    <div class="bct-top">
+      <span class="bct-badge">✓ Agregado al carrito</span>
+      <button type="button" class="bct-close" aria-label="Cerrar">✕</button>
+    </div>
+
+    <div class="bdp-progress">
+      <div class="bdp-progress-track">
+        <div class="bdp-progress-fill" data-bct-fill style="width: 15%">
+          <span class="bdp-progress-dot" aria-hidden="true"></span>
+        </div>
+      </div>
+      <div class="bdp-milestones">
+        <div class="bdp-milestone" data-milestone="2">
+          <span class="bdp-milestone-icon">🎽</span>
+          <span class="bdp-milestone-label">10% off <small>(en 2)</small></span>
+        </div>
+        <div class="bdp-milestone" data-milestone="3">
+          <span class="bdp-milestone-icon">🔥</span>
+          <span class="bdp-milestone-label">½ precio <small>(en 3)</small></span>
+        </div>
+        <div class="bdp-milestone" data-milestone="4">
+          <span class="bdp-milestone-icon">🎁</span>
+          <span class="bdp-milestone-label">Gratis <small>(en 4)</small></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bct-message" data-bct-message></div>
+
+    <div class="bct-actions">
+      <a href="{{ routes.cart_url }}" class="bct-btn bct-btn--primary">Ver carrito 🛒</a>
+      <button type="button" class="bct-btn bct-btn--ghost" data-bct-continue>Seguir comprando</button>
+    </div>
+  </div>
+</div>

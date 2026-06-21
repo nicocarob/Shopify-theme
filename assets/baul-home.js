@@ -468,7 +468,11 @@ if (productJsonEl && productForm) {
     });
 
     if (!response.ok) throw new Error('Cart add failed');
-    return response.json();
+    const data = await response.json();
+    if (typeof window.baulCartToastNotify === 'function') {
+      window.baulCartToastNotify();
+    }
+    return data;
   };
 
   confirmBtn?.addEventListener('click', async () => {
@@ -821,6 +825,171 @@ if (productJsonEl && productForm) {
     const observer = new ResizeObserver(measureLoopWidth);
     observer.observe(track);
   }
+})();
+
+(function initBaulCartToast() {
+  const toast = document.getElementById('baul-cart-toast');
+  if (!toast) return;
+
+  const fillEl = toast.querySelector('[data-bct-fill]');
+  const messageEl = toast.querySelector('[data-bct-message]');
+  const closeBtn = toast.querySelector('.bct-close');
+  const continueBtn = toast.querySelector('[data-bct-continue]');
+  const milestoneEls = toast.querySelectorAll('.bdp-milestone[data-milestone]');
+
+  let showDelayTimer = null;
+  let hideTimer = null;
+
+  function isCartPage() {
+    return /\/cart\/?$/.test(window.location.pathname);
+  }
+
+  function getDiscountState(count) {
+    const c = Math.max(0, Number(count) || 0);
+
+    if (c >= 5) {
+      return {
+        message: '¡Tienes todos los descuentos activos! 🏆',
+        progress: 100,
+        reached: [true, true, true],
+      };
+    }
+    if (c >= 4) {
+      return {
+        message: '¡Descuento aplicado! La 5ta es gratis al hacer checkout 🎁',
+        progress: 100,
+        reached: [true, true, true],
+      };
+    }
+    if (c === 3) {
+      return {
+        message: 'Agrega 1 más y la 5ta es completamente gratis 🎁',
+        progress: 68,
+        reached: [true, true, false],
+      };
+    }
+    if (c === 2) {
+      return {
+        message: 'Agrega 1 más y la 4ta te sale a mitad de precio 🔥',
+        progress: 40,
+        reached: [true, false, false],
+      };
+    }
+    return {
+      message: 'Agrega 1 camiseta más y la 3ra te sale con 10% off 🎽',
+      progress: 15,
+      reached: [false, false, false],
+    };
+  }
+
+  function updateToast(count) {
+    const state = getDiscountState(count);
+    if (fillEl) fillEl.style.width = `${state.progress}%`;
+    if (messageEl) messageEl.textContent = state.message;
+
+    milestoneEls.forEach((el, index) => {
+      el.classList.toggle('is-reached', Boolean(state.reached[index]));
+    });
+  }
+
+  function hideToast() {
+    toast.classList.remove('is-visible');
+    window.setTimeout(() => {
+      if (!toast.classList.contains('is-visible')) {
+        toast.hidden = true;
+      }
+    }, 350);
+  }
+
+  function showToast() {
+    toast.hidden = false;
+    requestAnimationFrame(() => {
+      toast.classList.add('is-visible');
+    });
+  }
+
+  function scheduleToastUpdate() {
+    if (isCartPage()) return;
+
+    window.clearTimeout(showDelayTimer);
+    window.clearTimeout(hideTimer);
+
+    showDelayTimer = window.setTimeout(async () => {
+      try {
+        const response = await fetch('/cart.js', {
+          headers: { Accept: 'application/json' },
+        });
+        if (!response.ok) return;
+
+        const cart = await response.json();
+        updateToast(cart.item_count);
+        showToast();
+
+        hideTimer = window.setTimeout(hideToast, 7000);
+      } catch (e) {
+        /* ignore */
+      }
+    }, 800);
+  }
+
+  window.baulCartToastNotify = scheduleToastUpdate;
+
+  closeBtn?.addEventListener('click', () => {
+    window.clearTimeout(hideTimer);
+    hideToast();
+  });
+
+  continueBtn?.addEventListener('click', () => {
+    window.clearTimeout(hideTimer);
+    hideToast();
+  });
+
+  document.addEventListener('submit', async (event) => {
+    const form = event.target;
+    if (!(form instanceof HTMLFormElement)) return;
+
+    const action = form.getAttribute('action') || '';
+    if (!action.includes('/cart/add')) return;
+
+    event.preventDefault();
+
+    const formData = new FormData(form);
+    const id = formData.get('id');
+    if (!id) return;
+
+    const quantity = Number(formData.get('quantity') || 1);
+
+    try {
+      const response = await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({ id, quantity }),
+      });
+
+      if (!response.ok) throw new Error('Cart add failed');
+      scheduleToastUpdate();
+    } catch (e) {
+      form.submit();
+    }
+  });
+
+  document.addEventListener(
+    'click',
+    (event) => {
+      const btn = event.target.closest('.btn-add');
+      if (!btn) return;
+
+      const form = btn.closest('form[action*="/cart/add"]');
+      if (!form || btn.type === 'button') return;
+
+      event.preventDefault();
+      form.requestSubmit(btn);
+    },
+    true
+  );
 })();
 
 const videoEl = document.querySelector('.quality-video');
