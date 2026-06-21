@@ -4,7 +4,7 @@ const BAULRULETA = (() => {
     { label: 'Número gratis', code: 'NUM26CAB', val: '¡Ganaste personalización gratis! Elige tu número favorito sin costo 🎽', emoji: '🎽', prob: 25 },
     { label: '$1.000 OFF', code: 'MUNDIAL1K', val: '¡Ganaste $1.000 de descuento! Válido comprando 2 o más camisetas 🔥', emoji: '🔥', prob: 18 },
     { label: '$1.250 OFF', code: 'MUNDIAL1250', val: '¡Ganaste $1.250 de descuento! Válido comprando 2 o más camisetas 🔥', emoji: '💥', prob: 12 },
-    { label: 'Camiseta gratis', code: 'CAMISETA5', val: '¡Ganaste una camiseta gratis! Lleva 4 camisetas y la 5ta es tuya 🎽', emoji: '🏆', prob: 20 },
+    { label: 'Camiseta gratis', code: '', val: '¡Ganaste una camiseta gratis! Lleva 4 camisetas y la 5ta es tuya 🎽', emoji: '🏆', prob: 20 },
   ];
 
   const WHEEL_COLORS = ['#00c851', '#1a1a1a', '#ffd700', '#1a1a1a', '#e91e8c'];
@@ -361,13 +361,40 @@ const BAULRULETA = (() => {
   }
 
   function showResult(prize) {
+    const disclaimer =
+      'Ningún premio de la ruleta es acumulable con las promociones por volumen de la tienda. Se aplica solo el que más te convenga.';
+    const hasCode = Boolean(prize.code && String(prize.code).trim());
+    const couponBox = document.querySelector('.br-coupon-box');
+    const resSub = document.querySelector('.br-res-sub');
+    const timerBar = document.querySelector('.br-timer-bar');
+    const timerTxt = document.querySelector('.br-timer-txt');
+
     document.getElementById('br-res-emoji').textContent = prize.emoji;
     document.getElementById('br-res-title').textContent = prize.val;
-    document.getElementById('br-res-code').textContent = prize.code;
-    document.getElementById('br-res-val').textContent =
-      'Ningún premio de la ruleta es acumulable con las promociones por volumen de la tienda. Se aplica solo el que más te convenga.';
+
+    if (hasCode) {
+      if (couponBox) couponBox.style.display = '';
+      if (resSub) {
+        resSub.style.display = '';
+        resSub.textContent = 'Úsalo en los próximos 30 minutos';
+      }
+      if (timerBar) timerBar.style.display = '';
+      if (timerTxt) timerTxt.style.display = '';
+      document.getElementById('br-res-code').textContent = prize.code;
+      document.getElementById('br-res-val').textContent = disclaimer;
+      startTimer();
+    } else {
+      if (couponBox) couponBox.style.display = 'none';
+      if (resSub) {
+        resSub.style.display = '';
+        resSub.textContent = disclaimer;
+      }
+      if (timerBar) timerBar.style.display = 'none';
+      if (timerTxt) timerTxt.style.display = 'none';
+      if (timerInterval) clearInterval(timerInterval);
+    }
+
     showStep(3);
-    startTimer();
     launchFireworks();
     setPopupShown();
   }
