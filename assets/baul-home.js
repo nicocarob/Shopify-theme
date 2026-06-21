@@ -846,39 +846,47 @@ if (productJsonEl && productForm) {
 
   function getDiscountState(count) {
     const c = Math.max(0, Number(count) || 0);
+    const reached = [c >= 2, c >= 3, c >= 4];
 
     if (c >= 5) {
       return {
-        message: '¡Tienes todos los descuentos activos! 🏆',
+        message: '✅ ¡Tienes todos los descuentos activos!',
         progress: 100,
-        reached: [true, true, true],
+        reached,
       };
     }
-    if (c >= 4) {
+    if (c === 4) {
       return {
-        message: '¡Descuento aplicado! La 5ta es gratis al hacer checkout 🎁',
-        progress: 100,
-        reached: [true, true, true],
+        message: 'Agrega 1 más y la 5ta es completamente gratis 🎁',
+        progress: 85,
+        reached,
       };
     }
     if (c === 3) {
       return {
-        message: 'Agrega 1 más y la 5ta es completamente gratis 🎁',
+        message: 'Agrega 1 más y la 4ta te sale a mitad de precio 🔥',
         progress: 68,
-        reached: [true, true, false],
+        reached,
       };
     }
     if (c === 2) {
       return {
-        message: 'Agrega 1 más y la 4ta te sale a mitad de precio 🔥',
+        message: 'Agrega 1 más y la 3ra te sale con 10% off 🎽',
         progress: 40,
-        reached: [true, false, false],
+        reached,
+      };
+    }
+    if (c === 1) {
+      return {
+        message: 'Agrega 1 camiseta más y la 3ra te sale con 10% off 🎽',
+        progress: 15,
+        reached,
       };
     }
     return {
       message: 'Agrega 1 camiseta más y la 3ra te sale con 10% off 🎽',
-      progress: 15,
-      reached: [false, false, false],
+      progress: 0,
+      reached,
     };
   }
 

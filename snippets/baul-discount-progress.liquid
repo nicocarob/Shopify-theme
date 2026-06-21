@@ -5,8 +5,10 @@
 
 {% liquid
   assign count = count | default: 0
-  if count >= 4
+  if count >= 5
     assign progress = 100
+  elsif count == 4
+    assign progress = 85
   elsif count == 3
     assign progress = 68
   elsif count == 2
@@ -47,11 +49,13 @@
     {% if count == 1 %}
       Agrega 1 camiseta más y la 3ra te sale con 10% off 🎽
     {% elsif count == 2 %}
-      Agrega 1 más y la 4ta te sale a mitad de precio 🔥
+      Agrega 1 más y la 3ra te sale con 10% off 🎽
     {% elsif count == 3 %}
+      Agrega 1 más y la 4ta te sale a mitad de precio 🔥
+    {% elsif count == 4 %}
       Agrega 1 más y la 5ta es completamente gratis 🎁
-    {% elsif count >= 4 %}
-      ✅ ¡Descuentos activos! Se aplican automáticamente al hacer checkout
+    {% elsif count >= 5 %}
+      ✅ ¡Tienes todos los descuentos activos!
     {% endif %}
   </div>
 </div>
