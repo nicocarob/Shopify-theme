@@ -34,25 +34,26 @@
                   <a href="{{ item.url }}" class="bcart-item-name">{{ item.product.title }}</a>
                   {% unless item.variant.title == 'Default Title' %}
                     <div class="bcart-item-variant">{{ item.variant.title }}</div>
-                    <div class="cart-item--properties">
-  {% for property in item.properties %}
-    {% assign property_first_char = property.first | slice: 0 %}
-    {% if property.last != blank and property_first_char != '_' %}
-      <div class="product-option">
-        {{ property.first }}:
-          {% if property.last contains '/uploads/' %}
-            <a href="{{ property.last }}" class="link" target="_blank">
-              {{ property.last | split: '/' | last }}
-            </a>
-          {% else %}
-            {{ property.last }}
-          {% endif %}
-      </div>
-    {% endif %}
-  {% endfor %}
-</div>
+                    
                   {% endunless %}
                   <div class="bcart-item-price">{{ item.final_line_price | money_without_trailing_zeros }}</div>
+                  <div class="cart-item--properties">
+                      {% for property in item.properties %}
+                        {% assign property_first_char = property.first | slice: 0 %}
+                        {% if property.last != blank and property_first_char != '_' %}
+                          <div class="product-option">
+                            {{ property.first }}:
+                              {% if property.last contains '/uploads/' %}
+                                <a href="{{ property.last }}" class="link" target="_blank">
+                                  {{ property.last | split: '/' | last }}
+                                </a>
+                              {% else %}
+                                {{ property.last }}
+                              {% endif %}
+                          </div>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
                   <div class="bcart-item-actions">
                     <label class="bcart-qty-label">
                       <span>Cant.</span>
