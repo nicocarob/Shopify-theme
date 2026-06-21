@@ -1,16 +1,13 @@
 const BAULRULETA = (() => {
   const PRIZES = [
-    { label: '$500', code: 'MUNDIAL500', val: '$500 de descuento', emoji: '🎉' },
-    { label: '$750', code: 'MUNDIAL750', val: '$750 de descuento', emoji: '⚽' },
-    { label: '$1.000', code: 'MUNDIAL1K', val: '$1.000 de descuento', emoji: '🔥' },
-    { label: '$1.500', code: 'MUNDIAL1500', val: '$1.500 de descuento', emoji: '🏆' },
-    { label: '$2.000', code: 'MUNDIAL2K', val: '$2.000 de descuento', emoji: '👑' },
-    { label: '5% OFF', code: 'MUNDIAL5OFF', val: '5% en toda la tienda', emoji: '🌟' },
-    { label: 'Número', code: 'NUM26CAB', val: 'Número en camiseta gratis', emoji: '🎽' },
-    { label: 'Nombre', code: 'NOM26CAB', val: 'Nombre en camiseta gratis', emoji: '✨' },
+    { label: 'Nombre gratis', code: 'NOM26CAB', val: '¡Ganaste personalización gratis! Escribe tu nombre en tu camiseta sin costo 🎽', emoji: '✨', prob: 25 },
+    { label: 'Número gratis', code: 'NUM26CAB', val: '¡Ganaste personalización gratis! Elige tu número favorito sin costo 🎽', emoji: '🎽', prob: 25 },
+    { label: '$1.000 OFF', code: 'MUNDIAL1K', val: '¡Ganaste $1.000 de descuento! Válido comprando 2 o más camisetas 🔥', emoji: '🔥', prob: 18 },
+    { label: '$1.250 OFF', code: 'MUNDIAL1250', val: '¡Ganaste $1.250 de descuento! Válido comprando 2 o más camisetas 🔥', emoji: '💥', prob: 12 },
+    { label: 'Camiseta gratis', code: 'CAMISETA5', val: '¡Ganaste una camiseta gratis! Lleva 4 camisetas y la 5ta es tuya 🎽', emoji: '🏆', prob: 20 },
   ];
 
-  const COLORS = ['#00c851', '#1a1a1a', '#e91e8c', '#1a1a1a', '#ffd700', '#1a1a1a', '#ff6b35', '#1a1a1a'];
+  const WHEEL_COLORS = ['#00c851', '#1a1a1a', '#ffd700', '#1a1a1a', '#e91e8c'];
 
   const SPIN_DURATION = 7000;
   const SHAKE_WINDOW = 800;
@@ -95,6 +92,16 @@ const BAULRULETA = (() => {
     }
   }
 
+  function getWeightedWinner() {
+    const total = PRIZES.reduce((sum, p) => sum + p.prob, 0);
+    let rand = Math.random() * total;
+    for (let i = 0; i < PRIZES.length; i++) {
+      rand -= PRIZES[i].prob;
+      if (rand <= 0) return i;
+    }
+    return PRIZES.length - 1;
+  }
+
   function drawWheel(angle) {
     const canvas = document.getElementById('br-wheel-canvas');
     if (!canvas) return;
@@ -114,7 +121,7 @@ const BAULRULETA = (() => {
       ctx.moveTo(cx, cy);
       ctx.arc(cx, cy, r, start, end);
       ctx.closePath();
-      ctx.fillStyle = COLORS[i];
+      ctx.fillStyle = WHEEL_COLORS[i];
       ctx.fill();
       ctx.strokeStyle = '#0a0a0a';
       ctx.lineWidth = 2;
@@ -124,7 +131,7 @@ const BAULRULETA = (() => {
       ctx.translate(cx, cy);
       ctx.rotate(start + slice / 2);
       ctx.textAlign = 'right';
-      ctx.fillStyle = COLORS[i] === '#1a1a1a' ? '#ffffff' : '#000000';
+      ctx.fillStyle = WHEEL_COLORS[i] === '#1a1a1a' ? '#ffffff' : '#000000';
       ctx.font = '600 11px sans-serif';
       ctx.fillText(prize.label, r - 10, 4);
       ctx.restore();
@@ -153,7 +160,7 @@ const BAULRULETA = (() => {
     if (spinBtn) spinBtn.disabled = true;
 
     const canvas = document.getElementById('br-wheel-canvas');
-    const wi = Math.floor(Math.random() * PRIZES.length);
+    const wi = getWeightedWinner();
     const slice = (2 * Math.PI) / PRIZES.length;
     const targetAngle = 2 * Math.PI * 10 - wi * slice - slice / 2 - Math.PI / 2;
 
@@ -355,9 +362,10 @@ const BAULRULETA = (() => {
 
   function showResult(prize) {
     document.getElementById('br-res-emoji').textContent = prize.emoji;
-    document.getElementById('br-res-title').textContent = '¡Ganaste ' + prize.label + '!';
+    document.getElementById('br-res-title').textContent = prize.val;
     document.getElementById('br-res-code').textContent = prize.code;
-    document.getElementById('br-res-val').textContent = prize.val;
+    document.getElementById('br-res-val').textContent =
+      'Ningún premio de la ruleta es acumulable con las promociones por volumen de la tienda. Se aplica solo el que más te convenga.';
     showStep(3);
     startTimer();
     launchFireworks();
