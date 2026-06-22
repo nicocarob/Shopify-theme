@@ -559,15 +559,14 @@
     background: linear-gradient(-90deg, #101c14, transparent);
   }
   .bp-stamps-track {
-    display: flex;
+    display: inline-flex;
     flex-wrap: nowrap;
     gap: 12px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    animation: slL 40s linear infinite;
+    will-change: transform;
   }
-  .bp-stamps-track::-webkit-scrollbar {
-    display: none;
+  .bp-stamps-wrap:hover .bp-stamps-track {
+    animation-play-state: paused;
   }
   .bp-stamp-card {
     position: relative;
@@ -2813,6 +2812,7 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .bp-stamps-wrap::after {
       width: 28px;
     }
+    .bp-stamps-track { animation-duration: 25s; }
     .bp-customize-tag { margin-bottom: 10px; }
     .bp-customize-title {
       font-size: clamp(32px, 9vw, 42px);
