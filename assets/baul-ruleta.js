@@ -2,14 +2,19 @@ let upsellTimer = null;
 let upsellAutoCloseTimer = null;
 
 function scheduleUpsell() {
+  if (sessionStorage.getItem('upsellShown')) return;
+
   clearTimeout(upsellTimer);
   upsellTimer = setTimeout(async () => {
     try {
+      if (sessionStorage.getItem('upsellShown')) return;
+
       const res = await fetch('/cart.js');
       const cart = await res.json();
       if (cart.item_count === 0) {
         const upsell = document.getElementById('br-upsell');
         if (upsell) {
+          sessionStorage.setItem('upsellShown', '1');
           upsell.style.display = 'flex';
           clearTimeout(upsellAutoCloseTimer);
           upsellAutoCloseTimer = setTimeout(() => closeUpsell(), 15000);
