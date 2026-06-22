@@ -13,88 +13,88 @@
     "baul_homepage": {
       "type": "baul-homepage",
       "blocks": {
-        "testi_13": {
-          "type": "testimonial",
-          "settings": {
-            "image": "shopify://shop_images/IMG_2283.jpg"
-          }
-        },
         "testi_08": {
           "type": "testimonial",
           "settings": {
-            "image": "shopify://shop_images/IMG_2292.jpg"
-          }
-        },
-        "testi_02": {
-          "type": "testimonial",
-          "settings": {
-            "image": "shopify://shop_images/unnamed_1.jpg"
-          }
-        },
-        "testi_09": {
-          "type": "testimonial",
-          "settings": {
-            "image": "shopify://shop_images/IMG_2291.jpg"
-          }
-        },
-        "testi_03": {
-          "type": "testimonial",
-          "settings": {
-            "image": "shopify://shop_images/unnamed.jpg"
-          }
-        },
-        "testi_04": {
-          "type": "testimonial",
-          "settings": {
-            "image": "shopify://shop_images/IMG_2296.jpg"
-          }
-        },
-        "testi_12": {
-          "type": "testimonial",
-          "settings": {
-            "image": "shopify://shop_images/IMG_2287.jpg"
-          }
-        },
-        "testi_05": {
-          "type": "testimonial",
-          "settings": {
-            "image": "shopify://shop_images/IMG_2295.jpg"
-          }
-        },
-        "testi_07": {
-          "type": "testimonial",
-          "settings": {
-            "image": "shopify://shop_images/IMG_2293.jpg"
-          }
-        },
-        "testi_01": {
-          "type": "testimonial",
-          "settings": {
-            "image": "shopify://shop_images/unnamed_2.jpg"
+            "image": "shopify://shop_images/IMG_3230.jpg"
           }
         },
         "testi_10": {
           "type": "testimonial",
           "settings": {
-            "image": "shopify://shop_images/IMG_2290.jpg"
-          }
-        },
-        "testi_11": {
-          "type": "testimonial",
-          "settings": {
-            "image": "shopify://shop_images/IMG_2289.jpg"
-          }
-        },
-        "testi_06": {
-          "type": "testimonial",
-          "settings": {
-            "image": "shopify://shop_images/IMG_2294.jpg"
+            "image": "shopify://shop_images/79C234A8-7C45-4464-926C-1073FBFB169F.jpg"
           }
         },
         "testi_14": {
           "type": "testimonial",
           "settings": {
-            "image": "shopify://shop_images/IMG_2275.jpg"
+            "image": "shopify://shop_images/85CDAF3E-2145-4B3E-AD4E-BD2E4940CC2C.jpg"
+          }
+        },
+        "testi_11": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/IMG_3229.jpg"
+          }
+        },
+        "testi_03": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/IMG_3232.jpg"
+          }
+        },
+        "testi_06": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/7BC5EEE2-A876-4881-80CC-8338FBD57093.jpg"
+          }
+        },
+        "testi_09": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/IMG_3236.jpg"
+          }
+        },
+        "testi_07": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/IMG_3227.jpg"
+          }
+        },
+        "testi_13": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/6DBB7416-AD33-4FB9-9668-D1B481425D3E.jpg"
+          }
+        },
+        "testi_02": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/IMG_3235.jpg"
+          }
+        },
+        "testi_05": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/IMG_3226.jpg"
+          }
+        },
+        "testi_01": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/IMG_3228.jpg"
+          }
+        },
+        "testi_04": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/IMG_3237.jpg"
+          }
+        },
+        "testi_12": {
+          "type": "testimonial",
+          "settings": {
+            "image": "shopify://shop_images/IMG_3225.jpg"
           }
         },
         "liga_01": {
@@ -203,20 +203,20 @@
         }
       },
       "block_order": [
-        "testi_13",
         "testi_08",
-        "testi_02",
-        "testi_09",
+        "testi_10",
+        "testi_14",
+        "testi_11",
         "testi_03",
+        "testi_06",
+        "testi_09",
+        "testi_07",
+        "testi_13",
+        "testi_02",
+        "testi_05",
+        "testi_01",
         "testi_04",
         "testi_12",
-        "testi_05",
-        "testi_07",
-        "testi_01",
-        "testi_10",
-        "testi_11",
-        "testi_06",
-        "testi_14",
         "liga_01",
         "liga_02",
         "liga_03",
