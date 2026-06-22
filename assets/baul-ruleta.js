@@ -442,7 +442,10 @@ const BAULRULETA = (() => {
   }
 
   function init() {
-    if (getPopupShown()) return;
+    if (getPopupShown()) {
+      scheduleUpsell();
+      return;
+    }
 
     const overlay = document.getElementById('br-overlay');
     if (!overlay) return;
