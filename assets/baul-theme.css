@@ -2742,6 +2742,7 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .sec-title { font-size: clamp(28px, 8vw, 42px); }
     .testi-hdr { padding: 0 16px; margin-bottom: 20px; }
     .testi-wrap::before, .testi-wrap::after { width: 40px; }
+    .testi-track { animation: slL 25s linear infinite; }
     .t-card { width: 190px; border-radius: 14px; }
     .prod-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .pc-name { font-size: 13px; }
