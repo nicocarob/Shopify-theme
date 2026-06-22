@@ -83,6 +83,53 @@
   </div>
 </section>
 
+<div class="divider"></div>
+
+<section class="testi-sec">
+  <div class="sec-bg-grid"></div>
+  <div class="sec-bg-light"></div>
+  <div class="testi-hdr rev">
+    <div class="eyebrow">{{ section.settings.testi_eyebrow }}</div>
+    <h2 class="sec-title">{{ section.settings.testi_title }}</h2>
+    <p class="sec-sub" style="margin-top:8px;">{{ section.settings.testi_subtitle }}</p>
+  </div>
+  <div class="testi-wrap">
+    <div class="testi-track">
+      {% for block in section.blocks %}
+        {% if block.type == 'testimonial' and block.settings.image != blank %}
+          <div class="t-card" {{ block.shopify_attributes }}>
+            <img
+              class="t-img"
+              src="{{ block.settings.image | image_url: width: 520 }}"
+              alt="{{ block.settings.image.alt | default: 'Cliente' | escape }}"
+              width="260"
+              height="460"
+              loading="lazy"
+            >
+          </div>
+        {% endif %}
+      {% endfor %}
+      {% comment %} Duplicar para loop infinito del carrusel {% endcomment %}
+      {% for block in section.blocks %}
+        {% if block.type == 'testimonial' and block.settings.image != blank %}
+          <div class="t-card" aria-hidden="true">
+            <img
+              class="t-img"
+              src="{{ block.settings.image | image_url: width: 520 }}"
+              alt=""
+              width="260"
+              height="460"
+              loading="lazy"
+            >
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
 <section class="mv-sec" id="vendidos">
   <div class="sec-bg-grid"></div>
   <div class="sec-hdr rev">
@@ -227,51 +274,6 @@
       {% endcase %}
       {% render 'baul-product-card', product: product, delay: delay_val %}
     {% endfor %}
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<section class="testi-sec">
-  <div class="sec-bg-grid"></div>
-  <div class="sec-bg-light"></div>
-  <div class="testi-hdr rev">
-    <div class="eyebrow">{{ section.settings.testi_eyebrow }}</div>
-    <h2 class="sec-title">{{ section.settings.testi_title }}</h2>
-    <p class="sec-sub" style="margin-top:8px;">{{ section.settings.testi_subtitle }}</p>
-  </div>
-  <div class="testi-wrap">
-    <div class="testi-track">
-      {% for block in section.blocks %}
-        {% if block.type == 'testimonial' and block.settings.image != blank %}
-          <div class="t-card" {{ block.shopify_attributes }}>
-            <img
-              class="t-img"
-              src="{{ block.settings.image | image_url: width: 520 }}"
-              alt="{{ block.settings.image.alt | default: 'Cliente' | escape }}"
-              width="260"
-              height="460"
-              loading="lazy"
-            >
-          </div>
-        {% endif %}
-      {% endfor %}
-      {% comment %} Duplicar para loop infinito del carrusel {% endcomment %}
-      {% for block in section.blocks %}
-        {% if block.type == 'testimonial' and block.settings.image != blank %}
-          <div class="t-card" aria-hidden="true">
-            <img
-              class="t-img"
-              src="{{ block.settings.image | image_url: width: 520 }}"
-              alt=""
-              width="260"
-              height="460"
-              loading="lazy"
-            >
-          </div>
-        {% endif %}
-      {% endfor %}
-    </div>
   </div>
 </section>
 
