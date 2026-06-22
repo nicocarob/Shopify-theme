@@ -1,3 +1,31 @@
+let upsellTimer = null;
+let upsellAutoCloseTimer = null;
+
+function scheduleUpsell() {
+  clearTimeout(upsellTimer);
+  upsellTimer = setTimeout(async () => {
+    try {
+      const res = await fetch('/cart.js');
+      const cart = await res.json();
+      if (cart.item_count === 0) {
+        const upsell = document.getElementById('br-upsell');
+        if (upsell) {
+          upsell.style.display = 'flex';
+          clearTimeout(upsellAutoCloseTimer);
+          upsellAutoCloseTimer = setTimeout(() => closeUpsell(), 15000);
+        }
+      }
+    } catch (e) {}
+  }, 5000);
+}
+
+function closeUpsell() {
+  const upsell = document.getElementById('br-upsell');
+  if (upsell) upsell.style.display = 'none';
+  clearTimeout(upsellTimer);
+  clearTimeout(upsellAutoCloseTimer);
+}
+
 const BAULRULETA = (() => {
   const PRIZES = [
     { label: 'Nombre gratis', code: 'NOM26CAB', val: '¡Ganaste personalización gratis! Escribe tu nombre en tu camiseta sin costo 🎽', emoji: '✨', prob: 25 },
@@ -397,6 +425,7 @@ const BAULRULETA = (() => {
     showStep(3);
     launchFireworks();
     setPopupShown();
+    scheduleUpsell();
   }
 
   function closePopup() {
@@ -409,6 +438,7 @@ const BAULRULETA = (() => {
       ctx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
     }
     setPopupShown();
+    scheduleUpsell();
   }
 
   function init() {

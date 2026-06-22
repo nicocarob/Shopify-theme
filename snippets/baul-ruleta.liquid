@@ -48,4 +48,19 @@
   </div>
 </div>
 
+<div id="br-upsell" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:99998; align-items:center; justify-content:center; padding:16px;">
+  <div style="background:#0f0f0f; border:0.5px solid rgba(0,200,81,0.3); border-radius:16px; max-width:340px; width:100%; padding:24px; text-align:center; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.8);">
+    <button onclick="closeUpsell()" style="position:absolute;top:10px;right:12px;background:none;border:none;color:rgba(255,255,255,0.3);font-size:18px;cursor:pointer;">✕</button>
+    <div style="font-size:40px;margin-bottom:12px;">🎁</div>
+    <div style="font-size:22px;font-weight:700;color:#fff;text-transform:uppercase;margin-bottom:8px;letter-spacing:0.04em;line-height:1.1;">¡Agrega tu primer <span style="color:#00c851;">producto!</span></div>
+    <div style="font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:16px;line-height:1.5;">Agrega cualquier producto al carrito y activa los regalos exclusivos por cantidad</div>
+    <div style="display:flex;gap:8px;justify-content:center;margin-bottom:20px;flex-wrap:wrap;">
+      <div style="background:#161616;border:0.5px solid #2a2a2a;border-radius:100px;padding:4px 12px;font-size:11px;color:rgba(255,255,255,0.5);">2 productos → <strong style="color:#fff;">10% off</strong></div>
+      <div style="background:#161616;border:0.5px solid #2a2a2a;border-radius:100px;padding:4px 12px;font-size:11px;color:rgba(255,255,255,0.5);">3 productos → <strong style="color:#fff;">½ precio</strong></div>
+      <div style="background:#161616;border:0.5px solid #2a2a2a;border-radius:100px;padding:4px 12px;font-size:11px;color:rgba(255,255,255,0.5);">4 productos → <strong style="color:#fff;">gratis 🎁</strong></div>
+    </div>
+    <button onclick="closeUpsell()" style="width:100%;padding:13px;background:#00c851;color:#000;border:none;border-radius:8px;font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;cursor:pointer;margin-bottom:0;">¡Vamos! 🛒</button>
+  </div>
+</div>
+
 {{ 'baul-ruleta.js' | asset_url | script_tag }}
