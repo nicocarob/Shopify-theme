@@ -46,10 +46,8 @@ const BAULRULETA = (() => {
   const SHAKE_WINDOW = 800;
   const SHAKE_DELAY = 300;
   const FIREWORK_DURATION = 4000;
-  const KLAVIYO_API_KEY = 'RMwPCt';
 
   let spinning = false;
-  let pendingPrize = null;
   let timerInterval = null;
   let fireworksRaf = null;
   let fireworksCanvas = null;
@@ -68,61 +66,18 @@ const BAULRULETA = (() => {
     localStorage.setItem('baulRuletaDate', new Date().toISOString().split('T')[0]);
   }
 
-  async function subscribeToKlaviyo(email, prize) {
-    if (!email || !prize) return false;
-
-    try {
-      const response = await fetch(
-        'https://a.klaviyo.com/client/subscriptions/?company_id=' + KLAVIYO_API_KEY,
-        {
-          method: 'POST',
-          headers: {
-            accept: 'application/json',
-            'content-type': 'application/json',
-            revision: '2023-12-15',
-          },
-          body: JSON.stringify({
-            data: {
-              type: 'subscription',
-              attributes: {
-                custom_source: 'ruleta_mundial_2026',
-                profile: {
-                  data: {
-                    type: 'profile',
-                    attributes: {
-                      email: email,
-                      properties: {
-                        coupon_code: prize.code,
-                        coupon_value: prize.val,
-                      },
-                    },
-                  },
-                },
-              },
-              relationships: {
-                list: {
-                  data: {
-                    type: 'list',
-                    id: 'Uij28M',
-                  },
-                },
-              },
-            },
-          }),
-        }
+  function getWhatsAppUrl(prize) {
+    const hasCode = Boolean(prize.code && String(prize.code).trim());
+    if (hasCode) {
+      return (
+        'https://wa.me/56948685507?text=' +
+        encodeURIComponent('Hola! Giré la ruleta en La Cábala y gané el cupón: ' + prize.code)
       );
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.log('Klaviyo error:', response.status, errorText);
-        return false;
-      }
-
-      return true;
-    } catch (e) {
-      console.log('Klaviyo error:', e);
-      return false;
     }
+    return (
+      'https://wa.me/56948685507?text=' +
+      encodeURIComponent('Hola! Giré la ruleta en La Cábala y gané una camiseta gratis 🎁')
+    );
   }
 
   function getWeightedWinner() {
@@ -206,7 +161,7 @@ const BAULRULETA = (() => {
       console.log('Winner index:', wi, '| Prize:', PRIZES[wi].label);
       setTimeout(() => {
         spinning = false;
-        showEmailStep(PRIZES[wi]);
+        showResult(PRIZES[wi]);
       }, SHAKE_DELAY);
     }
 
@@ -357,40 +312,9 @@ const BAULRULETA = (() => {
 
   function showStep(step) {
     const s2 = document.getElementById('br-s2');
-    const s2b = document.getElementById('br-s2b');
     const s3 = document.getElementById('br-s3');
     if (s2) s2.style.display = step === 2 ? 'block' : 'none';
-    if (s2b) s2b.style.display = step === '2b' ? 'block' : 'none';
     if (s3) s3.style.display = step === 3 ? 'block' : 'none';
-  }
-
-  function showEmailStep(prize) {
-    pendingPrize = prize;
-    showStep('2b');
-  }
-
-  async function handleReveal() {
-    const emailInput = document.getElementById('br-email-reveal');
-    const email = emailInput ? emailInput.value.trim() : '';
-    if (!email || !email.includes('@')) {
-      alert('Ingresa un email válido para ver tu cupón');
-      return;
-    }
-
-    const btn = document.getElementById('br-btn-reveal');
-    if (btn) {
-      btn.disabled = true;
-      btn.textContent = 'Enviando...';
-    }
-
-    await subscribeToKlaviyo(email, pendingPrize);
-
-    if (btn) {
-      btn.disabled = false;
-      btn.textContent = 'Ver mi cupón →';
-    }
-
-    showResult(pendingPrize);
   }
 
   function showResult(prize) {
@@ -401,9 +325,12 @@ const BAULRULETA = (() => {
     const resSub = document.querySelector('.br-res-sub');
     const timerBar = document.querySelector('.br-timer-bar');
     const timerTxt = document.querySelector('.br-timer-txt');
+    const waBtn = document.getElementById('br-btn-wa');
 
     document.getElementById('br-res-emoji').textContent = prize.emoji;
     document.getElementById('br-res-title').textContent = prize.val;
+
+    if (waBtn) waBtn.href = getWhatsAppUrl(prize);
 
     if (hasCode) {
       if (couponBox) couponBox.style.display = '';
@@ -463,7 +390,6 @@ const BAULRULETA = (() => {
     }, 100);
 
     document.getElementById('br-btn-spin').addEventListener('click', spinWheel);
-    document.getElementById('br-btn-reveal').addEventListener('click', handleReveal);
     document.getElementById('br-btn-close').addEventListener('click', closePopup);
     document.getElementById('br-overlay').addEventListener('click', function (e) {
       if (e.target === this) closePopup();
