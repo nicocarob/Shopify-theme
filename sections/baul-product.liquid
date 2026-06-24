@@ -82,6 +82,7 @@
       </div>
 
       <h1 class="bp-title">{{ product.title }}</h1>
+      <div class="product-stars product-stars--pdp" data-handle="{{ product.handle }}"></div>
       {% if vendor_label != blank or product.type != blank %}
         <p class="bp-subtitle">
           {% if product.vendor != blank %}{{ product.vendor }}{% endif %}

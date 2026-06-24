@@ -960,3 +960,38 @@ if (videoEl) {
   );
   observer.observe(videoEl);
 }
+
+function getProductSocialProof(handle) {
+  let hash = 0;
+  for (let i = 0; i < handle.length; i++) {
+    hash = (hash << 5) - hash + handle.charCodeAt(i);
+    hash |= 0;
+  }
+  const r = Math.abs(hash % 1000) / 1000;
+  const rating = (4.8 + r * 0.2).toFixed(1);
+  const sold = Math.floor(200 + r * 300);
+  return { rating, sold };
+}
+
+function initProductSocialProof() {
+  document.querySelectorAll('.product-stars').forEach((el) => {
+    const handle = el.dataset.handle;
+    if (!handle) return;
+
+    const { rating, sold } = getProductSocialProof(handle);
+    el.innerHTML =
+      '<span class="ps-stars" aria-hidden="true">★★★★★</span>' +
+      '<span class="ps-rating">' +
+      rating +
+      '</span>' +
+      '<span class="ps-sold">· ' +
+      sold +
+      ' vendidos</span>';
+  });
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initProductSocialProof);
+} else {
+  initProductSocialProof();
+}

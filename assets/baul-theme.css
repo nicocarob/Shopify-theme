@@ -1012,6 +1012,14 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     font-weight: 600; color: var(--text-muted);
     letter-spacing: 0.08em; text-transform: uppercase;
   }
+  .product-stars { display: flex; align-items: center; gap: 5px; margin-bottom: 5px; }
+  .ps-stars { display: flex; gap: 1px; color: #ffd700; font-size: 11px; }
+  .ps-rating { font-size: 11px; color: #ffd700; font-weight: 700; }
+  .ps-sold { font-size: 10px; color: rgba(255,255,255,0.35); }
+  .product-stars--pdp { margin-bottom: 10px; }
+  .product-stars--pdp .ps-stars { font-size: 14px; }
+  .product-stars--pdp .ps-rating { font-size: 14px; }
+  .product-stars--pdp .ps-sold { font-size: 12px; }
   
   .pc-price-row {
     display: flex; align-items: center; justify-content: space-between;
