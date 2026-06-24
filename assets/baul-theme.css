@@ -88,57 +88,65 @@
   .sec-inner { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; }
   
   /* ── Countdown sticky bar ── */
-  #cbar {
-    position: sticky; top: 0; z-index: 200;
-    background: linear-gradient(90deg, #0d0d0d, #111, #0d0d0d);
-    color: var(--text); padding: 16px 24px;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
-    font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase;
-    border-bottom: 1px solid var(--border);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
-  }
-  .cbar-inner {
+  .baul-countdown-banner {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: #0a0a0a;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.15);
+    padding: 10px 16px;
     display: flex;
     align-items: center;
-    gap: 24px;
-    max-width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
   }
-  .cbar-main {
+  .bcb-left {
     display: flex;
     flex-direction: column;
     gap: 2px;
-    align-items: flex-start;
-    text-align: left;
+    min-width: 0;
   }
-  .cbar-line--timer {
+  .bcb-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 15px;
+    color: #ffffff;
+    letter-spacing: 1.5px;
+    line-height: 1.1;
+  }
+  .bcb-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    color: #888;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .bcb-right {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 14px;
+    gap: 2px;
     flex-shrink: 0;
   }
-  .ctimer {
-    font-family: 'Bebas Neue', sans-serif; font-size: 32px;
-    letter-spacing: 0.1em; color: var(--accent-gold);
-    text-shadow: 0 0 20px rgba(255, 215, 0, 0.35);
+  .bcb-timer {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: #ffd700;
+    letter-spacing: 3px;
+    line-height: 1;
   }
-  .cb-pill {
-    background: var(--accent); color: #000;
-    padding: 4px 12px; font-size: 11px; letter-spacing: 0.14em;
-    border-radius: 100px; font-weight: 700;
-    box-shadow: 0 0 16px rgba(0, 200, 81, 0.35);
-    animation: pillPulse 2.5s ease-in-out infinite;
-  }
-  @keyframes pillPulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(0, 200, 81, 0.4); }
-    50% { box-shadow: 0 0 0 6px rgba(0, 200, 81, 0); }
-  }
-  .cbar-text { font-size: 16px; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.85); }
-  .cbar-sub {
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    color: rgba(255, 255, 255, 0.5);
-    font-weight: 600;
+  .bcb-sep { color: #00c851; margin: 0 1px; }
+  .bcb-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 9px;
+    color: #555;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 0 4px;
+    box-sizing: border-box;
   }
 
   /* ── Ticker marquee ── */
@@ -2699,28 +2707,12 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   
   /* ── Mobile ── */
   @media (max-width: 768px) {
-    #cbar {
-      padding: 16px 12px;
-      overflow-x: hidden;
-    }
-    .cbar-inner {
-      flex-direction: column;
-      align-items: center;
+    .baul-countdown-banner {
+      padding: 10px 12px;
       gap: 10px;
-      text-align: center;
     }
-    .cbar-main {
-      align-items: center;
-      text-align: center;
-    }
-    .cbar-line--timer {
-      justify-content: center;
-      gap: 12px;
-    }
-    .cbar-text { font-size: 15px; letter-spacing: 0.08em; }
-    .cbar-sub { font-size: 11px; letter-spacing: 0.1em; }
-    .ctimer { font-size: 32px; }
-    .cb-pill { font-size: 10px; padding: 4px 8px; letter-spacing: 0.1em; }
+    .bcb-title { font-size: 14px; letter-spacing: 1px; }
+    .bcb-timer { font-size: 26px; letter-spacing: 2px; }
     .ticker { overflow-x: hidden; padding: 8px 0; }
     .tick-tr { animation: tick 17s linear infinite; }
     .tick-it { padding: 0 10px; font-size: 9px; letter-spacing: 0.1em; }

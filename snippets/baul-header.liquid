@@ -15,15 +15,17 @@
 
 {% capture logo_src %}{% render 'baul-logo-url', section: section, width: 104 %}{% endcapture %}
 
-<div id="cbar">
-  <div class="cbar-inner">
-    <div class="cbar-main">
-      <span class="cbar-text">⏱️ ENVÍO GRATIS POR TIEMPO LIMITADO</span>
-      <span class="cbar-sub">EL ENVÍO GRATIS TERMINA EN:</span>
+<div id="cbar" class="baul-countdown-banner">
+  <div class="bcb-left">
+    <span class="bcb-title">⏱ ENVÍO GRATIS A TODO CHILE 🇨🇱</span>
+    <span class="bcb-sub">OFERTA TERMINA EN</span>
+  </div>
+  <div class="bcb-right">
+    <div class="bcb-timer">
+      <span id="bcb-hh">00</span><span class="bcb-sep">:</span><span id="bcb-mm">00</span><span class="bcb-sep">:</span><span id="bcb-ss">00</span>
     </div>
-    <div class="cbar-line cbar-line--timer">
-      <span class="ctimer" id="mainTimer">00:00:00</span>
-      <span class="cb-pill">📦 GRATIS A TODO CHILE</span>
+    <div class="bcb-labels">
+      <span>HRS</span><span>MIN</span><span>SEG</span>
     </div>
   </div>
 </div>
