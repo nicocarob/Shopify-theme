@@ -92,11 +92,24 @@
     position: sticky; top: 0; z-index: 200;
     background: linear-gradient(90deg, #0d0d0d, #111, #0d0d0d);
     color: var(--text); padding: 16px 24px;
-    display: flex; align-items: center; justify-content: center; gap: 14px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
     font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
     font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase;
     border-bottom: 1px solid var(--border);
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+  }
+  .cbar-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    align-items: flex-start;
+    text-align: left;
+  }
+  .cbar-line--timer {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
   }
   .ctimer {
     font-family: 'Bebas Neue', sans-serif; font-size: 32px;
@@ -114,8 +127,13 @@
     0%, 100% { box-shadow: 0 0 0 0 rgba(0, 200, 81, 0.4); }
     50% { box-shadow: 0 0 0 6px rgba(0, 200, 81, 0); }
   }
-  .cbar-line { display: contents; }
-  .cbar-text { font-size: 16px; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.7); }
+  .cbar-text { font-size: 16px; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.85); }
+  .cbar-sub {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 600;
+  }
 
   /* ── Ticker marquee ── */
   .ticker {
@@ -2680,12 +2698,17 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
       padding: 16px 12px; gap: 10px; text-align: center;
       overflow-x: hidden;
     }
-    .cbar-line {
-      display: flex; align-items: center; justify-content: center;
-      gap: 8px; width: 100%;
+    .cbar-main {
+      align-items: center;
+      text-align: center;
     }
-    .cbar-line--timer { gap: 12px; }
-    .cbar-text { font-size: 16px; letter-spacing: 0.08em; }
+    .cbar-line--timer {
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+    }
+    .cbar-text { font-size: 15px; letter-spacing: 0.08em; }
+    .cbar-sub { font-size: 11px; letter-spacing: 0.1em; }
     .ctimer { font-size: 32px; }
     .cb-pill { font-size: 10px; padding: 4px 8px; letter-spacing: 0.1em; }
     .ticker { overflow-x: hidden; padding: 8px 0; }

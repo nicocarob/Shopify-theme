@@ -5,12 +5,10 @@
 
 {% liquid
   assign logo_secundario = blank
-  assign countdown_text = 'ENVÍO GRATIS POR TIEMPO LIMITADO — TERMINA EN:'
   assign promo_text = '🎽 Lleva 3 camisetas y te llevas la 4ª a mitad de precio 🔥'
 
   if section != blank
     assign logo_secundario = section.settings.logo_secundario
-    assign countdown_text = section.settings.countdown_text | default: countdown_text
     assign promo_text = section.settings.promo_text | default: promo_text
   endif
 %}
@@ -18,12 +16,12 @@
 {% capture logo_src %}{% render 'baul-logo-url', section: section, width: 104 %}{% endcapture %}
 
 <div id="cbar">
-  <div class="cbar-line cbar-line--text">
-    <span>🔥</span>
-    <span class="cbar-text">{{ countdown_text }}</span>
+  <div class="cbar-main">
+    <span class="cbar-text">⏱️ ENVÍO GRATIS POR TIEMPO LIMITADO</span>
+    <span class="cbar-sub">EL ENVÍO GRATIS TERMINA EN:</span>
   </div>
   <div class="cbar-line cbar-line--timer">
-    <span class="ctimer" id="mainTimer">05:00:00</span>
+    <span class="ctimer" id="mainTimer">00:00:00</span>
     <span class="cb-pill">📦 GRATIS A TODO CHILE</span>
   </div>
 </div>

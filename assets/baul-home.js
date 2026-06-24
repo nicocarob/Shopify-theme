@@ -1,108 +1,5 @@
-const MATCHES = [
-  { date: new Date('2026-06-11T15:00:00-04:00'), home: 'México', away: 'Sudáfrica', flagHome: '🇲🇽', flagAway: '🇿🇦' },
-  { date: new Date('2026-06-11T22:00:00-04:00'), home: 'Corea del Sur', away: 'Chequia', flagHome: '🇰🇷', flagAway: '🇨🇿' },
-  { date: new Date('2026-06-12T15:00:00-04:00'), home: 'Canadá', away: 'Bosnia', flagHome: '🇨🇦', flagAway: '🇧🇦' },
-  { date: new Date('2026-06-12T21:00:00-04:00'), home: 'Estados Unidos', away: 'Paraguay', flagHome: '🇺🇸', flagAway: '🇵🇾' },
-  { date: new Date('2026-06-13T15:00:00-04:00'), home: 'Qatar', away: 'Suiza', flagHome: '🇶🇦', flagAway: '🇨🇭' },
-  { date: new Date('2026-06-13T18:00:00-04:00'), home: 'Brasil', away: 'Marruecos', flagHome: '🇧🇷', flagAway: '🇲🇦' },
-  { date: new Date('2026-06-13T21:00:00-04:00'), home: 'Haití', away: 'Escocia', flagHome: '🇭🇹', flagAway: '🏴󠁧󠁢󠁳󠁣󠁴󠁿' },
-  { date: new Date('2026-06-14T12:00:00-04:00'), home: 'Australia', away: 'Turquía', flagHome: '🇦🇺', flagAway: '🇹🇷' },
-  { date: new Date('2026-06-14T15:00:00-04:00'), home: 'Alemania', away: 'Curazao', flagHome: '🇩🇪', flagAway: '🇨🇼' },
-  { date: new Date('2026-06-14T18:00:00-04:00'), home: 'Países Bajos', away: 'Japón', flagHome: '🇳🇱', flagAway: '🇯🇵' },
-  { date: new Date('2026-06-14T21:00:00-04:00'), home: 'Costa de Marfil', away: 'Ecuador', flagHome: '🇨🇮', flagAway: '🇪🇨' },
-  { date: new Date('2026-06-15T12:00:00-04:00'), home: 'España', away: 'Cabo Verde', flagHome: '🇪🇸', flagAway: '🇨🇻' },
-  { date: new Date('2026-06-15T15:00:00-04:00'), home: 'Bélgica', away: 'Egipto', flagHome: '🇧🇪', flagAway: '🇪🇬' },
-  { date: new Date('2026-06-15T18:00:00-04:00'), home: 'Arabia Saudí', away: 'Uruguay', flagHome: '🇸🇦', flagAway: '🇺🇾' },
-  { date: new Date('2026-06-15T21:00:00-04:00'), home: 'Irán', away: 'Nueva Zelanda', flagHome: '🇮🇷', flagAway: '🇳🇿' },
-  { date: new Date('2026-06-16T15:00:00-04:00'), home: 'Francia', away: 'Senegal', flagHome: '🇫🇷', flagAway: '🇸🇳' },
-  { date: new Date('2026-06-16T18:00:00-04:00'), home: 'Irak', away: 'Noruega', flagHome: '🇮🇶', flagAway: '🇳🇴' },
-  { date: new Date('2026-06-16T21:00:00-04:00'), home: 'Argentina', away: 'Argelia', flagHome: '🇦🇷', flagAway: '🇩🇿' },
-  { date: new Date('2026-06-17T13:00:00-04:00'), home: 'Portugal', away: 'DR Congo', flagHome: '🇵🇹', flagAway: '🇨🇩' },
-  { date: new Date('2026-06-17T21:00:00-04:00'), home: 'Colombia', away: 'Uzbekistán', flagHome: '🇨🇴', flagAway: '🇺🇿' },
-  { date: new Date('2026-06-18T13:00:00-04:00'), home: 'Inglaterra', away: 'Croacia', flagHome: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', flagAway: '🇭🇷' },
-  { date: new Date('2026-06-19T13:00:00-04:00'), home: 'Argentina', away: 'Austria', flagHome: '🇦🇷', flagAway: '🇦🇹' },
-  { date: new Date('2026-06-20T13:00:00-04:00'), home: 'Brasil', away: 'Haití', flagHome: '🇧🇷', flagAway: '🇭🇹' },
-  { date: new Date('2026-06-21T13:00:00-04:00'), home: 'España', away: 'Arabia Saudí', flagHome: '🇪🇸', flagAway: '🇸🇦' },
-  { date: new Date('2026-06-22T13:00:00-04:00'), home: 'Francia', away: 'Irak', flagHome: '🇫🇷', flagAway: '🇮🇶' },
-  { date: new Date('2026-06-23T13:00:00-04:00'), home: 'Portugal', away: 'Uzbekistán', flagHome: '🇵🇹', flagAway: '🇺🇿' },
-  { date: new Date('2026-06-24T13:00:00-04:00'), home: 'Alemania', away: 'Costa de Marfil', flagHome: '🇩🇪', flagAway: '🇨🇮' },
-  { date: new Date('2026-07-04T16:00:00-04:00'), home: 'Octavos', away: 'de Final', flagHome: '⚽', flagAway: '🏆' },
-  { date: new Date('2026-07-11T16:00:00-04:00'), home: 'Cuartos', away: 'de Final', flagHome: '⚽', flagAway: '🏆' },
-  { date: new Date('2026-07-15T18:00:00-04:00'), home: 'Semifinal', away: 'Mundial', flagHome: '⚽', flagAway: '🏆' },
-  { date: new Date('2026-07-19T15:00:00-04:00'), home: 'Final', away: 'Mundial 2026', flagHome: '🏆', flagAway: '🌟' },
-];
-
-const TEAM_RANK = {
-  Argentina: 10,
-  Brasil: 10,
-  Francia: 9,
-  Inglaterra: 9,
-  España: 9,
-  Portugal: 8,
-  Alemania: 8,
-  'Países Bajos': 7,
-  Uruguay: 7,
-  Colombia: 7,
-  Bélgica: 7,
-  'Estados Unidos': 6,
-  México: 6,
-  Japón: 6,
-  'Corea del Sur': 6,
-  Croacia: 6,
-  Ecuador: 5,
-  Senegal: 5,
-  Marruecos: 5,
-};
-
 const TOTAL = 5 * 3600000;
 const CARD_FLOORS = [45, 65, 85, 105, 125, 155, 190, 270].map((m) => m * 60000);
-const FALLBACK_BANNER_TEXT = '⏱️ ENVÍO GRATIS POR TIEMPO LIMITADO — TERMINA EN:';
-
-function getChileDateKey(date) {
-  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Santiago' }).format(date);
-}
-
-function getMatchScore(match) {
-  const rank = (team) => TEAM_RANK[team] || 1;
-  return rank(match.home) + rank(match.away);
-}
-
-function pickFeaturedMatch() {
-  const now = Date.now();
-  const todayKey = getChileDateKey(new Date());
-  const todayUpcoming = MATCHES.filter(
-    (match) => getChileDateKey(match.date) === todayKey && match.date.getTime() > now
-  );
-
-  if (todayUpcoming.length) {
-    return todayUpcoming.reduce((best, match) =>
-      getMatchScore(match) > getMatchScore(best) ? match : best
-    );
-  }
-
-  const future = MATCHES.filter((match) => match.date.getTime() > now);
-  if (!future.length) return null;
-
-  const byDay = {};
-  future.forEach((match) => {
-    const key = getChileDateKey(match.date);
-    if (!byDay[key]) byDay[key] = [];
-    byDay[key].push(match);
-  });
-
-  const nearestDay = Object.keys(byDay).sort()[0];
-  return byDay[nearestDay].reduce((best, match) =>
-    getMatchScore(match) > getMatchScore(best) ? match : best
-  );
-}
-
-function getBannerText(match) {
-  if (!match) return FALLBACK_BANNER_TEXT;
-  if (window.innerWidth >= 768) {
-    return '⏱️ Envío GRATIS antes de ' + match.home + ' vs ' + match.away + ' — TERMINA EN:';
-  }
-  return '⏱️ Envío GRATIS hasta el partido ' + match.flagHome + ' vs ' + match.flagAway;
-}
 
 function getEnd(key, floor) {
   let v = parseInt(localStorage.getItem(key) || '0', 10);
@@ -116,14 +13,12 @@ function getEnd(key, floor) {
 
 const cardEnds = CARD_FLOORS.map((f, i) => getEnd('bdc_c' + i, f));
 
-let featuredMatch = pickFeaturedMatch();
-let matchEnd = featuredMatch ? featuredMatch.date.getTime() : 0;
-
-function updateBannerCopy() {
-  featuredMatch = pickFeaturedMatch();
-  matchEnd = featuredMatch ? featuredMatch.date.getTime() : 0;
-  const cbarText = document.querySelector('.cbar-text');
-  if (cbarText) cbarText.textContent = getBannerText(featuredMatch);
+function getSecondsUntil4AM() {
+  const now = new Date();
+  const next4am = new Date();
+  next4am.setHours(4, 0, 0, 0);
+  if (now >= next4am) next4am.setDate(next4am.getDate() + 1);
+  return Math.floor((next4am - now) / 1000);
 }
 
 function fmt(ms) {
@@ -136,13 +31,9 @@ function fmt(ms) {
 function tick() {
   const now = Date.now();
 
-  if (!featuredMatch || matchEnd <= now) {
-    updateBannerCopy();
-  }
-
   const mainTimer = document.getElementById('mainTimer');
   if (mainTimer) {
-    mainTimer.textContent = featuredMatch ? fmt(matchEnd - now) : '00:00:00';
+    mainTimer.textContent = fmt(getSecondsUntil4AM() * 1000);
   }
 
   document.querySelectorAll('.urg-timer').forEach((el) => {
@@ -161,12 +52,6 @@ function tick() {
     if (clk) clk.style.left = pct + '%';
   });
 }
-
-updateBannerCopy();
-window.addEventListener('resize', () => {
-  const cbarText = document.querySelector('.cbar-text');
-  if (cbarText) cbarText.textContent = getBannerText(featuredMatch);
-});
 
 tick();
 setInterval(tick, 1000);
