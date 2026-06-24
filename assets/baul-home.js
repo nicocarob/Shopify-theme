@@ -13,30 +13,28 @@ function getEnd(key, floor) {
 
 const cardEnds = CARD_FLOORS.map((f, i) => getEnd('bdc_c' + i, f));
 
-function bcbTick() {
-  const hhEl = document.getElementById('bcb-hh');
-  const mmEl = document.getElementById('bcb-mm');
-  const ssEl = document.getElementById('bcb-ss');
-  if (!hhEl || !mmEl || !ssEl) return;
-
+function getSecondsUntil4AM() {
   const now = new Date();
   const next4am = new Date();
   next4am.setHours(4, 0, 0, 0);
   if (now >= next4am) next4am.setDate(next4am.getDate() + 1);
+  return Math.floor((next4am - now) / 1000);
+}
 
-  let secs = Math.floor((next4am - now) / 1000);
-  const h = Math.floor(secs / 3600);
-  secs %= 3600;
-  const m = Math.floor(secs / 60);
-  const s = secs % 60;
-
-  hhEl.textContent = String(h).padStart(2, '0');
-  mmEl.textContent = String(m).padStart(2, '0');
-  ssEl.textContent = String(s).padStart(2, '0');
+function fmt(ms) {
+  const t = Math.max(0, ms);
+  return [Math.floor(t / 3600000), Math.floor((t % 3600000) / 60000), Math.floor((t % 60000) / 1000)]
+    .map((n) => String(n).padStart(2, '0'))
+    .join(':');
 }
 
 function tick() {
   const now = Date.now();
+
+  const mainTimer = document.getElementById('mainTimer');
+  if (mainTimer) {
+    mainTimer.textContent = fmt(getSecondsUntil4AM() * 1000);
+  }
 
   document.querySelectorAll('.urg-timer').forEach((el) => {
     const i = parseInt(el.dataset.idx, 10);
@@ -54,16 +52,6 @@ function tick() {
     if (clk) clk.style.left = pct + '%';
   });
 }
-
-function fmt(ms) {
-  const t = Math.max(0, ms);
-  return [Math.floor(t / 3600000), Math.floor((t % 3600000) / 60000), Math.floor((t % 60000) / 1000)]
-    .map((n) => String(n).padStart(2, '0'))
-    .join(':');
-}
-
-bcbTick();
-setInterval(bcbTick, 1000);
 
 tick();
 setInterval(tick, 1000);
