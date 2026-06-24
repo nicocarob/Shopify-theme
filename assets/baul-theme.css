@@ -2752,21 +2752,42 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .testi-wrap::before, .testi-wrap::after { width: 40px; }
     .testi-track { animation: slL 25s linear infinite; }
     .t-card { width: 190px; border-radius: 14px; }
-    .prod-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .pc-name { font-size: 13px; }
-    .p-new { font-size: 20px; }
+    .prod-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .prod-grid .pc { align-self: start; }
+    .pc-img-wrap { aspect-ratio: 4 / 5; }
+    .pc-info { padding: 8px 10px 6px; gap: 3px; flex: 0 0 auto; }
+    .pc-name { font-size: 12px; line-height: 1.15; }
+    .pc-ver { font-size: 11px; letter-spacing: 0.06em; }
+    .product-stars { gap: 4px; margin-bottom: 2px; }
+    .ps-stars { font-size: 10px; }
+    .ps-rating { font-size: 10px; }
+    .ps-sold { font-size: 9px; }
+    .pc-price-row {
+      margin-top: 0;
+      padding: 6px 10px 8px;
+    }
+    .p-col { gap: 1px; }
+    .p-old { font-size: 10px; }
+    .p-new { font-size: 18px; }
     .btn-row {
       flex-direction: column;
+      gap: 4px;
+      padding: 0 10px 8px;
     }
     .btn-add {
       width: 100%;
-      padding: 10px;
+      padding: 7px 10px;
+      font-size: 13px;
     }
     .btn-custom {
       width: 100%;
-      padding: 7px;
-      font-size: 11px;
+      padding: 5px 10px;
+      font-size: 10px;
     }
+    .pc-urgency { padding: 6px 10px 8px; gap: 4px; }
+    .pc-num { top: 8px; left: 8px; width: 26px; height: 26px; font-size: 15px; }
+    .pc-offer-badge { top: 8px; right: 8px; font-size: 9px; padding: 3px 6px; }
+    .badge-uu { bottom: 8px; left: 8px; font-size: 9px; padding: 4px 7px; gap: 4px; }
     .liga-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }
     .lg-circle { width: 72px; height: 72px; }
     .lg-ico { font-size: 26px; }
