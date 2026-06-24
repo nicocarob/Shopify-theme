@@ -1232,9 +1232,43 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     color: #fff; letter-spacing: 0.05em; transition: text-shadow 0.5s, color 0.5s;
   }
   .urg-timer.danger { color: var(--accent-red); text-shadow: 0 0 12px rgba(255, 60, 60, 0.5); }
-  .urg-bar { height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; position: relative; }
-  .urg-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease, background 0.5s; }
-  .urg-clk { position: absolute; top: 50%; transform: translateY(-50%); font-size: 10px; pointer-events: none; transition: left 0.5s ease; }
+  .urg-bar {
+    height: 14px;
+    background: transparent;
+    border-radius: 0;
+    overflow: visible;
+    position: relative;
+  }
+  .urg-bar::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+  }
+  .urg-fill {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 4px;
+    border-radius: 2px;
+    transition: width 0.5s ease, background 0.5s;
+  }
+  .urg-clk {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 11px;
+    line-height: 1;
+    pointer-events: none;
+    transition: left 0.5s ease;
+    z-index: 1;
+  }
   
   /* Section accent variants */
   .col-sec--gold .eyebrow, .col-sec--gold .lk-all:hover { color: var(--accent-gold); }

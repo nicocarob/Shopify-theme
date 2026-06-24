@@ -158,7 +158,7 @@ function tick() {
       fill.style.width = pct + '%';
       fill.style.background = pct > 60 ? '#22c55e' : pct > 25 ? '#eab308' : '#ef4444';
     }
-    if (clk) clk.style.left = 'calc(' + pct + '% - 5px)';
+    if (clk) clk.style.left = pct + '%';
   });
 }
 
