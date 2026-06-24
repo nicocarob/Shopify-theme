@@ -16,14 +16,12 @@
 {% capture logo_src %}{% render 'baul-logo-url', section: section, width: 104 %}{% endcapture %}
 
 <div id="cbar">
-  <div class="cbar-glow" aria-hidden="true"></div>
   <div class="cbar-inner">
     <div class="cbar-main">
       <span class="cbar-text">⏱️ ENVÍO GRATIS A TODO CHILE POR TIEMPO LIMITADO 🇨🇱</span>
       <span class="cbar-sub">EL ENVÍO GRATIS TERMINA EN:</span>
     </div>
-    <div class="cbar-divider" aria-hidden="true"></div>
-    <div class="cbar-timer">
+    <div class="cbar-line cbar-line--timer">
       <span class="ctimer" id="mainTimer">00:00:00</span>
     </div>
   </div>

@@ -89,95 +89,38 @@
   
   /* ── Countdown sticky bar ── */
   #cbar {
-    position: sticky;
-    top: 0;
-    z-index: 200;
-    background: linear-gradient(180deg, #111 0%, var(--bg) 100%);
-    color: var(--text);
-    padding: 12px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Barlow Condensed', sans-serif;
-    border-bottom: 1px solid rgba(255, 215, 0, 0.12);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.55);
-    overflow: hidden;
-  }
-  #cbar::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      rgba(0, 200, 81, 0.5) 25%,
-      var(--accent-gold) 50%,
-      rgba(0, 200, 81, 0.5) 75%,
-      transparent 100%
-    );
-    pointer-events: none;
-  }
-  .cbar-glow {
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 70% 120% at 15% 50%, rgba(0, 200, 81, 0.07) 0%, transparent 55%),
-      radial-gradient(ellipse 50% 100% at 85% 50%, rgba(255, 215, 0, 0.06) 0%, transparent 55%);
-    pointer-events: none;
+    position: sticky; top: 0; z-index: 200;
+    background: linear-gradient(90deg, #0d0d0d, #111, #0d0d0d);
+    color: var(--text); padding: 16px 24px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+    font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
   }
   .cbar-inner {
-    position: relative;
-    z-index: 1;
     display: flex;
     align-items: center;
-    gap: 20px;
-    max-width: 960px;
-    width: 100%;
+    gap: 24px;
+    max-width: 100%;
   }
   .cbar-main {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: 2px;
     align-items: flex-start;
     text-align: left;
-    flex: 1;
-    min-width: 0;
   }
-  .cbar-divider {
-    flex-shrink: 0;
-    width: 1px;
-    height: 38px;
-    background: linear-gradient(
-      180deg,
-      transparent 0%,
-      rgba(255, 215, 0, 0.35) 50%,
-      transparent 100%
-    );
-  }
-  .cbar-timer {
-    flex-shrink: 0;
+  .cbar-line--timer {
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 6px 14px;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 215, 0, 0.22);
-    background: linear-gradient(145deg, rgba(255, 215, 0, 0.08) 0%, rgba(0, 200, 81, 0.04) 100%);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.06),
-      0 0 20px rgba(255, 215, 0, 0.08);
+    gap: 14px;
+    flex-shrink: 0;
   }
   .ctimer {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 34px;
-    letter-spacing: 0.14em;
-    line-height: 1;
-    color: var(--accent-gold);
-    font-variant-numeric: tabular-nums;
-    text-shadow: 0 0 18px rgba(255, 215, 0, 0.35);
+    font-family: 'Bebas Neue', sans-serif; font-size: 32px;
+    letter-spacing: 0.1em; color: var(--accent-gold);
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.35);
   }
   .cb-pill {
     background: var(--accent); color: #000;
@@ -190,19 +133,12 @@
     0%, 100% { box-shadow: 0 0 0 0 rgba(0, 200, 81, 0.4); }
     50% { box-shadow: 0 0 0 6px rgba(0, 200, 81, 0); }
   }
-  .cbar-text {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 17px;
-    letter-spacing: 0.08em;
-    line-height: 1.15;
-    color: rgba(255, 255, 255, 0.92);
-  }
+  .cbar-text { font-size: 16px; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.85); }
   .cbar-sub {
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    color: var(--text-soft);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.5);
     font-weight: 600;
-    text-transform: uppercase;
   }
   @media (min-width: 769px) {
     .cbar-sub {
@@ -2770,45 +2706,26 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   /* ── Mobile ── */
   @media (max-width: 768px) {
     #cbar {
-      padding: 9px 12px;
+      padding: 16px 12px;
       overflow-x: hidden;
     }
     .cbar-inner {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      grid-template-rows: auto auto;
-      gap: 4px 10px;
+      flex-direction: column;
       align-items: center;
-      max-width: 100%;
-    }
-    .cbar-main {
-      display: contents;
-    }
-    .cbar-text {
-      grid-column: 1 / -1;
-      font-size: 13px;
-      letter-spacing: 0.06em;
-      line-height: 1.2;
+      gap: 10px;
       text-align: center;
     }
-    .cbar-sub {
-      grid-column: 1;
-      font-size: 9px;
-      letter-spacing: 0.1em;
-      text-align: left;
-      width: auto;
+    .cbar-main {
+      align-items: center;
+      text-align: center;
     }
-    .cbar-divider { display: none; }
-    .cbar-timer {
-      grid-column: 2;
-      grid-row: 2;
-      padding: 4px 10px;
-      border-radius: 6px;
+    .cbar-line--timer {
+      justify-content: center;
+      gap: 12px;
     }
-    .ctimer {
-      font-size: 26px;
-      letter-spacing: 0.1em;
-    }
+    .cbar-text { font-size: 15px; letter-spacing: 0.08em; }
+    .cbar-sub { font-size: 11px; letter-spacing: 0.1em; }
+    .ctimer { font-size: 32px; }
     .cb-pill { font-size: 10px; padding: 4px 8px; letter-spacing: 0.1em; }
     .ticker { overflow-x: hidden; padding: 8px 0; }
     .tick-tr { animation: tick 17s linear infinite; }
