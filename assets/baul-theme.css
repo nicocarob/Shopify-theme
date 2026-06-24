@@ -140,6 +140,12 @@
     color: rgba(255, 255, 255, 0.5);
     font-weight: 600;
   }
+  @media (min-width: 769px) {
+    .cbar-sub {
+      text-align: center;
+      width: 100%;
+    }
+  }
 
   /* ── Ticker marquee ── */
   .ticker {
