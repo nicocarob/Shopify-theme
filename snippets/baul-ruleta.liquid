@@ -1,6 +1,10 @@
 {{ 'baul-ruleta.css' | asset_url | stylesheet_tag }}
 
-<div id="br-overlay">
+{% comment %}
+  Popup de ruleta: solo se activa en /cart con al menos 1 producto (ver baul-ruleta.js).
+{% endcomment %}
+
+<div id="br-overlay" data-br-cart-only="true">
   <div id="br-popup">
     <button id="br-btn-close" aria-label="Cerrar">✕</button>
 

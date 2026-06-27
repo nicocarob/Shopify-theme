@@ -66,6 +66,31 @@ const BAULRULETA = (() => {
     localStorage.setItem('baulRuletaDate', new Date().toISOString().split('T')[0]);
   }
 
+  function isCartPage() {
+    return window.location.pathname.includes('/cart');
+  }
+
+  function getCartItemCountFromDom() {
+    return document.querySelectorAll('.bcart-items .bcart-item, .cart-item, [data-cart-item]').length;
+  }
+
+  async function getCartItemCount() {
+    try {
+      const res = await fetch('/cart.js');
+      if (!res.ok) throw new Error('cart fetch failed');
+      const cart = await res.json();
+      return cart.item_count || 0;
+    } catch (e) {
+      return getCartItemCountFromDom();
+    }
+  }
+
+  async function canShowRuletaPopup() {
+    if (!isCartPage()) return false;
+    if (getPopupShown()) return false;
+    return (await getCartItemCount()) > 0;
+  }
+
   function getWhatsAppUrl(prize) {
     const hasCode = Boolean(prize.code && String(prize.code).trim());
     if (hasCode) {
@@ -374,11 +399,6 @@ const BAULRULETA = (() => {
   }
 
   function init() {
-    if (getPopupShown()) {
-      scheduleUpsell();
-      return;
-    }
-
     const overlay = document.getElementById('br-overlay');
     if (!overlay) return;
 
@@ -396,9 +416,16 @@ const BAULRULETA = (() => {
     });
   }
 
-  return { init };
+  return { init, canShowRuletaPopup, getPopupShown };
 })();
 
-document.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => BAULRULETA.init(), 15000);
+document.addEventListener('DOMContentLoaded', async () => {
+  if (BAULRULETA.getPopupShown()) {
+    scheduleUpsell();
+    return;
+  }
+
+  if (!(await BAULRULETA.canShowRuletaPopup())) return;
+
+  BAULRULETA.init();
 });
