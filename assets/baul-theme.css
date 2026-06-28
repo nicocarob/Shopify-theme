@@ -1730,24 +1730,67 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     position: relative; overflow: hidden; min-height: 60vh;
   }
   .bc-hero {
-    max-width: 1200px; margin: 0 auto 40px; position: relative; z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto 48px;
+    padding: 44px 0 36px;
+    position: relative;
+    z-index: 1;
   }
   .bc-hero-banner {
     border-radius: var(--radius-md); overflow: hidden;
-    margin-bottom: 28px; border: 1px solid var(--border);
+    margin-bottom: 32px; border: 1px solid var(--border);
   }
   .bc-hero-banner img {
     width: 100%; height: auto; max-height: 320px;
     object-fit: cover; display: block;
   }
   .bc-hero-text { text-align: center; }
-  .bc-hero-text .sec-title { margin-bottom: 12px; }
+  .bc-hero-text .sec-title {
+    margin: 0 0 16px;
+    padding: 0 8px;
+  }
   .bc-hero-desc {
     font-family: 'Barlow Condensed', sans-serif; font-size: 16px;
     line-height: 1.65; color: var(--text-muted); max-width: 640px;
     margin: 0 auto;
+    padding: 0 8px;
   }
   .bc-grid { margin-bottom: 40px; }
+
+  .bc-infinite-sentinel {
+    width: 100%;
+    height: 1px;
+    pointer-events: none;
+  }
+  .bc-infinite-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    max-width: 1200px;
+    margin: 0 auto 32px;
+    padding: 16px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    position: relative;
+    z-index: 1;
+  }
+  .bc-infinite-status[hidden] { display: none !important; }
+  .bc-infinite-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 215, 0, 0.2);
+    border-top-color: var(--accent-gold);
+    border-radius: 50%;
+    animation: bc-spin 0.7s linear infinite;
+  }
+  @keyframes bc-spin {
+    to { transform: rotate(360deg); }
+  }
 
   .pagination {
     display: flex;
@@ -2794,8 +2837,12 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .cw-mega-title { font-size: clamp(40px, 12vw, 64px); }
     .bp-page { padding: 8px 0 32px; }
     .bc-page { padding: 0 16px 40px; }
-    .bc-hero { margin-bottom: 28px; }
+    .bc-hero {
+      margin-bottom: 32px;
+      padding: 28px 0 24px;
+    }
     .bc-hero-banner img { max-height: 200px; }
+    .bc-hero-text .sec-title { margin-bottom: 12px; }
     .blc-page { padding: 32px 16px 40px; }
     .blc-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .blc-name { font-size: 22px; margin: 12px 12px 10px; }

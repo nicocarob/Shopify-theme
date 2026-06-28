@@ -860,6 +860,7 @@ function getProductSocialProof(handle) {
 
 function initProductSocialProof() {
   document.querySelectorAll('.product-stars').forEach((el) => {
+    if (el.dataset.proofInit) return;
     const handle = el.dataset.handle;
     if (!handle) return;
 
@@ -872,8 +873,11 @@ function initProductSocialProof() {
       '<span class="ps-sold">· ' +
       sold +
       ' vendidos</span>';
+    el.dataset.proofInit = '1';
   });
 }
+
+window.baulInitProductSocialProof = initProductSocialProof;
 
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initProductSocialProof);

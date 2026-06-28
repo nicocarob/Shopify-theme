@@ -2,6 +2,10 @@
   Página de colección La Cábala
 {% endcomment %}
 
+{% liquid
+  assign products_per_page = section.settings.products_per_page | default: 24
+%}
+
 {% render 'baul-header', section: section %}
 
 <section class="bc-page">
@@ -27,32 +31,29 @@
     </div>
   </div>
 
-  {% paginate collection.products by 250 %}
-    <div class="prod-grid bc-grid">
+  {% paginate collection.products by products_per_page %}
+    <div class="prod-grid bc-grid" data-collection-infinite>
       {% for product in collection.products %}
         {% render 'baul-product-card', product: product %}
       {% endfor %}
     </div>
 
-    {% if paginate.pages > 1 %}
-      <nav class="pagination" aria-label="Paginación">
-        {% if paginate.previous %}
-          <a href="{{ paginate.previous.url }}">← Anterior</a>
-        {% else %}
-          <span class="is-disabled">← Anterior</span>
-        {% endif %}
-
-        <span class="pagination__info">{{ paginate.current_page }} / {{ paginate.pages }}</span>
-
-        {% if paginate.next %}
-          <a href="{{ paginate.next.url }}">Siguiente →</a>
-        {% else %}
-          <span class="is-disabled">Siguiente →</span>
-        {% endif %}
-      </nav>
-    {% endif %}
+    <div
+      id="bc-infinite-sentinel"
+      class="bc-infinite-sentinel"
+      {% if paginate.next %}
+        data-next-url="{{ paginate.next.url }}"
+      {% endif %}
+      aria-hidden="true"
+    ></div>
+    <div id="bc-infinite-status" class="bc-infinite-status" hidden>
+      <span class="bc-infinite-spinner" aria-hidden="true"></span>
+      <span>Cargando productos…</span>
+    </div>
   {% endpaginate %}
 </section>
+
+<script src="{{ 'baul-collection.js' | asset_url }}" defer></script>
 
 {% schema %}
 {
@@ -97,11 +98,11 @@
     {
       "type": "range",
       "id": "products_per_page",
-      "label": "Productos por página",
-      "min": 24,
-      "max": 250,
-      "step": 2,
-      "default": 250
+      "label": "Productos por carga",
+      "min": 12,
+      "max": 48,
+      "step": 4,
+      "default": 24
     }
   ],
   "presets": [
