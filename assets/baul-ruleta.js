@@ -91,20 +91,6 @@ const BAULRULETA = (() => {
     return (await getCartItemCount()) > 0;
   }
 
-  function getWhatsAppUrl(prize) {
-    const hasCode = Boolean(prize.code && String(prize.code).trim());
-    if (hasCode) {
-      return (
-        'https://wa.me/56948685507?text=' +
-        encodeURIComponent('Hola! Giré la ruleta en La Cábala y gané el cupón: ' + prize.code)
-      );
-    }
-    return (
-      'https://wa.me/56948685507?text=' +
-      encodeURIComponent('Hola! Giré la ruleta en La Cábala y gané una camiseta gratis 🎁')
-    );
-  }
-
   function getWeightedWinner() {
     const total = PRIZES.reduce((sum, p) => sum + p.prob, 0);
     let rand = Math.random() * total;
@@ -350,12 +336,9 @@ const BAULRULETA = (() => {
     const resSub = document.querySelector('.br-res-sub');
     const timerBar = document.querySelector('.br-timer-bar');
     const timerTxt = document.querySelector('.br-timer-txt');
-    const waBtn = document.getElementById('br-btn-wa');
 
     document.getElementById('br-res-emoji').textContent = prize.emoji;
     document.getElementById('br-res-title').textContent = prize.val;
-
-    if (waBtn) waBtn.href = getWhatsAppUrl(prize);
 
     if (hasCode) {
       if (couponBox) couponBox.style.display = '';
