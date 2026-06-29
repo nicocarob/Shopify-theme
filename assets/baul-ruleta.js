@@ -394,6 +394,7 @@ const BAULRULETA = (() => {
 
     document.getElementById('br-btn-spin').addEventListener('click', spinWheel);
     document.getElementById('br-btn-close').addEventListener('click', closePopup);
+    document.getElementById('br-btn-shop')?.addEventListener('click', closePopup);
     document.getElementById('br-overlay').addEventListener('click', function (e) {
       if (e.target === this) closePopup();
     });
