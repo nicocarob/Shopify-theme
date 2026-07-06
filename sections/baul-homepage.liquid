@@ -65,9 +65,14 @@
         <a href="#buscar" class="btn-ghost">{{ section.settings.hero_btn_secondary }}</a>
       </div>
       <div class="hero-flags">
-        <span class="flag-b">🇨🇱</span><span class="flag-b">🇦🇷</span><span class="flag-b">🇧🇷</span>
-        <span class="flag-b">🇵🇹</span><span class="flag-b">🇩🇪</span><span class="flag-b">🇫🇷</span>
-        <span class="flag-b">🇪🇸</span><span class="flag-b">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>
+        <a href="{{ routes.search_url }}?q={{ 'Chile' | url_encode }}&type=product" class="flag-b" aria-label="Buscar camisetas de Chile">🇨🇱</a>
+        <a href="{{ routes.search_url }}?q={{ 'Argentina' | url_encode }}&type=product" class="flag-b" aria-label="Buscar camisetas de Argentina">🇦🇷</a>
+        <a href="{{ routes.search_url }}?q={{ 'Brasil' | url_encode }}&type=product" class="flag-b" aria-label="Buscar camisetas de Brasil">🇧🇷</a>
+        <a href="{{ routes.search_url }}?q={{ 'Portugal' | url_encode }}&type=product" class="flag-b" aria-label="Buscar camisetas de Portugal">🇵🇹</a>
+        <a href="{{ routes.search_url }}?q={{ 'Alemania' | url_encode }}&type=product" class="flag-b" aria-label="Buscar camisetas de Alemania">🇩🇪</a>
+        <a href="{{ routes.search_url }}?q={{ 'Francia' | url_encode }}&type=product" class="flag-b" aria-label="Buscar camisetas de Francia">🇫🇷</a>
+        <a href="{{ routes.search_url }}?q={{ 'España' | url_encode }}&type=product" class="flag-b" aria-label="Buscar camisetas de España">🇪🇸</a>
+        <a href="{{ routes.search_url }}?q={{ 'Inglaterra' | url_encode }}&type=product" class="flag-b" aria-label="Buscar camisetas de Inglaterra">🏴󠁧󠁢󠁥󠁮󠁧󠁿</a>
       </div>
     </div>
     <div class="hero-r rev-r">
