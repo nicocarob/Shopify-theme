@@ -37,7 +37,7 @@ const BAULRULETA = (() => {
     { label: 'Número gratis', code: 'NUM26CAB', val: '¡Ganaste personalización gratis! Elige tu número favorito sin costo 🎽', emoji: '🎽', prob: 25 },
     { label: '$1.000 OFF', code: 'MUNDIAL1K', val: '¡Ganaste $1.000 de descuento! Válido comprando 2 o más camisetas 🔥', emoji: '🔥', prob: 18 },
     { label: '$1.250 OFF', code: 'MUNDIAL1250', val: '¡Ganaste $1.250 de descuento! Válido comprando 2 o más camisetas 🔥', emoji: '💥', prob: 12 },
-    { label: 'Camiseta gratis', code: '', val: '¡Ganaste una camiseta gratis! Lleva 4 camisetas y la 5ta es tuya 🎽', emoji: '🏆', prob: 20 },
+    { label: 'Camiseta gratis', code: '', val: '¡Ganaste una camiseta gratis! Lleva 7 camisetas y la 8va es tuya 🎽', emoji: '🏆', prob: 20 },
   ];
 
   const WHEEL_COLORS = ['#00c851', '#1a1a1a', '#ffd700', '#1a1a1a', '#e91e8c'];

@@ -5,10 +5,16 @@
 
 {% liquid
   assign count = count | default: 0
-  if count >= 5
+  if count >= 8
     assign progress = 100
-  elsif count == 4
+  elsif count == 7
     assign progress = 85
+  elsif count == 6
+    assign progress = 81
+  elsif count == 5
+    assign progress = 77
+  elsif count == 4
+    assign progress = 72
   elsif count == 3
     assign progress = 68
   elsif count == 2
@@ -38,9 +44,9 @@
         <span class="bdp-milestone-icon">🔥</span>
         <span class="bdp-milestone-label">½ precio en la 4ta</span>
       </div>
-      <div class="bdp-milestone{% if count >= 4 %} is-reached{% endif %}">
+      <div class="bdp-milestone{% if count >= 7 %} is-reached{% endif %}">
         <span class="bdp-milestone-icon">🎁</span>
-        <span class="bdp-milestone-label">Gratis la 5ta</span>
+        <span class="bdp-milestone-label">Gratis la 8va</span>
       </div>
     </div>
   </div>
@@ -53,8 +59,14 @@
     {% elsif count == 3 %}
       Agrega 1 más y la 4ta te sale a mitad de precio 🔥
     {% elsif count == 4 %}
-      Agrega 1 más y la 5ta es completamente gratis 🎁
-    {% elsif count >= 5 %}
+      Lleva 7 camisetas y la 8va es gratis — te faltan 3 🎁
+    {% elsif count == 5 %}
+      Lleva 7 camisetas y la 8va es gratis — te faltan 2 🎁
+    {% elsif count == 6 %}
+      Agrega 1 más — a 7 camisetas desbloqueas la 8va gratis 🎁
+    {% elsif count == 7 %}
+      Agrega 1 más y la 8va es completamente gratis 🎁
+    {% elsif count >= 8 %}
       ✅ ¡Tienes todos los descuentos activos!
     {% endif %}
   </div>

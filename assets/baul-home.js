@@ -676,19 +676,40 @@ if (productJsonEl && productForm) {
 
   function getDiscountState(count) {
     const c = Math.max(0, Number(count) || 0);
-    const reached = [c >= 2, c >= 3, c >= 4];
+    const reached = [c >= 2, c >= 3, c >= 7];
 
-    if (c >= 5) {
+    if (c >= 8) {
       return {
         message: '✅ ¡Tienes todos los descuentos activos!',
         progress: 100,
         reached,
       };
     }
+    if (c === 7) {
+      return {
+        message: 'Agrega 1 más y la 8va es completamente gratis 🎁',
+        progress: 85,
+        reached,
+      };
+    }
+    if (c === 6) {
+      return {
+        message: 'Agrega 1 más — a 7 camisetas desbloqueas la 8va gratis 🎁',
+        progress: 81,
+        reached,
+      };
+    }
+    if (c === 5) {
+      return {
+        message: 'Lleva 7 camisetas y la 8va es gratis — te faltan 2 🎁',
+        progress: 77,
+        reached,
+      };
+    }
     if (c === 4) {
       return {
-        message: 'Agrega 1 más y la 5ta es completamente gratis 🎁',
-        progress: 85,
+        message: 'Lleva 7 camisetas y la 8va es gratis — te faltan 3 🎁',
+        progress: 72,
         reached,
       };
     }

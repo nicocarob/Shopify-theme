@@ -1,5 +1,5 @@
 {% comment %}
-  Banner Promocional - Promo 4x3 Camisetas de Fútbol
+  Banner Promocional - Promo 8x7 Camisetas de Fútbol
   Sección personalizada para Shopify
   Agrega este archivo a: sections/banner-promo-4x3.liquid
 {% endcomment %}
@@ -512,10 +512,10 @@
       <span class="promo-banner-4x3__eyebrow">⚽ Oferta Exclusiva</span>
       <h2 class="promo-banner-4x3__title">
         PROMO
-        <span class="highlight">4x3</span>
+        <span class="highlight">8x7</span>
       </h2>
-      <p class="promo-banner-4x3__subtitle">{{ section.settings.subtitle | default: 'Lleva 4 camisetas · Paga solo 3' }}</p>
-      <p class="promo-banner-4x3__description">{{ section.settings.description | default: 'La cuarta camiseta es completamente gratis. No acumulable con otras promociones.' }}</p>
+      <p class="promo-banner-4x3__subtitle">{{ section.settings.subtitle | default: 'Lleva 7 camisetas · La 8va es gratis' }}</p>
+      <p class="promo-banner-4x3__description">{{ section.settings.description | default: 'La octava camiseta es completamente gratis. No acumulable con otras promociones.' }}</p>
     </div>
 
     <!-- CTA -->
@@ -543,7 +543,7 @@
   {% if section.settings.show_ticker %}
   <div class="promo-banner-4x3__ticker">
     <div class="ticker-track">
-      {% assign ticker_text = section.settings.ticker_text | default: 'PROMO 4X3 · LLEVÁS 4 CAMISETAS Y PAGÁS SOLO 3 · OFERTA POR TIEMPO LIMITADO · ' %}
+      {% assign ticker_text = section.settings.ticker_text | default: 'PROMO 8X7 · LLEVÁS 7 CAMISETAS Y LA 8VA ES GRATIS · OFERTA POR TIEMPO LIMITADO · ' %}
       {% for i in (1..6) %}
         <span class="ticker-item">{{ ticker_text }}</span>
       {% endfor %}
@@ -590,13 +590,13 @@
       "type": "text",
       "id": "subtitle",
       "label": "Subtítulo",
-      "default": "Lleva 4 camisetas · Paga solo 3"
+      "default": "Lleva 7 camisetas · La 8va es gratis"
     },
     {
       "type": "textarea",
       "id": "description",
       "label": "Descripción",
-      "default": "La cuarta camiseta es completamente gratis. No acumulable con otras promociones."
+      "default": "La octava camiseta es completamente gratis. No acumulable con otras promociones."
     },
     {
       "type": "header",
@@ -647,7 +647,7 @@
       "type": "text",
       "id": "ticker_text",
       "label": "Texto del ticker",
-      "default": "PROMO 4X3 · LLEVÁS 4 CAMISETAS Y PAGÁS SOLO 3 · OFERTA POR TIEMPO LIMITADO · "
+      "default": "PROMO 8X7 · LLEVÁS 7 CAMISETAS Y LA 8VA ES GRATIS · OFERTA POR TIEMPO LIMITADO · "
     }
   ],
   "presets": [
