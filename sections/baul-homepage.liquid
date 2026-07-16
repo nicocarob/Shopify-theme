@@ -45,8 +45,6 @@
   else
     assign fem_products = collections.all.products
   endif
-
-  assign wa_url = section.settings.whatsapp_url | default: 'https://wa.me/message/Z5XXALWPDL4GI1'
 %}
 
 {% render 'baul-header', section: section %}
@@ -417,14 +415,6 @@
     {% endfor %}
   </div>
 </section>
-
-<script>
-  (function () {
-    var wa = document.querySelector('.wa');
-    var url = {{ wa_url | json }};
-    if (wa && url) wa.href = url;
-  })();
-</script>
 
 {% schema %}
 {
