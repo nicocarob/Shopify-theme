@@ -88,6 +88,11 @@
           "path_loading_mode": "include",
           "page_paths": ""
         }
+      },
+      "6615124273980966592": {
+        "type": "shopify://apps/chatty/blocks/app-embed/1c0e135d-e8e1-4fe2-86be-1c36def46675",
+        "disabled": false,
+        "settings": {}
       }
     },
     "color_schemes": {
