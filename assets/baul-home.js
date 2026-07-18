@@ -238,6 +238,10 @@ if (productJsonEl && productForm) {
   const modal = document.getElementById('modal-tallas');
   if (!modal) return;
 
+  if (modal.parentElement !== document.body) {
+    document.body.appendChild(modal);
+  }
+
   const defaultTab = modal.dataset.defaultTab || 'fan';
   const tabs = modal.querySelectorAll('.tallas-tab');
   const panels = modal.querySelectorAll('.tallas-panel');
@@ -252,9 +256,20 @@ if (productJsonEl && productForm) {
     });
   }
 
+  function openModal() {
+    setTab(defaultTab);
+    modal.hidden = false;
+    modal.classList.add('is-open');
+    modal.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+    closeBtn?.focus();
+  }
+
   function closeModal() {
-    modal.style.display = 'none';
+    modal.classList.remove('is-open');
+    modal.hidden = true;
     document.body.style.overflow = '';
+    document.getElementById('btn-tallas')?.focus();
   }
 
   setTab(defaultTab);
@@ -269,9 +284,12 @@ if (productJsonEl && productForm) {
     if (event.target === modal) closeModal();
   });
 
-  document.getElementById('btn-tallas')?.addEventListener('click', () => {
-    setTab(defaultTab);
-    document.body.style.overflow = 'hidden';
+  document.getElementById('btn-tallas')?.addEventListener('click', openModal);
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && modal.classList.contains('is-open')) {
+      closeModal();
+    }
   });
 })();
 
