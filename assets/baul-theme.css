@@ -1503,7 +1503,7 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   .tallas-popup {
     position: relative;
     width: 100%;
-    max-width: 580px;
+    max-width: 700px;
     max-height: calc(100dvh - 32px);
     overflow-y: auto;
     margin: 0 auto;
@@ -1621,6 +1621,206 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   .tallas-warn {
     color: #ffb347;
   }
+
+  .tallas-extra {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255, 215, 0, 0.15);
+  }
+  .tallas-howto__title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 18px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.06em;
+    color: #fff;
+    text-transform: uppercase;
+  }
+  .tallas-howto__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: rgba(255, 215, 0, 0.12);
+    border: 1px solid rgba(255, 215, 0, 0.25);
+    font-size: 16px;
+  }
+  .tallas-howto__layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  .tallas-howto__steps {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .tallas-step {
+    background: #0a0a0a;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .tallas-step__row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .tallas-step__badge {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    color: #0a0a0a;
+    line-height: 1;
+  }
+  .tallas-step__badge--a { background: var(--accent-gold); }
+  .tallas-step__badge--b { background: var(--accent); }
+  .tallas-step__badge--c { background: #c9a0ff; }
+  .tallas-step__label {
+    display: block;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.08em;
+    color: #fff;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .tallas-step__copy p {
+    margin: 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--text-soft);
+  }
+  .tallas-step__mini {
+    display: none;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    justify-content: center;
+  }
+  .tallas-step__mini svg {
+    width: 48px;
+    height: auto;
+  }
+  .tallas-howto__visual {
+    background: linear-gradient(145deg, rgba(0, 200, 81, 0.06) 0%, rgba(255, 215, 0, 0.04) 100%);
+    border: 1px solid rgba(255, 215, 0, 0.12);
+    border-radius: 12px;
+    padding: 16px 12px;
+  }
+  .tallas-jersey-pair {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 8px;
+  }
+  .tallas-jersey-svg {
+    width: 46%;
+    max-width: 130px;
+    height: auto;
+    filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.45));
+  }
+  .tallas-tips {
+    margin-top: 22px;
+    background: #0a0a0a;
+    border: 1px solid rgba(0, 200, 81, 0.22);
+    border-radius: 12px;
+    padding: 16px 14px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+  .tallas-tips__title {
+    margin: 0 0 14px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.1em;
+    color: var(--accent-gold);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tallas-tips__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .tallas-tip {
+    text-align: center;
+    padding: 10px 8px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border);
+  }
+  .tallas-tip__icon {
+    display: block;
+    font-size: 22px;
+    margin-bottom: 8px;
+    line-height: 1;
+  }
+  .tallas-tip p {
+    margin: 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    line-height: 1.4;
+    color: var(--text-soft);
+  }
+  .tallas-footnote {
+    margin: 14px 0 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tallas-footnote span {
+    color: var(--accent-gold);
+    font-size: 13px;
+  }
+
+  @media (max-width: 640px) {
+    .tallas-howto__layout {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .tallas-howto__visual {
+      order: -1;
+      padding: 12px 10px;
+    }
+    .tallas-jersey-svg {
+      max-width: 110px;
+    }
+    .tallas-step__mini {
+      display: flex;
+    }
+    .tallas-tips__grid {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .tallas-tip {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      text-align: left;
+    }
+    .tallas-tip__icon {
+      margin-bottom: 0;
+      flex-shrink: 0;
+    }
+  }
+
   .bp-atc {
     width: 100%; margin-top: 8px; margin-bottom: 20px;
     background: #00c851; color: #000; border: none;
