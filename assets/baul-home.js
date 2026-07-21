@@ -925,45 +925,78 @@ if (document.readyState === 'loading') {
 }
 
 (function initTeamCollection() {
+  function revealCards(root) {
+    root.querySelectorAll('.rev, .rev-l, .rev-r, .rev-s').forEach((el) => {
+      el.classList.add('in');
+    });
+  }
+
+  function findProductGrid(doc) {
+    return (
+      doc.querySelector('[data-baul-team-grid]') ||
+      doc.querySelector('.baul-team-grid-section .prod-grid') ||
+      doc.querySelector('.bc-grid.prod-grid') ||
+      doc.querySelector('.prod-grid')
+    );
+  }
+
   function loadTeamCollection(section) {
     const target = section.querySelector('[data-baul-team-grid-target]');
     const fetchUrl = section.dataset.fetchUrl;
+    const fallbackUrl = section.dataset.fetchFallback;
     const excludeId = section.dataset.excludeId;
 
     if (!target || !fetchUrl) return;
+
+    function renderFromHtml(html) {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      const grid = findProductGrid(doc);
+
+      if (!grid || !grid.querySelector('.pc')) {
+        throw new Error('team grid not found');
+      }
+
+      const clone = grid.cloneNode(true);
+
+      if (excludeId) {
+        clone.querySelectorAll('[data-product-id]').forEach((btn) => {
+          if (String(btn.dataset.productId) === String(excludeId)) {
+            btn.closest('.pc')?.remove();
+          }
+        });
+      }
+
+      if (!clone.querySelector('.pc')) {
+        section.remove();
+        return;
+      }
+
+      target.innerHTML = clone.innerHTML;
+      revealCards(target);
+      window.baulInitProductSocialProof?.();
+    }
 
     fetch(fetchUrl)
       .then((response) => {
         if (!response.ok) throw new Error('team collection fetch failed');
         return response.text();
       })
-      .then((html) => {
-        const doc = new DOMParser().parseFromString(html, 'text/html');
-        const grid = doc.querySelector('[data-baul-team-grid]');
-
-        if (!grid) {
-          section.remove();
-          return;
-        }
-
-        if (excludeId) {
-          grid.querySelectorAll('[data-product-id]').forEach((btn) => {
-            if (btn.dataset.productId === excludeId) {
-              btn.closest('.pc')?.remove();
-            }
-          });
-        }
-
-        if (!grid.querySelector('.pc')) {
-          section.remove();
-          return;
-        }
-
-        target.innerHTML = grid.innerHTML;
-        window.baulInitProductSocialProof?.();
-      })
+      .then(renderFromHtml)
       .catch(() => {
-        section.remove();
+        if (!fallbackUrl || fallbackUrl === fetchUrl) {
+          target.innerHTML = '<p class="bp-team-loading">No hay más productos de este equipo.</p>';
+          return;
+        }
+
+        fetch(fallbackUrl)
+          .then((response) => {
+            if (!response.ok) throw new Error('team collection fallback failed');
+            return response.text();
+          })
+          .then(renderFromHtml)
+          .catch(() => {
+            target.innerHTML = '<p class="bp-team-loading">No hay más productos de este equipo.</p>';
+          });
       });
   }
 

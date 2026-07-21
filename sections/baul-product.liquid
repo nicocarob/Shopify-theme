@@ -268,7 +268,7 @@
       {% endif %}
     {% endcapture %}
 
-    {% if equipo_col != blank and team_collection_cards != blank %}
+    {% if team_collection_cards != blank %}
       <section class="col-sec bp-team-collection">
         <div class="sec-bg-grid"></div>
         <div class="sec-hdr rev sec-hdr--center">
@@ -278,13 +278,14 @@
           {{ team_collection_cards }}
         </div>
       </section>
-    {% elsif equipo_col == blank %}
+    {% else %}
       <section
         class="col-sec bp-team-collection"
         data-baul-team-collection
         data-team-tag="{{ equipo_tag | escape }}"
         data-exclude-id="{{ product.id }}"
-        data-fetch-url="{{ routes.all_products_collection_url }}/{{ equipo_tag }}?section_id=baul-team-grid"
+        data-fetch-url="/collections/all/{{ equipo_tag }}?section_id=baul-team-grid"
+        data-fetch-fallback="/collections/all/{{ equipo_tag }}"
       >
         <div class="sec-bg-grid"></div>
         <div class="sec-hdr rev sec-hdr--center">
