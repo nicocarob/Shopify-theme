@@ -233,7 +233,49 @@
       endfor
     endif
 
-    assign shown = 0
+    assign equipo_tag = team_tag
+  %}
+
+  {% if equipo_tag != blank %}
+    {% assign productos_equipo = collections['all'].products | where: 'tags', equipo_tag %}
+    {% assign equipo_label = equipo_tag | replace: '-', ' ' | upcase %}
+
+    {% capture team_collection_cards %}
+      {% if productos_equipo.size > 0 %}
+        {% for p in productos_equipo %}
+          {% unless p.id == product.id %}
+            {% render 'baul-product-card', product: p %}
+          {% endunless %}
+        {% endfor %}
+      {% elsif collections[equipo_tag] != blank %}
+        {% for p in collections[equipo_tag].products %}
+          {% unless p.id == product.id %}
+            {% render 'baul-product-card', product: p %}
+          {% endunless %}
+        {% endfor %}
+      {% else %}
+        {% for p in collections.all.products limit: 250 %}
+          {% if p.tags contains equipo_tag and p.id != product.id %}
+            {% render 'baul-product-card', product: p %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endcapture %}
+
+    {% if team_collection_cards != blank %}
+      <section class="col-sec bp-team-collection">
+        <div class="sec-bg-grid"></div>
+        <div class="sec-hdr rev sec-hdr--center">
+          <h2 class="sec-title">TODA LA COLECCIÓN DE {{ equipo_label }}</h2>
+        </div>
+        <div class="prod-grid">
+          {{ team_collection_cards }}
+        </div>
+      </section>
+    {% endif %}
+  {% endif %}
+
+  {% liquid
     assign tag_count = 0
     assign shown_ids = ','
   %}

@@ -1868,6 +1868,12 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     border-top: 1px solid var(--border); padding-top: 24px;
   }
   .bp-desc p { margin: 0 0 12px; }
+  .bp-team-collection {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 32px;
+    padding-bottom: 8px;
+  }
   .bp-related { padding-top: 40px; padding-bottom: 20px; }
   .related-wrap {
     overflow: hidden;
