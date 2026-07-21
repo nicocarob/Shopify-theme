@@ -1874,6 +1874,17 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     padding-top: 32px;
     padding-bottom: 8px;
   }
+  .bp-team-loading {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 24px 0;
+    text-align: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
   .bp-related { padding-top: 40px; padding-bottom: 20px; }
   .related-wrap {
     overflow: hidden;

@@ -923,3 +923,57 @@ if (document.readyState === 'loading') {
 } else {
   initProductSocialProof();
 }
+
+(function initTeamCollection() {
+  function loadTeamCollection(section) {
+    const target = section.querySelector('[data-baul-team-grid-target]');
+    const fetchUrl = section.dataset.fetchUrl;
+    const excludeId = section.dataset.excludeId;
+
+    if (!target || !fetchUrl) return;
+
+    fetch(fetchUrl)
+      .then((response) => {
+        if (!response.ok) throw new Error('team collection fetch failed');
+        return response.text();
+      })
+      .then((html) => {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const grid = doc.querySelector('[data-baul-team-grid]');
+
+        if (!grid) {
+          section.remove();
+          return;
+        }
+
+        if (excludeId) {
+          grid.querySelectorAll('[data-product-id]').forEach((btn) => {
+            if (btn.dataset.productId === excludeId) {
+              btn.closest('.pc')?.remove();
+            }
+          });
+        }
+
+        if (!grid.querySelector('.pc')) {
+          section.remove();
+          return;
+        }
+
+        target.innerHTML = grid.innerHTML;
+        window.baulInitProductSocialProof?.();
+      })
+      .catch(() => {
+        section.remove();
+      });
+  }
+
+  function boot() {
+    document.querySelectorAll('[data-baul-team-collection]').forEach(loadTeamCollection);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();

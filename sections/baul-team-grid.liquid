@@ -1,0 +1,24 @@
+{% comment %}
+  Grid de productos para Section Rendering API.
+  Usar desde: /collections/all/{tag}?section_id=baul-team-grid
+  o desde: /collections/{handle}?section_id=baul-team-grid
+{% endcomment %}
+
+{% if collection != blank %}
+  <div class="prod-grid" data-baul-team-grid>
+    {% paginate collection.products by 50 %}
+      {% for p in collection.products %}
+        {% render 'baul-product-card', product: p %}
+      {% endfor %}
+    {% endpaginate %}
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Baúl Team Grid",
+  "tag": "section",
+  "class": "baul-team-grid-section",
+  "settings": []
+}
+{% endschema %}
