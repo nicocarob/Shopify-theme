@@ -935,68 +935,88 @@ if (document.readyState === 'loading') {
     return (
       doc.querySelector('[data-baul-team-grid]') ||
       doc.querySelector('.baul-team-grid-section .prod-grid') ||
+      doc.querySelector('.baul-team-search-grid-section .prod-grid') ||
       doc.querySelector('.bc-grid.prod-grid') ||
       doc.querySelector('.prod-grid')
     );
   }
 
+  function extractCards(html, excludeId, seenIds) {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const grid = findProductGrid(doc);
+    if (!grid) return [];
+
+    const cards = [];
+    grid.querySelectorAll('.pc').forEach((pc) => {
+      const btn = pc.querySelector('[data-product-id]');
+      const productId = btn?.dataset.productId;
+      if (!productId || seenIds.has(productId) || String(productId) === String(excludeId)) return;
+      seenIds.add(productId);
+      cards.push(pc.cloneNode(true));
+    });
+    return cards;
+  }
+
+  function fetchHtml(url) {
+    return fetch(url).then((response) => {
+      if (!response.ok) throw new Error('fetch failed');
+      return response.text();
+    });
+  }
+
   function loadTeamCollection(section) {
     const target = section.querySelector('[data-baul-team-grid-target]');
-    const fetchUrl = section.dataset.fetchUrl;
-    const fallbackUrl = section.dataset.fetchFallback;
+    const teamTags = (section.dataset.teamTags || '')
+      .split('|')
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+    const searchUrl = section.dataset.searchUrl;
     const excludeId = section.dataset.excludeId;
 
-    if (!target || !fetchUrl) return;
+    if (!target || teamTags.length === 0) return;
 
-    function renderFromHtml(html) {
-      const doc = new DOMParser().parseFromString(html, 'text/html');
-      const grid = findProductGrid(doc);
+    const fetchUrls = [];
+    const seenUrls = new Set();
 
-      if (!grid || !grid.querySelector('.pc')) {
-        throw new Error('team grid not found');
-      }
+    teamTags.forEach((tag) => {
+      const encoded = encodeURIComponent(tag);
+      [
+        `/collections/all/${encoded}?section_id=baul-team-grid`,
+        `/collections/all/${encoded}`,
+      ].forEach((url) => {
+        if (!seenUrls.has(url)) {
+          seenUrls.add(url);
+          fetchUrls.push(url);
+        }
+      });
+    });
 
-      const clone = grid.cloneNode(true);
-
-      if (excludeId) {
-        clone.querySelectorAll('[data-product-id]').forEach((btn) => {
-          if (String(btn.dataset.productId) === String(excludeId)) {
-            btn.closest('.pc')?.remove();
-          }
-        });
-      }
-
-      if (!clone.querySelector('.pc')) {
-        section.remove();
-        return;
-      }
-
-      target.innerHTML = clone.innerHTML;
-      revealCards(target);
-      window.baulInitProductSocialProof?.();
+    if (searchUrl && !seenUrls.has(searchUrl)) {
+      fetchUrls.push(searchUrl);
     }
 
-    fetch(fetchUrl)
-      .then((response) => {
-        if (!response.ok) throw new Error('team collection fetch failed');
-        return response.text();
-      })
-      .then(renderFromHtml)
-      .catch(() => {
-        if (!fallbackUrl || fallbackUrl === fetchUrl) {
+    const seenIds = new Set();
+    const collectedCards = [];
+
+    Promise.allSettled(fetchUrls.map((url) => fetchHtml(url)))
+      .then((results) => {
+        results.forEach((result) => {
+          if (result.status !== 'fulfilled') return;
+          collectedCards.push(...extractCards(result.value, excludeId, seenIds));
+        });
+
+        if (collectedCards.length === 0) {
           target.innerHTML = '<p class="bp-team-loading">No hay más productos de este equipo.</p>';
           return;
         }
 
-        fetch(fallbackUrl)
-          .then((response) => {
-            if (!response.ok) throw new Error('team collection fallback failed');
-            return response.text();
-          })
-          .then(renderFromHtml)
-          .catch(() => {
-            target.innerHTML = '<p class="bp-team-loading">No hay más productos de este equipo.</p>';
-          });
+        target.innerHTML = '';
+        collectedCards.forEach((card) => target.appendChild(card));
+        revealCards(target);
+        window.baulInitProductSocialProof?.();
+      })
+      .catch(() => {
+        target.innerHTML = '<p class="bp-team-loading">No hay más productos de este equipo.</p>';
       });
   }
 

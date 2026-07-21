@@ -1,0 +1,40 @@
+{% comment %}
+  Grid de búsqueda filtrado por equipo base y variantes equipo-año.
+  Usar desde: /search?q=francia&type=product&section_id=baul-team-search-grid
+{% endcomment %}
+
+{% liquid
+  assign equipo_base = search.terms | handleize
+  assign team_prefix = equipo_base | append: '-'
+%}
+
+{% if search.performed %}
+  <div class="prod-grid" data-baul-team-grid>
+    {% paginate search.results by 50 %}
+      {% for item in search.results %}
+        {% if item.object_type == 'product' %}
+          {% assign matches_team = false %}
+          {% for tag in item.tags %}
+            {% assign tag_handle = tag | handleize %}
+            {% if tag_handle == equipo_base or tag_handle contains team_prefix %}
+              {% assign matches_team = true %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {% if matches_team %}
+            {% render 'baul-product-card', product: item %}
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    {% endpaginate %}
+  </div>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Baúl Team Search Grid",
+  "tag": "section",
+  "class": "baul-team-search-grid-section",
+  "settings": []
+}
+{% endschema %}

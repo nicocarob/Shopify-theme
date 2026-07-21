@@ -250,52 +250,87 @@
     endif
 
     assign equipo_tag = team_tag
+
+    assign equipo_base = equipo_tag
+    assign year_segment = equipo_tag | split: '-' | last
+    if year_segment.size == 4
+      assign year_value = year_segment | plus: 0
+      if year_value >= 1900
+        assign year_suffix_len = year_segment.size | plus: 1
+        assign base_end = equipo_tag.size | minus: year_suffix_len
+        assign equipo_base = equipo_tag | slice: 0, base_end
+      endif
+    endif
+
+    assign team_prefix = equipo_base | append: '-'
+    assign team_fetch_tags = equipo_base
+    assign team_tags_seen = '|' | append: equipo_base | append: '|'
+
+    for tag in product.tags
+      assign tag_handle = tag | handleize
+      assign tag_matches_team = false
+      if tag_handle == equipo_base
+        assign tag_matches_team = true
+      elsif tag_handle contains team_prefix
+        assign tag_matches_team = true
+      endif
+
+      if tag_matches_team
+        assign tag_marker = '|' | append: tag_handle | append: '|'
+        unless team_tags_seen contains tag_marker
+          assign team_fetch_tags = team_fetch_tags | append: '|' | append: tag_handle
+          assign team_tags_seen = team_tags_seen | append: tag_handle | append: '|'
+        endunless
+      endif
+    endfor
+
+    assign equipo_col = collections[equipo_base]
+    if equipo_col == blank
+      assign equipo_col = collections[equipo_tag]
+    endif
+
+    if equipo_col != blank
+      for p in equipo_col.products limit: 50
+        for tag in p.tags
+          assign tag_handle = tag | handleize
+          assign tag_matches_team = false
+          if tag_handle == equipo_base
+            assign tag_matches_team = true
+          elsif tag_handle contains team_prefix
+            assign tag_matches_team = true
+          endif
+
+          if tag_matches_team
+            assign tag_marker = '|' | append: tag_handle | append: '|'
+            unless team_tags_seen contains tag_marker
+              assign team_fetch_tags = team_fetch_tags | append: '|' | append: tag_handle
+              assign team_tags_seen = team_tags_seen | append: tag_handle | append: '|'
+            endunless
+          endif
+        endfor
+      endfor
+    endif
   %}
 
   {% if equipo_tag != blank %}
-    {% assign equipo_label = equipo_tag | replace: '-', ' ' | upcase %}
-    {% assign equipo_col = collections[equipo_tag] %}
+    {% assign equipo_label = equipo_base | replace: '-', ' ' | upcase %}
 
-    {% capture team_collection_cards %}
-      {% if equipo_col != blank %}
-        {% paginate equipo_col.products by 50 %}
-          {% for p in equipo_col.products %}
-            {% unless p.id == product.id %}
-              {% render 'baul-product-card', product: p %}
-            {% endunless %}
-          {% endfor %}
-        {% endpaginate %}
-      {% endif %}
-    {% endcapture %}
-
-    {% if team_collection_cards != blank %}
-      <section class="col-sec bp-team-collection">
-        <div class="sec-bg-grid"></div>
-        <div class="sec-hdr rev sec-hdr--center">
-          <h2 class="sec-title">TODA LA COLECCIÓN DE {{ equipo_label }}</h2>
-        </div>
-        <div class="prod-grid">
-          {{ team_collection_cards }}
-        </div>
-      </section>
-    {% else %}
-      <section
-        class="col-sec bp-team-collection"
-        data-baul-team-collection
-        data-team-tag="{{ equipo_tag | escape }}"
-        data-exclude-id="{{ product.id }}"
-        data-fetch-url="/collections/all/{{ equipo_tag }}?section_id=baul-team-grid"
-        data-fetch-fallback="/collections/all/{{ equipo_tag }}"
-      >
-        <div class="sec-bg-grid"></div>
-        <div class="sec-hdr rev sec-hdr--center">
-          <h2 class="sec-title">TODA LA COLECCIÓN DE {{ equipo_label }}</h2>
-        </div>
-        <div class="prod-grid" data-baul-team-grid-target>
-          <p class="bp-team-loading">Cargando colección…</p>
-        </div>
-      </section>
-    {% endif %}
+    <section
+      class="col-sec bp-team-collection"
+      data-baul-team-collection
+      data-team-base="{{ equipo_base | escape }}"
+      data-team-tags="{{ team_fetch_tags | escape }}"
+      data-exclude-id="{{ product.id }}"
+      data-search-url="/search?q={{ equipo_base | url_encode }}&type=product&section_id=baul-team-search-grid"
+    >
+      <div class="sec-bg-grid"></div>
+      <div class="sec-hdr rev sec-hdr--center">
+        <h2 class="sec-title">TODA LA COLECCIÓN DE {{ equipo_label }}</h2>
+      </div>
+      <div class="prod-grid" data-baul-team-grid-target>
+        <p class="bp-team-loading">Cargando colección…</p>
+      </div>
+    </section>
   {% endif %}
 
   {% liquid
