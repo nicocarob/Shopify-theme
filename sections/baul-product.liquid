@@ -178,7 +178,10 @@
 
   {% liquid
     assign team_tag = ''
+    assign equipo_tag_source = ''
     assign skip_tags = 'adultos,ninos,niños,local,visitante,mujer,player-version,retro,mundial,cortavientos' | split: ','
+    assign skip_collections = 'all,frontpage,mas-vendidos,copa-del-mundo,ninos,mujer,retro,adultos' | split: ','
+    assign best_collection_count = 999999
 
     for tag in product.tags
       assign tag_key = tag | downcase | strip
@@ -189,15 +192,24 @@
           assign is_season = true
         endif
         unless is_season
+          assign candidate_handle = ''
           if collections[tag] != blank
-            assign team_tag = tag_handle
-            break
+            assign candidate_handle = tag | handleize
           elsif collections[tag_handle] != blank
-            assign team_tag = tag_handle
-            break
+            assign candidate_handle = tag_handle
           elsif collections[tag_key] != blank
-            assign team_tag = tag_key
-            break
+            assign candidate_handle = tag_key
+          endif
+
+          if candidate_handle != blank
+            unless skip_collections contains candidate_handle
+              assign candidate_col = collections[candidate_handle]
+              if candidate_col.products_count > 0 and candidate_col.products_count < best_collection_count
+                assign best_collection_count = candidate_col.products_count
+                assign team_tag = candidate_handle
+                assign equipo_tag_source = tag
+              endif
+            endunless
           endif
         endunless
       endunless
@@ -214,6 +226,7 @@
           endif
           if is_season == false and tag contains '-'
             assign team_tag = tag_handle
+            assign equipo_tag_source = tag
             break
           endif
         endunless
@@ -227,6 +240,7 @@
         unless skip_tags contains tag_key
           if tag_handle.size > 2
             assign team_tag = tag_handle
+            assign equipo_tag_source = tag
             break
           endif
         endunless
@@ -239,26 +253,41 @@
   {% if equipo_tag != blank %}
     {% assign productos_equipo = collections['all'].products | where: 'tags', equipo_tag %}
     {% assign equipo_label = equipo_tag | replace: '-', ' ' | upcase %}
+    {% assign equipo_col = collections[equipo_tag] %}
 
     {% capture team_collection_cards %}
-      {% if productos_equipo.size > 0 %}
+      {% if equipo_col != blank %}
+        {% paginate equipo_col.products by 50 %}
+          {% for p in equipo_col.products %}
+            {% unless p.id == product.id %}
+              {% render 'baul-product-card', product: p %}
+            {% endunless %}
+          {% endfor %}
+        {% endpaginate %}
+      {% elsif productos_equipo.size > 0 %}
         {% for p in productos_equipo %}
           {% unless p.id == product.id %}
             {% render 'baul-product-card', product: p %}
           {% endunless %}
         {% endfor %}
-      {% elsif collections[equipo_tag] != blank %}
-        {% for p in collections[equipo_tag].products %}
-          {% unless p.id == product.id %}
-            {% render 'baul-product-card', product: p %}
-          {% endunless %}
-        {% endfor %}
       {% else %}
-        {% for p in collections.all.products limit: 250 %}
-          {% if p.tags contains equipo_tag and p.id != product.id %}
-            {% render 'baul-product-card', product: p %}
-          {% endif %}
-        {% endfor %}
+        {% paginate collections.all.products by 50 %}
+          {% for p in collections.all.products %}
+            {% if p.id != product.id %}
+              {% assign matches_equipo = false %}
+              {% for tag in p.tags %}
+                {% assign tag_handle = tag | handleize %}
+                {% if tag_handle == equipo_tag or tag == equipo_tag_source %}
+                  {% assign matches_equipo = true %}
+                  {% break %}
+                {% endif %}
+              {% endfor %}
+              {% if matches_equipo %}
+                {% render 'baul-product-card', product: p %}
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        {% endpaginate %}
       {% endif %}
     {% endcapture %}
 
@@ -276,14 +305,15 @@
   {% endif %}
 
   {% liquid
+    assign shown = 0
     assign tag_count = 0
     assign shown_ids = ','
   %}
 
   {% capture related_cards %}
-    {% if team_tag != blank %}
-      {% for p in collections.all.products limit: 250 %}
-        {% if p.tags contains team_tag and p.id != product.id %}
+    {% if team_tag != blank and equipo_col != blank %}
+      {% for p in equipo_col.products %}
+        {% if p.id != product.id %}
           {% assign pid_marker = ',' | append: p.id | append: ',' %}
           {% unless shown_ids contains pid_marker %}
             {% render 'baul-product-card', product: p %}
@@ -292,6 +322,29 @@
             {% assign shown_ids = shown_ids | append: p.id | append: ',' %}
             {% if shown >= 8 %}{% break %}{% endif %}
           {% endunless %}
+        {% endif %}
+      {% endfor %}
+    {% elsif team_tag != blank %}
+      {% for p in collections.all.products limit: 250 %}
+        {% if p.id != product.id %}
+          {% assign matches_team = false %}
+          {% for tag in p.tags %}
+            {% assign tag_handle = tag | handleize %}
+            {% if tag_handle == team_tag or tag == equipo_tag_source %}
+              {% assign matches_team = true %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {% if matches_team %}
+            {% assign pid_marker = ',' | append: p.id | append: ',' %}
+            {% unless shown_ids contains pid_marker %}
+              {% render 'baul-product-card', product: p %}
+              {% assign shown = shown | plus: 1 %}
+              {% assign tag_count = tag_count | plus: 1 %}
+              {% assign shown_ids = shown_ids | append: p.id | append: ',' %}
+              {% if shown >= 8 %}{% break %}{% endif %}
+            {% endunless %}
+          {% endif %}
         {% endif %}
       {% endfor %}
     {% endif %}
