@@ -155,6 +155,16 @@
         <button type="submit" name="add" class="bp-atc" id="bp-atc-btn"{% unless current_variant.available %} disabled{% endunless %}>
           AGREGAR AL CARRO
         </button>
+
+        {% if section.blocks.size > 0 %}
+          <div class="bp-app-blocks">
+            {% for block in section.blocks %}
+              <div class="bp-app-block" {{ block.shopify_attributes }}>
+                {% render block %}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
       {% endform %}
 
       <div class="bp-trust">
@@ -589,6 +599,11 @@
   "name": "Baúl Producto",
   "tag": "section",
   "class": "baul-product-section",
+  "blocks": [
+    {
+      "type": "@app"
+    }
+  ],
   "settings": [
     {
       "type": "header",

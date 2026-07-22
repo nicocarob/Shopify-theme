@@ -12,16 +12,6 @@
   "sections": {
     "baul_product": {
       "type": "baul-product",
-      "settings": {
-        "countdown_text": "ENVÍO GRATIS POR TIEMPO LIMITADO — TERMINA EN:",
-        "promo_text": "🎽 Lleva 3 camisetas y te llevas la 4ª a mitad de precio 🔥",
-        "logo": "shopify://shop_images/ANUNCIOS_5.png",
-        "logo_secundario": "shopify://shop_images/ANUNCIOS_5_343e85a0-0c4d-40df-b716-03f16b3bd7b9.png",
-        "whatsapp_url": "https://wa.me/message/Z5XXALWPDL4GI1"
-      }
-    },
-    "178475167059fa6c4c": {
-      "type": "_blocks",
       "blocks": {
         "venti_widget_ventipay_widget_hNEiyT": {
           "type": "shopify://apps/venti-widget/blocks/ventipay-widget/593e972e-0379-4dab-ab73-fcfb3301399e",
@@ -35,31 +25,11 @@
         "venti_widget_ventipay_widget_hNEiyT"
       ],
       "settings": {
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "flex-start",
-        "vertical_alignment": "center",
-        "align_baseline": false,
-        "horizontal_alignment_flex_direction_column": "flex-start",
-        "vertical_alignment_flex_direction_column": "center",
-        "gap": 12,
-        "section_width": "page-width",
-        "section_height": "",
-        "section_height_custom": 50,
-        "color_scheme": "",
-        "background_media": "none",
-        "video_position": "cover",
-        "background_image_position": "cover",
-        "border": "none",
-        "border_width": 1,
-        "border_opacity": 100,
-        "border_radius": 0,
-        "toggle_overlay": false,
-        "overlay_color": "#00000026",
-        "overlay_style": "solid",
-        "gradient_direction": "to top",
-        "padding-block-start": 0,
-        "padding-block-end": 0
+        "countdown_text": "ENVÍO GRATIS POR TIEMPO LIMITADO — TERMINA EN:",
+        "promo_text": "🎽 Lleva 3 camisetas y te llevas la 4ª a mitad de precio 🔥",
+        "logo": "shopify://shop_images/ANUNCIOS_5.png",
+        "logo_secundario": "shopify://shop_images/ANUNCIOS_5_343e85a0-0c4d-40df-b716-03f16b3bd7b9.png",
+        "whatsapp_url": "https://wa.me/message/Z5XXALWPDL4GI1"
       }
     },
     "1784238532dab6e080": {
@@ -112,7 +82,6 @@
   },
   "order": [
     "baul_product",
-    "178475167059fa6c4c",
     "1784238532dab6e080"
   ]
 }
