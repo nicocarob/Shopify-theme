@@ -398,14 +398,14 @@
     font-family: 'Barlow', sans-serif;
     font-size: 12px;
   }
-  .baul-search-card__regular { color: #fff; font-weight: 600; }
+  .baul-search-card__regular { color: var(--accent); font-weight: 600; }
   .baul-search-card__compare {
     color: #777;
     text-decoration: line-through;
     font-size: 11px;
   }
   .baul-search-card__sale {
-    color: #ff4d4d;
+    color: var(--accent);
     font-weight: 700;
   }
   .baul-search-modal__footer-link {
