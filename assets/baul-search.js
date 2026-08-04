@@ -5,11 +5,6 @@
   const MIN_CHARS = 1;
   const SUGGEST_LIMIT = 8;
 
-  let moneyFormat = '${{amount_no_decimals}}';
-  let popularUrl = '/collections/mas-vendidos';
-  let popularProducts = [];
-  let overlayInstance = null;
-
   function getRecentlyViewed() {
     try {
       return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
@@ -22,15 +17,7 @@
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(items.slice(0, MAX_RECENT)));
     } catch {
-      /* ignore */
-    }
-  }
-
-  function clearRecentlyViewed() {
-    try {
-      localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      /* ignore */
+      /* ignore quota errors */
     }
   }
 
@@ -41,19 +28,22 @@
     saveRecentlyViewed(items);
   }
 
-  function formatMoney(cents, format) {
-    const fmt = format || moneyFormat;
+  function formatMoney(cents, moneyFormat) {
     if (typeof Shopify !== 'undefined' && Shopify.formatMoney) {
-      return Shopify.formatMoney(cents, fmt);
+      return Shopify.formatMoney(cents, moneyFormat || '${{amount_no_decimals}}');
     }
-    return '$' + Math.round(cents).toLocaleString('es-CL');
+    return '$' + Math.round(cents / 100).toLocaleString('es-CL');
   }
 
-  function parseSuggestPrice(value) {
-    if (value == null || value === '') return 0;
-    if (typeof value === 'number') return value;
-    const num = parseFloat(value);
-    return Number.isNaN(num) ? 0 : Math.round(num);
+  function suggestPrice(product, moneyFormat) {
+    if (product.price_formatted) return product.price_formatted;
+    if (product.price == null || product.price === '') return '';
+    if (typeof product.price === 'number') {
+      return formatMoney(product.price, moneyFormat);
+    }
+    const num = parseFloat(product.price);
+    if (Number.isNaN(num)) return String(product.price);
+    return formatMoney(Math.round(num * 100), moneyFormat);
   }
 
   function escapeHtml(str) {
@@ -64,359 +54,79 @@
       .replace(/"/g, '&quot;');
   }
 
-  function loadPopularData() {
-    const el = document.getElementById('baul-search-popular-json');
-    if (!el) return;
-    try {
-      const data = JSON.parse(el.textContent);
-      if (data.moneyFormat) moneyFormat = data.moneyFormat;
-      popularUrl = data.url || popularUrl;
-      popularProducts = data.products || [];
-    } catch {
-      popularProducts = [];
-    }
-  }
-
-  function buildPricesHtml(product) {
-    const priceCents =
-      typeof product.price === 'number' ? product.price : parseSuggestPrice(product.price);
-    const compareCents =
-      typeof product.compare_at_price === 'number'
-        ? product.compare_at_price
-        : parseSuggestPrice(product.compare_at_price);
-
-    if (compareCents > priceCents && priceCents > 0) {
-      return (
-        '<div class="baul-search-item__prices">' +
-        '<span class="baul-search-item__compare">' +
-        escapeHtml(formatMoney(compareCents)) +
-        '</span>' +
-        '<span class="baul-search-item__price">' +
-        escapeHtml(formatMoney(priceCents)) +
-        '</span></div>'
-      );
-    }
-
-    if (!priceCents) return '';
-    return (
-      '<div class="baul-search-item__prices">' +
-      '<span class="baul-search-item__price">' +
-      escapeHtml(formatMoney(priceCents)) +
-      '</span></div>'
-    );
-  }
-
-  function buildCardHtml(product) {
+  function buildItemHtml(product, moneyFormat) {
     const img = product.image || product.featured_image?.url || '';
     const title = escapeHtml(product.title || '');
     const url = product.url || '/products/' + (product.handle || '');
-    const pricesHtml = buildPricesHtml(product);
+    const price = suggestPrice(product, moneyFormat || product.moneyFormat);
+    const priceHtml = price
+      ? '<span class="baul-search-item__price">' + escapeHtml(price) + '</span>'
+      : '';
     const imgHtml = img
       ? '<img class="baul-search-item__img" src="' +
         escapeHtml(img) +
-        '" alt="" width="320" height="320" loading="lazy">'
+        '" alt="" width="48" height="48" loading="lazy">'
       : '<div class="baul-search-item__img baul-search-item__img--empty"></div>';
-
     return (
       '<a href="' +
       escapeHtml(url) +
-      '" class="baul-search-item baul-search-item--grid">' +
-      '<div class="baul-search-item__media">' +
+      '" class="baul-search-item">' +
       imgHtml +
-      '</div>' +
-      '<div class="baul-search-item__body">' +
-      '<span class="baul-search-item__title">' +
+      '<div class="baul-search-item__body"><span class="baul-search-item__title">' +
       title +
       '</span>' +
-      pricesHtml +
+      priceHtml +
       '</div></a>'
     );
   }
 
-  function buildDefaultHtml() {
-    const recent = getRecentlyViewed();
+  function getPopularData() {
+    const el = document.getElementById('baul-search-popular-json');
+    if (!el) return { url: '/collections/mas-vendidos', products: [] };
+    try {
+      const data = JSON.parse(el.textContent);
+      if (Array.isArray(data)) return { url: '/collections/mas-vendidos', products: data };
+      return {
+        url: data.url || '/collections/mas-vendidos',
+        products: data.products || [],
+      };
+    } catch {
+      return { url: '/collections/mas-vendidos', products: [] };
+    }
+  }
+
+  function buildPanelHtml(recent, popularData, moneyFormat) {
+    const popular = popularData.products || [];
     const recentIds = new Set(recent.map((p) => p.id));
-    const popular = popularProducts.filter((p) => !recentIds.has(p.id)).slice(0, MAX_RECENT);
+    const popularFiltered = popular.filter((p) => !recentIds.has(p.id)).slice(0, MAX_RECENT);
+
+    if (!recent.length && !popularFiltered.length) return '';
+
     let html = '<div class="baul-search-panel">';
 
     if (recent.length) {
       html +=
-        '<div class="baul-search-panel__head">' +
-        '<p class="baul-search-panel__label">Visto recientemente</p>' +
-        '<button type="button" class="baul-search-panel__clear" data-clear-recent>Borrar</button>' +
-        '</div>' +
-        '<div class="baul-search-list baul-search-list--grid">' +
-        recent.map(buildCardHtml).join('') +
+        '<p class="baul-search-panel__label">Vistos recientemente</p>' +
+        '<div class="baul-search-list">' +
+        recent.map((p) => buildItemHtml(p, moneyFormat)).join('') +
         '</div>';
     }
 
-    if (popular.length) {
+    if (popularFiltered.length) {
       html +=
-        '<div class="baul-search-panel__head' +
-        (recent.length ? ' baul-search-panel__head--spaced' : '') +
-        '">' +
-        '<p class="baul-search-panel__label">Más vendidos</p>' +
-        '</div>' +
-        '<div class="baul-search-list baul-search-list--grid">' +
-        popular.map(buildCardHtml).join('') +
+        '<p class="baul-search-panel__label' +
+        (recent.length ? ' baul-search-panel__label--spaced' : '') +
+        '">Más vendidos</p>' +
+        '<div class="baul-search-list">' +
+        popularFiltered.map((p) => buildItemHtml(p, moneyFormat)).join('') +
         '</div>' +
         '<a href="' +
-        escapeHtml(popularUrl) +
+        escapeHtml(popularData.url || '/collections/mas-vendidos') +
         '" class="baul-search-view-all">Ver todos los más vendidos →</a>';
-    }
-
-    if (!recent.length && !popular.length) {
-      html +=
-        '<p class="baul-search-panel__empty">Escribe el nombre de un equipo o camiseta para buscar.</p>';
     }
 
     html += '</div>';
     return html;
-  }
-
-  function buildResultsHtml(products, q) {
-    if (!products.length) {
-      return (
-        '<div class="baul-search-panel">' +
-        '<p class="baul-search-panel__empty">No hay resultados para "' +
-        escapeHtml(q) +
-        '"</p>' +
-        '<a href="/search?q=' +
-        encodeURIComponent(q) +
-        '&type=product" class="baul-search-view-all">Ver todos los resultados →</a>' +
-        '</div>'
-      );
-    }
-
-    return (
-      '<div class="baul-search-panel">' +
-      '<div class="baul-search-panel__head">' +
-      '<p class="baul-search-panel__label">Resultados</p>' +
-      '</div>' +
-      '<div class="baul-search-list baul-search-list--grid">' +
-      products
-        .map((p) =>
-          buildCardHtml({
-            title: p.title,
-            url: p.url,
-            image: p.featured_image?.url || p.image,
-            price: parseSuggestPrice(p.price),
-            compare_at_price: parseSuggestPrice(p.compare_at_price_max),
-          })
-        )
-        .join('') +
-      '</div>' +
-      '<a href="/search?q=' +
-      encodeURIComponent(q) +
-      '&type=product" class="baul-search-view-all">Ver todos los resultados →</a>' +
-      '</div>'
-    );
-  }
-
-  class SearchOverlay {
-    constructor() {
-      this.root = document.getElementById('baul-search-overlay');
-      this.input = document.getElementById('baul-search-overlay-input');
-      this.content = document.getElementById('baul-search-overlay-content');
-      this.closeBtn = document.getElementById('baul-search-overlay-close');
-      if (!this.root || !this.input || !this.content) return;
-
-      if (this.root.parentElement !== document.body) {
-        document.body.appendChild(this.root);
-      }
-
-      this.abortController = null;
-      this.debounceTimer = null;
-      this.isOpen = false;
-
-      this.closeBtn?.addEventListener('click', () => this.close());
-      this.input.addEventListener('input', () => this.onInput());
-      this.input.addEventListener('keydown', (e) => this.onKeydown(e));
-      this.content.addEventListener('click', (e) => {
-        const clearBtn = e.target.closest('[data-clear-recent]');
-        if (!clearBtn) return;
-        e.preventDefault();
-        clearRecentlyViewed();
-        this.showDefault();
-      });
-
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && this.isOpen) this.close();
-      });
-    }
-
-    open(initialQuery) {
-      if (!this.root) return;
-      this.isOpen = true;
-      this.root.hidden = false;
-      this.root.setAttribute('aria-hidden', 'false');
-      document.body.classList.add('baul-search-open');
-      this.input.value = initialQuery || '';
-      this.showDefault();
-      window.requestAnimationFrame(() => this.input.focus());
-    }
-
-    close() {
-      if (!this.root) return;
-      this.isOpen = false;
-      this.root.hidden = true;
-      this.root.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('baul-search-open');
-      this.input.value = '';
-      this.content.innerHTML = '';
-      if (this.abortController) {
-        this.abortController.abort();
-        this.abortController = null;
-      }
-    }
-
-    onInput() {
-      clearTimeout(this.debounceTimer);
-      const q = this.input.value.trim();
-      if (q.length < MIN_CHARS) {
-        this.showDefault();
-        return;
-      }
-      this.debounceTimer = setTimeout(() => this.fetchSuggestions(q), DEBOUNCE_MS);
-    }
-
-    onKeydown(e) {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        this.close();
-      }
-    }
-
-    showDefault() {
-      this.content.innerHTML = buildDefaultHtml();
-    }
-
-    async fetchSuggestions(q) {
-      if (this.abortController) this.abortController.abort();
-      this.abortController = new AbortController();
-      this.content.innerHTML =
-        '<div class="baul-search-panel"><p class="baul-search-panel__loading">Buscando…</p></div>';
-
-      try {
-        const params = new URLSearchParams({
-          q: q,
-          'resources[type]': 'product',
-          'resources[limit]': String(SUGGEST_LIMIT),
-          'resources[options][unavailable_products]': 'last',
-        });
-        const res = await fetch('/search/suggest.json?' + params, {
-          signal: this.abortController.signal,
-        });
-        if (!res.ok) throw new Error('fetch failed');
-        const data = await res.json();
-        const products = data?.resources?.results?.products || [];
-        this.content.innerHTML = buildResultsHtml(products, q);
-      } catch (err) {
-        if (err.name !== 'AbortError') {
-          this.content.innerHTML =
-            '<div class="baul-search-panel"><p class="baul-search-panel__empty">No se pudo cargar la búsqueda. Intenta de nuevo.</p></div>';
-        }
-      }
-    }
-  }
-
-  class InlineSearch {
-    constructor(wrapper) {
-      this.wrapper = wrapper;
-      this.input = wrapper.querySelector('input[name="q"]');
-      this.dropdown = wrapper.querySelector('.baul-search-dropdown');
-      if (!this.input || !this.dropdown) return;
-
-      this.abortController = null;
-      this.debounceTimer = null;
-
-      this.input.setAttribute('aria-autocomplete', 'list');
-      this.input.setAttribute('aria-controls', this.dropdown.id || 'baul-search-dropdown');
-      this.input.setAttribute('aria-expanded', 'false');
-
-      this.input.addEventListener('input', () => this.onInput());
-      this.input.addEventListener('focus', () => this.onFocus());
-      this.input.addEventListener('keydown', (e) => this.onKeydown(e));
-      this.dropdown.addEventListener('click', (e) => {
-        const clearBtn = e.target.closest('[data-clear-recent]');
-        if (!clearBtn) return;
-        e.preventDefault();
-        clearRecentlyViewed();
-        this.showDefault();
-      });
-
-      document.addEventListener('click', (e) => {
-        if (!this.wrapper.contains(e.target)) this.close();
-      });
-    }
-
-    onFocus() {
-      const q = this.input.value.trim();
-      if (q.length < MIN_CHARS) this.showDefault();
-      else this.fetchSuggestions(q);
-    }
-
-    onInput() {
-      clearTimeout(this.debounceTimer);
-      const q = this.input.value.trim();
-      if (q.length < MIN_CHARS) {
-        this.showDefault();
-        return;
-      }
-      this.debounceTimer = setTimeout(() => this.fetchSuggestions(q), DEBOUNCE_MS);
-    }
-
-    onKeydown(e) {
-      if (e.key === 'Escape') {
-        this.close();
-        this.input.blur();
-      }
-    }
-
-    showDefault() {
-      this.open(buildDefaultHtml());
-    }
-
-    async fetchSuggestions(q) {
-      if (this.abortController) this.abortController.abort();
-      this.abortController = new AbortController();
-      this.open(
-        '<div class="baul-search-panel"><p class="baul-search-panel__loading">Buscando…</p></div>'
-      );
-
-      try {
-        const params = new URLSearchParams({
-          q: q,
-          'resources[type]': 'product',
-          'resources[limit]': String(SUGGEST_LIMIT),
-          'resources[options][unavailable_products]': 'last',
-        });
-        const res = await fetch('/search/suggest.json?' + params, {
-          signal: this.abortController.signal,
-        });
-        if (!res.ok) throw new Error('fetch failed');
-        const data = await res.json();
-        const products = data?.resources?.results?.products || [];
-        this.open(buildResultsHtml(products, q));
-      } catch (err) {
-        if (err.name !== 'AbortError') this.close();
-      }
-    }
-
-    open(html) {
-      this.dropdown.innerHTML = html;
-      this.dropdown.hidden = false;
-      this.input.setAttribute('aria-expanded', 'true');
-    }
-
-    close() {
-      this.dropdown.hidden = true;
-      this.input.setAttribute('aria-expanded', 'false');
-      if (this.abortController) {
-        this.abortController.abort();
-        this.abortController = null;
-      }
-    }
   }
 
   function initRecentlyViewedTracking() {
@@ -432,28 +142,254 @@
         url: data.url,
         image: data.image,
         price: data.price,
-        compare_at_price: data.compare_at_price,
+        moneyFormat: data.moneyFormat,
       });
     } catch {
       /* ignore */
     }
   }
 
-  function initHeaderTriggers() {
-    document.querySelectorAll('[data-search-trigger="header"]').forEach((trigger) => {
-      trigger.addEventListener('click', () => {
-        if (overlayInstance) overlayInstance.open();
+  let sharedBackdrop = null;
+
+  function getSharedBackdrop() {
+    if (!sharedBackdrop) {
+      sharedBackdrop = document.createElement('div');
+      sharedBackdrop.className = 'baul-search-backdrop';
+      sharedBackdrop.hidden = true;
+      document.body.appendChild(sharedBackdrop);
+    }
+    return sharedBackdrop;
+  }
+
+  class PredictiveSearch {
+    constructor(wrapper) {
+      this.wrapper = wrapper;
+      this.form = wrapper.querySelector('form') || wrapper;
+      this.input = wrapper.querySelector('input[name="q"]');
+      this.dropdown = wrapper.querySelector('.baul-search-dropdown');
+      if (!this.input || !this.dropdown) return;
+
+      this.abortController = null;
+      this.debounceTimer = null;
+      this.moneyFormat = wrapper.dataset.moneyFormat || '${{amount_no_decimals}}';
+      this.mobileQuery = window.matchMedia('(max-width: 768px)');
+
+      this.input.setAttribute('aria-autocomplete', 'list');
+      this.input.setAttribute('aria-controls', this.dropdown.id || 'baul-search-dropdown');
+      this.input.setAttribute('aria-expanded', 'false');
+
+      this.onResize = () => {
+        if (this.wrapper.classList.contains('is-active')) this.updateMobilePosition();
+      };
+      this.onScroll = () => {
+        if (this.wrapper.classList.contains('is-active') && this.isMobile()) {
+          this.updateMobilePosition();
+        }
+      };
+
+      this.bindEvents();
+    }
+
+    isMobile() {
+      return this.mobileQuery.matches;
+    }
+
+    updateMobilePosition() {
+      if (!this.isMobile()) return;
+      const rect = this.input.getBoundingClientRect();
+      const top = Math.ceil(rect.bottom + 8);
+      document.documentElement.style.setProperty('--baul-search-top', top + 'px');
+
+      if (window.visualViewport) {
+        const vv = window.visualViewport;
+        const visibleTop = vv.offsetTop;
+        const visibleBottom = vv.offsetTop + vv.height;
+        const available = Math.max(160, visibleBottom - top - 12);
+        document.documentElement.style.setProperty('--baul-search-max-h', available + 'px');
+      } else {
+        document.documentElement.style.removeProperty('--baul-search-max-h');
+      }
+    }
+
+    showMobileLayer() {
+      if (!this.isMobile()) return;
+      this.updateMobilePosition();
+      const backdrop = getSharedBackdrop();
+      backdrop.hidden = false;
+      backdrop.classList.add('is-visible');
+      backdrop.onclick = () => {
+        this.close();
+        this.input.blur();
+      };
+      document.body.classList.add('baul-search-open');
+    }
+
+    hideMobileLayer() {
+      if (!document.querySelector('.baul-predictive-search.is-active')) {
+        const backdrop = getSharedBackdrop();
+        backdrop.classList.remove('is-visible');
+        backdrop.hidden = true;
+        document.body.classList.remove('baul-search-open');
+      }
+    }
+
+    bindEvents() {
+      this.input.addEventListener('input', () => this.onInput());
+      this.input.addEventListener('focus', () => this.onFocus());
+      this.input.addEventListener('keydown', (e) => this.onKeydown(e));
+
+      document.addEventListener('click', (e) => {
+        if (!this.wrapper.contains(e.target)) this.close();
       });
-    });
+
+      window.addEventListener('resize', this.onResize);
+      window.addEventListener('scroll', this.onScroll, { passive: true });
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', this.onResize);
+        window.visualViewport.addEventListener('scroll', this.onScroll);
+      }
+    }
+
+    onFocus() {
+      const q = this.input.value.trim();
+      if (q.length < MIN_CHARS) {
+        this.showRecent();
+      } else {
+        this.fetchSuggestions(q);
+      }
+    }
+
+    onInput() {
+      clearTimeout(this.debounceTimer);
+      const q = this.input.value.trim();
+      if (q.length < MIN_CHARS) {
+        this.showRecent();
+        return;
+      }
+      this.debounceTimer = setTimeout(() => this.fetchSuggestions(q), DEBOUNCE_MS);
+    }
+
+    onKeydown(e) {
+      if (e.key === 'Escape') {
+        this.close();
+        this.input.blur();
+        return;
+      }
+      if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+      const items = this.dropdown.querySelectorAll('.baul-search-item');
+      if (!items.length) return;
+      e.preventDefault();
+      const current = this.dropdown.querySelector('.baul-search-item.is-focused');
+      let index = current ? Array.from(items).indexOf(current) : -1;
+      if (e.key === 'ArrowDown') index = Math.min(index + 1, items.length - 1);
+      else index = Math.max(index - 1, 0);
+      items.forEach((item) => item.classList.remove('is-focused'));
+      items[index].classList.add('is-focused');
+      items[index].scrollIntoView({ block: 'nearest' });
+    }
+
+    async fetchSuggestions(q) {
+      if (this.abortController) this.abortController.abort();
+      this.abortController = new AbortController();
+
+      this.dropdown.innerHTML =
+        '<div class="baul-search-panel"><p class="baul-search-panel__loading">Buscando…</p></div>';
+      this.open();
+
+      try {
+        const params = new URLSearchParams({
+          q: q,
+          'resources[type]': 'product',
+          'resources[limit]': String(SUGGEST_LIMIT),
+          'resources[options][unavailable_products]': 'last',
+        });
+        const res = await fetch('/search/suggest.json?' + params, {
+          signal: this.abortController.signal,
+        });
+        if (!res.ok) throw new Error('fetch failed');
+        const data = await res.json();
+        const products = data?.resources?.results?.products || [];
+        this.renderResults(products, q);
+      } catch (err) {
+        if (err.name !== 'AbortError') this.close();
+      }
+    }
+
+    showRecent() {
+      const html = buildPanelHtml(getRecentlyViewed(), getPopularData(), this.moneyFormat);
+      if (!html) {
+        this.close();
+        return;
+      }
+      this.open(html);
+    }
+
+    renderResults(products, q) {
+      if (!products.length) {
+        const html =
+          '<div class="baul-search-panel">' +
+          '<p class="baul-search-panel__empty">No hay resultados para "' +
+          escapeHtml(q) +
+          '"</p>' +
+          '<a href="/search?q=' +
+          encodeURIComponent(q) +
+          '&type=product" class="baul-search-view-all">Ver todos los resultados →</a>' +
+          '</div>';
+        this.open(html);
+        return;
+      }
+
+      const items = products
+        .map((p) =>
+          buildItemHtml(
+            {
+              title: p.title,
+              url: p.url,
+              image: p.featured_image?.url || p.image,
+              price: p.price,
+            },
+            this.moneyFormat
+          )
+        )
+        .join('');
+
+      const html =
+        '<div class="baul-search-panel">' +
+        '<p class="baul-search-panel__label">Resultados</p>' +
+        '<div class="baul-search-list">' +
+        items +
+        '</div>' +
+        '<a href="/search?q=' +
+        encodeURIComponent(q) +
+        '&type=product" class="baul-search-view-all">Ver todos los resultados →</a>' +
+        '</div>';
+      this.open(html);
+    }
+
+    open(html) {
+      if (html) this.dropdown.innerHTML = html;
+      this.dropdown.hidden = false;
+      this.wrapper.classList.add('is-active');
+      this.input.setAttribute('aria-expanded', 'true');
+      this.showMobileLayer();
+    }
+
+    close() {
+      this.dropdown.hidden = true;
+      this.wrapper.classList.remove('is-active');
+      this.input.setAttribute('aria-expanded', 'false');
+      this.hideMobileLayer();
+      if (this.abortController) {
+        this.abortController.abort();
+        this.abortController = null;
+      }
+    }
   }
 
   function init() {
-    loadPopularData();
     initRecentlyViewedTracking();
-    overlayInstance = new SearchOverlay();
-    initHeaderTriggers();
-    document.querySelectorAll('.baul-predictive-search--inline').forEach((wrapper) => {
-      new InlineSearch(wrapper);
+    document.querySelectorAll('.baul-predictive-search').forEach((wrapper) => {
+      new PredictiveSearch(wrapper);
     });
   }
 
