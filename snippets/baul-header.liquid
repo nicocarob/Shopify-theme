@@ -39,8 +39,12 @@
   </div>
 </div>
 
-<div class="promo-banner">
-  <p>{{ promo_text }}</p>
+<div class="promo-banner" role="note" aria-label="Promoción activa">
+  <div class="promo-banner__inner">
+    <span class="promo-banner__badge">Oferta</span>
+    <p class="promo-banner__text">{{ promo_text }}</p>
+    <span class="promo-banner__accent" aria-hidden="true">−50%</span>
+  </div>
 </div>
 
 <nav>

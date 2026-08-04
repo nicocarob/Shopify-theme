@@ -161,22 +161,93 @@
   .tick-it b { color: var(--accent); margin-right: 6px; }
   @keyframes tick { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
   
-  /* ── Promo banner (3x1) ── */
+  /* ── Promo banner ── */
   .promo-banner {
-    margin: 10px 16px; padding: 12px 20px;
-    background: linear-gradient(135deg, #00c851 0%, #00a844 100%);
-    border-radius: 10px; text-align: center;
-    box-shadow: 0 4px 20px rgba(0, 200, 81, 0.25);
-    animation: promoGlow 3s ease-in-out infinite;
+    margin: 0;
+    padding: 10px 16px 0;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    animation: none;
   }
-  .promo-banner p {
-    margin: 0; font-family: 'Barlow Condensed', sans-serif;
-    font-size: 0.85rem; font-weight: 800; color: #000;
-    letter-spacing: 0.3px; line-height: 1.3;
+  .promo-banner__inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 11px 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 200, 81, 0.28);
+    background:
+      linear-gradient(135deg, rgba(0, 200, 81, 0.14) 0%, rgba(0, 0, 0, 0.55) 42%, rgba(0, 200, 81, 0.08) 100%),
+      rgba(8, 8, 8, 0.92);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 8px 28px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
   }
-  @keyframes promoGlow {
-    0%, 100% { box-shadow: 0 4px 20px rgba(0, 200, 81, 0.25); }
-    50% { box-shadow: 0 4px 32px rgba(0, 200, 81, 0.45); }
+  .promo-banner__inner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 0%,
+      rgba(0, 200, 81, 0.08) 45%,
+      transparent 70%
+    );
+    transform: translateX(-120%);
+    animation: promoShine 5s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .promo-banner__badge {
+    flex-shrink: 0;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #00e85a 0%, #00c851 100%);
+    color: #001a0a;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    box-shadow: 0 2px 10px rgba(0, 200, 81, 0.35);
+  }
+  .promo-banner__text {
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(13px, 1.5vw, 15px);
+    font-weight: 700;
+    color: #f4f4f4;
+    letter-spacing: 0.05em;
+    line-height: 1.35;
+    text-wrap: balance;
+  }
+  .promo-banner__accent {
+    flex-shrink: 0;
+    min-width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 200, 81, 0.35);
+    background: rgba(0, 200, 81, 0.1);
+    color: var(--accent);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.04em;
+    line-height: 1;
+  }
+  @keyframes promoShine {
+    0%, 100% { transform: translateX(-120%); }
+    45%, 55% { transform: translateX(120%); }
   }
   
   /* ── Navigation ── */
@@ -3194,6 +3265,31 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .ticker { overflow-x: hidden; padding: 8px 0; }
     .tick-tr { animation: tick 17s linear infinite; }
     .tick-it { padding: 0 10px; font-size: 9px; letter-spacing: 0.1em; }
+    .promo-banner {
+      padding: 8px 10px 0;
+    }
+    .promo-banner__inner {
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+    }
+    .promo-banner__badge {
+      font-size: 9px;
+      padding: 4px 8px;
+      letter-spacing: 0.12em;
+    }
+    .promo-banner__text {
+      font-size: 12px;
+      letter-spacing: 0.03em;
+      line-height: 1.3;
+      text-align: left;
+    }
+    .promo-banner__accent {
+      min-width: 36px;
+      height: 36px;
+      font-size: 15px;
+      border-radius: 8px;
+    }
     nav {
       padding: 0 8px; height: auto; min-height: 50px;
       overflow: visible; gap: 8px; flex-wrap: wrap;
@@ -3558,6 +3654,8 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   }
 
   @media (max-width: 480px) {
+    .promo-banner__accent { display: none; }
+    .promo-banner__text { text-align: center; font-size: 11px; }
     .liga-grid { grid-template-columns: repeat(2, 1fr); }
     .ft-grid { grid-template-columns: 1fr 1fr; gap: 18px 12px; }
     .bp-customize-fields {
