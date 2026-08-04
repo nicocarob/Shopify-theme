@@ -588,6 +588,12 @@
 
 <script type="application/json" id="baul-product-json">
   {
+    "id": {{ product.id }},
+    "handle": {{ product.handle | json }},
+    "title": {{ product.title | json }},
+    "url": {{ product.url | json }},
+    "image": {{ product.featured_image | image_url: width: 120 | json }},
+    "price": {{ current_variant.price }},
     "variants": {{ product.variants | json }},
     "options": {{ product.options | json }},
     "moneyFormat": {{ shop.money_format | json }}

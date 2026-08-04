@@ -307,10 +307,14 @@
   <div class="rev sec-hdr--center" style="text-align:center;">
     <div class="eyebrow">Encuentra tu camiseta</div>
     <h2 class="sec-title">BUSCA POR EQUIPO O LIGA</h2>
-    <form class="srch-box" id="baul-search-form" action="{{ routes.search_url }}" method="get" role="search">
-      <input class="srch-in" type="search" name="q" placeholder="Ej: Real Madrid, Chile, Barcelona..." autocomplete="off">
-      <button class="srch-btn" type="submit" aria-label="Buscar">🔍</button>
-    </form>
+    <div class="srch-wrap baul-predictive-search baul-predictive-search--light" data-money-format="{{ shop.money_format | escape }}">
+      <form class="srch-box" id="baul-search-form" action="{{ routes.search_url }}" method="get" role="search">
+        <input type="hidden" name="type" value="product">
+        <input class="srch-in" type="search" name="q" placeholder="Ej: Real Madrid, Chile, Barcelona..." autocomplete="off" aria-label="Buscar equipo o camiseta">
+        <button class="srch-btn" type="submit" aria-label="Buscar">🔍</button>
+      </form>
+      <div class="baul-search-dropdown" id="baul-search-dropdown" hidden aria-live="polite"></div>
+    </div>
   </div>
   <div class="liga-grid rev">
     {% for block in section.blocks %}
