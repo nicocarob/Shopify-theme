@@ -1,17 +1,22 @@
 (function () {
   const STORAGE_KEY = 'baulRecentlyViewed';
-  const MAX_RECENT = 8;
-  const DEBOUNCE_MS = 180;
+  const MAX_ITEMS = 8;
+  const DEBOUNCE_MS = 200;
   const MIN_CHARS = 1;
   const SUGGEST_LIMIT = 8;
-  const MOBILE_QUERY = '(max-width: 768px)';
 
-  let mobileSheet = null;
-  let activeInstance = null;
+  const modal = document.getElementById('baul-search-modal');
+  const form = document.getElementById('baul-search-modal-form');
+  const input = document.getElementById('baul-search-modal-input');
+  const body = document.getElementById('baul-search-modal-body');
+  const clearBtn = document.getElementById('baul-search-modal-clear');
 
-  function isMobile() {
-    return window.matchMedia(MOBILE_QUERY).matches;
-  }
+  if (!modal || !form || !input || !body) return;
+
+  const moneyFormat = modal.dataset.moneyFormat || '${{amount_no_decimals}}';
+  let debounceTimer = null;
+  let abortController = null;
+  let lastFocus = null;
 
   function getRecentlyViewed() {
     try {
@@ -21,71 +26,36 @@
     }
   }
 
-  function saveRecentlyViewed(items) {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(items.slice(0, MAX_RECENT)));
-    } catch {
-      /* ignore quota errors */
-    }
-  }
-
   function trackRecentlyViewed(product) {
     if (!product || !product.id) return;
     const items = getRecentlyViewed().filter((p) => p.id !== product.id);
     items.unshift(product);
-    saveRecentlyViewed(items);
-  }
-
-  function formatMoney(cents, moneyFormat) {
-    if (typeof Shopify !== 'undefined' && Shopify.formatMoney) {
-      return Shopify.formatMoney(cents, moneyFormat || '${{amount_no_decimals}}');
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items.slice(0, MAX_ITEMS)));
+    } catch {
+      /* ignore */
     }
-    return '$' + Math.round(cents / 100).toLocaleString('es-CL');
   }
 
-  function suggestPrice(product, moneyFormat) {
-    if (product.price_formatted) return product.price_formatted;
-    if (product.price == null || product.price === '') return '';
-    if (typeof product.price === 'number') {
-      return formatMoney(product.price, moneyFormat);
+  function initRecentlyViewedTracking() {
+    const el = document.getElementById('baul-product-json');
+    if (!el) return;
+    try {
+      const data = JSON.parse(el.textContent);
+      if (!data.id) return;
+      trackRecentlyViewed({
+        id: data.id,
+        handle: data.handle,
+        title: data.title,
+        url: data.url,
+        image: data.image,
+        price: data.price,
+        compare_at_price: data.compare_at_price || 0,
+        moneyFormat: data.moneyFormat,
+      });
+    } catch {
+      /* ignore */
     }
-    const num = parseFloat(product.price);
-    if (Number.isNaN(num)) return String(product.price);
-    return formatMoney(Math.round(num * 100), moneyFormat);
-  }
-
-  function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-  }
-
-  function buildItemHtml(product, moneyFormat) {
-    const img = product.image || product.featured_image?.url || '';
-    const title = escapeHtml(product.title || '');
-    const url = product.url || '/products/' + (product.handle || '');
-    const price = suggestPrice(product, moneyFormat || product.moneyFormat);
-    const priceHtml = price
-      ? '<span class="baul-search-item__price">' + escapeHtml(price) + '</span>'
-      : '';
-    const imgHtml = img
-      ? '<img class="baul-search-item__img" src="' +
-        escapeHtml(img) +
-        '" alt="" width="48" height="48" loading="lazy">'
-      : '<div class="baul-search-item__img baul-search-item__img--empty"></div>';
-    return (
-      '<a href="' +
-      escapeHtml(url) +
-      '" class="baul-search-item">' +
-      imgHtml +
-      '<div class="baul-search-item__body"><span class="baul-search-item__title">' +
-      title +
-      '</span>' +
-      priceHtml +
-      '</div></a>'
-    );
   }
 
   function getPopularData() {
@@ -103,351 +73,253 @@
     }
   }
 
-  function buildPanelHtml(recent, popularData, moneyFormat) {
-    const popular = popularData.products || [];
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function formatMoney(cents) {
+    if (typeof Shopify !== 'undefined' && Shopify.formatMoney) {
+      return Shopify.formatMoney(cents, moneyFormat);
+    }
+    return '$' + Math.round(cents / 100).toLocaleString('es-CL');
+  }
+
+  function parseCents(value) {
+    if (value == null || value === '') return 0;
+    if (typeof value === 'number') return value;
+    const num = parseFloat(value);
+    if (Number.isNaN(num)) return 0;
+    return Math.round(num * 100);
+  }
+
+  function buildPriceHtml(product) {
+    const priceCents =
+      typeof product.price === 'number' ? product.price : parseCents(product.price);
+    const compareCents =
+      product.compare_at_price != null
+        ? typeof product.compare_at_price === 'number'
+          ? product.compare_at_price
+          : parseCents(product.compare_at_price)
+        : parseCents(product.compare_at_price_max);
+
+    if (compareCents > priceCents && priceCents > 0) {
+      return (
+        '<div class="baul-search-card__price">' +
+        '<span class="baul-search-card__compare">' +
+        escapeHtml(formatMoney(compareCents)) +
+        '</span>' +
+        '<span class="baul-search-card__sale">' +
+        escapeHtml(formatMoney(priceCents)) +
+        '</span></div>'
+      );
+    }
+
+    if (priceCents > 0) {
+      return (
+        '<div class="baul-search-card__price"><span class="baul-search-card__regular">' +
+        escapeHtml(formatMoney(priceCents)) +
+        '</span></div>'
+      );
+    }
+
+    return '';
+  }
+
+  function buildCardHtml(product) {
+    const img = product.image || product.featured_image?.url || '';
+    const title = escapeHtml(product.title || '');
+    const url = product.url || '/products/' + (product.handle || '');
+    const imgHtml = img
+      ? '<img class="baul-search-card__img" src="' +
+        escapeHtml(img) +
+        '" alt="" width="240" height="300" loading="lazy">'
+      : '<div class="baul-search-card__img baul-search-card__img--empty"></div>';
+
+    return (
+      '<li class="baul-search-card">' +
+      '<a class="baul-search-card__link" href="' +
+      escapeHtml(url) +
+      '">' +
+      '<div class="baul-search-card__media">' +
+      imgHtml +
+      '</div>' +
+      '<div class="baul-search-card__content">' +
+      '<p class="baul-search-card__title">' +
+      title +
+      '</p>' +
+      buildPriceHtml(product) +
+      '</div></a></li>'
+    );
+  }
+
+  function buildSection(title, products, footerHtml) {
+    if (!products.length) return '';
+    return (
+      '<section class="baul-search-section">' +
+      '<h4 class="baul-search-section__title">' +
+      escapeHtml(title) +
+      '</h4>' +
+      '<ul class="baul-search-grid" role="listbox">' +
+      products.map(buildCardHtml).join('') +
+      '</ul>' +
+      (footerHtml || '') +
+      '</section>'
+    );
+  }
+
+  function buildDefaultHtml() {
+    const recent = getRecentlyViewed();
+    const popularData = getPopularData();
     const recentIds = new Set(recent.map((p) => p.id));
-    const popularFiltered = popular.filter((p) => !recentIds.has(p.id)).slice(0, MAX_RECENT);
+    const popular = (popularData.products || [])
+      .filter((p) => !recentIds.has(p.id))
+      .slice(0, MAX_ITEMS);
 
-    if (!recent.length && !popularFiltered.length) return '';
-
-    let html = '<div class="baul-search-panel">';
-
+    let html = '';
     if (recent.length) {
-      html +=
-        '<p class="baul-search-panel__label">Vistos recientemente</p>' +
-        '<div class="baul-search-list">' +
-        recent.map((p) => buildItemHtml(p, moneyFormat)).join('') +
-        '</div>';
+      html += buildSection('Vistos recientemente', recent);
     }
-
-    if (popularFiltered.length) {
-      html +=
-        '<p class="baul-search-panel__label' +
-        (recent.length ? ' baul-search-panel__label--spaced' : '') +
-        '">Más vendidos</p>' +
-        '<div class="baul-search-list">' +
-        popularFiltered.map((p) => buildItemHtml(p, moneyFormat)).join('') +
-        '</div>' +
+    if (popular.length) {
+      html += buildSection(
+        'Productos',
+        popular,
         '<a href="' +
-        escapeHtml(popularData.url || '/collections/mas-vendidos') +
-        '" class="baul-search-view-all">Ver todos los más vendidos →</a>';
+          escapeHtml(popularData.url || '/collections/mas-vendidos') +
+          '" class="baul-search-modal__footer-link">Ver todos los más vendidos →</a>'
+      );
     }
-
-    html += '</div>';
     return html;
   }
 
-  function initRecentlyViewedTracking() {
-    const el = document.getElementById('baul-product-json');
-    if (!el) return;
-    try {
-      const data = JSON.parse(el.textContent);
-      if (!data.id) return;
-      trackRecentlyViewed({
-        id: data.id,
-        handle: data.handle,
-        title: data.title,
-        url: data.url,
-        image: data.image,
-        price: data.price,
-        moneyFormat: data.moneyFormat,
-      });
-    } catch {
-      /* ignore */
-    }
-  }
-
-  function ensureMobileSheet() {
-    if (mobileSheet) return mobileSheet;
-
-    const el = document.createElement('div');
-    el.className = 'baul-search-mobile';
-    el.hidden = true;
-    el.innerHTML =
-      '<div class="baul-search-mobile__bar">' +
-      '<form class="baul-search-mobile__form" action="/search" method="get" role="search">' +
-      '<input type="hidden" name="type" value="product">' +
-      '<input class="baul-search-mobile__input" type="search" name="q" autocomplete="off" enterkeyhint="search" aria-label="Buscar equipo o camiseta">' +
-      '</form>' +
-      '<button type="button" class="baul-search-mobile__close" aria-label="Cerrar búsqueda">✕</button>' +
-      '</div>' +
-      '<div class="baul-search-mobile__panel" aria-live="polite"></div>';
-
-    document.body.appendChild(el);
-
-    const input = el.querySelector('.baul-search-mobile__input');
-    const panel = el.querySelector('.baul-search-mobile__panel');
-    const closeBtn = el.querySelector('.baul-search-mobile__close');
-    const form = el.querySelector('.baul-search-mobile__form');
-
-    closeBtn.addEventListener('click', () => {
-      if (activeInstance) activeInstance.closeMobileSheet();
-    });
-
-    form.addEventListener('submit', () => {
-      if (activeInstance) activeInstance.closeMobileSheet();
-    });
-
-    mobileSheet = { el, input, panel, form };
-    return mobileSheet;
-  }
-
-  class PredictiveSearch {
-    constructor(wrapper) {
-      this.wrapper = wrapper;
-      this.form = wrapper.querySelector('form') || wrapper;
-      this.input = wrapper.querySelector('input[name="q"]');
-      this.dropdown = wrapper.querySelector('.baul-search-dropdown');
-      if (!this.input || !this.dropdown) return;
-
-      this.abortController = null;
-      this.debounceTimer = null;
-      this.moneyFormat = wrapper.dataset.moneyFormat || '${{amount_no_decimals}}';
-      this.isLight = wrapper.classList.contains('baul-predictive-search--light');
-      this.mobileOpen = false;
-      this.ignoreOutsideUntil = 0;
-
-      this.input.setAttribute('aria-autocomplete', 'list');
-      this.input.setAttribute('aria-controls', this.dropdown.id || 'baul-search-dropdown');
-      this.input.setAttribute('aria-expanded', 'false');
-
-      this.bindEvents();
-      this.setupMobileTrigger();
-
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && this.mobileOpen) this.closeMobileSheet();
-      });
-    }
-
-    getPanelEl() {
-      if (this.mobileOpen && mobileSheet) return mobileSheet.panel;
-      return this.dropdown;
-    }
-
-    getQueryInput() {
-      if (this.mobileOpen && mobileSheet) return mobileSheet.input;
-      return this.input;
-    }
-
-    setupMobileTrigger() {
-      if (!isMobile()) return;
-
-      const openSheet = (e) => {
-        e.preventDefault();
-        this.openMobileSheet();
-      };
-
-      this.input.setAttribute('readonly', 'readonly');
-      this.input.setAttribute('inputmode', 'search');
-      this.input.addEventListener('click', openSheet);
-      this.input.addEventListener('focus', openSheet);
-    }
-
-    openMobileSheet() {
-      const sheet = ensureMobileSheet();
-      activeInstance = this;
-      this.mobileOpen = true;
-
-      sheet.form.action = this.form.action || '/search';
-      sheet.input.value = this.input.value;
-      sheet.input.placeholder = this.input.placeholder || 'Buscar equipo o camiseta...';
-      sheet.el.classList.toggle('baul-search-mobile--light', this.isLight);
-      sheet.el.hidden = false;
-      document.body.classList.add('baul-search-mobile-open');
-
-      sheet.input.oninput = () => this.onInput();
-      sheet.input.onkeydown = (e) => this.onKeydown(e);
-
-      this.ignoreOutsideUntil = Date.now() + 400;
-      this.showDefaultPanel();
-
-      requestAnimationFrame(() => {
-        sheet.input.focus({ preventScroll: true });
-      });
-    }
-
-    closeMobileSheet() {
-      if (!this.mobileOpen) return;
-      const sheet = ensureMobileSheet();
-      this.input.value = sheet.input.value;
-      this.mobileOpen = false;
-      sheet.el.hidden = true;
-      sheet.panel.innerHTML = '';
-      sheet.input.oninput = null;
-      sheet.input.onkeydown = null;
-      document.body.classList.remove('baul-search-mobile-open');
-      if (activeInstance === this) activeInstance = null;
-      this.close();
-    }
-
-    bindEvents() {
-      if (!isMobile()) {
-        this.input.removeAttribute('readonly');
-        this.input.addEventListener('input', () => this.onInput());
-        this.input.addEventListener('focus', () => this.onFocus());
-        this.input.addEventListener('keydown', (e) => this.onKeydown(e));
-      }
-
-      document.addEventListener('pointerdown', (e) => {
-        if (Date.now() < this.ignoreOutsideUntil) return;
-        if (this.mobileOpen) return;
-        if (!this.wrapper.contains(e.target)) this.close();
-      });
-    }
-
-    onFocus() {
-      if (isMobile()) return;
-      const q = this.getQueryInput().value.trim();
-      if (q.length < MIN_CHARS) {
-        this.showDefaultPanel();
-      } else {
-        this.fetchSuggestions(q);
-      }
-    }
-
-    onInput() {
-      clearTimeout(this.debounceTimer);
-      const q = this.getQueryInput().value.trim();
-      if (q.length < MIN_CHARS) {
-        this.showDefaultPanel();
-        return;
-      }
-      this.debounceTimer = setTimeout(() => this.fetchSuggestions(q), DEBOUNCE_MS);
-    }
-
-    onKeydown(e) {
-      if (e.key === 'Escape') {
-        if (this.mobileOpen) this.closeMobileSheet();
-        else this.close();
-        this.getQueryInput().blur();
-        return;
-      }
-      const panel = this.getPanelEl();
-      if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
-      const items = panel.querySelectorAll('.baul-search-item');
-      if (!items.length) return;
-      e.preventDefault();
-      const current = panel.querySelector('.baul-search-item.is-focused');
-      let index = current ? Array.from(items).indexOf(current) : -1;
-      if (e.key === 'ArrowDown') index = Math.min(index + 1, items.length - 1);
-      else index = Math.max(index - 1, 0);
-      items.forEach((item) => item.classList.remove('is-focused'));
-      items[index].classList.add('is-focused');
-      items[index].scrollIntoView({ block: 'nearest' });
-    }
-
-    async fetchSuggestions(q) {
-      if (this.abortController) this.abortController.abort();
-      this.abortController = new AbortController();
-
-      const panel = this.getPanelEl();
-      panel.innerHTML =
-        '<div class="baul-search-panel"><p class="baul-search-panel__loading">Buscando…</p></div>';
-      this.open();
-
-      try {
-        const params = new URLSearchParams({
-          q: q,
-          'resources[type]': 'product',
-          'resources[limit]': String(SUGGEST_LIMIT),
-          'resources[options][unavailable_products]': 'last',
-        });
-        const res = await fetch('/search/suggest.json?' + params, {
-          signal: this.abortController.signal,
-        });
-        if (!res.ok) throw new Error('fetch failed');
-        const data = await res.json();
-        const products = data?.resources?.results?.products || [];
-        this.renderResults(products, q);
-      } catch (err) {
-        if (err.name !== 'AbortError') this.close();
-      }
-    }
-
-    showDefaultPanel() {
-      const html = buildPanelHtml(getRecentlyViewed(), getPopularData(), this.moneyFormat);
-      if (!html) {
-        this.close();
-        return;
-      }
-      this.open(html);
-    }
-
-    renderResults(products, q) {
-      const panel = this.getPanelEl();
-      if (!products.length) {
-        panel.innerHTML =
-          '<div class="baul-search-panel">' +
-          '<p class="baul-search-panel__empty">No hay resultados para "' +
-          escapeHtml(q) +
-          '"</p>' +
-          '<a href="/search?q=' +
-          encodeURIComponent(q) +
-          '&type=product" class="baul-search-view-all">Ver todos los resultados →</a>' +
-          '</div>';
-        this.open();
-        return;
-      }
-
-      const items = products
-        .map((p) =>
-          buildItemHtml(
-            {
-              title: p.title,
-              url: p.url,
-              image: p.featured_image?.url || p.image,
-              price: p.price,
-            },
-            this.moneyFormat
-          )
-        )
-        .join('');
-
-      panel.innerHTML =
-        '<div class="baul-search-panel">' +
-        '<p class="baul-search-panel__label">Resultados</p>' +
-        '<div class="baul-search-list">' +
-        items +
-        '</div>' +
+  function renderResults(products, q) {
+    if (!products.length) {
+      body.innerHTML =
+        '<div class="baul-search-modal__empty">No hay resultados para "' +
+        escapeHtml(q) +
+        '"</div>' +
         '<a href="/search?q=' +
         encodeURIComponent(q) +
-        '&type=product" class="baul-search-view-all">Ver todos los resultados →</a>' +
-        '</div>';
-      this.open();
+        '&type=product" class="baul-search-modal__footer-link">Ver todos los resultados →</a>';
+      return;
     }
 
-    open(html) {
-      const panel = this.getPanelEl();
-      if (html) panel.innerHTML = html;
-      if (!this.mobileOpen) {
-        this.dropdown.hidden = false;
-        this.wrapper.classList.add('is-active');
-      }
-      this.input.setAttribute('aria-expanded', 'true');
-    }
+    const mapped = products.map((p) => ({
+      title: p.title,
+      url: p.url,
+      image: p.featured_image?.url || p.image,
+      price: parseCents(p.price),
+      compare_at_price: parseCents(p.compare_at_price_max),
+    }));
 
-    close() {
-      if (this.mobileOpen) return;
-      this.dropdown.hidden = true;
-      this.wrapper.classList.remove('is-active');
-      this.input.setAttribute('aria-expanded', 'false');
-      if (this.abortController) {
-        this.abortController.abort();
-        this.abortController = null;
-      }
+    body.innerHTML = buildSection(
+      'Productos',
+      mapped,
+      '<a href="/search?q=' +
+        encodeURIComponent(q) +
+        '&type=product" class="baul-search-modal__footer-link">Ver todos los resultados →</a>'
+    );
+  }
+
+  function showDefault() {
+    const html = buildDefaultHtml();
+    body.innerHTML = html || '<div class="baul-search-modal__empty">Escribe para buscar productos</div>';
+  }
+
+  function updateClearButton() {
+    if (!clearBtn) return;
+    const hasValue = input.value.trim().length > 0;
+    clearBtn.hidden = !hasValue;
+  }
+
+  async function fetchSuggestions(q) {
+    if (abortController) abortController.abort();
+    abortController = new AbortController();
+
+    body.innerHTML = '<div class="baul-search-modal__loading">Buscando…</div>';
+
+    try {
+      const params = new URLSearchParams({
+        q: q,
+        'resources[type]': 'product',
+        'resources[limit]': String(SUGGEST_LIMIT),
+        'resources[options][unavailable_products]': 'last',
+      });
+      const res = await fetch('/search/suggest.json?' + params, {
+        signal: abortController.signal,
+      });
+      if (!res.ok) throw new Error('fetch failed');
+      const data = await res.json();
+      renderResults(data?.resources?.results?.products || [], q);
+    } catch (err) {
+      if (err.name !== 'AbortError') showDefault();
     }
   }
 
-  function init() {
-    initRecentlyViewedTracking();
-    document.querySelectorAll('.baul-predictive-search').forEach((wrapper) => {
-      new PredictiveSearch(wrapper);
+  function onInput() {
+    updateClearButton();
+    clearTimeout(debounceTimer);
+    const q = input.value.trim();
+    if (q.length < MIN_CHARS) {
+      showDefault();
+      return;
+    }
+    debounceTimer = setTimeout(() => fetchSuggestions(q), DEBOUNCE_MS);
+  }
+
+  function openModal(prefill) {
+    lastFocus = document.activeElement;
+    modal.hidden = false;
+    document.body.classList.add('baul-search-modal-open');
+    if (typeof prefill === 'string') input.value = prefill;
+    updateClearButton();
+    showDefault();
+    requestAnimationFrame(() => input.focus({ preventScroll: true }));
+  }
+
+  function closeModal() {
+    modal.hidden = true;
+    document.body.classList.remove('baul-search-modal-open');
+    if (abortController) {
+      abortController.abort();
+      abortController = null;
+    }
+    if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+  }
+
+  function bindTriggers() {
+    document.querySelectorAll('[data-search-open], #n-search-open').forEach((btn) => {
+      btn.addEventListener('click', () => openModal());
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
+  input.addEventListener('input', onInput);
+
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      input.value = '';
+      updateClearButton();
+      showDefault();
+      input.focus();
+    });
   }
+
+  modal.querySelectorAll('[data-search-close]').forEach((el) => {
+    el.addEventListener('click', closeModal);
+  });
+
+  form.addEventListener('submit', () => closeModal());
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !modal.hidden) {
+      e.preventDefault();
+      closeModal();
+    }
+  });
+
+  bindTriggers();
+  initRecentlyViewedTracking();
 })();

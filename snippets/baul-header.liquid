@@ -57,21 +57,6 @@
       >
     {% endif %}
   </a>
-  <div class="n-search-wrap baul-predictive-search" data-money-format="{{ shop.money_format | escape }}">
-    <form class="n-search" id="n-search-form" action="{{ routes.search_url }}" method="get" role="search">
-      <input type="hidden" name="type" value="product">
-      <input
-        class="n-search-in"
-        type="search"
-        name="q"
-        placeholder="Buscar equipo o camiseta..."
-        autocomplete="off"
-        aria-label="Buscar equipo o camiseta"
-      >
-    </form>
-    <div class="baul-search-dropdown" id="n-search-dropdown" hidden aria-live="polite"></div>
-  </div>
-  <button type="button" class="n-hamburger" id="n-hamburger" aria-expanded="false" aria-label="Abrir menú de navegación">☰</button>
   <ul class="n-links" id="n-links">
     <li><a href="{{ collections['liga-chilena'].url | default: '/collections/liga-chilena' }}">🇨🇱 Liga Chilena</a></li>
     <li><a href="{{ collections['liga-espanola'].url | default: '/collections/liga-espanola' }}">🇪🇸 Española</a></li>
@@ -81,7 +66,18 @@
     <li><a href="{{ collections['ninos'].url | default: '/collections/ninos' }}">👦 Niños</a></li>
     <li><a href="{{ collections['mujer'].url | default: '/collections/mujer' }}">👩 Mujer</a></li>
   </ul>
-  <a href="{{ routes.cart_url }}" class="btn-cart">🛒 Carrito ({{ cart.item_count }})</a>
+  <div class="n-actions">
+    <button type="button" class="n-search-btn" id="n-search-open" aria-label="Buscar productos">
+      <svg viewBox="0 0 20 20" fill="none" width="20" height="20" aria-hidden="true">
+        <circle cx="9" cy="9" r="4.75" stroke="currentColor" stroke-width="1.5"></circle>
+        <path d="m12.5 12.5 3.25 3.25" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"></path>
+      </svg>
+      <span class="n-search-btn__label">Buscar</span>
+    </button>
+    <a href="{{ routes.cart_url }}" class="btn-cart">🛒 Carrito ({{ cart.item_count }})</a>
+    <button type="button" class="n-hamburger" id="n-hamburger" aria-expanded="false" aria-label="Abrir menú de navegación">☰</button>
+  </div>
 </nav>
 
 {% render 'baul-search-popular' %}
+{% render 'baul-search-modal' %}

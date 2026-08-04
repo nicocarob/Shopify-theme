@@ -20,8 +20,9 @@
           "handle": {{ product.handle | json }},
           "title": {{ product.title | json }},
           "url": {{ product.url | json }},
-          "image": {{ product.featured_image | image_url: width: 120 | json }},
-          "price": {{ product.selected_or_first_available_variant.price }}
+          "image": {{ product.featured_image | image_url: width: 500 | json }},
+          "price": {{ product.selected_or_first_available_variant.price }},
+          "compare_at_price": {{ product.selected_or_first_available_variant.compare_at_price | default: 0 }}
         }{%- unless forloop.last -%},{%- endunless -%}
       {%- endfor -%}
     ]

@@ -102,19 +102,6 @@ const eyeObs = new IntersectionObserver(
 );
 document.querySelectorAll('.eyebrow').forEach((el) => eyeObs.observe(el));
 
-const navSearchToggle = document.getElementById('n-search-toggle');
-const navSearchForm = document.getElementById('n-search-form');
-if (navSearchToggle && navSearchForm) {
-  navSearchToggle.addEventListener('click', () => {
-    const isOpen = navSearchForm.classList.toggle('is-open');
-    navSearchToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    if (isOpen) {
-      const input = navSearchForm.querySelector('input[name="q"]');
-      if (input) input.focus();
-    }
-  });
-}
-
 function syncCbarHeight() {
   const cbar = document.getElementById('cbar');
   if (!cbar) return;
