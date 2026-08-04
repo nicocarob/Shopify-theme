@@ -57,8 +57,12 @@
       >
     {% endif %}
   </a>
-  <div class="n-search-wrap baul-predictive-search" data-money-format="{{ shop.money_format | escape }}">
-    <form class="n-search" id="n-search-form" action="{{ routes.search_url }}" method="get" role="search">
+  <div class="n-search-wrap baul-predictive-search" data-money-format="{{ shop.money_format | escape }}" data-search-mode="header">
+    <button type="button" class="n-search-open" id="n-search-open" aria-label="Buscar equipo o camiseta">
+      <span class="n-search-open__icon" aria-hidden="true">🔍</span>
+      <span class="n-search-open__text">Buscar</span>
+    </button>
+    <form class="n-search n-search--desktop" id="n-search-form" action="{{ routes.search_url }}" method="get" role="search">
       <input type="hidden" name="type" value="product">
       <input
         class="n-search-in"
@@ -69,7 +73,7 @@
         aria-label="Buscar equipo o camiseta"
       >
     </form>
-    <div class="baul-search-dropdown" id="n-search-dropdown" hidden aria-live="polite"></div>
+    <div class="baul-search-dropdown baul-search-dropdown--desktop" id="n-search-dropdown" hidden aria-live="polite"></div>
   </div>
   <button type="button" class="n-hamburger" id="n-hamburger" aria-expanded="false" aria-label="Abrir menú de navegación">☰</button>
   <ul class="n-links" id="n-links">
@@ -85,3 +89,4 @@
 </nav>
 
 {% render 'baul-search-popular' %}
+{% render 'baul-search-overlay' %}

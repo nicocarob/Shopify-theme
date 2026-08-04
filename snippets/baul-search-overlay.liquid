@@ -1,0 +1,35 @@
+{% comment %}
+  Overlay de búsqueda móvil (pantalla completa)
+{% endcomment %}
+
+<div id="baul-search-overlay" class="baul-search-overlay" hidden aria-hidden="true">
+  <div class="baul-search-overlay__top">
+    <form
+      class="baul-search-overlay__form"
+      id="baul-search-overlay-form"
+      action="{{ routes.search_url }}"
+      method="get"
+      role="search"
+    >
+      <input type="hidden" name="type" value="product">
+      <label class="baul-search-overlay__field">
+        <span class="baul-search-overlay__icon" aria-hidden="true">🔍</span>
+        <input
+          type="search"
+          name="q"
+          class="baul-search-overlay__input"
+          id="baul-search-overlay-input"
+          placeholder="Buscar"
+          autocomplete="off"
+          aria-label="Buscar equipo o camiseta"
+        >
+      </label>
+      <button type="button" class="baul-search-overlay__close" id="baul-search-overlay-close" aria-label="Cerrar búsqueda">✕</button>
+    </form>
+  </div>
+  <div
+    class="baul-search-overlay__content"
+    id="baul-search-overlay-content"
+    aria-live="polite"
+  ></div>
+</div>

@@ -592,8 +592,9 @@
     "handle": {{ product.handle | json }},
     "title": {{ product.title | json }},
     "url": {{ product.url | json }},
-    "image": {{ product.featured_image | image_url: width: 120 | json }},
+    "image": {{ product.featured_image | image_url: width: 480 | json }},
     "price": {{ current_variant.price }},
+    "compare_at_price": {{ current_variant.compare_at_price | default: 0 }},
     "variants": {{ product.variants | json }},
     "options": {{ product.options | json }},
     "moneyFormat": {{ shop.money_format | json }}
