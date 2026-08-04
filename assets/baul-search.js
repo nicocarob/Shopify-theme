@@ -4,6 +4,14 @@
   const DEBOUNCE_MS = 180;
   const MIN_CHARS = 1;
   const SUGGEST_LIMIT = 8;
+  const MOBILE_QUERY = '(max-width: 768px)';
+
+  let mobileSheet = null;
+  let activeInstance = null;
+
+  function isMobile() {
+    return window.matchMedia(MOBILE_QUERY).matches;
+  }
 
   function getRecentlyViewed() {
     try {
@@ -149,16 +157,39 @@
     }
   }
 
-  let sharedBackdrop = null;
+  function ensureMobileSheet() {
+    if (mobileSheet) return mobileSheet;
 
-  function getSharedBackdrop() {
-    if (!sharedBackdrop) {
-      sharedBackdrop = document.createElement('div');
-      sharedBackdrop.className = 'baul-search-backdrop';
-      sharedBackdrop.hidden = true;
-      document.body.appendChild(sharedBackdrop);
-    }
-    return sharedBackdrop;
+    const el = document.createElement('div');
+    el.className = 'baul-search-mobile';
+    el.hidden = true;
+    el.innerHTML =
+      '<div class="baul-search-mobile__bar">' +
+      '<form class="baul-search-mobile__form" action="/search" method="get" role="search">' +
+      '<input type="hidden" name="type" value="product">' +
+      '<input class="baul-search-mobile__input" type="search" name="q" autocomplete="off" enterkeyhint="search" aria-label="Buscar equipo o camiseta">' +
+      '</form>' +
+      '<button type="button" class="baul-search-mobile__close" aria-label="Cerrar búsqueda">✕</button>' +
+      '</div>' +
+      '<div class="baul-search-mobile__panel" aria-live="polite"></div>';
+
+    document.body.appendChild(el);
+
+    const input = el.querySelector('.baul-search-mobile__input');
+    const panel = el.querySelector('.baul-search-mobile__panel');
+    const closeBtn = el.querySelector('.baul-search-mobile__close');
+    const form = el.querySelector('.baul-search-mobile__form');
+
+    closeBtn.addEventListener('click', () => {
+      if (activeInstance) activeInstance.closeMobileSheet();
+    });
+
+    form.addEventListener('submit', () => {
+      if (activeInstance) activeInstance.closeMobileSheet();
+    });
+
+    mobileSheet = { el, input, panel, form };
+    return mobileSheet;
   }
 
   class PredictiveSearch {
@@ -172,88 +203,103 @@
       this.abortController = null;
       this.debounceTimer = null;
       this.moneyFormat = wrapper.dataset.moneyFormat || '${{amount_no_decimals}}';
-      this.mobileQuery = window.matchMedia('(max-width: 768px)');
+      this.isLight = wrapper.classList.contains('baul-predictive-search--light');
+      this.mobileOpen = false;
+      this.ignoreOutsideUntil = 0;
 
       this.input.setAttribute('aria-autocomplete', 'list');
       this.input.setAttribute('aria-controls', this.dropdown.id || 'baul-search-dropdown');
       this.input.setAttribute('aria-expanded', 'false');
 
-      this.onResize = () => {
-        if (this.wrapper.classList.contains('is-active')) this.updateMobilePosition();
-      };
-      this.onScroll = () => {
-        if (this.wrapper.classList.contains('is-active') && this.isMobile()) {
-          this.updateMobilePosition();
-        }
-      };
-
       this.bindEvents();
+      this.setupMobileTrigger();
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && this.mobileOpen) this.closeMobileSheet();
+      });
     }
 
-    isMobile() {
-      return this.mobileQuery.matches;
+    getPanelEl() {
+      if (this.mobileOpen && mobileSheet) return mobileSheet.panel;
+      return this.dropdown;
     }
 
-    updateMobilePosition() {
-      if (!this.isMobile()) return;
-      const rect = this.input.getBoundingClientRect();
-      const top = Math.ceil(rect.bottom + 8);
-      document.documentElement.style.setProperty('--baul-search-top', top + 'px');
-
-      if (window.visualViewport) {
-        const vv = window.visualViewport;
-        const visibleTop = vv.offsetTop;
-        const visibleBottom = vv.offsetTop + vv.height;
-        const available = Math.max(160, visibleBottom - top - 12);
-        document.documentElement.style.setProperty('--baul-search-max-h', available + 'px');
-      } else {
-        document.documentElement.style.removeProperty('--baul-search-max-h');
-      }
+    getQueryInput() {
+      if (this.mobileOpen && mobileSheet) return mobileSheet.input;
+      return this.input;
     }
 
-    showMobileLayer() {
-      if (!this.isMobile()) return;
-      this.updateMobilePosition();
-      const backdrop = getSharedBackdrop();
-      backdrop.hidden = false;
-      backdrop.classList.add('is-visible');
-      backdrop.onclick = () => {
-        this.close();
-        this.input.blur();
+    setupMobileTrigger() {
+      if (!isMobile()) return;
+
+      const openSheet = (e) => {
+        e.preventDefault();
+        this.openMobileSheet();
       };
-      document.body.classList.add('baul-search-open');
+
+      this.input.setAttribute('readonly', 'readonly');
+      this.input.setAttribute('inputmode', 'search');
+      this.input.addEventListener('click', openSheet);
+      this.input.addEventListener('focus', openSheet);
     }
 
-    hideMobileLayer() {
-      if (!document.querySelector('.baul-predictive-search.is-active')) {
-        const backdrop = getSharedBackdrop();
-        backdrop.classList.remove('is-visible');
-        backdrop.hidden = true;
-        document.body.classList.remove('baul-search-open');
-      }
+    openMobileSheet() {
+      const sheet = ensureMobileSheet();
+      activeInstance = this;
+      this.mobileOpen = true;
+
+      sheet.form.action = this.form.action || '/search';
+      sheet.input.value = this.input.value;
+      sheet.input.placeholder = this.input.placeholder || 'Buscar equipo o camiseta...';
+      sheet.el.classList.toggle('baul-search-mobile--light', this.isLight);
+      sheet.el.hidden = false;
+      document.body.classList.add('baul-search-mobile-open');
+
+      sheet.input.oninput = () => this.onInput();
+      sheet.input.onkeydown = (e) => this.onKeydown(e);
+
+      this.ignoreOutsideUntil = Date.now() + 400;
+      this.showDefaultPanel();
+
+      requestAnimationFrame(() => {
+        sheet.input.focus({ preventScroll: true });
+      });
+    }
+
+    closeMobileSheet() {
+      if (!this.mobileOpen) return;
+      const sheet = ensureMobileSheet();
+      this.input.value = sheet.input.value;
+      this.mobileOpen = false;
+      sheet.el.hidden = true;
+      sheet.panel.innerHTML = '';
+      sheet.input.oninput = null;
+      sheet.input.onkeydown = null;
+      document.body.classList.remove('baul-search-mobile-open');
+      if (activeInstance === this) activeInstance = null;
+      this.close();
     }
 
     bindEvents() {
-      this.input.addEventListener('input', () => this.onInput());
-      this.input.addEventListener('focus', () => this.onFocus());
-      this.input.addEventListener('keydown', (e) => this.onKeydown(e));
+      if (!isMobile()) {
+        this.input.removeAttribute('readonly');
+        this.input.addEventListener('input', () => this.onInput());
+        this.input.addEventListener('focus', () => this.onFocus());
+        this.input.addEventListener('keydown', (e) => this.onKeydown(e));
+      }
 
-      document.addEventListener('click', (e) => {
+      document.addEventListener('pointerdown', (e) => {
+        if (Date.now() < this.ignoreOutsideUntil) return;
+        if (this.mobileOpen) return;
         if (!this.wrapper.contains(e.target)) this.close();
       });
-
-      window.addEventListener('resize', this.onResize);
-      window.addEventListener('scroll', this.onScroll, { passive: true });
-      if (window.visualViewport) {
-        window.visualViewport.addEventListener('resize', this.onResize);
-        window.visualViewport.addEventListener('scroll', this.onScroll);
-      }
     }
 
     onFocus() {
-      const q = this.input.value.trim();
+      if (isMobile()) return;
+      const q = this.getQueryInput().value.trim();
       if (q.length < MIN_CHARS) {
-        this.showRecent();
+        this.showDefaultPanel();
       } else {
         this.fetchSuggestions(q);
       }
@@ -261,9 +307,9 @@
 
     onInput() {
       clearTimeout(this.debounceTimer);
-      const q = this.input.value.trim();
+      const q = this.getQueryInput().value.trim();
       if (q.length < MIN_CHARS) {
-        this.showRecent();
+        this.showDefaultPanel();
         return;
       }
       this.debounceTimer = setTimeout(() => this.fetchSuggestions(q), DEBOUNCE_MS);
@@ -271,15 +317,17 @@
 
     onKeydown(e) {
       if (e.key === 'Escape') {
-        this.close();
-        this.input.blur();
+        if (this.mobileOpen) this.closeMobileSheet();
+        else this.close();
+        this.getQueryInput().blur();
         return;
       }
+      const panel = this.getPanelEl();
       if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
-      const items = this.dropdown.querySelectorAll('.baul-search-item');
+      const items = panel.querySelectorAll('.baul-search-item');
       if (!items.length) return;
       e.preventDefault();
-      const current = this.dropdown.querySelector('.baul-search-item.is-focused');
+      const current = panel.querySelector('.baul-search-item.is-focused');
       let index = current ? Array.from(items).indexOf(current) : -1;
       if (e.key === 'ArrowDown') index = Math.min(index + 1, items.length - 1);
       else index = Math.max(index - 1, 0);
@@ -292,7 +340,8 @@
       if (this.abortController) this.abortController.abort();
       this.abortController = new AbortController();
 
-      this.dropdown.innerHTML =
+      const panel = this.getPanelEl();
+      panel.innerHTML =
         '<div class="baul-search-panel"><p class="baul-search-panel__loading">Buscando…</p></div>';
       this.open();
 
@@ -315,7 +364,7 @@
       }
     }
 
-    showRecent() {
+    showDefaultPanel() {
       const html = buildPanelHtml(getRecentlyViewed(), getPopularData(), this.moneyFormat);
       if (!html) {
         this.close();
@@ -325,8 +374,9 @@
     }
 
     renderResults(products, q) {
+      const panel = this.getPanelEl();
       if (!products.length) {
-        const html =
+        panel.innerHTML =
           '<div class="baul-search-panel">' +
           '<p class="baul-search-panel__empty">No hay resultados para "' +
           escapeHtml(q) +
@@ -335,7 +385,7 @@
           encodeURIComponent(q) +
           '&type=product" class="baul-search-view-all">Ver todos los resultados →</a>' +
           '</div>';
-        this.open(html);
+        this.open();
         return;
       }
 
@@ -353,7 +403,7 @@
         )
         .join('');
 
-      const html =
+      panel.innerHTML =
         '<div class="baul-search-panel">' +
         '<p class="baul-search-panel__label">Resultados</p>' +
         '<div class="baul-search-list">' +
@@ -363,22 +413,24 @@
         encodeURIComponent(q) +
         '&type=product" class="baul-search-view-all">Ver todos los resultados →</a>' +
         '</div>';
-      this.open(html);
+      this.open();
     }
 
     open(html) {
-      if (html) this.dropdown.innerHTML = html;
-      this.dropdown.hidden = false;
-      this.wrapper.classList.add('is-active');
+      const panel = this.getPanelEl();
+      if (html) panel.innerHTML = html;
+      if (!this.mobileOpen) {
+        this.dropdown.hidden = false;
+        this.wrapper.classList.add('is-active');
+      }
       this.input.setAttribute('aria-expanded', 'true');
-      this.showMobileLayer();
     }
 
     close() {
+      if (this.mobileOpen) return;
       this.dropdown.hidden = true;
       this.wrapper.classList.remove('is-active');
       this.input.setAttribute('aria-expanded', 'false');
-      this.hideMobileLayer();
       if (this.abortController) {
         this.abortController.abort();
         this.abortController = null;
