@@ -13,6 +13,7 @@
 <script type="application/json" id="baul-search-popular-json">
   {
     "url": {{ popular_url | json }},
+    "moneyFormat": {{ shop.money_format | json }},
     "products": [
       {%- for product in popular_collection.products limit: 8 -%}
         {
