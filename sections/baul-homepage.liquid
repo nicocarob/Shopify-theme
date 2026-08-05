@@ -60,7 +60,7 @@
       <p class="hero-desc">{{ section.settings.hero_description }}</p>
       <div class="hero-btns">
         <a href="#colsec" class="btn-gold">{{ section.settings.hero_btn_primary }}</a>
-        <a href="#buscar" class="btn-ghost">{{ section.settings.hero_btn_secondary }}</a>
+        <a href="#elige-liga" class="btn-ghost">{{ section.settings.hero_btn_secondary }}</a>
       </div>
       <div class="hero-flags">
         <a href="{{ routes.search_url }}?q={{ 'Chile' | url_encode }}&type=product" class="flag-b" aria-label="Buscar camisetas de Chile">🇨🇱</a>
@@ -302,44 +302,6 @@
       </video>
     </div>
     <a href="/search?q=portugal&type=product" class="bp-video-cta">Ver esta camiseta →</a>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<section class="srch-sec" id="buscar">
-  <div class="rev sec-hdr--center" style="text-align:center;">
-    <div class="eyebrow">Encuentra tu camiseta</div>
-    <h2 class="sec-title">BUSCA POR EQUIPO O LIGA</h2>
-    <div class="srch-wrap">
-      <button type="button" class="srch-box srch-box--trigger" data-search-open aria-label="Buscar equipo o camiseta">
-        <span class="srch-in srch-in--fake">Ej: Real Madrid, Chile, Barcelona...</span>
-        <span class="srch-btn" aria-hidden="true">🔍</span>
-      </button>
-    </div>
-  </div>
-  <div class="liga-grid rev">
-    {% for block in section.blocks %}
-      {% if block.type == 'liga' %}
-        {% assign liga_col = collections[block.settings.collection_handle] %}
-        <a class="lg-c" href="{{ liga_col.url | default: '#' }}" {{ block.shopify_attributes }}>
-          <div class="lg-circle">
-            {% if block.settings.logo != blank %}
-              <img
-                src="{{ block.settings.logo | image_url: width: 120 }}"
-                alt="{{ block.settings.liga_name | escape }}"
-                width="60"
-                height="60"
-                style="width:60px;height:60px;object-fit:contain;"
-              >
-            {% else %}
-              <div class="lg-ico">{{ block.settings.emoji | default: '⚽' }}</div>
-            {% endif %}
-          </div>
-          <div class="lg-nm">{{ block.settings.liga_name }}</div>
-        </a>
-      {% endif %}
-    {% endfor %}
   </div>
 </section>
 
