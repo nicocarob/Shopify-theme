@@ -25,47 +25,50 @@
   </header>
 
   <div class="elige-liga" data-elige-liga>
-    <div class="elige-liga__tabs" role="tablist" aria-label="Ligas">
-      {% assign first_liga = true %}
-      {% for block in section.blocks %}
-        {% if block.type == 'liga' %}
-          {% assign liga_col = collections[block.settings.collection_handle] %}
-          <button
-            type="button"
-            class="elige-liga__tab{% if first_liga %} is-active{% endif %}"
-            role="tab"
-            data-liga-tab="{{ block.settings.collection_handle }}"
-            aria-selected="{% if first_liga %}true{% else %}false{% endif %}"
-            aria-controls="elige-panel-{{ block.settings.collection_handle }}"
-            id="elige-tab-{{ block.settings.collection_handle }}"
-            {{ block.shopify_attributes }}
-          >
-            <span class="elige-liga__tab-tile">
-              {% if block.settings.logo != blank %}
-                <img
-                  src="{{ block.settings.logo | image_url: width: 120 }}"
-                  alt=""
-                  width="48"
-                  height="48"
-                  loading="lazy"
-                >
-              {% elsif liga_col != blank and liga_col.image != blank %}
-                <img
-                  src="{{ liga_col.image | image_url: width: 120 }}"
-                  alt=""
-                  width="48"
-                  height="48"
-                  loading="lazy"
-                >
-              {% else %}
-                <span class="elige-liga__tab-emoji">{{ block.settings.emoji | default: '⚽' }}</span>
-              {% endif %}
-            </span>
-            <span class="elige-liga__tab-name">{{ block.settings.liga_name }}</span>
-          </button>
-          {% assign first_liga = false %}
-        {% endif %}
-      {% endfor %}
+    <div class="elige-liga__scroll-wrap elige-liga__scroll-wrap--tabs" data-elige-scroll>
+      <div class="elige-liga__tabs" role="tablist" aria-label="Ligas">
+        {% assign first_liga = true %}
+        {% for block in section.blocks %}
+          {% if block.type == 'liga' %}
+            {% assign liga_col = collections[block.settings.collection_handle] %}
+            <button
+              type="button"
+              class="elige-liga__tab{% if first_liga %} is-active{% endif %}"
+              role="tab"
+              data-liga-tab="{{ block.settings.collection_handle }}"
+              aria-selected="{% if first_liga %}true{% else %}false{% endif %}"
+              aria-controls="elige-panel-{{ block.settings.collection_handle }}"
+              id="elige-tab-{{ block.settings.collection_handle }}"
+              tabindex="{% if first_liga %}0{% else %}-1{% endif %}"
+              {{ block.shopify_attributes }}
+            >
+              <span class="elige-liga__tab-tile">
+                {% if block.settings.logo != blank %}
+                  <img
+                    src="{{ block.settings.logo | image_url: width: 160 }}"
+                    alt="{{ block.settings.liga_name | escape }}"
+                    width="56"
+                    height="56"
+                    loading="lazy"
+                  >
+                {% elsif liga_col != blank and liga_col.image != blank %}
+                  <img
+                    src="{{ liga_col.image | image_url: width: 160 }}"
+                    alt="{{ block.settings.liga_name | escape }}"
+                    width="56"
+                    height="56"
+                    loading="lazy"
+                  >
+                {% else %}
+                  <span class="elige-liga__tab-emoji" aria-hidden="true">{{ block.settings.emoji | default: '⚽' }}</span>
+                {% endif %}
+              </span>
+              <span class="elige-liga__tab-name">{{ block.settings.liga_name }}</span>
+            </button>
+            {% assign first_liga = false %}
+          {% endif %}
+        {% endfor %}
+      </div>
     </div>
 
     <div class="elige-liga__panels">
@@ -74,7 +77,7 @@
         {% if block.type == 'liga' %}
           {% assign liga_handle = block.settings.collection_handle %}
           {% assign liga_col = collections[liga_handle] %}
-          {% assign liga_url = liga_col.url | default: '#' %}
+          {% assign liga_url = liga_col.url | default: routes.all_products_collection_url %}
           {% assign liga_name = block.settings.liga_name %}
 
           <div
@@ -86,92 +89,118 @@
             aria-labelledby="elige-tab-{{ liga_handle }}"
             {% unless first_panel %}hidden{% endunless %}
           >
-            <div class="elige-liga__teams" role="group" aria-label="Equipos de {{ liga_name }}">
-              <button
-                type="button"
-                class="elige-liga__team is-active"
-                data-team-btn
-                data-team-all
-                data-team-id="all"
-                data-team-url="{{ liga_url }}"
-                data-team-name="Todos"
-              >
-                <span class="elige-liga__crest elige-liga__crest--all" aria-hidden="true">⚽</span>
-                <span class="elige-liga__team-name">Todos</span>
-              </button>
-
-              {% for team_block in section.blocks %}
-                {% if team_block.type == 'equipo' and team_block.settings.liga_handle == liga_handle %}
-                  {% assign team_col = collections[team_block.settings.collection_handle] %}
-                  {% assign team_url = team_col.url | default: '#' %}
-                  {% assign team_name = team_block.settings.team_name | default: team_col.title | default: 'Equipo' %}
-                  <button
-                    type="button"
-                    class="elige-liga__team"
-                    data-team-btn
-                    data-team-id="{{ team_block.settings.collection_handle }}"
-                    data-team-url="{{ team_url }}"
-                    data-team-name="{{ team_name | escape }}"
-                    {{ team_block.shopify_attributes }}
-                  >
-                    <span class="elige-liga__crest">
-                      {% if team_block.settings.logo != blank %}
-                        <img
-                          src="{{ team_block.settings.logo | image_url: width: 120 }}"
-                          alt=""
-                          width="40"
-                          height="40"
-                          loading="lazy"
-                        >
-                      {% elsif team_col != blank and team_col.image != blank %}
-                        <img
-                          src="{{ team_col.image | image_url: width: 120 }}"
-                          alt=""
-                          width="40"
-                          height="40"
-                          loading="lazy"
-                        >
-                      {% else %}
-                        <span class="elige-liga__team-emoji">{{ team_block.settings.emoji | default: '⚽' }}</span>
-                      {% endif %}
-                    </span>
-                    <span class="elige-liga__team-name">{{ team_name }}</span>
-                  </button>
-                {% endif %}
-              {% endfor %}
-            </div>
-
-            <div class="elige-liga__preview">
-              <div class="elige-liga__products prod-grid" data-team-products="all">
-                {% if liga_col != blank %}
-                  {% for product in liga_col.products limit: 4 %}
-                    {% render 'baul-product-card', product: product %}
-                  {% endfor %}
-                {% endif %}
+            <div class="elige-liga__panel-inner">
+              <div class="elige-liga__teams-hdr">
+                <span class="elige-liga__teams-label">Elige tu equipo</span>
+                <span class="elige-liga__teams-liga">{{ liga_name }}</span>
               </div>
 
-              {% for team_block in section.blocks %}
-                {% if team_block.type == 'equipo' and team_block.settings.liga_handle == liga_handle %}
-                  {% assign team_col = collections[team_block.settings.collection_handle] %}
-                  <div class="elige-liga__products prod-grid" data-team-products="{{ team_block.settings.collection_handle }}" hidden>
-                    {% if team_col != blank %}
-                      {% for product in team_col.products limit: 4 %}
-                        {% render 'baul-product-card', product: product %}
-                      {% endfor %}
+              <div class="elige-liga__scroll-wrap elige-liga__scroll-wrap--teams" data-elige-scroll>
+                <div class="elige-liga__teams" role="group" aria-label="Equipos de {{ liga_name }}">
+                  <button
+                    type="button"
+                    class="elige-liga__team is-active"
+                    data-team-btn
+                    data-team-all
+                    data-team-id="all"
+                    data-team-url="{{ liga_url }}"
+                    data-team-name="Todos"
+                    aria-pressed="true"
+                  >
+                    <span class="elige-liga__crest elige-liga__crest--all" aria-hidden="true">⚽</span>
+                    <span class="elige-liga__team-name">Todos</span>
+                  </button>
+
+                  {% for team_block in section.blocks %}
+                    {% if team_block.type == 'equipo' and team_block.settings.liga_handle == liga_handle %}
+                      {% assign team_col = collections[team_block.settings.collection_handle] %}
+                      {% assign team_url = team_col.url | default: '#' %}
+                      {% assign team_name = team_block.settings.team_name | default: team_col.title | default: 'Equipo' %}
+                      <button
+                        type="button"
+                        class="elige-liga__team"
+                        data-team-btn
+                        data-team-id="{{ team_block.settings.collection_handle }}"
+                        data-team-url="{{ team_url }}"
+                        data-team-name="{{ team_name | escape }}"
+                        aria-pressed="false"
+                        {{ team_block.shopify_attributes }}
+                      >
+                        <span class="elige-liga__crest">
+                          {% if team_block.settings.logo != blank %}
+                            <img
+                              src="{{ team_block.settings.logo | image_url: width: 120 }}"
+                              alt="{{ team_name | escape }}"
+                              width="40"
+                              height="40"
+                              loading="lazy"
+                            >
+                          {% elsif team_col != blank and team_col.image != blank %}
+                            <img
+                              src="{{ team_col.image | image_url: width: 120 }}"
+                              alt="{{ team_name | escape }}"
+                              width="40"
+                              height="40"
+                              loading="lazy"
+                            >
+                          {% else %}
+                            <span class="elige-liga__team-emoji" aria-hidden="true">{{ team_block.settings.emoji | default: '⚽' }}</span>
+                          {% endif %}
+                        </span>
+                        <span class="elige-liga__team-name">{{ team_name }}</span>
+                      </button>
                     {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+
+              <div class="elige-liga__preview" aria-live="polite" aria-atomic="true">
+                {% if liga_col != blank and liga_col.products_count > 0 %}
+                  <div class="elige-liga__products prod-grid is-visible" data-team-products="all">
+                    {% for product in liga_col.products limit: 4 %}
+                      {% render 'baul-product-card', product: product %}
+                    {% endfor %}
+                  </div>
+                {% else %}
+                  <div class="elige-liga__empty is-visible" data-team-products="all">
+                    <span class="elige-liga__empty-icon" aria-hidden="true">⚽</span>
+                    <p class="elige-liga__empty-text">Próximamente más camisetas de {{ liga_name }}</p>
+                    <a href="{{ liga_url }}" class="elige-liga__empty-link">Ver colección →</a>
                   </div>
                 {% endif %}
-              {% endfor %}
-            </div>
 
-            <div class="elige-liga__cta-wrap">
-              <a
-                href="{{ liga_url }}"
-                class="btn-gold elige-liga__cta"
-                data-liga-cta
-              >
-                Ver el resto de camisetas de {{ liga_name }}
-              </a>
+                {% for team_block in section.blocks %}
+                  {% if team_block.type == 'equipo' and team_block.settings.liga_handle == liga_handle %}
+                    {% assign team_col = collections[team_block.settings.collection_handle] %}
+                    {% assign team_name = team_block.settings.team_name | default: team_col.title | default: 'Equipo' %}
+                    {% assign team_url = team_col.url | default: '#' %}
+
+                    {% if team_col != blank and team_col.products_count > 0 %}
+                      <div class="elige-liga__products prod-grid" data-team-products="{{ team_block.settings.collection_handle }}" hidden>
+                        {% for product in team_col.products limit: 4 %}
+                          {% render 'baul-product-card', product: product %}
+                        {% endfor %}
+                      </div>
+                    {% else %}
+                      <div class="elige-liga__empty" data-team-products="{{ team_block.settings.collection_handle }}" hidden>
+                        <span class="elige-liga__empty-icon" aria-hidden="true">⚽</span>
+                        <p class="elige-liga__empty-text">Aún no hay camisetas de {{ team_name }}</p>
+                        <a href="{{ team_url }}" class="elige-liga__empty-link">Ver colección →</a>
+                      </div>
+                    {% endif %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+
+              <div class="elige-liga__cta-wrap">
+                <a
+                  href="{{ liga_url }}"
+                  class="btn-gold elige-liga__cta"
+                  data-liga-cta
+                >
+                  Ver el resto de camisetas de {{ liga_name }}
+                </a>
+              </div>
             </div>
           </div>
 

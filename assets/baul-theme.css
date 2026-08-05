@@ -3094,21 +3094,22 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
 
   /* ── Elige tu liga (liga → equipo picker) ── */
   .elige-liga-sec {
-    padding: 60px 20px;
+    padding: 72px 24px;
     position: relative;
     overflow: hidden;
     background: var(--bg);
   }
   .elige-liga-sec__hdr {
     text-align: center;
-    max-width: 720px;
-    margin: 0 auto 36px;
+    max-width: 760px;
+    margin: 0 auto 40px;
   }
   .elige-liga-sec .sec-sub {
     margin-top: 10px;
-    max-width: 520px;
+    max-width: 540px;
     margin-left: auto;
     margin-right: auto;
+    line-height: 1.5;
   }
 
   .elige-liga {
@@ -3118,14 +3119,44 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     z-index: 1;
   }
 
+  .elige-liga__scroll-wrap {
+    position: relative;
+  }
+  .elige-liga__scroll-wrap::before,
+  .elige-liga__scroll-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 36px;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .elige-liga__scroll-wrap--tabs::before,
+  .elige-liga__scroll-wrap--tabs::after { bottom: 16px; }
+  .elige-liga__scroll-wrap::before {
+    left: 0;
+    background: linear-gradient(90deg, var(--bg) 15%, transparent 100%);
+  }
+  .elige-liga__scroll-wrap::after {
+    right: 0;
+    background: linear-gradient(270deg, var(--bg) 15%, transparent 100%);
+  }
+  .elige-liga__scroll-wrap.is-scrollable:not(.is-at-start)::before { opacity: 1; }
+  .elige-liga__scroll-wrap.is-scrollable:not(.is-at-end)::after { opacity: 1; }
+
   .elige-liga__tabs {
     display: flex;
     flex-wrap: nowrap;
-    gap: 12px;
+    gap: 10px;
     overflow-x: auto;
-    padding: 4px 2px 16px;
-    margin-bottom: 8px;
+    padding: 4px 4px 18px;
+    margin-bottom: 4px;
     -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: 16px;
     scrollbar-width: thin;
     scrollbar-color: rgba(0, 200, 81, 0.35) transparent;
   }
@@ -3141,16 +3172,23 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     flex-direction: column;
     align-items: center;
     gap: 8px;
-    min-width: 88px;
-    max-width: 110px;
+    min-width: 84px;
+    max-width: 104px;
     padding: 0;
     border: none;
     background: transparent;
     cursor: pointer;
     color: var(--text-muted);
     transition: color 0.2s, transform 0.2s;
+    scroll-snap-align: center;
+    -webkit-tap-highlight-color: transparent;
   }
   .elige-liga__tab:hover { color: #fff; transform: translateY(-2px); }
+  .elige-liga__tab:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+    border-radius: 8px;
+  }
   .elige-liga__tab.is-active { color: #fff; }
 
   .elige-liga__tab-tile {
@@ -3162,7 +3200,7 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
     overflow: hidden;
   }
   .elige-liga__tab-tile img {
@@ -3175,6 +3213,7 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   .elige-liga__tab.is-active .elige-liga__tab-tile {
     border-color: var(--accent);
     background: #fff;
+    transform: scale(1.04);
     box-shadow: 0 0 0 1px rgba(0, 200, 81, 0.35), 0 8px 24px rgba(0, 0, 0, 0.35);
   }
   .elige-liga__tab-name {
@@ -3184,18 +3223,56 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     letter-spacing: 0.06em;
     text-transform: uppercase;
     text-align: center;
-    line-height: 1.2;
+    line-height: 1.25;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .elige-liga__panel[hidden] { display: none !important; }
+
+  .elige-liga__panel-inner {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 24px 20px 28px;
+    backdrop-filter: blur(4px);
+  }
+
+  .elige-liga__teams-hdr {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .elige-liga__teams-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .elige-liga__teams-liga {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
+  }
 
   .elige-liga__teams {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
-    margin-bottom: 28px;
-    padding: 0 4px;
+    gap: 10px 12px;
+    margin-bottom: 24px;
+    padding: 2px 4px 6px;
   }
 
   .elige-liga__team {
@@ -3204,15 +3281,21 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     align-items: center;
     gap: 6px;
     min-width: 72px;
-    max-width: 96px;
+    max-width: 92px;
     padding: 0;
     border: none;
     background: transparent;
     cursor: pointer;
     color: var(--text-muted);
     transition: color 0.2s, transform 0.2s;
+    -webkit-tap-highlight-color: transparent;
   }
   .elige-liga__team:hover { color: #fff; transform: translateY(-2px); }
+  .elige-liga__team:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
   .elige-liga__team.is-active { color: #fff; }
 
   .elige-liga__crest {
@@ -3224,7 +3307,7 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: border-color 0.25s, box-shadow 0.25s;
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
     overflow: hidden;
   }
   .elige-liga__crest img {
@@ -3237,6 +3320,7 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   .elige-liga__team-emoji { font-size: 22px; line-height: 1; }
   .elige-liga__team.is-active .elige-liga__crest {
     border-color: var(--accent);
+    transform: scale(1.05);
     box-shadow: 0 0 0 1px rgba(0, 200, 81, 0.35), 0 6px 20px rgba(0, 0, 0, 0.3);
   }
 
@@ -3248,15 +3332,76 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     text-transform: uppercase;
     text-align: center;
     line-height: 1.2;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
-  .elige-liga__preview { margin-bottom: 28px; }
-  .elige-liga__products[hidden] { display: none !important; }
-  .elige-liga__products.prod-grid {
+  .elige-liga__preview {
+    margin-bottom: 24px;
+    min-height: 120px;
+  }
+  .elige-liga__products[hidden],
+  .elige-liga__empty[hidden] { display: none !important; }
+
+  .elige-liga__products.prod-grid,
+  .elige-liga__empty {
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.28s ease, transform 0.28s ease;
   }
+  .elige-liga__products.is-visible,
+  .elige-liga__empty.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  .elige-liga__products .pc-num,
+  .elige-liga__products .pc-urgency,
+  .elige-liga__products .badge-uu { display: none; }
+  .elige-liga__products .pc-info { padding: 12px 14px 10px; }
+  .elige-liga__products .pc-name { font-size: 14px; }
+  .elige-liga__products .pc-ver { font-size: 11px; }
+  .elige-liga__products .btn-row { padding: 0 10px 12px; gap: 6px; }
+  .elige-liga__products .btn-add,
+  .elige-liga__products .btn-custom { font-size: 10px; padding: 9px 8px; }
+
+  .elige-liga__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 36px 20px;
+    border: 1px dashed rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    background: rgba(0, 0, 0, 0.18);
+    text-align: center;
+  }
+  .elige-liga__empty-icon { font-size: 28px; opacity: 0.5; }
+  .elige-liga__empty-text {
+    margin: 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.45);
+  }
+  .elige-liga__empty-link {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .elige-liga__empty-link:hover { text-decoration: underline; }
 
   .elige-liga__cta-wrap {
     display: flex;
@@ -3266,7 +3411,66 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   .elige-liga__cta {
     text-decoration: none;
     text-align: center;
-    min-width: min(100%, 420px);
+    width: min(100%, 480px);
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  @media (min-width: 768px) {
+    .elige-liga__tabs {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px 10px;
+      overflow: visible;
+      scroll-snap-type: none;
+      max-width: 760px;
+      margin: 0 auto 20px;
+      padding-bottom: 8px;
+    }
+    .elige-liga__tab {
+      min-width: 0;
+      max-width: none;
+      width: 100%;
+    }
+    .elige-liga__tab-tile { width: 76px; height: 76px; }
+    .elige-liga__scroll-wrap--tabs::before,
+    .elige-liga__scroll-wrap--tabs::after { display: none; }
+    .elige-liga__panel-inner { padding: 28px 28px 32px; }
+    .elige-liga__products.prod-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width: 1024px) {
+    .elige-liga-sec { padding: 80px 40px; }
+    .elige-liga__tab-tile { width: 80px; height: 80px; }
+    .elige-liga__crest { width: 60px; height: 60px; }
+    .elige-liga__team { min-width: 76px; max-width: 100px; }
+    .elige-liga__team-name { font-size: 11px; }
+    .elige-liga__products.prod-grid { grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  }
+
+  @media (max-width: 767px) {
+    .elige-liga__tabs {
+      display: flex;
+      max-width: none;
+      margin-bottom: 4px;
+    }
+    .elige-liga__teams {
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      overflow-x: auto;
+      scroll-snap-type: x proximity;
+      scroll-padding-inline: 8px;
+      gap: 8px;
+      padding-bottom: 8px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .elige-liga__teams::-webkit-scrollbar { display: none; }
+    .elige-liga__team {
+      flex: 0 0 auto;
+      scroll-snap-align: start;
+    }
+    .elige-liga__products.prod-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   }
   
   /* ── Footer ── */
@@ -3883,12 +4087,43 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .promo-banner__text { text-align: center; font-size: 11px; }
     .liga-grid { grid-template-columns: repeat(2, 1fr); }
 
-    .elige-liga__tab-tile { width: 60px; height: 60px; }
-    .elige-liga__tab { min-width: 76px; }
-    .elige-liga__crest { width: 48px; height: 48px; }
-    .elige-liga__team { min-width: 64px; max-width: 80px; }
+    .elige-liga-sec { padding: 36px 12px; }
+    .elige-liga-sec__hdr { margin-bottom: 28px; }
+    .elige-liga__panel-inner { padding: 18px 12px 22px; border-radius: 14px; }
+    .elige-liga__tabs {
+      display: flex;
+      gap: 8px;
+      padding-bottom: 14px;
+    }
+    .elige-liga__tab { min-width: 72px; max-width: 88px; gap: 6px; }
+    .elige-liga__tab-tile { width: 58px; height: 58px; }
+    .elige-liga__tab-name { font-size: 10px; }
+    .elige-liga__teams {
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      overflow-x: auto;
+      scroll-snap-type: x proximity;
+      scroll-padding-inline: 8px;
+      gap: 8px;
+      margin-bottom: 18px;
+      padding-bottom: 8px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .elige-liga__teams::-webkit-scrollbar { display: none; }
+    .elige-liga__team {
+      flex: 0 0 auto;
+      min-width: 62px;
+      max-width: 72px;
+      scroll-snap-align: start;
+    }
+    .elige-liga__crest { width: 46px; height: 46px; }
     .elige-liga__team-name { font-size: 9px; }
-    .elige-liga__products.prod-grid { grid-template-columns: repeat(2, 1fr); }
+    .elige-liga__products.prod-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .elige-liga__products .pc-info { padding: 10px 10px 8px; }
+    .elige-liga__products .pc-name { font-size: 12px; }
+    .elige-liga__products .btn-row { flex-direction: column; }
+    .elige-liga__cta { width: 100%; font-size: 11px; padding: 12px 16px; }
     .ft-grid { grid-template-columns: 1fr 1fr; gap: 18px 12px; }
     .bp-customize-fields {
       grid-template-columns: 1fr 80px;
