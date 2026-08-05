@@ -3157,8 +3157,8 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     width: 72px;
     height: 72px;
     border-radius: 50%;
-    background: var(--bg-card);
-    border: 2px solid var(--border);
+    background: #fff;
+    border: 2px solid #e8e8e8;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3174,7 +3174,7 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   .elige-liga__tab-emoji { font-size: 28px; line-height: 1; }
   .elige-liga__tab.is-active .elige-liga__tab-tile {
     border-color: var(--accent);
-    background: rgba(0, 200, 81, 0.08);
+    background: #fff;
     box-shadow: 0 0 0 1px rgba(0, 200, 81, 0.35), 0 8px 24px rgba(0, 0, 0, 0.35);
   }
   .elige-liga__tab-name {
@@ -3219,8 +3219,8 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     width: 56px;
     height: 56px;
     border-radius: 50%;
-    background: var(--bg-card);
-    border: 2px solid var(--border);
+    background: #fff;
+    border: 2px solid #e8e8e8;
     display: flex;
     align-items: center;
     justify-content: center;
