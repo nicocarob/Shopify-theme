@@ -1294,6 +1294,103 @@
     color: #fff;
     border-color: #fff;
   }
+
+  /* ── Ediciones especiales (editorial) ── */
+  .bp-special-sec {
+    position: relative;
+    overflow: hidden;
+    padding: 72px 24px;
+    background: #0a0a0a;
+  }
+  .bp-special-glow {
+    position: absolute;
+    top: -120px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(900px, 90vw);
+    height: 360px;
+    background: radial-gradient(ellipse at center, rgba(138, 92, 255, 0.14) 0%, transparent 68%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .bp-special-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .bp-special-hdr {
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto 40px;
+  }
+  .bp-special-eyebrow {
+    display: inline-block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c4a8ff;
+    margin-bottom: 14px;
+  }
+  .bp-special-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 7vw, 72px);
+    line-height: 0.95;
+    letter-spacing: 0.03em;
+    color: #fff;
+    margin: 0 0 16px;
+    text-shadow: 0 0 40px rgba(138, 92, 255, 0.15);
+  }
+  .bp-special-desc {
+    font-family: 'Barlow', sans-serif;
+    font-size: clamp(15px, 2.2vw, 17px);
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.55);
+    margin: 0;
+    max-width: 620px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .bp-special-grid {
+    margin-bottom: 32px;
+  }
+  .bp-special-sec .pc:hover {
+    border-color: #c4a8ff;
+    box-shadow: var(--shadow-hover), 0 0 0 1px rgba(196, 168, 255, 0.45);
+  }
+  .bp-special-cta-wrap {
+    display: flex;
+    justify-content: center;
+  }
+  .bp-special-cta {
+    display: inline-flex;
+    align-items: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #c4a8ff;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(196, 168, 255, 0.45);
+    padding-bottom: 4px;
+    transition: color 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  .bp-special-cta:hover {
+    color: #fff;
+    border-color: #fff;
+    transform: translateY(-1px);
+  }
+
+  @media (max-width: 767px) {
+    .bp-special-sec { padding: 48px 16px; }
+    .bp-special-hdr { margin-bottom: 28px; }
+    .bp-special-eyebrow { font-size: 10px; letter-spacing: 0.16em; }
+    .bp-special-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .bp-special-desc { font-size: 14px; line-height: 1.55; }
+  }
   
   /* Product card — Shopify mas-vendidos clone */
   .pc {
@@ -3928,7 +4025,7 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .trophy-scene { width: 160px; max-width: 160px; height: auto; margin: 0 auto; }
     .trophy-img { width: 100%; max-width: 160px; height: auto; }
     .trophy-glow { width: 140px; height: 140px; }
-    .mv-sec, .col-sec, .srch-sec, .testi-sec, .bp-video-sec, .elige-liga-sec { padding: 40px 16px; }
+    .mv-sec, .col-sec, .srch-sec, .testi-sec, .bp-video-sec, .bp-special-sec, .elige-liga-sec { padding: 40px 16px; }
     .cw-grid { grid-template-columns: repeat(2, 1fr); }
     .cw-grid .cw-card:nth-child(3):last-child {
       grid-column: 1 / -1; max-width: calc(50% - 8px); justify-self: center;

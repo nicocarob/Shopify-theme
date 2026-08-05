@@ -286,6 +286,10 @@
 
 <div class="divider"></div>
 
+{% render 'baul-ediciones-especiales', section: section %}
+
+<div class="divider"></div>
+
 <section class="bp-video-sec" id="video-premium">
   <div class="bp-video-inner rev">
     <h2 class="bp-video-title">Camiseta Portugal Edición Especial — Pantera Negra</h2>
@@ -512,9 +516,55 @@
       "label": "URL Ver toda — Copa del Mundo"
     },
     {
+      "type": "header",
+      "content": "Ediciones especiales"
+    },
+    {
+      "type": "text",
+      "id": "special_eyebrow",
+      "label": "Eyebrow — Ediciones especiales",
+      "default": "✦ EDICIONES ESPECIALES"
+    },
+    {
+      "type": "text",
+      "id": "special_title",
+      "label": "Título — Ediciones especiales",
+      "default": "NO SOLO DE FÚTBOL VIVE LA CAMISETA"
+    },
+    {
+      "type": "textarea",
+      "id": "special_description",
+      "label": "Descripción — Ediciones especiales",
+      "default": "Bandas de rock, series de culto y colaboraciones imposibles. Camisetas que cuentan otra historia y que solo entienden los que estaban ahí."
+    },
+    {
       "type": "collection",
-      "id": "retro_collection",
-      "label": "Colección Retro"
+      "id": "special_collection",
+      "label": "Colección ediciones especiales"
+    },
+    {
+      "type": "url",
+      "id": "special_collection_url",
+      "label": "URL Ver todas — Ediciones especiales"
+    },
+    {
+      "type": "text",
+      "id": "special_cta",
+      "label": "Texto del enlace",
+      "default": "Ver todas las ediciones especiales →"
+    },
+    {
+      "type": "range",
+      "id": "special_products_limit",
+      "label": "Cantidad de productos",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Colección Retro"
     },
     {
       "type": "url",

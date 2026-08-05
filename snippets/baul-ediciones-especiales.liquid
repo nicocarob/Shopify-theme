@@ -1,0 +1,51 @@
+{% comment %}
+  Sección editorial — Ediciones especiales (inspirada en camisetasdefutbol.com.co)
+{% endcomment %}
+
+{% liquid
+  assign special_col = section.settings.special_collection
+  if special_col == blank
+    assign special_col = collections['ediciones-especiales']
+  endif
+
+  if special_col != blank and special_col.products_count > 0
+    assign special_products = special_col.products
+    assign special_url = section.settings.special_collection_url | default: special_col.url
+  else
+    assign special_products = collections.all.products
+    assign special_url = section.settings.special_collection_url | default: routes.all_products_collection_url
+  endif
+
+  assign special_limit = section.settings.special_products_limit | default: 4
+%}
+
+<section class="bp-special-sec" id="ediciones-especiales">
+  <div class="sec-bg-grid"></div>
+  <div class="bp-special-glow" aria-hidden="true"></div>
+
+  <div class="bp-special-inner">
+    <header class="bp-special-hdr rev">
+      <div class="bp-special-eyebrow">{{ section.settings.special_eyebrow | default: '✦ EDICIONES ESPECIALES' }}</div>
+      <h2 class="bp-special-title">{{ section.settings.special_title | default: 'NO SOLO DE FÚTBOL VIVE LA CAMISETA' }}</h2>
+      <p class="bp-special-desc">{{ section.settings.special_description | default: 'Bandas de rock, series de culto y colaboraciones imposibles. Camisetas que cuentan otra historia y que solo entienden los que estaban ahí.' }}</p>
+    </header>
+
+    <div class="prod-grid bp-special-grid rev">
+      {% for product in special_products limit: special_limit %}
+        {% case forloop.index0 %}
+          {% when 1 %}{% assign delay_val = '0.08s' %}
+          {% when 2 %}{% assign delay_val = '0.16s' %}
+          {% when 3 %}{% assign delay_val = '0.24s' %}
+          {% else %}{% assign delay_val = '' %}
+        {% endcase %}
+        {% render 'baul-product-card', product: product, delay: delay_val, version_text: 'Edición especial' %}
+      {% endfor %}
+    </div>
+
+    <div class="bp-special-cta-wrap rev">
+      <a href="{{ special_url }}" class="bp-special-cta">
+        {{ section.settings.special_cta | default: 'Ver todas las ediciones especiales →' }}
+      </a>
+    </div>
+  </div>
+</section>
