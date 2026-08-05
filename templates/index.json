@@ -102,7 +102,8 @@
           "settings": {
             "collection_handle": "liga-chilena",
             "liga_name": "Liga Chilena",
-            "emoji": "🇨🇱"
+            "emoji": "🇨🇱",
+            "logo": "shopify://shop_images/Campeonatochilenologo.webp"
           }
         },
         "liga_02": {
@@ -110,7 +111,8 @@
           "settings": {
             "collection_handle": "liga-espanola",
             "liga_name": "Liga Española",
-            "emoji": "🇪🇸"
+            "emoji": "🇪🇸",
+            "logo": "shopify://shop_images/LaLiga_logo_2023_svg.webp"
           }
         },
         "liga_03": {
@@ -118,7 +120,8 @@
           "settings": {
             "collection_handle": "premier-league",
             "liga_name": "Premier League",
-            "emoji": "🏴󠁧󠁢󠁥󠁮󠁧󠁿"
+            "emoji": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+            "logo": "shopify://shop_images/english-premier-league.4d68127f.png"
           }
         },
         "liga_04": {
@@ -183,8 +186,7 @@
             "liga_handle": "liga-chilena",
             "collection_handle": "uchile",
             "team_name": "Universidad de Chile",
-            "emoji": "⚽",
-            "logo": "shopify://shop_images/Emblema_del_Club_Universidad_de_Chile.png"
+            "emoji": "⚽"
           }
         },
         "eq_chile_02": {
@@ -193,8 +195,7 @@
             "liga_handle": "liga-chilena",
             "collection_handle": "cato",
             "team_name": "Universidad Católica",
-            "emoji": "⚽",
-            "logo": "shopify://shop_images/Escudo_Club_Deportivo_Universidad_Catolica_svg.png"
+            "emoji": "⚽"
           }
         },
         "eq_chile_03": {
@@ -212,8 +213,7 @@
             "liga_handle": "liga-espanola",
             "collection_handle": "barcelona",
             "team_name": "Barcelona",
-            "emoji": "⚽",
-            "logo": "shopify://shop_images/FC_Barcelona__crest__svg.png"
+            "emoji": "⚽"
           }
         },
         "eq_esp_02": {
@@ -222,8 +222,7 @@
             "liga_handle": "liga-espanola",
             "collection_handle": "real-madrid",
             "team_name": "Real Madrid",
-            "emoji": "⚽",
-            "logo": "shopify://shop_images/Real_Madrid_CF_svg.png"
+            "emoji": "⚽"
           }
         },
         "eq_pl_01": {
@@ -322,8 +321,7 @@
             "liga_handle": "copa-del-mundo",
             "collection_handle": "chile",
             "team_name": "Chile",
-            "emoji": "🇨🇱",
-            "logo": "shopify://shop_images/Logo_de_la_Federacion_de_Futbol_de_Chile.png"
+            "emoji": "🇨🇱"
           }
         },
         "eq_sel_02": {
@@ -470,9 +468,6 @@
         "testi_eyebrow": "Lo que dicen de nosotros",
         "testi_title": "NUESTROS CLIENTES NOS RECOMIENDAN",
         "testi_subtitle": "Más de 10 años vendiendo a hinchas de todo Chile",
-        "elige_eyebrow": "ELIGE TU LIGA",
-        "elige_title": "LAS GRANDES LIGAS",
-        "elige_subtitle": "Toca el escudo de tu liga y luego el de tu equipo.",
         "mv_collection": "mas-vendidos",
         "mv_collection_url": "",
         "wc_collection": "",
@@ -488,6 +483,9 @@
         "cw_pill_1": "🧥 SOLO 100 UNIDADES DISPONIBLES",
         "cw_pill_2": "⚡ UNA VEZ AGOTADO NO VUELVE",
         "cw_collection": "cortavientos",
+        "elige_eyebrow": "ELIGE TU LIGA",
+        "elige_title": "LAS GRANDES LIGAS",
+        "elige_subtitle": "Toca el escudo de tu liga y luego el de tu equipo.",
         "footer_description": "Más de 10 años equipando hinchas en todo Chile. La mejor calidad, envío gratis y atención personalizada.",
         "instagram_url": "",
         "whatsapp_url": "https://wa.me/message/Z5XXALWPDL4GI1"
