@@ -102,22 +102,17 @@ const eyeObs = new IntersectionObserver(
 );
 document.querySelectorAll('.eyebrow').forEach((el) => eyeObs.observe(el));
 
-function measureCbarHeight(cbar) {
-  const html = document.documentElement;
-  const wasHidden = html.classList.contains('baul-cbar-hidden');
-  if (!wasHidden) return cbar.offsetHeight;
-  html.classList.remove('baul-cbar-hidden');
-  const height = cbar.offsetHeight;
-  html.classList.add('baul-cbar-hidden');
-  return height;
-}
+let cbarFullHeight = 0;
 
 function syncCbarHeight() {
   const cbar = document.getElementById('cbar');
   if (!cbar) return;
-  const height = measureCbarHeight(cbar);
-  document.documentElement.style.setProperty('--baul-cbar-full-h', height + 'px');
-  if (!document.documentElement.classList.contains('baul-cbar-hidden')) {
+  if (document.documentElement.classList.contains('baul-cbar-hidden')) return;
+
+  const height = cbar.offsetHeight;
+  if (height > 0) {
+    cbarFullHeight = height;
+    document.documentElement.style.setProperty('--baul-cbar-full-h', height + 'px');
     document.documentElement.style.setProperty('--baul-cbar-h', height + 'px');
   }
 }
@@ -125,21 +120,46 @@ syncCbarHeight();
 window.addEventListener('resize', syncCbarHeight);
 if (typeof ResizeObserver !== 'undefined') {
   const cbarEl = document.getElementById('cbar');
-  if (cbarEl) new ResizeObserver(syncCbarHeight).observe(cbarEl);
+  if (cbarEl) {
+    new ResizeObserver(() => {
+      if (!document.documentElement.classList.contains('baul-cbar-hidden')) {
+        syncCbarHeight();
+      }
+    }).observe(cbarEl);
+  }
 }
 
 (function initCbarScrollHide() {
   const threshold = 56;
   let ticking = false;
+  let cbarIsHidden = document.documentElement.classList.contains('baul-cbar-hidden');
+
+  function setCbarHidden(hidden) {
+    const html = document.documentElement;
+    const cbar = document.getElementById('cbar');
+    if (!cbar || hidden === cbarIsHidden) return;
+    cbarIsHidden = hidden;
+
+    if (hidden) {
+      if (cbar.offsetHeight > 0) cbarFullHeight = cbar.offsetHeight;
+      cbar.style.maxHeight = cbarFullHeight + 'px';
+      requestAnimationFrame(() => {
+        html.classList.add('baul-cbar-hidden');
+        cbar.style.maxHeight = '';
+        html.style.setProperty('--baul-cbar-h', '0px');
+      });
+      return;
+    }
+
+    html.classList.remove('baul-cbar-hidden');
+    cbar.style.maxHeight = '';
+    const height = cbarFullHeight || cbar.scrollHeight;
+    html.style.setProperty('--baul-cbar-h', height + 'px');
+    requestAnimationFrame(syncCbarHeight);
+  }
 
   function updateCbarVisibility() {
-    const hidden = window.scrollY > threshold;
-    document.documentElement.classList.toggle('baul-cbar-hidden', hidden);
-    if (hidden) {
-      document.documentElement.style.setProperty('--baul-cbar-h', '0px');
-    } else {
-      syncCbarHeight();
-    }
+    setCbarHidden(window.scrollY > threshold);
     ticking = false;
   }
 
