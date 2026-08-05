@@ -200,7 +200,7 @@
           "type": "equipo",
           "settings": {
             "liga_handle": "liga-chilena",
-            "collection_handle": "cato",
+            "collection_handle": "uc",
             "team_name": "Universidad Católica",
             "emoji": "⚽",
             "logo": "shopify://shop_images/LogoCDUC.png"
