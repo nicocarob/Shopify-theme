@@ -1295,14 +1295,14 @@
     border-color: #fff;
   }
 
-  /* ── Ediciones especiales (editorial + banner) ── */
-  .bp-special-sec {
+  /* ── Colecciones con banner de imagen ── */
+  .bp-banner-sec {
     position: relative;
     overflow: hidden;
     background: #0a0a0a;
     padding: 0 0 64px;
   }
-  .bp-special-banner {
+  .bp-banner-sec__banner {
     position: relative;
     min-height: 420px;
     display: flex;
@@ -1310,7 +1310,7 @@
     overflow: hidden;
     background: #111;
   }
-  .bp-special-banner__img {
+  .bp-banner-sec__img {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -1319,7 +1319,7 @@
     object-position: 65% center;
     display: block;
   }
-  .bp-special-banner__scrim {
+  .bp-banner-sec__scrim {
     position: absolute;
     inset: 0;
     z-index: 1;
@@ -1329,36 +1329,32 @@
       linear-gradient(to bottom, rgba(10, 10, 10, 0.35) 0%, transparent 30%, rgba(10, 10, 10, 0.55) 100%);
     pointer-events: none;
   }
-  .bp-special-banner__inner {
+  .bp-banner-sec__banner-inner {
     position: relative;
     z-index: 2;
     width: 100%;
-    padding-top: 56px;
-    padding-bottom: 56px;
-    padding-left: 24px;
-    padding-right: 24px;
+    padding: 56px 24px;
   }
-  .bp-special-inner {
+  .bp-banner-sec__container {
     max-width: 1200px;
     margin: 0 auto;
     position: relative;
     z-index: 1;
   }
-  .bp-special-hdr {
+  .bp-banner-sec__hdr {
     text-align: left;
     max-width: 520px;
   }
-  .bp-special-eyebrow {
+  .bp-banner-sec__eyebrow {
     display: inline-block;
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: #c4a8ff;
     margin-bottom: 10px;
   }
-  .bp-special-title {
+  .bp-banner-sec__title {
     font-family: 'Bebas Neue', sans-serif;
     font-size: clamp(42px, 5.2vw, 72px);
     line-height: 0.92;
@@ -1367,7 +1363,7 @@
     margin: 0 0 14px;
     text-wrap: balance;
   }
-  .bp-special-desc {
+  .bp-banner-sec__desc {
     font-family: 'Barlow', sans-serif;
     font-size: clamp(15px, 2vw, 17px);
     line-height: 1.7;
@@ -1375,30 +1371,26 @@
     margin: 0 0 24px;
     max-width: 430px;
   }
-  .bp-special-banner-cta {
+  .bp-banner-sec__banner-cta {
     display: inline-flex;
     text-decoration: none;
     font-size: 14px;
     padding: 14px 24px;
   }
-  .bp-special-body {
+  .bp-banner-sec__body {
     position: relative;
     z-index: 1;
     padding: 0 24px;
   }
-  .bp-special-grid {
+  .bp-banner-sec__grid {
     margin-top: 48px;
     margin-bottom: 32px;
   }
-  .bp-special-sec .pc:hover {
-    border-color: #c4a8ff;
-    box-shadow: var(--shadow-hover), 0 0 0 1px rgba(196, 168, 255, 0.45);
-  }
-  .bp-special-cta-wrap {
+  .bp-banner-sec__cta-wrap {
     display: flex;
     justify-content: center;
   }
-  .bp-special-cta {
+  .bp-banner-sec__footer-cta {
     display: inline-flex;
     align-items: center;
     font-family: 'Barlow Condensed', sans-serif;
@@ -1406,44 +1398,60 @@
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: #c4a8ff;
     text-decoration: none;
-    border-bottom: 1px solid rgba(196, 168, 255, 0.45);
+    border-bottom: 1px solid currentColor;
     padding-bottom: 4px;
     transition: color 0.2s, border-color 0.2s, transform 0.2s;
   }
-  .bp-special-cta:hover {
-    color: #fff;
-    border-color: #fff;
+  .bp-banner-sec__footer-cta:hover {
+    color: #fff !important;
+    border-color: #fff !important;
     transform: translateY(-1px);
   }
 
+  /* Temas de acento */
+  .bp-banner-sec--green .bp-banner-sec__eyebrow,
+  .bp-banner-sec--green .bp-banner-sec__footer-cta { color: var(--accent); border-color: rgba(0, 200, 81, 0.45); }
+  .bp-banner-sec--green .pc:hover { border-color: var(--accent); box-shadow: var(--shadow-hover), 0 0 0 1px var(--accent); }
+
+  .bp-banner-sec--gold .bp-banner-sec__eyebrow,
+  .bp-banner-sec--gold .bp-banner-sec__footer-cta { color: var(--accent-gold); border-color: rgba(255, 215, 0, 0.45); }
+  .bp-banner-sec--gold .pc:hover { border-color: var(--accent-gold); box-shadow: var(--shadow-hover), 0 0 0 1px var(--accent-gold); }
+
+  .bp-banner-sec--pink .bp-banner-sec__eyebrow,
+  .bp-banner-sec--pink .bp-banner-sec__footer-cta { color: var(--accent-pink); border-color: rgba(255, 105, 180, 0.45); }
+  .bp-banner-sec--pink .pc:hover { border-color: var(--accent-pink); box-shadow: var(--shadow-hover), 0 0 0 1px var(--accent-pink); }
+
+  .bp-banner-sec--violet .bp-banner-sec__eyebrow,
+  .bp-banner-sec--violet .bp-banner-sec__footer-cta { color: #c4a8ff; border-color: rgba(196, 168, 255, 0.45); }
+  .bp-banner-sec--violet .pc:hover { border-color: #c4a8ff; box-shadow: var(--shadow-hover), 0 0 0 1px rgba(196, 168, 255, 0.45); }
+
   @media (max-width: 768px) {
-    .bp-special-sec { padding-bottom: 40px; }
-    .bp-special-banner {
+    .bp-banner-sec { padding-bottom: 40px; }
+    .bp-banner-sec__banner {
       min-height: 340px;
       align-items: flex-end;
     }
-    .bp-special-banner__img { object-position: 70% center; }
-    .bp-special-banner__scrim {
+    .bp-banner-sec__img { object-position: 70% center; }
+    .bp-banner-sec__scrim {
       background: linear-gradient(to top, rgba(10, 10, 10, 0.95) 20%, rgba(10, 10, 10, 0.55) 60%, rgba(10, 10, 10, 0.3) 100%);
     }
-    .bp-special-banner__inner {
-      padding-top: 32px;
-      padding-bottom: 28px;
-      padding-left: 16px;
-      padding-right: 16px;
+    .bp-banner-sec__banner-inner {
+      padding: 32px 16px 28px;
     }
-    .bp-special-body { padding: 0 16px; }
-    .bp-special-eyebrow { font-size: 10px; letter-spacing: 0.16em; }
-    .bp-special-grid {
+    .bp-banner-sec__body { padding: 0 16px; }
+    .bp-banner-sec__eyebrow { font-size: 10px; letter-spacing: 0.16em; }
+    .bp-banner-sec__grid {
       margin-top: 32px;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
     }
-    .bp-special-desc { font-size: 14px; line-height: 1.55; margin-bottom: 18px; }
-    .bp-special-banner-cta { width: 100%; justify-content: center; }
+    .bp-banner-sec__desc { font-size: 14px; line-height: 1.55; margin-bottom: 18px; }
+    .bp-banner-sec__banner-cta { width: 100%; justify-content: center; }
   }
+
+  /* Alias legacy */
+  .bp-special-sec { padding: 0; }
   
   /* Product card — Shopify mas-vendidos clone */
   .pc {
@@ -4079,7 +4087,7 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .trophy-img { width: 100%; max-width: 160px; height: auto; }
     .trophy-glow { width: 140px; height: 140px; }
     .mv-sec, .col-sec, .srch-sec, .testi-sec, .bp-video-sec, .elige-liga-sec { padding: 40px 16px; }
-    .bp-special-body { padding: 0 16px; }
+    .bp-banner-sec__body { padding: 0 16px; }
     .cw-grid { grid-template-columns: repeat(2, 1fr); }
     .cw-grid .cw-card:nth-child(3):last-child {
       grid-column: 1 / -1; max-width: calc(50% - 8px); justify-self: center;

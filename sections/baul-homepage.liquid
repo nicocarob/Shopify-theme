@@ -11,39 +11,64 @@
     assign trophy_src = trophy_img | image_url: width: 800
   endif
 
-  assign mv_collection = collections['mas-vendidos']
+  assign mv_collection = section.settings.mv_collection
+  if mv_collection == blank
+    assign mv_collection = collections['mas-vendidos']
+  endif
   if mv_collection != blank and mv_collection.products_count > 0
     assign mv_products = mv_collection.products
+    assign mv_url = section.settings.mv_collection_url | default: mv_collection.url
   else
     assign mv_products = collections.all.products
+    assign mv_url = section.settings.mv_collection_url | default: routes.all_products_collection_url
   endif
 
-  assign wc_collection = collections['copa-del-mundo']
+  assign wc_collection = section.settings.wc_collection
+  if wc_collection == blank
+    assign wc_collection = collections['copa-del-mundo']
+  endif
   if wc_collection != blank and wc_collection.products_count > 0
     assign wc_products = wc_collection.products
+    assign wc_url = section.settings.wc_collection_url | default: wc_collection.url
   else
     assign wc_products = collections.all.products
+    assign wc_url = section.settings.wc_collection_url | default: routes.all_products_collection_url
   endif
 
-  assign retro_collection = collections[section.settings.retro_collection]
+  assign retro_collection = section.settings.retro_collection
+  if retro_collection == blank
+    assign retro_collection = collections['retro']
+  endif
   if retro_collection != blank and retro_collection.products_count > 0
     assign retro_products = retro_collection.products
+    assign retro_url = section.settings.retro_collection_url | default: retro_collection.url
   else
     assign retro_products = collections.all.products
+    assign retro_url = section.settings.retro_collection_url | default: routes.all_products_collection_url
   endif
 
-  assign ninos_collection = collections['ninos']
+  assign ninos_collection = section.settings.ninos_collection
+  if ninos_collection == blank
+    assign ninos_collection = collections['ninos']
+  endif
   if ninos_collection != blank and ninos_collection.products_count > 0
     assign ninos_products = ninos_collection.products
+    assign ninos_url = section.settings.ninos_collection_url | default: ninos_collection.url
   else
     assign ninos_products = collections.all.products
+    assign ninos_url = section.settings.ninos_collection_url | default: routes.all_products_collection_url
   endif
 
-  assign fem_collection = collections['mujer']
+  assign fem_collection = section.settings.fem_collection
+  if fem_collection == blank
+    assign fem_collection = collections['mujer']
+  endif
   if fem_collection != blank and fem_collection.products_count > 0
     assign fem_products = fem_collection.products
+    assign fem_url = section.settings.fem_collection_url | default: fem_collection.url
   else
     assign fem_products = collections.all.products
+    assign fem_url = section.settings.fem_collection_url | default: routes.all_products_collection_url
   endif
 %}
 
@@ -133,38 +158,22 @@
 
 <div class="divider"></div>
 
-<section class="mv-sec" id="vendidos">
-  <div class="sec-bg-grid"></div>
-  <div class="sec-hdr rev">
-    <div>
-      <div class="eyebrow">Lo que todos quieren</div>
-      <h2 class="sec-title">MÁS VENDIDOS</h2>
-      <div class="sec-sub">Las camisetas favoritas de nuestros hinchas</div>
-    </div>
-    <a href="{{ mv_collection.url | default: routes.all_products_collection_url }}" class="lk-all">Ver todo →</a>
-  </div>
-  <div class="prod-grid">
-    {% for product in mv_products limit: 8 %}
-      {% case forloop.index0 %}
-        {% when 1 %}{% assign delay_val = '0.07s' %}
-        {% when 2 %}{% assign delay_val = '0.14s' %}
-        {% when 3 %}{% assign delay_val = '0.21s' %}
-        {% when 4 %}{% assign delay_val = '0.28s' %}
-        {% when 5 %}{% assign delay_val = '0.35s' %}
-        {% when 6 %}{% assign delay_val = '0.42s' %}
-        {% when 7 %}{% assign delay_val = '0.49s' %}
-        {% else %}{% assign delay_val = '' %}
-      {% endcase %}
-      {% render 'baul-product-card',
-        product: product,
-        rank: forloop.index,
-        show_urgency: true,
-        timer_idx: forloop.index0,
-        delay: delay_val
-      %}
-    {% endfor %}
-  </div>
-</section>
+{% render 'baul-collection-banner',
+  section_id: 'vendidos',
+  theme: 'green',
+  eyebrow: section.settings.mv_eyebrow,
+  title: section.settings.mv_title,
+  description: section.settings.mv_description,
+  bg_image: section.settings.mv_bg_image,
+  bg_position: section.settings.mv_bg_position,
+  banner_cta: section.settings.mv_banner_cta,
+  footer_cta: section.settings.mv_footer_cta,
+  collection_url: mv_url,
+  products: mv_products,
+  limit: section.settings.mv_products_limit,
+  show_rank: true,
+  show_urgency: true
+%}
 
 <div class="divider"></div>
 
@@ -260,29 +269,20 @@
 
 <div class="divider"></div>
 
-<section class="col-sec col-sec--gold" id="colsec">
-  <div class="sec-bg-grid"></div>
-  <div class="sec-bg-radial"></div>
-  <div class="sec-hdr rev">
-    <div>
-      <div class="eyebrow">Colección especial</div>
-      <h2 class="sec-title">FIFA WORLD CUP 2026</h2>
-      <div class="sec-sub">Las camisetas del evento más grande del fútbol</div>
-    </div>
-    <a href="{{ wc_collection.url | default: section.settings.wc_collection_url }}" class="lk-all">Ver toda →</a>
-  </div>
-  <div class="prod-grid">
-    {% for product in wc_products limit: 10 %}
-      {% case forloop.index0 %}
-        {% when 1 %}{% assign delay_val = '0.07s' %}
-        {% when 2 %}{% assign delay_val = '0.14s' %}
-        {% when 3 %}{% assign delay_val = '0.21s' %}
-        {% else %}{% assign delay_val = '' %}
-      {% endcase %}
-      {% render 'baul-product-card', product: product, delay: delay_val %}
-    {% endfor %}
-  </div>
-</section>
+{% render 'baul-collection-banner',
+  section_id: 'colsec',
+  theme: 'gold',
+  eyebrow: section.settings.wc_eyebrow,
+  title: section.settings.wc_title,
+  description: section.settings.wc_description,
+  bg_image: section.settings.wc_bg_image,
+  bg_position: section.settings.wc_bg_position,
+  banner_cta: section.settings.wc_banner_cta,
+  footer_cta: section.settings.wc_footer_cta,
+  collection_url: wc_url,
+  products: wc_products,
+  limit: section.settings.wc_products_limit
+%}
 
 <div class="divider"></div>
 
@@ -311,53 +311,39 @@
 
 <div class="divider"></div>
 
-<section class="col-sec">
-  <div class="sec-bg-grid"></div>
-  <div class="sec-hdr rev">
-    <div>
-      <div class="eyebrow">Los clásicos de siempre</div>
-      <h2 class="sec-title">COLECCIÓN RETRO</h2>
-      <div class="sec-sub">Las camisetas que marcaron historia</div>
-    </div>
-    <a href="{{ retro_collection.url | default: section.settings.retro_collection_url }}" class="lk-all">Ver toda →</a>
-  </div>
-  <div class="prod-grid">
-    {% for product in retro_products limit: 4 %}
-      {% case forloop.index0 %}
-        {% when 1 %}{% assign delay_val = '0.07s' %}
-        {% when 2 %}{% assign delay_val = '0.14s' %}
-        {% when 3 %}{% assign delay_val = '0.21s' %}
-        {% else %}{% assign delay_val = '' %}
-      {% endcase %}
-      {% render 'baul-product-card', product: product, delay: delay_val, version_text: 'Edición Retro' %}
-    {% endfor %}
-  </div>
-</section>
+{% render 'baul-collection-banner',
+  section_id: 'retro',
+  theme: 'green',
+  eyebrow: section.settings.retro_eyebrow,
+  title: section.settings.retro_title,
+  description: section.settings.retro_description,
+  bg_image: section.settings.retro_bg_image,
+  bg_position: section.settings.retro_bg_position,
+  banner_cta: section.settings.retro_banner_cta,
+  footer_cta: section.settings.retro_footer_cta,
+  collection_url: retro_url,
+  products: retro_products,
+  limit: section.settings.retro_products_limit,
+  version_text: 'Edición Retro'
+%}
 
 <div class="divider"></div>
 
-<section class="col-sec">
-  <div class="sec-bg-grid"></div>
-  <div class="sec-hdr rev">
-    <div>
-      <div class="eyebrow">Para los más chicos</div>
-      <h2 class="sec-title">COLECCIÓN NIÑOS</h2>
-      <div class="sec-sub">Talles 4 a 14 años disponibles</div>
-    </div>
-    <a href="{{ ninos_collection.url | default: section.settings.ninos_collection_url }}" class="lk-all">Ver toda →</a>
-  </div>
-  <div class="prod-grid">
-    {% for product in ninos_products limit: 8 %}
-      {% case forloop.index0 %}
-        {% when 1 %}{% assign delay_val = '0.07s' %}
-        {% when 2 %}{% assign delay_val = '0.14s' %}
-        {% when 3 %}{% assign delay_val = '0.21s' %}
-        {% else %}{% assign delay_val = '' %}
-      {% endcase %}
-      {% render 'baul-product-card', product: product, delay: delay_val, version_text: 'Tallas 4–14 años' %}
-    {% endfor %}
-  </div>
-</section>
+{% render 'baul-collection-banner',
+  section_id: 'ninos',
+  theme: 'green',
+  eyebrow: section.settings.ninos_eyebrow,
+  title: section.settings.ninos_title,
+  description: section.settings.ninos_description,
+  bg_image: section.settings.ninos_bg_image,
+  bg_position: section.settings.ninos_bg_position,
+  banner_cta: section.settings.ninos_banner_cta,
+  footer_cta: section.settings.ninos_footer_cta,
+  collection_url: ninos_url,
+  products: ninos_products,
+  limit: section.settings.ninos_products_limit,
+  version_text: 'Tallas 4–14 años'
+%}
 
 <div class="divider"></div>
 
@@ -365,28 +351,21 @@
 
 <div class="divider"></div>
 
-<section class="col-sec col-sec--pink">
-  <div class="sec-bg-grid"></div>
-  <div class="sec-hdr rev">
-    <div>
-      <div class="eyebrow">Para ellas</div>
-      <h2 class="sec-title">COLECCIÓN FEMENINA</h2>
-      <div class="sec-sub">Corte y talla femenina, mismo estilo premium</div>
-    </div>
-    <a href="{{ fem_collection.url | default: section.settings.fem_collection_url }}" class="lk-all">Ver toda →</a>
-  </div>
-  <div class="prod-grid">
-    {% for product in fem_products limit: 8 %}
-      {% case forloop.index0 %}
-        {% when 1 %}{% assign delay_val = '0.07s' %}
-        {% when 2 %}{% assign delay_val = '0.14s' %}
-        {% when 3 %}{% assign delay_val = '0.21s' %}
-        {% else %}{% assign delay_val = '' %}
-      {% endcase %}
-      {% render 'baul-product-card', product: product, delay: delay_val, version_text: 'Corte Mujer' %}
-    {% endfor %}
-  </div>
-</section>
+{% render 'baul-collection-banner',
+  section_id: 'mujer',
+  theme: 'pink',
+  eyebrow: section.settings.fem_eyebrow,
+  title: section.settings.fem_title,
+  description: section.settings.fem_description,
+  bg_image: section.settings.fem_bg_image,
+  bg_position: section.settings.fem_bg_position,
+  banner_cta: section.settings.fem_banner_cta,
+  footer_cta: section.settings.fem_footer_cta,
+  collection_url: fem_url,
+  products: fem_products,
+  limit: section.settings.fem_products_limit,
+  version_text: 'Corte Mujer'
+%}
 
 {% schema %}
 {
@@ -493,27 +472,131 @@
     },
     {
       "type": "header",
-      "content": "Colecciones de productos"
+      "content": "Más Vendidos"
+    },
+    {
+      "type": "image_picker",
+      "id": "mv_bg_image",
+      "label": "Imagen de fondo del banner"
+    },
+    {
+      "type": "text",
+      "id": "mv_bg_position",
+      "label": "Posición de la imagen",
+      "default": "65% center"
+    },
+    {
+      "type": "text",
+      "id": "mv_eyebrow",
+      "label": "Eyebrow",
+      "default": "Lo que todos quieren"
+    },
+    {
+      "type": "text",
+      "id": "mv_title",
+      "label": "Título",
+      "default": "MÁS VENDIDOS"
+    },
+    {
+      "type": "textarea",
+      "id": "mv_description",
+      "label": "Descripción",
+      "default": "Las camisetas favoritas de nuestros hinchas"
     },
     {
       "type": "collection",
       "id": "mv_collection",
-      "label": "Colección Más Vendidos"
+      "label": "Colección"
     },
     {
       "type": "url",
       "id": "mv_collection_url",
-      "label": "URL Ver todo — Más Vendidos"
+      "label": "URL Ver todo"
+    },
+    {
+      "type": "text",
+      "id": "mv_banner_cta",
+      "label": "Botón en el banner",
+      "default": "VER MÁS VENDIDOS"
+    },
+    {
+      "type": "text",
+      "id": "mv_footer_cta",
+      "label": "Enlace inferior",
+      "default": "Ver todos los más vendidos →"
+    },
+    {
+      "type": "range",
+      "id": "mv_products_limit",
+      "label": "Cantidad de productos",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "FIFA World Cup 2026"
+    },
+    {
+      "type": "image_picker",
+      "id": "wc_bg_image",
+      "label": "Imagen de fondo del banner"
+    },
+    {
+      "type": "text",
+      "id": "wc_bg_position",
+      "label": "Posición de la imagen",
+      "default": "65% center"
+    },
+    {
+      "type": "text",
+      "id": "wc_eyebrow",
+      "label": "Eyebrow",
+      "default": "Colección especial"
+    },
+    {
+      "type": "text",
+      "id": "wc_title",
+      "label": "Título",
+      "default": "FIFA WORLD CUP 2026"
+    },
+    {
+      "type": "textarea",
+      "id": "wc_description",
+      "label": "Descripción",
+      "default": "Las camisetas del evento más grande del fútbol"
     },
     {
       "type": "collection",
       "id": "wc_collection",
-      "label": "Colección Copa del Mundo"
+      "label": "Colección"
     },
     {
       "type": "url",
       "id": "wc_collection_url",
-      "label": "URL Ver toda — Copa del Mundo"
+      "label": "URL Ver todo"
+    },
+    {
+      "type": "text",
+      "id": "wc_banner_cta",
+      "label": "Botón en el banner",
+      "default": "VER COLECCIÓN MUNDIAL"
+    },
+    {
+      "type": "text",
+      "id": "wc_footer_cta",
+      "label": "Enlace inferior",
+      "default": "Ver toda la colección →"
+    },
+    {
+      "type": "range",
+      "id": "wc_products_limit",
+      "label": "Cantidad de productos",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 8
     },
     {
       "type": "header",
@@ -585,29 +668,192 @@
       "content": "Colección Retro"
     },
     {
+      "type": "image_picker",
+      "id": "retro_bg_image",
+      "label": "Imagen de fondo del banner"
+    },
+    {
+      "type": "text",
+      "id": "retro_bg_position",
+      "label": "Posición de la imagen",
+      "default": "65% center"
+    },
+    {
+      "type": "text",
+      "id": "retro_eyebrow",
+      "label": "Eyebrow",
+      "default": "Los clásicos de siempre"
+    },
+    {
+      "type": "text",
+      "id": "retro_title",
+      "label": "Título",
+      "default": "COLECCIÓN RETRO"
+    },
+    {
+      "type": "textarea",
+      "id": "retro_description",
+      "label": "Descripción",
+      "default": "Las camisetas que marcaron historia"
+    },
+    {
+      "type": "collection",
+      "id": "retro_collection",
+      "label": "Colección"
+    },
+    {
       "type": "url",
       "id": "retro_collection_url",
-      "label": "URL Ver toda — Retro"
+      "label": "URL Ver todo"
+    },
+    {
+      "type": "text",
+      "id": "retro_banner_cta",
+      "label": "Botón en el banner",
+      "default": "VER COLECCIÓN RETRO"
+    },
+    {
+      "type": "text",
+      "id": "retro_footer_cta",
+      "label": "Enlace inferior",
+      "default": "Ver toda la colección retro →"
+    },
+    {
+      "type": "range",
+      "id": "retro_products_limit",
+      "label": "Cantidad de productos",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Colección Niños"
+    },
+    {
+      "type": "image_picker",
+      "id": "ninos_bg_image",
+      "label": "Imagen de fondo del banner"
+    },
+    {
+      "type": "text",
+      "id": "ninos_bg_position",
+      "label": "Posición de la imagen",
+      "default": "65% center"
+    },
+    {
+      "type": "text",
+      "id": "ninos_eyebrow",
+      "label": "Eyebrow",
+      "default": "Para los más chicos"
+    },
+    {
+      "type": "text",
+      "id": "ninos_title",
+      "label": "Título",
+      "default": "COLECCIÓN NIÑOS"
+    },
+    {
+      "type": "textarea",
+      "id": "ninos_description",
+      "label": "Descripción",
+      "default": "Talles 4 a 14 años disponibles"
     },
     {
       "type": "collection",
       "id": "ninos_collection",
-      "label": "Colección Niños"
+      "label": "Colección"
     },
     {
       "type": "url",
       "id": "ninos_collection_url",
-      "label": "URL Ver toda — Niños"
+      "label": "URL Ver todo"
+    },
+    {
+      "type": "text",
+      "id": "ninos_banner_cta",
+      "label": "Botón en el banner",
+      "default": "VER COLECCIÓN NIÑOS"
+    },
+    {
+      "type": "text",
+      "id": "ninos_footer_cta",
+      "label": "Enlace inferior",
+      "default": "Ver toda la colección niños →"
+    },
+    {
+      "type": "range",
+      "id": "ninos_products_limit",
+      "label": "Cantidad de productos",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Colección Femenina"
+    },
+    {
+      "type": "image_picker",
+      "id": "fem_bg_image",
+      "label": "Imagen de fondo del banner"
+    },
+    {
+      "type": "text",
+      "id": "fem_bg_position",
+      "label": "Posición de la imagen",
+      "default": "65% center"
+    },
+    {
+      "type": "text",
+      "id": "fem_eyebrow",
+      "label": "Eyebrow",
+      "default": "Para ellas"
+    },
+    {
+      "type": "text",
+      "id": "fem_title",
+      "label": "Título",
+      "default": "COLECCIÓN FEMENINA"
+    },
+    {
+      "type": "textarea",
+      "id": "fem_description",
+      "label": "Descripción",
+      "default": "Corte y talla femenina, mismo estilo premium"
     },
     {
       "type": "collection",
       "id": "fem_collection",
-      "label": "Colección Femenina"
+      "label": "Colección"
     },
     {
       "type": "url",
       "id": "fem_collection_url",
-      "label": "URL Ver toda — Femenina"
+      "label": "URL Ver todo"
+    },
+    {
+      "type": "text",
+      "id": "fem_banner_cta",
+      "label": "Botón en el banner",
+      "default": "VER COLECCIÓN FEMENINA"
+    },
+    {
+      "type": "text",
+      "id": "fem_footer_cta",
+      "label": "Enlace inferior",
+      "default": "Ver toda la colección mujer →"
+    },
+    {
+      "type": "range",
+      "id": "fem_products_limit",
+      "label": "Cantidad de productos",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 8
     },
     {
       "type": "header",

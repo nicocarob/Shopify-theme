@@ -1,7 +1,4 @@
-{% comment %}
-  Sección editorial — Ediciones especiales (banner con imagen de fondo)
-{% endcomment %}
-
+{% comment %} Wrapper — Ediciones especiales {% endcomment %}
 {% liquid
   assign special_col = section.settings.special_collection
   if special_col == blank
@@ -15,66 +12,19 @@
     assign special_products = collections.all.products
     assign special_url = section.settings.special_collection_url | default: routes.all_products_collection_url
   endif
-
-  assign special_limit = section.settings.special_products_limit | default: 4
-  assign bg_image = section.settings.special_bg_image
-  assign bg_position = section.settings.special_bg_position | default: '65% center'
 %}
-
-<section class="bp-special-sec" id="ediciones-especiales">
-  <div class="bp-special-banner">
-    {% if bg_image != blank %}
-      <img
-        class="bp-special-banner__img"
-        src="{{ bg_image | image_url: width: 2400 }}"
-        srcset="
-          {{ bg_image | image_url: width: 900 }} 900w,
-          {{ bg_image | image_url: width: 1400 }} 1400w,
-          {{ bg_image | image_url: width: 2400 }} 2400w
-        "
-        sizes="100vw"
-        alt="{{ bg_image.alt | default: section.settings.special_title | escape }}"
-        width="2400"
-        height="800"
-        loading="lazy"
-        style="object-position: {{ bg_position }};"
-      >
-    {% endif %}
-    <div class="bp-special-banner__scrim" aria-hidden="true"></div>
-
-    <div class="bp-special-inner bp-special-banner__inner">
-      <div class="bp-special-hdr rev">
-        <div class="bp-special-eyebrow">{{ section.settings.special_eyebrow | default: '✦ EDICIONES ESPECIALES' }}</div>
-        <h2 class="bp-special-title">{{ section.settings.special_title | default: 'NO SOLO DE FÚTBOL VIVE LA CAMISETA' }}</h2>
-        <p class="bp-special-desc">{{ section.settings.special_description | default: 'Bandas de rock, series de culto y colaboraciones imposibles. Camisetas que cuentan otra historia y que solo entienden los que estaban ahí.' }}</p>
-        {% if section.settings.special_banner_cta != blank %}
-          <a href="{{ special_url }}" class="bp-special-banner-cta btn-gold">
-            {{ section.settings.special_banner_cta }}
-          </a>
-        {% endif %}
-      </div>
-    </div>
-  </div>
-
-  <div class="bp-special-body">
-    <div class="bp-special-inner">
-      <div class="prod-grid bp-special-grid rev">
-        {% for product in special_products limit: special_limit %}
-          {% case forloop.index0 %}
-            {% when 1 %}{% assign delay_val = '0.08s' %}
-            {% when 2 %}{% assign delay_val = '0.16s' %}
-            {% when 3 %}{% assign delay_val = '0.24s' %}
-            {% else %}{% assign delay_val = '' %}
-          {% endcase %}
-          {% render 'baul-product-card', product: product, delay: delay_val, version_text: 'Edición especial' %}
-        {% endfor %}
-      </div>
-
-      <div class="bp-special-cta-wrap rev">
-        <a href="{{ special_url }}" class="bp-special-cta">
-          {{ section.settings.special_cta | default: 'Ver todas las ediciones especiales →' }}
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
+{% render 'baul-collection-banner',
+  section_id: 'ediciones-especiales',
+  theme: 'violet',
+  eyebrow: section.settings.special_eyebrow,
+  title: section.settings.special_title,
+  description: section.settings.special_description,
+  bg_image: section.settings.special_bg_image,
+  bg_position: section.settings.special_bg_position,
+  banner_cta: section.settings.special_banner_cta,
+  footer_cta: section.settings.special_cta,
+  collection_url: special_url,
+  products: special_products,
+  limit: section.settings.special_products_limit,
+  version_text: 'Edición especial'
+%}
