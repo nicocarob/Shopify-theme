@@ -97,6 +97,35 @@
     font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase;
     border-bottom: 1px solid var(--border);
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    max-height: var(--baul-cbar-full-h, 120px);
+    transition:
+      max-height 0.35s ease,
+      opacity 0.3s ease,
+      padding 0.35s ease,
+      border-color 0.3s ease,
+      box-shadow 0.35s ease;
+  }
+  html.baul-cbar-hidden #cbar {
+    max-height: 0 !important;
+    padding-top: 0;
+    padding-bottom: 0;
+    opacity: 0;
+    border-bottom-color: transparent;
+    box-shadow: none;
+    pointer-events: none;
+  }
+  .baul-header-stick {
+    position: sticky;
+    top: var(--baul-cbar-h, 72px);
+    z-index: 199;
+    transition: top 0.35s ease;
+  }
+  html.baul-cbar-hidden {
+    --baul-cbar-h: 0px;
+  }
+  html.baul-cbar-hidden .baul-header-stick {
+    top: 0;
   }
   .cbar-inner {
     display: flex;
@@ -264,7 +293,8 @@
     background: rgba(10, 10, 10, 0.97);
     backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--border);
-    position: sticky; top: var(--baul-cbar-h, 72px); z-index: 199;
+    position: relative;
+    z-index: 1;
     padding: 0 40px; display: flex; align-items: center;
     justify-content: space-between; height: 66px;
     box-shadow: 0 1px 0 rgba(0, 200, 81, 0.12), 0 8px 32px rgba(0, 0, 0, 0.5);
@@ -3302,7 +3332,7 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     nav {
       padding: 0 8px; height: auto; min-height: 50px;
       overflow: visible; gap: 8px; flex-wrap: wrap;
-      position: sticky; z-index: 199;
+      position: relative; z-index: 1;
       display: flex;
       align-items: center;
       justify-content: space-between;

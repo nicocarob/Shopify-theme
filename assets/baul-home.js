@@ -102,10 +102,24 @@ const eyeObs = new IntersectionObserver(
 );
 document.querySelectorAll('.eyebrow').forEach((el) => eyeObs.observe(el));
 
+function measureCbarHeight(cbar) {
+  const html = document.documentElement;
+  const wasHidden = html.classList.contains('baul-cbar-hidden');
+  if (!wasHidden) return cbar.offsetHeight;
+  html.classList.remove('baul-cbar-hidden');
+  const height = cbar.offsetHeight;
+  html.classList.add('baul-cbar-hidden');
+  return height;
+}
+
 function syncCbarHeight() {
   const cbar = document.getElementById('cbar');
   if (!cbar) return;
-  document.documentElement.style.setProperty('--baul-cbar-h', cbar.offsetHeight + 'px');
+  const height = measureCbarHeight(cbar);
+  document.documentElement.style.setProperty('--baul-cbar-full-h', height + 'px');
+  if (!document.documentElement.classList.contains('baul-cbar-hidden')) {
+    document.documentElement.style.setProperty('--baul-cbar-h', height + 'px');
+  }
 }
 syncCbarHeight();
 window.addEventListener('resize', syncCbarHeight);
@@ -113,6 +127,34 @@ if (typeof ResizeObserver !== 'undefined') {
   const cbarEl = document.getElementById('cbar');
   if (cbarEl) new ResizeObserver(syncCbarHeight).observe(cbarEl);
 }
+
+(function initCbarScrollHide() {
+  const threshold = 56;
+  let ticking = false;
+
+  function updateCbarVisibility() {
+    const hidden = window.scrollY > threshold;
+    document.documentElement.classList.toggle('baul-cbar-hidden', hidden);
+    if (hidden) {
+      document.documentElement.style.setProperty('--baul-cbar-h', '0px');
+    } else {
+      syncCbarHeight();
+    }
+    ticking = false;
+  }
+
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (!ticking) {
+        requestAnimationFrame(updateCbarVisibility);
+        ticking = true;
+      }
+    },
+    { passive: true }
+  );
+  updateCbarVisibility();
+})();
 
 const navToggle = document.getElementById('n-hamburger');
 const navLinks = document.getElementById('n-links');
