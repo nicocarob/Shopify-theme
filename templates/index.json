@@ -222,7 +222,8 @@
             "liga_handle": "liga-espanola",
             "collection_handle": "barcelona",
             "team_name": "Barcelona",
-            "emoji": "⚽"
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/images_3.png"
           }
         },
         "eq_esp_02": {
@@ -231,7 +232,8 @@
             "liga_handle": "liga-espanola",
             "collection_handle": "real-madrid",
             "team_name": "Real Madrid",
-            "emoji": "⚽"
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/images_4.png"
           }
         },
         "eq_pl_01": {
@@ -240,7 +242,8 @@
             "liga_handle": "premier-league",
             "collection_handle": "arsenal",
             "team_name": "Arsenal",
-            "emoji": "⚽"
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/images_5.png"
           }
         },
         "eq_pl_02": {
@@ -249,7 +252,8 @@
             "liga_handle": "premier-league",
             "collection_handle": "manchester-united",
             "team_name": "Manchester United",
-            "emoji": "⚽"
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Logo-Manchester-United.png"
           }
         },
         "eq_pl_03": {
@@ -258,7 +262,8 @@
             "liga_handle": "premier-league",
             "collection_handle": "liverpool",
             "team_name": "Liverpool",
-            "emoji": "⚽"
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/escudo-liverpool.png"
           }
         },
         "eq_pl_04": {
@@ -267,7 +272,8 @@
             "liga_handle": "premier-league",
             "collection_handle": "chelsea",
             "team_name": "Chelsea",
-            "emoji": "⚽"
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/363.png"
           }
         },
         "eq_sa_01": {
@@ -276,7 +282,8 @@
             "liga_handle": "serie-a",
             "collection_handle": "inter",
             "team_name": "Inter",
-            "emoji": "⚽"
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/FC_Internazionale_Milano_2021_svg.webp"
           }
         },
         "eq_sa_02": {
@@ -285,7 +292,8 @@
             "liga_handle": "serie-a",
             "collection_handle": "ac-milan",
             "team_name": "AC Milan",
-            "emoji": "⚽"
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Logo_of_AC_Milan_svg.webp"
           }
         },
         "eq_sa_03": {
@@ -294,7 +302,8 @@
             "liga_handle": "serie-a",
             "collection_handle": "juventus",
             "team_name": "Juventus",
-            "emoji": "⚽"
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Juventus_FC_2017_logo.png"
           }
         },
         "eq_bun_01": {
@@ -303,7 +312,8 @@
             "liga_handle": "liga-alemana",
             "collection_handle": "bayern-munich",
             "team_name": "Bayern Munich",
-            "emoji": "⚽"
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/132.png"
           }
         },
         "eq_bun_02": {
@@ -312,7 +322,8 @@
             "liga_handle": "liga-alemana",
             "collection_handle": "borussia-dortmund",
             "team_name": "Borussia Dortmund",
-            "emoji": "⚽"
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Borussia_Dortmund_logo_svg.webp"
           }
         },
         "eq_l1_01": {
@@ -321,7 +332,8 @@
             "liga_handle": "liga-francesa",
             "collection_handle": "psg",
             "team_name": "PSG",
-            "emoji": "⚽"
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Paris_Saint-Germain_F.C..svg"
           }
         },
         "eq_sel_01": {
@@ -366,7 +378,8 @@
             "liga_handle": "liga-argentina-1",
             "collection_handle": "boca-juniors",
             "team_name": "Boca Juniors",
-            "emoji": "⚽"
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/CABJ70.png"
           }
         },
         "eq_arg_02": {
@@ -375,7 +388,8 @@
             "liga_handle": "liga-argentina-1",
             "collection_handle": "river-plate",
             "team_name": "River Plate",
-            "emoji": "⚽"
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/16_710a1d92-6a8b-4518-a4b7-a1857993f40d.png"
           }
         },
         "eq_bra_01": {
@@ -384,7 +398,8 @@
             "liga_handle": "liga-brasilena",
             "collection_handle": "flamengo",
             "team_name": "Flamengo",
-            "emoji": "⚽"
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Clube_de_Regatas_do_Flamengo_logo_svg.webp"
           }
         },
         "cw_01": {
