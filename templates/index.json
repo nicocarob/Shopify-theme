@@ -177,6 +177,209 @@
             "emoji": "🏆"
           }
         },
+        "eq_chile_01": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-chilena",
+            "collection_handle": "uchile",
+            "team_name": "Universidad de Chile",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Emblema_del_Club_Universidad_de_Chile.png"
+          }
+        },
+        "eq_chile_02": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-chilena",
+            "collection_handle": "cato",
+            "team_name": "Universidad Católica",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Escudo_Club_Deportivo_Universidad_Catolica_svg.png"
+          }
+        },
+        "eq_chile_03": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-chilena",
+            "collection_handle": "colo-colo",
+            "team_name": "Colo Colo",
+            "emoji": "⚽"
+          }
+        },
+        "eq_esp_01": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "barcelona",
+            "team_name": "Barcelona",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/FC_Barcelona__crest__svg.png"
+          }
+        },
+        "eq_esp_02": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "real-madrid",
+            "team_name": "Real Madrid",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Real_Madrid_CF_svg.png"
+          }
+        },
+        "eq_pl_01": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "arsenal",
+            "team_name": "Arsenal",
+            "emoji": "⚽"
+          }
+        },
+        "eq_pl_02": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "manchester-united",
+            "team_name": "Manchester United",
+            "emoji": "⚽"
+          }
+        },
+        "eq_pl_03": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "liverpool",
+            "team_name": "Liverpool",
+            "emoji": "⚽"
+          }
+        },
+        "eq_pl_04": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "chelsea",
+            "team_name": "Chelsea",
+            "emoji": "⚽"
+          }
+        },
+        "eq_sa_01": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "serie-a",
+            "collection_handle": "inter",
+            "team_name": "Inter",
+            "emoji": "⚽"
+          }
+        },
+        "eq_sa_02": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "serie-a",
+            "collection_handle": "ac-milan",
+            "team_name": "AC Milan",
+            "emoji": "⚽"
+          }
+        },
+        "eq_sa_03": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "serie-a",
+            "collection_handle": "juventus",
+            "team_name": "Juventus",
+            "emoji": "⚽"
+          }
+        },
+        "eq_bun_01": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-alemana",
+            "collection_handle": "bayern-munich",
+            "team_name": "Bayern Munich",
+            "emoji": "⚽"
+          }
+        },
+        "eq_bun_02": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-alemana",
+            "collection_handle": "borussia-dortmund",
+            "team_name": "Borussia Dortmund",
+            "emoji": "⚽"
+          }
+        },
+        "eq_l1_01": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-francesa",
+            "collection_handle": "psg",
+            "team_name": "PSG",
+            "emoji": "⚽"
+          }
+        },
+        "eq_sel_01": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "copa-del-mundo",
+            "collection_handle": "chile",
+            "team_name": "Chile",
+            "emoji": "🇨🇱",
+            "logo": "shopify://shop_images/Logo_de_la_Federacion_de_Futbol_de_Chile.png"
+          }
+        },
+        "eq_sel_02": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "copa-del-mundo",
+            "collection_handle": "argentina",
+            "team_name": "Argentina",
+            "emoji": "🇦🇷"
+          }
+        },
+        "eq_sel_03": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "copa-del-mundo",
+            "collection_handle": "portugal",
+            "team_name": "Portugal",
+            "emoji": "🇵🇹"
+          }
+        },
+        "eq_sel_04": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "copa-del-mundo",
+            "collection_handle": "brasil",
+            "team_name": "Brasil",
+            "emoji": "🇧🇷"
+          }
+        },
+        "eq_arg_01": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-argentina-1",
+            "collection_handle": "boca-juniors",
+            "team_name": "Boca Juniors",
+            "emoji": "⚽"
+          }
+        },
+        "eq_arg_02": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-argentina-1",
+            "collection_handle": "river-plate",
+            "team_name": "River Plate",
+            "emoji": "⚽"
+          }
+        },
+        "eq_bra_01": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "flamengo",
+            "team_name": "Flamengo",
+            "emoji": "⚽"
+          }
+        },
         "cw_01": {
           "type": "cortaviento",
           "settings": {
@@ -227,6 +430,28 @@
         "liga_08",
         "liga_09",
         "liga_10",
+        "eq_chile_01",
+        "eq_chile_02",
+        "eq_chile_03",
+        "eq_esp_01",
+        "eq_esp_02",
+        "eq_pl_01",
+        "eq_pl_02",
+        "eq_pl_03",
+        "eq_pl_04",
+        "eq_sa_01",
+        "eq_sa_02",
+        "eq_sa_03",
+        "eq_bun_01",
+        "eq_bun_02",
+        "eq_l1_01",
+        "eq_sel_01",
+        "eq_sel_02",
+        "eq_sel_03",
+        "eq_sel_04",
+        "eq_arg_01",
+        "eq_arg_02",
+        "eq_bra_01",
         "cw_01",
         "cw_02",
         "cw_03"
@@ -245,6 +470,9 @@
         "testi_eyebrow": "Lo que dicen de nosotros",
         "testi_title": "NUESTROS CLIENTES NOS RECOMIENDAN",
         "testi_subtitle": "Más de 10 años vendiendo a hinchas de todo Chile",
+        "elige_eyebrow": "ELIGE TU LIGA",
+        "elige_title": "LAS GRANDES LIGAS",
+        "elige_subtitle": "Toca el escudo de tu liga y luego el de tu equipo.",
         "mv_collection": "mas-vendidos",
         "mv_collection_url": "",
         "wc_collection": "",

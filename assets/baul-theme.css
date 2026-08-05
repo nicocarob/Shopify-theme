@@ -3091,6 +3091,183 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     transition: color 0.2s;
   }
   .lg-c:hover .lg-nm { color: var(--accent); }
+
+  /* ── Elige tu liga (liga → equipo picker) ── */
+  .elige-liga-sec {
+    padding: 60px 20px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+  .elige-liga-sec__hdr {
+    text-align: center;
+    max-width: 720px;
+    margin: 0 auto 36px;
+  }
+  .elige-liga-sec .sec-sub {
+    margin-top: 10px;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .elige-liga {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .elige-liga__tabs {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 4px 2px 16px;
+    margin-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 200, 81, 0.35) transparent;
+  }
+  .elige-liga__tabs::-webkit-scrollbar { height: 4px; }
+  .elige-liga__tabs::-webkit-scrollbar-thumb {
+    background: rgba(0, 200, 81, 0.35);
+    border-radius: 4px;
+  }
+
+  .elige-liga__tab {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    min-width: 88px;
+    max-width: 110px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: color 0.2s, transform 0.2s;
+  }
+  .elige-liga__tab:hover { color: #fff; transform: translateY(-2px); }
+  .elige-liga__tab.is-active { color: #fff; }
+
+  .elige-liga__tab-tile {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+    overflow: hidden;
+  }
+  .elige-liga__tab-tile img {
+    width: 68%;
+    height: 68%;
+    object-fit: contain;
+    display: block;
+  }
+  .elige-liga__tab-emoji { font-size: 28px; line-height: 1; }
+  .elige-liga__tab.is-active .elige-liga__tab-tile {
+    border-color: var(--accent);
+    background: rgba(0, 200, 81, 0.08);
+    box-shadow: 0 0 0 1px rgba(0, 200, 81, 0.35), 0 8px 24px rgba(0, 0, 0, 0.35);
+  }
+  .elige-liga__tab-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  .elige-liga__panel[hidden] { display: none !important; }
+
+  .elige-liga__teams {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 28px;
+    padding: 0 4px;
+  }
+
+  .elige-liga__team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    min-width: 72px;
+    max-width: 96px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: color 0.2s, transform 0.2s;
+  }
+  .elige-liga__team:hover { color: #fff; transform: translateY(-2px); }
+  .elige-liga__team.is-active { color: #fff; }
+
+  .elige-liga__crest {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.25s, box-shadow 0.25s;
+    overflow: hidden;
+  }
+  .elige-liga__crest img {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+    display: block;
+  }
+  .elige-liga__crest--all { font-size: 22px; }
+  .elige-liga__team-emoji { font-size: 22px; line-height: 1; }
+  .elige-liga__team.is-active .elige-liga__crest {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px rgba(0, 200, 81, 0.35), 0 6px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .elige-liga__team-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  .elige-liga__preview { margin-bottom: 28px; }
+  .elige-liga__products[hidden] { display: none !important; }
+  .elige-liga__products.prod-grid {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .elige-liga__cta-wrap {
+    display: flex;
+    justify-content: center;
+    padding-top: 4px;
+  }
+  .elige-liga__cta {
+    text-decoration: none;
+    text-align: center;
+    min-width: min(100%, 420px);
+  }
   
   /* ── Footer ── */
   footer {
@@ -3420,7 +3597,7 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .trophy-scene { width: 160px; max-width: 160px; height: auto; margin: 0 auto; }
     .trophy-img { width: 100%; max-width: 160px; height: auto; }
     .trophy-glow { width: 140px; height: 140px; }
-    .mv-sec, .col-sec, .srch-sec, .testi-sec, .bp-video-sec { padding: 40px 16px; }
+    .mv-sec, .col-sec, .srch-sec, .testi-sec, .bp-video-sec, .elige-liga-sec { padding: 40px 16px; }
     .cw-grid { grid-template-columns: repeat(2, 1fr); }
     .cw-grid .cw-card:nth-child(3):last-child {
       grid-column: 1 / -1; max-width: calc(50% - 8px); justify-self: center;
@@ -3705,6 +3882,13 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .promo-banner__accent { display: none; }
     .promo-banner__text { text-align: center; font-size: 11px; }
     .liga-grid { grid-template-columns: repeat(2, 1fr); }
+
+    .elige-liga__tab-tile { width: 60px; height: 60px; }
+    .elige-liga__tab { min-width: 76px; }
+    .elige-liga__crest { width: 48px; height: 48px; }
+    .elige-liga__team { min-width: 64px; max-width: 80px; }
+    .elige-liga__team-name { font-size: 9px; }
+    .elige-liga__products.prod-grid { grid-template-columns: repeat(2, 1fr); }
     .ft-grid { grid-template-columns: 1fr 1fr; gap: 18px 12px; }
     .bp-customize-fields {
       grid-template-columns: 1fr 80px;

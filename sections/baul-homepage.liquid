@@ -166,6 +166,10 @@
   </div>
 </section>
 
+<div class="divider"></div>
+
+{% render 'baul-elige-liga', section: section %}
+
 <section class="col-sec bp-customize" id="personaliza">
   <div class="sec-bg-grid"></div>
   <div class="bp-customize-grid">
@@ -610,6 +614,28 @@
     },
     {
       "type": "header",
+      "content": "Elige tu liga"
+    },
+    {
+      "type": "text",
+      "id": "elige_eyebrow",
+      "label": "Eyebrow — Elige tu liga",
+      "default": "ELIGE TU LIGA"
+    },
+    {
+      "type": "text",
+      "id": "elige_title",
+      "label": "Título — Elige tu liga",
+      "default": "LAS GRANDES LIGAS"
+    },
+    {
+      "type": "text",
+      "id": "elige_subtitle",
+      "label": "Subtítulo — Elige tu liga",
+      "default": "Toca el escudo de tu liga y luego el de tu equipo."
+    },
+    {
+      "type": "header",
       "content": "Footer y contacto"
     },
     {
@@ -692,6 +718,41 @@
           "type": "image_picker",
           "id": "logo",
           "label": "Logo (opcional)"
+        }
+      ]
+    },
+    {
+      "type": "equipo",
+      "name": "Equipo (Elige tu liga)",
+      "settings": [
+        {
+          "type": "text",
+          "id": "liga_handle",
+          "label": "Handle de la liga (igual al bloque Liga)",
+          "default": "liga-chilena"
+        },
+        {
+          "type": "text",
+          "id": "collection_handle",
+          "label": "Handle colección del equipo",
+          "default": "uchile"
+        },
+        {
+          "type": "text",
+          "id": "team_name",
+          "label": "Nombre del equipo",
+          "default": "Universidad de Chile"
+        },
+        {
+          "type": "text",
+          "id": "emoji",
+          "label": "Emoji (si no hay logo)",
+          "default": "⚽"
+        },
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Escudo (opcional)"
         }
       ]
     }
