@@ -192,7 +192,8 @@
             "liga_handle": "liga-chilena",
             "collection_handle": "uchile",
             "team_name": "Universidad de Chile",
-            "emoji": "⚽"
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Emblema_del_Club_Universidad_de_Chile.png"
           }
         },
         "eq_chile_02": {
@@ -201,7 +202,8 @@
             "liga_handle": "liga-chilena",
             "collection_handle": "cato",
             "team_name": "Universidad Católica",
-            "emoji": "⚽"
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/LogoCDUC.png"
           }
         },
         "eq_chile_03": {
@@ -210,7 +212,8 @@
             "liga_handle": "liga-chilena",
             "collection_handle": "colo-colo",
             "team_name": "Colo Colo",
-            "emoji": "⚽"
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/colo-colo-logo-footylogos-320.webp"
           }
         },
         "eq_esp_01": {
