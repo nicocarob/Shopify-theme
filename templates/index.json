@@ -280,8 +280,8 @@
           "type": "equipo",
           "settings": {
             "liga_handle": "serie-a",
-            "collection_handle": "inter",
-            "team_name": "Inter",
+            "collection_handle": "inter-milan",
+            "team_name": "Inter de Milán",
             "emoji": "⚽",
             "logo": "shopify://shop_images/FC_Internazionale_Milano_2021_svg.webp"
           }
