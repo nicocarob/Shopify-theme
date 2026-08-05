@@ -15,11 +15,6 @@
     assign discount_pct = 0
   endif
 
-  assign vendor_label = product.vendor
-  if vendor_label == blank
-    assign vendor_label = product.type
-  endif
-
   assign talla_tab = 'fan'
   if product.title contains 'Niño' or product.title contains 'niño' or product.title contains 'Nino' or product.title contains 'nino'
     assign talla_tab = 'ninos'
@@ -37,29 +32,57 @@
 <section class="bp-page">
   <div class="sec-bg-grid"></div>
   <div class="bp-grid">
-    <div class="bp-gallery">
-      <div class="bp-main-img-wrap">
-        {% if product.featured_image %}
-          <img
-            id="bp-main-img"
-            class="bp-main-img"
-            src="{{ product.featured_image | image_url: width: 1200 }}"
-            alt="{{ product.featured_image.alt | default: product.title | escape }}"
-            width="800"
-            height="800"
-            loading="eager"
-          >
-        {% else %}
-          <div class="pc-bg">⚽</div>
+    <div class="bp-gallery" data-bp-gallery>
+      <div class="bp-slider-wrap">
+        <div class="bp-slider" data-bp-slider tabindex="0" aria-label="Galería de imágenes del producto">
+          {% if product.images.size > 0 %}
+            {% for image in product.images %}
+              <div
+                class="bp-slide{% if forloop.first %} is-active{% endif %}"
+                data-slide-index="{{ forloop.index0 }}"
+                id="bp-slide-{{ forloop.index }}"
+              >
+                <img
+                  class="bp-slide-img"
+                  src="{{ image | image_url: width: 1400 }}"
+                  alt="{{ image.alt | default: product.title | escape }}"
+                  width="800"
+                  height="800"
+                  loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                  {% if forloop.first %}fetchpriority="high"{% endif %}
+                  data-full-src="{{ image | image_url: width: 1400 }}"
+                >
+              </div>
+            {% endfor %}
+          {% else %}
+            <div class="bp-slide is-active" data-slide-index="0">
+              <div class="pc-bg">⚽</div>
+            </div>
+          {% endif %}
+        </div>
+
+        {% if product.images.size > 1 %}
+          <div class="bp-slider-dots" data-bp-dots aria-hidden="true">
+            {% for image in product.images %}
+              <button
+                type="button"
+                class="bp-slider-dot{% if forloop.first %} is-active{% endif %}"
+                data-dot-index="{{ forloop.index0 }}"
+                aria-label="Imagen {{ forloop.index }} de {{ product.images.size }}"
+              ></button>
+            {% endfor %}
+          </div>
         {% endif %}
       </div>
+
       {% if product.images.size > 1 %}
-        <div class="bp-thumbs">
+        <div class="bp-thumbs bp-thumbs--desktop">
           {% for image in product.images %}
             <button
               type="button"
               class="bp-thumb{% if forloop.first %} is-active{% endif %}"
-              data-src="{{ image | image_url: width: 1200 }}"
+              data-slide-index="{{ forloop.index0 }}"
+              data-src="{{ image | image_url: width: 1400 }}"
               aria-label="Ver imagen {{ forloop.index }}"
             >
               <img
@@ -83,13 +106,6 @@
 
       <h1 class="bp-title">{{ product.title }}</h1>
       <div class="product-stars product-stars--pdp" data-handle="{{ product.handle }}"></div>
-      {% if vendor_label != blank or product.type != blank %}
-        <p class="bp-subtitle">
-          {% if product.vendor != blank %}{{ product.vendor }}{% endif %}
-          {% if product.vendor != blank and product.type != blank %} · {% endif %}
-          {% if product.type != blank %}{{ product.type }}{% endif %}
-        </p>
-      {% endif %}
 
       <div class="bp-price-row" id="bp-price-row">
         {% if compare_at_price > price %}
@@ -152,9 +168,25 @@
 
         {% render 'easify-pof__product-option' %}
 
-        <button type="submit" name="add" class="bp-atc" id="bp-atc-btn"{% unless current_variant.available %} disabled{% endunless %}>
-          AGREGAR AL CARRO
-        </button>
+        <div class="bp-actions">
+          <button
+            type="button"
+            class="bp-buy-now"
+            id="bp-buy-btn"
+            {% unless current_variant.available %}disabled{% endunless %}
+          >
+            COMPRAR AHORA
+          </button>
+          <button
+            type="button"
+            class="bp-add-cart"
+            id="bp-add-cart-btn"
+            aria-label="Agregar al carrito"
+            {% unless current_variant.available %}disabled{% endunless %}
+          >
+            <span class="bp-add-cart__icon" aria-hidden="true">🛒</span>
+          </button>
+        </div>
 
         {% if section.blocks.size > 0 %}
           <div class="bp-app-blocks">
