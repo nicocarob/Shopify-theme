@@ -129,7 +129,8 @@
           "settings": {
             "collection_handle": "serie-a",
             "liga_name": "Serie A",
-            "emoji": "🇮🇹"
+            "emoji": "🇮🇹",
+            "logo": "shopify://shop_images/images_6_564fa930-1e64-4b97-a220-7e03dfec77ec.jpg"
           }
         },
         "liga_05": {
@@ -137,7 +138,8 @@
           "settings": {
             "collection_handle": "liga-alemana",
             "liga_name": "Bundesliga",
-            "emoji": "🇩🇪"
+            "emoji": "🇩🇪",
+            "logo": "shopify://shop_images/Bundesliga_logo__2017.svg"
           }
         },
         "liga_06": {
@@ -145,7 +147,8 @@
           "settings": {
             "collection_handle": "liga-francesa",
             "liga_name": "Ligue 1",
-            "emoji": "🇫🇷"
+            "emoji": "🇫🇷",
+            "logo": "shopify://shop_images/kdff.png"
           }
         },
         "liga_07": {
@@ -153,7 +156,8 @@
           "settings": {
             "collection_handle": "copa-del-mundo",
             "liga_name": "Selecciones",
-            "emoji": "🌍"
+            "emoji": "🌍",
+            "logo": "shopify://shop_images/fifa-world-cup-2026-logo-footylogos.png"
           }
         },
         "liga_08": {
@@ -161,7 +165,8 @@
           "settings": {
             "collection_handle": "liga-argentina-1",
             "liga_name": "Liga Argentina",
-            "emoji": "🇦🇷"
+            "emoji": "🇦🇷",
+            "logo": "shopify://shop_images/Liga_Profesional_de_F_3Ftbol_Argentino__28Icon_29.webp"
           }
         },
         "liga_09": {
@@ -169,7 +174,8 @@
           "settings": {
             "collection_handle": "liga-brasilena",
             "liga_name": "Liga Brasileña",
-            "emoji": "🇧🇷"
+            "emoji": "🇧🇷",
+            "logo": "shopify://shop_images/Campeonato_Brasileiro_Serie_A_logo__2024__svg.webp"
           }
         },
         "liga_10": {
