@@ -287,6 +287,83 @@ if (navToggle && navLinks) {
   });
 })();
 
+function buildCartAddPayload(form) {
+  if (!(form instanceof HTMLFormElement)) return null;
+
+  const idInput = form.querySelector('[name="id"]');
+  const variantId = idInput ? String(idInput.value || '').trim() : '';
+  if (!variantId) return null;
+
+  const payload = {
+    id: Number(variantId),
+    quantity: 1,
+  };
+
+  const qtyInput = form.querySelector('[name="quantity"]');
+  if (qtyInput && qtyInput.value) {
+    const qty = parseInt(qtyInput.value, 10);
+    if (qty > 0) payload.quantity = qty;
+  }
+
+  const properties = {};
+  form.querySelectorAll('[name^="properties["]').forEach((el) => {
+    if (el.disabled || !el.name) return;
+    const match = el.name.match(/^properties\[(.+)\]$/);
+    if (!match) return;
+    const key = match[1];
+
+    if (el.type === 'radio') {
+      if (el.checked && el.value) properties[key] = el.value;
+      return;
+    }
+    if (el.type === 'checkbox') {
+      if (el.checked) properties[key] = el.value || 'Yes';
+      return;
+    }
+
+    const val = el.value != null ? String(el.value).trim() : '';
+    if (val) properties[key] = val;
+  });
+
+  if (Object.keys(properties).length) {
+    payload.properties = properties;
+  }
+
+  return payload;
+}
+
+async function addItemToCart(payload) {
+  const response = await fetch('/cart/add.js', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const message = data.description || data.message || 'No se pudo agregar al carrito';
+    throw new Error(message);
+  }
+  return data;
+}
+
+function updateHeaderCartCount(count) {
+  document.querySelectorAll('.btn-cart').forEach((btn) => {
+    btn.textContent = '🛒 Carrito (' + count + ')';
+  });
+}
+
+async function refreshHeaderCartCount() {
+  const response = await fetch('/cart.js', { headers: { Accept: 'application/json' } });
+  if (!response.ok) return null;
+  const cart = await response.json();
+  updateHeaderCartCount(cart.item_count);
+  return cart;
+}
+
 const productJsonEl = document.getElementById('baul-product-json');
 const productForm = document.getElementById('baul-product-form');
 if (productJsonEl && productForm) {
@@ -344,22 +421,17 @@ if (productJsonEl && productForm) {
   }
 
   async function submitProductForm(redirectToCheckout) {
-    if (!variantInput || !variantInput.value) return;
+    const payload = buildCartAddPayload(productForm);
+    if (!payload) throw new Error('Selecciona una variante válida');
 
-    const formData = new FormData(productForm);
-    const response = await fetch('/cart/add.js', {
-      method: 'POST',
-      headers: { Accept: 'application/json' },
-      body: formData,
-    });
-
-    if (!response.ok) throw new Error('Cart add failed');
+    await addItemToCart(payload);
 
     if (redirectToCheckout) {
       window.location.href = '/checkout';
       return;
     }
 
+    await refreshHeaderCartCount();
     if (typeof window.baulCartToastNotify === 'function') {
       window.baulCartToastNotify();
     }
@@ -376,7 +448,6 @@ if (productJsonEl && productForm) {
     } catch (e) {
       buyBtn.disabled = false;
       buyBtn.textContent = originalText;
-      productForm.submit();
     }
   });
 
@@ -389,7 +460,7 @@ if (productJsonEl && productForm) {
       addCartBtn.classList.add('is-added');
       window.setTimeout(() => addCartBtn.classList.remove('is-added'), 900);
     } catch (e) {
-      productForm.requestSubmit();
+      /* keep cart intact; avoid native form submit */
     } finally {
       const variant = findVariant();
       addCartBtn.disabled = !(variant && variant.available);
@@ -548,17 +619,8 @@ if (productJsonEl && productForm) {
   };
 
   window.baulAddToCart = async function (variantId) {
-    const response = await fetch('/cart/add.js', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify({ id: variantId, quantity: 1 }),
-    });
-
-    if (!response.ok) throw new Error('Cart add failed');
-    const data = await response.json();
+    const data = await addItemToCart({ id: Number(variantId), quantity: 1 });
+    await refreshHeaderCartCount();
     if (typeof window.baulCartToastNotify === 'function') {
       window.baulCartToastNotify();
     }
@@ -1009,15 +1071,9 @@ if (productJsonEl && productForm) {
   });
 
   async function addToCartFromForm(form) {
-    const formData = new FormData(form);
-    const response = await fetch('/cart/add.js', {
-      method: 'POST',
-      headers: { Accept: 'application/json' },
-      body: formData,
-    });
-
-    if (!response.ok) throw new Error('Cart add failed');
-    return response.json();
+    const payload = buildCartAddPayload(form);
+    if (!payload) throw new Error('Variante no válida');
+    return addItemToCart(payload);
   }
 
   document.addEventListener('submit', async (event) => {
@@ -1029,14 +1085,14 @@ if (productJsonEl && productForm) {
 
     event.preventDefault();
 
-    const formData = new FormData(form);
-    if (!formData.get('id')) return;
+    if (!buildCartAddPayload(form)) return;
 
     try {
       await addToCartFromForm(form);
+      await refreshHeaderCartCount();
       scheduleToastUpdate();
     } catch (e) {
-      form.submit();
+      /* avoid native submit that can corrupt cart state */
     }
   });
 
