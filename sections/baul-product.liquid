@@ -171,7 +171,7 @@
         <div class="bp-actions">
           <button
             type="button"
-            class="bp-buy-now"
+            class="bp-buy-now tpo_ignore"
             id="bp-buy-btn"
             {% unless current_variant.available %}disabled{% endunless %}
           >
@@ -179,10 +179,8 @@
           </button>
           <button
             type="button"
-            name="add"
-            class="bp-add-cart button product-form__submit add-to-cart-button"
+            class="bp-add-cart tpo_ignore"
             id="bp-add-cart-btn"
-            data-variant-id="{{ current_variant.id }}"
             aria-label="Agregar al carrito"
             {% unless current_variant.available %}disabled{% endunless %}
           >
