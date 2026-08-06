@@ -414,7 +414,7 @@ function isolateBaulCartButton(btn) {
 
   const clone = btn.cloneNode(true);
   clone.dataset.baulIsolated = '1';
-  clone.classList.add('tpo_ignore');
+  // clone.classList.add('tpo_ignore');
   clone.classList.remove(
     'product-form__submit',
     'tpo_add-to-cart',
