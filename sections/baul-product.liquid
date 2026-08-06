@@ -168,6 +168,19 @@
 
         {% render 'easify-pof__product-option' %}
 
+        <button
+          type="submit"
+          name="add"
+          class="button product-form__submit bp-easify-atc-proxy"
+          id="bp-easify-atc-proxy"
+          data-variant-id="{{ current_variant.id }}"
+          hidden
+          tabindex="-1"
+          aria-hidden="true"
+        >
+          Agregar al carrito
+        </button>
+
         <div class="bp-actions">
           <button
             type="button"
@@ -179,8 +192,9 @@
           </button>
           <button
             type="button"
-            class="bp-add-cart"
+            class="bp-add-cart button product-form__submit"
             id="bp-add-cart-btn"
+            data-variant-id="{{ current_variant.id }}"
             aria-label="Agregar al carrito"
             {% unless current_variant.available %}disabled{% endunless %}
           >
