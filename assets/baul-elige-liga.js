@@ -8,13 +8,17 @@
     var overflowLeft = itemRect.left < containerRect.left + 8;
     var overflowRight = itemRect.right > containerRect.right - 8;
 
-    if (overflowLeft || overflowRight) {
-      item.scrollIntoView({
-        behavior: 'smooth',
-        inline: 'center',
-        block: 'nearest'
-      });
-    }
+    if (!overflowLeft && !overflowRight) return;
+
+    // Scroll only the horizontal carousel — never the page (scrollIntoView jumps to #elige-liga).
+    var delta =
+      itemRect.left + itemRect.width / 2 - (containerRect.left + containerRect.width / 2);
+    var target = container.scrollLeft + delta;
+    var maxScroll = container.scrollWidth - container.clientWidth;
+    container.scrollTo({
+      left: Math.max(0, Math.min(target, maxScroll)),
+      behavior: 'smooth'
+    });
   }
 
   function updateScrollFades(wrap) {

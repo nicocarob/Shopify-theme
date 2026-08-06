@@ -56,6 +56,18 @@ function tick() {
 tick();
 setInterval(tick, 1000);
 
+(function initHomeScrollBehavior() {
+  if (!document.body.classList.contains('baul-home')) return;
+
+  const nav = performance.getEntriesByType('navigation')[0];
+  if (nav?.type !== 'reload') return;
+
+  if (window.location.hash) {
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+  }
+  window.scrollTo(0, 0);
+})();
+
 const io = new IntersectionObserver(
   (entries) => {
     entries.forEach((e) => {
