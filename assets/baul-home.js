@@ -287,25 +287,19 @@ if (navToggle && navLinks) {
   });
 })();
 
-function buildCartAddPayload(form) {
-  if (!(form instanceof HTMLFormElement)) return null;
+function getVariantIdFromForm(form) {
+  const explicit = form.querySelector('#baul-variant-id');
+  if (explicit && explicit.value) return String(explicit.value).trim();
 
-  const idInput = form.querySelector('[name="id"]');
-  const variantId = idInput ? String(idInput.value || '').trim() : '';
-  if (!variantId) return null;
+  const idInput = form.querySelector('input[name="id"]:not([disabled])');
+  if (idInput && idInput.value) return String(idInput.value).trim();
 
-  const payload = {
-    id: Number(variantId),
-    quantity: 1,
-  };
+  return '';
+}
 
-  const qtyInput = form.querySelector('[name="quantity"]');
-  if (qtyInput && qtyInput.value) {
-    const qty = parseInt(qtyInput.value, 10);
-    if (qty > 0) payload.quantity = qty;
-  }
-
+function collectLineItemProperties(form) {
   const properties = {};
+
   form.querySelectorAll('[name^="properties["]').forEach((el) => {
     if (el.disabled || !el.name) return;
     const match = el.name.match(/^properties\[(.+)\]$/);
@@ -325,21 +319,54 @@ function buildCartAddPayload(form) {
     if (val) properties[key] = val;
   });
 
-  if (Object.keys(properties).length) {
-    payload.properties = properties;
+  return properties;
+}
+
+function buildCartAddPayload(form) {
+  if (!(form instanceof HTMLFormElement)) return null;
+
+  const variantId = getVariantIdFromForm(form);
+  if (!variantId) return null;
+
+  const item = {
+    id: variantId,
+    quantity: 1,
+  };
+
+  const qtyInput = form.querySelector('[name="quantity"]');
+  if (qtyInput && qtyInput.value) {
+    const qty = parseInt(qtyInput.value, 10);
+    if (qty > 0) item.quantity = qty;
   }
 
-  return payload;
+  const properties = collectLineItemProperties(form);
+  if (Object.keys(properties).length) {
+    item.properties = properties;
+  }
+
+  return { items: [item] };
+}
+
+async function fetchCart() {
+  const response = await fetch('/cart.js', {
+    credentials: 'same-origin',
+    headers: { Accept: 'application/json' },
+  });
+  if (!response.ok) return null;
+  return response.json();
 }
 
 async function addItemToCart(payload) {
+  const body = payload.items ? payload : { items: [payload] };
+
   const response = await fetch('/cart/add.js', {
     method: 'POST',
+    credentials: 'same-origin',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(body),
   });
 
   const data = await response.json().catch(() => ({}));
@@ -347,6 +374,12 @@ async function addItemToCart(payload) {
     const message = data.description || data.message || 'No se pudo agregar al carrito';
     throw new Error(message);
   }
+
+  const addedItems = data.items || (data.id || data.variant_id ? [data] : []);
+  if (!addedItems.length) {
+    throw new Error('No se pudo agregar al carrito');
+  }
+
   return data;
 }
 
@@ -356,12 +389,57 @@ function updateHeaderCartCount(count) {
   });
 }
 
+function rememberCartCount(count) {
+  sessionStorage.setItem(
+    'baul-cart-count',
+    JSON.stringify({
+      value: count,
+      timestamp: Date.now(),
+    })
+  );
+}
+
 async function refreshHeaderCartCount() {
-  const response = await fetch('/cart.js', { headers: { Accept: 'application/json' } });
-  if (!response.ok) return null;
-  const cart = await response.json();
+  const cart = await fetchCart();
+  if (!cart) return null;
   updateHeaderCartCount(cart.item_count);
+  rememberCartCount(cart.item_count);
   return cart;
+}
+
+function syncCartHeaderFromSession() {
+  const stored = sessionStorage.getItem('baul-cart-count');
+  if (!stored) return;
+
+  try {
+    const { value, timestamp } = JSON.parse(stored);
+    if (Date.now() - timestamp > 300000) return;
+    updateHeaderCartCount(Number(value) || 0);
+  } catch (e) {
+    /* ignore */
+  }
+}
+
+function initBaulCartSync() {
+  syncCartHeaderFromSession();
+  refreshHeaderCartCount();
+
+  window.addEventListener('pageshow', () => {
+    syncCartHeaderFromSession();
+    refreshHeaderCartCount();
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      refreshHeaderCartCount();
+    }
+  });
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initBaulCartSync);
+} else {
+  initBaulCartSync();
 }
 
 const productJsonEl = document.getElementById('baul-product-json');
@@ -424,14 +502,21 @@ if (productJsonEl && productForm) {
     const payload = buildCartAddPayload(productForm);
     if (!payload) throw new Error('Selecciona una variante válida');
 
+    const beforeCart = await fetchCart();
+    const beforeCount = beforeCart ? beforeCart.item_count : 0;
+
     await addItemToCart(payload);
+
+    const cart = await refreshHeaderCartCount();
+    if (!cart || cart.item_count <= beforeCount) {
+      throw new Error('No se pudo agregar al carrito');
+    }
 
     if (redirectToCheckout) {
       window.location.href = '/checkout';
       return;
     }
 
-    await refreshHeaderCartCount();
     if (typeof window.baulCartToastNotify === 'function') {
       window.baulCartToastNotify();
     }
@@ -619,8 +704,18 @@ if (productJsonEl && productForm) {
   };
 
   window.baulAddToCart = async function (variantId) {
-    const data = await addItemToCart({ id: Number(variantId), quantity: 1 });
-    await refreshHeaderCartCount();
+    const beforeCart = await fetchCart();
+    const beforeCount = beforeCart ? beforeCart.item_count : 0;
+
+    const data = await addItemToCart({
+      items: [{ id: String(variantId), quantity: 1 }],
+    });
+
+    const cart = await refreshHeaderCartCount();
+    if (!cart || cart.item_count <= beforeCount) {
+      throw new Error('No se pudo agregar al carrito');
+    }
+
     if (typeof window.baulCartToastNotify === 'function') {
       window.baulCartToastNotify();
     }
@@ -1042,12 +1137,9 @@ if (productJsonEl && productForm) {
 
     showDelayTimer = window.setTimeout(async () => {
       try {
-        const response = await fetch('/cart.js', {
-          headers: { Accept: 'application/json' },
-        });
-        if (!response.ok) return;
+        const cart = await fetchCart();
+        if (!cart || cart.item_count <= 0) return;
 
-        const cart = await response.json();
         updateToast(cart.item_count);
         showToast();
 
@@ -1088,8 +1180,14 @@ if (productJsonEl && productForm) {
     if (!buildCartAddPayload(form)) return;
 
     try {
+      const beforeCart = await fetchCart();
+      const beforeCount = beforeCart ? beforeCart.item_count : 0;
+
       await addToCartFromForm(form);
-      await refreshHeaderCartCount();
+
+      const cart = await refreshHeaderCartCount();
+      if (!cart || cart.item_count <= beforeCount) return;
+
       scheduleToastUpdate();
     } catch (e) {
       /* avoid native submit that can corrupt cart state */
