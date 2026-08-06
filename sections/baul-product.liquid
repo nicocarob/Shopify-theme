@@ -129,7 +129,7 @@
         </div>
       </div>
 
-      {% form 'product', product, id: 'baul-product-form', class: 'bp-form' %}
+      {% form 'product', product, id: 'baul-product-form', class: 'bp-form product-form' %}
         <input type="hidden" name="id" id="baul-variant-id" value="{{ current_variant.id }}">
 
         {% unless product.has_only_default_variant %}
@@ -168,19 +168,6 @@
 
         {% render 'easify-pof__product-option' %}
 
-        <button
-          type="button"
-          name="add"
-          class="button product-form__submit bp-easify-atc-proxy"
-          id="bp-easify-atc-proxy"
-          data-variant-id="{{ current_variant.id }}"
-          hidden
-          tabindex="-1"
-          aria-hidden="true"
-        >
-          Agregar al carrito
-        </button>
-
         <div class="bp-actions">
           <button
             type="button"
@@ -192,7 +179,8 @@
           </button>
           <button
             type="button"
-            class="bp-add-cart button product-form__submit"
+            name="add"
+            class="bp-add-cart button product-form__submit add-to-cart-button"
             id="bp-add-cart-btn"
             data-variant-id="{{ current_variant.id }}"
             aria-label="Agregar al carrito"
