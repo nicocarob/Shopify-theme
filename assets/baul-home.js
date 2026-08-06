@@ -297,14 +297,44 @@ function getVariantIdFromForm(form) {
   return '';
 }
 
+function formHasEasifyOptions(form) {
+  return !!(
+    form.querySelector('.easify-product-options .tpo_has-option-set') ||
+    form.querySelector('[name="tpo_total-additional-price"]') ||
+    form.querySelector('[name="properties[_tpo_add_by]"]')
+  );
+}
+
+function hasPersonalizationInput(form) {
+  return Object.keys(collectLineItemProperties(form)).length > 0;
+}
+
+function syncEasifyFormFields(form) {
+  const container = form.querySelector('.easify-product-options');
+  if (!container) return;
+
+  const parchesField = form.querySelector('[name="properties[Parches]"]');
+  if (!parchesField) return;
+
+  const checked = [...container.querySelectorAll('input[type="checkbox"]:checked')]
+    .map((el) => el.value)
+    .filter(Boolean);
+
+  parchesField.value = checked.join(', ');
+}
+
 function collectLineItemProperties(form) {
   const properties = {};
 
   form.querySelectorAll('[name^="properties["]').forEach((el) => {
-    if (el.disabled || !el.name) return;
+    if (!el.name) return;
+
     const match = el.name.match(/^properties\[(.+)\]$/);
     if (!match) return;
     const key = match[1];
+
+    const isTpoMarker = key.startsWith('_');
+    if (el.disabled && !isTpoMarker) return;
 
     if (el.type === 'radio') {
       if (el.checked && el.value) properties[key] = el.value;
@@ -320,6 +350,68 @@ function collectLineItemProperties(form) {
   });
 
   return properties;
+}
+
+function buildCartAddFormData(form) {
+  syncEasifyFormFields(form);
+
+  const formData = new FormData(form);
+  const variantId = getVariantIdFromForm(form);
+  if (variantId) formData.set('id', variantId);
+
+  const tpoAddBy = form.querySelector('[name="properties[_tpo_add_by]"]');
+  if (tpoAddBy && tpoAddBy.value) {
+    formData.set(tpoAddBy.name, tpoAddBy.value);
+  }
+
+  return formData;
+}
+
+function shouldUseFormDataForCart(form) {
+  return formHasEasifyOptions(form) || hasPersonalizationInput(form);
+}
+
+function parseCartAddResponse(data) {
+  if (!data || typeof data !== 'object') return [];
+
+  if (Array.isArray(data.items) && data.items.length) return data.items;
+  if (data.id || data.variant_id) return [data];
+
+  return [];
+}
+
+async function addItemToCartFromForm(form) {
+  const formData = buildCartAddFormData(form);
+  if (!formData.get('id')) throw new Error('Selecciona una variante válida');
+
+  const response = await fetch('/cart/add.js', {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: { Accept: 'application/json' },
+    body: formData,
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const message = data.description || data.message || 'No se pudo agregar al carrito';
+    throw new Error(message);
+  }
+
+  if (!parseCartAddResponse(data).length) {
+    throw new Error('No se pudo agregar al carrito');
+  }
+
+  return data;
+}
+
+async function addProductFormToCart(form) {
+  if (shouldUseFormDataForCart(form)) {
+    return addItemToCartFromForm(form);
+  }
+
+  const payload = buildCartAddPayload(form);
+  if (!payload) throw new Error('Selecciona una variante válida');
+  return addItemToCart(payload);
 }
 
 function buildCartAddPayload(form) {
@@ -375,7 +467,7 @@ async function addItemToCart(payload) {
     throw new Error(message);
   }
 
-  const addedItems = data.items || (data.id || data.variant_id ? [data] : []);
+  const addedItems = parseCartAddResponse(data);
   if (!addedItems.length) {
     throw new Error('No se pudo agregar al carrito');
   }
@@ -499,18 +591,8 @@ if (productJsonEl && productForm) {
   }
 
   async function submitProductForm(redirectToCheckout) {
-    const payload = buildCartAddPayload(productForm);
-    if (!payload) throw new Error('Selecciona una variante válida');
-
-    const beforeCart = await fetchCart();
-    const beforeCount = beforeCart ? beforeCart.item_count : 0;
-
-    await addItemToCart(payload);
-
-    const cart = await refreshHeaderCartCount();
-    if (!cart || cart.item_count <= beforeCount) {
-      throw new Error('No se pudo agregar al carrito');
-    }
+    await addProductFormToCart(productForm);
+    await refreshHeaderCartCount();
 
     if (redirectToCheckout) {
       window.location.href = '/checkout';
@@ -704,18 +786,10 @@ if (productJsonEl && productForm) {
   };
 
   window.baulAddToCart = async function (variantId) {
-    const beforeCart = await fetchCart();
-    const beforeCount = beforeCart ? beforeCart.item_count : 0;
-
     const data = await addItemToCart({
       items: [{ id: String(variantId), quantity: 1 }],
     });
-
-    const cart = await refreshHeaderCartCount();
-    if (!cart || cart.item_count <= beforeCount) {
-      throw new Error('No se pudo agregar al carrito');
-    }
-
+    await refreshHeaderCartCount();
     if (typeof window.baulCartToastNotify === 'function') {
       window.baulCartToastNotify();
     }
@@ -1163,9 +1237,7 @@ if (productJsonEl && productForm) {
   });
 
   async function addToCartFromForm(form) {
-    const payload = buildCartAddPayload(form);
-    if (!payload) throw new Error('Variante no válida');
-    return addItemToCart(payload);
+    return addProductFormToCart(form);
   }
 
   document.addEventListener('submit', async (event) => {
@@ -1177,17 +1249,11 @@ if (productJsonEl && productForm) {
 
     event.preventDefault();
 
-    if (!buildCartAddPayload(form)) return;
+    if (!getVariantIdFromForm(form)) return;
 
     try {
-      const beforeCart = await fetchCart();
-      const beforeCount = beforeCart ? beforeCart.item_count : 0;
-
       await addToCartFromForm(form);
-
-      const cart = await refreshHeaderCartCount();
-      if (!cart || cart.item_count <= beforeCount) return;
-
+      await refreshHeaderCartCount();
       scheduleToastUpdate();
     } catch (e) {
       /* avoid native submit that can corrupt cart state */
