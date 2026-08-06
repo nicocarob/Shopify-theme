@@ -457,17 +457,95 @@ function syncEasifyVariantId(form) {
   });
 }
 
+let easifyStayOnPageDepth = 0;
+
+function shouldBlockEasifyCartRedirect(url) {
+  if (!easifyStayOnPageDepth || typeof url !== 'string') return false;
+
+  try {
+    const target = new URL(url, window.location.origin);
+    if (target.origin !== window.location.origin) return false;
+
+    if (target.pathname === '/cart' || target.pathname.startsWith('/cart/')) {
+      return true;
+    }
+
+    return target.search.includes('addToCart=true');
+  } catch (e) {
+    return false;
+  }
+}
+
+function beginEasifyStayOnPage() {
+  easifyStayOnPageDepth += 1;
+  window.easifyAddToCartEvent = true;
+}
+
+function endEasifyStayOnPage(delayMs = 2500) {
+  window.setTimeout(() => {
+    easifyStayOnPageDepth = Math.max(0, easifyStayOnPageDepth - 1);
+    if (!easifyStayOnPageDepth) {
+      window.easifyAddToCartEvent = false;
+    }
+  }, delayMs);
+}
+
+function initEasifyStayOnPageGuard() {
+  if (initEasifyStayOnPageGuard.done) return;
+  initEasifyStayOnPageGuard.done = true;
+
+  const descriptor = Object.getOwnPropertyDescriptor(window.Location.prototype, 'href');
+  if (!descriptor?.set) return;
+
+  Object.defineProperty(window.location, 'href', {
+    configurable: true,
+    enumerable: descriptor.enumerable,
+    get() {
+      return descriptor.get.call(window.location);
+    },
+    set(value) {
+      if (shouldBlockEasifyCartRedirect(value)) return;
+      descriptor.set.call(window.location, value);
+    },
+  });
+
+  const originalReload = window.location.reload.bind(window.location);
+  window.location.reload = function (...args) {
+    if (easifyStayOnPageDepth) return;
+    return originalReload(...args);
+  };
+
+  const originalAssign = window.location.assign.bind(window.location);
+  window.location.assign = function (url) {
+    if (shouldBlockEasifyCartRedirect(url)) return;
+    return originalAssign(url);
+  };
+
+  const originalReplace = window.location.replace.bind(window.location);
+  window.location.replace = function (url) {
+    if (shouldBlockEasifyCartRedirect(url)) return;
+    return originalReplace(url);
+  };
+}
+
 async function addProductFormViaEasify(form) {
+  initEasifyStayOnPageGuard();
   syncEasifyFormFields(form);
   syncEasifyVariantId(form);
 
   const easifyBtn = getEasifyCartButton(form);
   await waitForEasifyCartButton(easifyBtn);
 
-  const addPromise = waitForEasifyCartAdd();
-  easifyBtn.click();
-  await addPromise;
-  await refreshHeaderCartCount();
+  beginEasifyStayOnPage();
+
+  try {
+    const addPromise = waitForEasifyCartAdd();
+    easifyBtn.click();
+    await addPromise;
+    await refreshHeaderCartCount();
+  } finally {
+    endEasifyStayOnPage();
+  }
 }
 
 function shouldUseFormDataForCart(form) {
@@ -637,6 +715,8 @@ function initBaulCartSync() {
 }
 
 function initEasifyCartBridge() {
+  initEasifyStayOnPageGuard();
+
   const onEasifyAdded = () => {
     refreshHeaderCartCount();
     if (typeof window.baulCartToastNotify === 'function') {
@@ -1402,7 +1482,10 @@ if (productJsonEl && productForm) {
     const action = form.getAttribute('action') || '';
     if (!action.includes('/cart/add')) return;
 
-    if (shouldDelegateToEasify(form)) return;
+    if (shouldDelegateToEasify(form)) {
+      event.preventDefault();
+      return;
+    }
 
     event.preventDefault();
 
