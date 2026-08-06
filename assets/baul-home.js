@@ -380,17 +380,22 @@ function shouldDelegateToEasify(form) {
   return hasPersonalizationInput(form) || hasEasifyAddonFee(form);
 }
 
+function getEasifyCartButton(form) {
+  if (!(form instanceof HTMLFormElement)) return null;
+
+  const candidates = [
+    form.querySelector('#bp-easify-atc-proxy'),
+    form.querySelector('#bp-add-cart-btn'),
+    form.querySelector('.product-form__submit:not(.tpo_ignore)'),
+  ].filter(Boolean);
+
+  const hooked = candidates.find((btn) => isEasifyCartButtonReady(btn));
+  return hooked || candidates[0] || null;
+}
+
 function isEasifyCartButtonReady(btn) {
   return !!(btn && btn.dataset.isRenderOptionSet === 'true');
 }
-
-function getEasifyCartButton(form) {
-  const btn = form.querySelector('#bp-add-cart-btn');
-  if (btn && isEasifyCartButtonReady(btn)) return btn;
-  return form.querySelector('.product-form__submit.tpo_add-to-cart') || btn;
-}
-
-let easifyBypassThemeCartHandler = false;
 
 function waitForEasifyCartButton(btn, timeoutMs = 8000) {
   if (!btn) return Promise.reject(new Error('easify-button-missing'));
@@ -443,13 +448,6 @@ function waitForEasifyCartAdd(timeoutMs = 20000) {
   });
 }
 
-function markEasifyStayOnPage() {
-  window.easifyAddToCartEvent = true;
-  window.setTimeout(() => {
-    window.easifyAddToCartEvent = false;
-  }, 4000);
-}
-
 function syncEasifyVariantId(form) {
   const variantId = getVariantIdFromForm(form);
   if (!variantId) return;
@@ -459,23 +457,89 @@ function syncEasifyVariantId(form) {
   });
 }
 
-async function triggerEasifyCartAdd(form, btn) {
-  syncEasifyFormFields(form);
-  syncEasifyVariantId(form);
-  await waitForEasifyCartButton(btn);
-  markEasifyStayOnPage();
+function guardEasifyCartRedirect(durationMs = 6000) {
+  let active = true;
+  const locationProto = window.Location.prototype;
+  const hrefDescriptor = Object.getOwnPropertyDescriptor(locationProto, 'href');
 
-  const addPromise = waitForEasifyCartAdd();
-  easifyBypassThemeCartHandler = true;
-
-  try {
-    btn.click();
-    await addPromise;
-  } finally {
-    easifyBypassThemeCartHandler = false;
+  if (!hrefDescriptor || !hrefDescriptor.set) {
+    return () => {};
   }
 
-  await refreshHeaderCartCount();
+  const originalSet = hrefDescriptor.set;
+  const originalGet = hrefDescriptor.get;
+
+  function shouldBlock(url) {
+    if (!active || typeof url !== 'string' || url.includes('/checkout')) return false;
+
+    try {
+      const path = new URL(url, window.location.href).pathname.replace(/\/$/, '') || '/';
+      return path === '/cart';
+    } catch (e) {
+      return /\/cart\/?(\?|$)/.test(url);
+    }
+  }
+
+  function release() {
+    if (!active) return;
+    active = false;
+    window.clearTimeout(timer);
+    try {
+      Object.defineProperty(locationProto, 'href', hrefDescriptor);
+    } catch (e) {
+      /* ignore */
+    }
+  }
+
+  Object.defineProperty(locationProto, 'href', {
+    configurable: true,
+    enumerable: hrefDescriptor.enumerable,
+    get() {
+      return originalGet.call(this);
+    },
+    set(value) {
+      if (shouldBlock(value)) {
+        release();
+        refreshHeaderCartCount();
+        if (typeof window.baulCartToastNotify === 'function') {
+          window.baulCartToastNotify();
+        }
+        return;
+      }
+      originalSet.call(this, value);
+    },
+  });
+
+  const timer = window.setTimeout(release, durationMs);
+  return release;
+}
+
+async function triggerEasifyCartAdd(form) {
+  syncEasifyFormFields(form);
+  syncEasifyVariantId(form);
+
+  const easifyBtn = getEasifyCartButton(form);
+  await waitForEasifyCartButton(easifyBtn);
+
+  const releaseGuard = guardEasifyCartRedirect();
+  const addPromise = waitForEasifyCartAdd();
+
+  try {
+    easifyBtn.click();
+    await addPromise;
+    await refreshHeaderCartCount();
+  } finally {
+    releaseGuard();
+  }
+}
+
+async function addProductFormViaEasify(form) {
+  return triggerEasifyCartAdd(form);
+}
+
+function shouldUseFormDataForCart(form) {
+  if (shouldDelegateToEasify(form)) return false;
+  return formHasEasifyOptions(form) || hasPersonalizationInput(form);
 }
 
 function parseCartAddResponse(data) {
@@ -513,12 +577,11 @@ async function addItemToCartFromForm(form) {
 
 async function addProductFormToCart(form) {
   if (shouldDelegateToEasify(form)) {
-    const easifyBtn = getEasifyCartButton(form);
-    try {
-      return await triggerEasifyCartAdd(form, easifyBtn);
-    } catch (e) {
-      return addItemToCartFromForm(form);
-    }
+    return addProductFormViaEasify(form);
+  }
+
+  if (shouldUseFormDataForCart(form)) {
+    return addItemToCartFromForm(form);
   }
 
   const payload = buildCartAddPayload(form);
@@ -642,7 +705,6 @@ function initBaulCartSync() {
 
 function initEasifyCartBridge() {
   const onEasifyAdded = () => {
-    window.easifyAddToCartEvent = false;
     refreshHeaderCartCount();
     if (typeof window.baulCartToastNotify === 'function') {
       window.baulCartToastNotify();
@@ -651,32 +713,6 @@ function initEasifyCartBridge() {
 
   document.addEventListener('easify:main-product:add', onEasifyAdded);
   document.addEventListener('tpo_product_added', onEasifyAdded);
-
-  if (initEasifyCartBridge.hrefGuard) return;
-  initEasifyCartBridge.hrefGuard = true;
-
-  const descriptor = Object.getOwnPropertyDescriptor(window.Location.prototype, 'href');
-  const setHref = descriptor?.set;
-  if (!setHref) return;
-
-  Object.defineProperty(window.location, 'href', {
-    configurable: true,
-    enumerable: descriptor.enumerable,
-    get() {
-      return descriptor.get.call(window.location);
-    },
-    set(url) {
-      if (window.easifyAddToCartEvent && typeof url === 'string') {
-        try {
-          const path = new URL(url, window.location.origin).pathname;
-          if (path === '/cart' || path.startsWith('/cart/')) return;
-        } catch (e) {
-          /* ignore */
-        }
-      }
-      setHref.call(window.location, url);
-    },
-  });
 }
 
 if (document.readyState === 'loading') {
@@ -744,23 +780,31 @@ if (productJsonEl && productForm) {
       addCartBtn.disabled = !variant.available;
       addCartBtn.setAttribute('data-variant-id', String(variant.id));
     }
+    const easifyProxy = productForm.querySelector('#bp-easify-atc-proxy');
+    if (easifyProxy) {
+      easifyProxy.setAttribute('data-variant-id', String(variant.id));
+    }
   }
 
-  productForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-  });
-
   async function submitProductForm(redirectToCheckout) {
-    if (shouldDelegateToEasify(productForm)) {
-      try {
-        await triggerEasifyCartAdd(productForm, getEasifyCartButton(productForm));
-      } catch (e) {
-        await addItemToCartFromForm(productForm);
+    if (
+      shouldDelegateToEasify(productForm) &&
+      isEasifyCartButtonReady(getEasifyCartButton(productForm))
+    ) {
+      await addProductFormViaEasify(productForm);
+
+      if (redirectToCheckout) {
+        window.location.href = '/checkout';
+        return;
       }
-    } else {
-      await addProductFormToCart(productForm);
+
+      if (typeof window.baulCartToastNotify === 'function') {
+        window.baulCartToastNotify();
+      }
+      return;
     }
 
+    await addProductFormToCart(productForm);
     await refreshHeaderCartCount();
 
     if (redirectToCheckout) {
@@ -787,37 +831,19 @@ if (productJsonEl && productForm) {
     }
   });
 
-  addCartBtn?.addEventListener('click', async (event) => {
-    if (easifyBypassThemeCartHandler) return;
+  addCartBtn?.addEventListener('click', async () => {
     if (addCartBtn.disabled) return;
 
-    if (shouldDelegateToEasify(productForm)) {
-      event.stopImmediatePropagation();
-      event.preventDefault();
-      addCartBtn.disabled = true;
+    const easifyBtn = getEasifyCartButton(productForm);
+    if (shouldDelegateToEasify(productForm) && isEasifyCartButtonReady(easifyBtn)) {
+      const releaseGuard = guardEasifyCartRedirect();
+      waitForEasifyCartAdd()
+        .then(() => refreshHeaderCartCount())
+        .catch(() => {})
+        .finally(() => releaseGuard());
 
-      try {
-        await triggerEasifyCartAdd(productForm, getEasifyCartButton(productForm));
-        addCartBtn.classList.add('is-added');
-        window.setTimeout(() => addCartBtn.classList.remove('is-added'), 900);
-        if (typeof window.baulCartToastNotify === 'function') {
-          window.baulCartToastNotify();
-        }
-      } catch (e) {
-        try {
-          await addItemToCartFromForm(productForm);
-          await refreshHeaderCartCount();
-          addCartBtn.classList.add('is-added');
-          window.setTimeout(() => addCartBtn.classList.remove('is-added'), 900);
-          if (typeof window.baulCartToastNotify === 'function') {
-            window.baulCartToastNotify();
-          }
-        } catch (err) {
-          /* keep cart intact */
-        }
-      } finally {
-        const variant = findVariant();
-        addCartBtn.disabled = !(variant && variant.available);
+      if (easifyBtn !== addCartBtn) {
+        easifyBtn.click();
       }
       return;
     }
@@ -1451,7 +1477,7 @@ if (productJsonEl && productForm) {
 
     event.preventDefault();
 
-    if (form.id === 'baul-product-form') return;
+    if (shouldDelegateToEasify(form)) return;
 
     if (!getVariantIdFromForm(form)) return;
 
