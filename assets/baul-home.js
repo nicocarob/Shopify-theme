@@ -371,6 +371,71 @@ function shouldUseFormDataForCart(form) {
   return formHasEasifyOptions(form) || hasPersonalizationInput(form);
 }
 
+let baulCartAddDepth = 0;
+let baulCartAddReleaseTimer = null;
+let baulLocationReload = null;
+
+function beginBaulCartAdd() {
+  baulCartAddDepth += 1;
+  window.easifyAddToCartEvent = true;
+
+  if (!baulLocationReload) {
+    baulLocationReload = window.location.reload.bind(window.location);
+    window.location.reload = function baulBlockedReload() {
+      if (window.easifyAddToCartEvent) return undefined;
+      return baulLocationReload();
+    };
+  }
+}
+
+function endBaulCartAdd() {
+  baulCartAddDepth = Math.max(0, baulCartAddDepth - 1);
+  if (baulCartAddDepth > 0) return;
+
+  window.clearTimeout(baulCartAddReleaseTimer);
+  baulCartAddReleaseTimer = window.setTimeout(() => {
+    if (baulCartAddDepth === 0) {
+      window.easifyAddToCartEvent = false;
+    }
+  }, 4000);
+}
+
+async function withBaulCartAdd(fn) {
+  beginBaulCartAdd();
+  try {
+    return await fn();
+  } finally {
+    endBaulCartAdd();
+  }
+}
+
+function isolateBaulCartButton(btn) {
+  if (!btn || btn.dataset.baulIsolated === '1') return btn;
+
+  const clone = btn.cloneNode(true);
+  clone.dataset.baulIsolated = '1';
+  clone.classList.add('tpo_ignore');
+  clone.classList.remove(
+    'product-form__submit',
+    'tpo_add-to-cart',
+    'add-to-cart-button',
+    'button'
+  );
+  clone.type = 'button';
+  clone.removeAttribute('name');
+  clone.removeAttribute('data-variant-id');
+  btn.replaceWith(clone);
+  return clone;
+}
+
+function isolateBaulProductButtons() {
+  const form = document.getElementById('baul-product-form');
+  if (!form) return;
+
+  isolateBaulCartButton(form.querySelector('#bp-add-cart-btn'));
+  isolateBaulCartButton(form.querySelector('#bp-buy-btn'));
+}
+
 function parseCartAddResponse(data) {
   if (!data || typeof data !== 'object') return [];
 
@@ -381,27 +446,29 @@ function parseCartAddResponse(data) {
 }
 
 async function addItemToCartFromForm(form) {
-  const formData = buildCartAddFormData(form);
-  if (!formData.get('id')) throw new Error('Selecciona una variante válida');
+  return withBaulCartAdd(async () => {
+    const formData = buildCartAddFormData(form);
+    if (!formData.get('id')) throw new Error('Selecciona una variante válida');
 
-  const response = await fetch('/cart/add.js', {
-    method: 'POST',
-    credentials: 'same-origin',
-    headers: { Accept: 'application/json' },
-    body: formData,
+    const response = await fetch('/cart/add.js', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { Accept: 'application/json' },
+      body: formData,
+    });
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const message = data.description || data.message || 'No se pudo agregar al carrito';
+      throw new Error(message);
+    }
+
+    if (!parseCartAddResponse(data).length) {
+      throw new Error('No se pudo agregar al carrito');
+    }
+
+    return data;
   });
-
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    const message = data.description || data.message || 'No se pudo agregar al carrito';
-    throw new Error(message);
-  }
-
-  if (!parseCartAddResponse(data).length) {
-    throw new Error('No se pudo agregar al carrito');
-  }
-
-  return data;
 }
 
 async function addProductFormToCart(form) {
@@ -449,30 +516,32 @@ async function fetchCart() {
 }
 
 async function addItemToCart(payload) {
-  const body = payload.items ? payload : { items: [payload] };
+  return withBaulCartAdd(async () => {
+    const body = payload.items ? payload : { items: [payload] };
 
-  const response = await fetch('/cart/add.js', {
-    method: 'POST',
-    credentials: 'same-origin',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    body: JSON.stringify(body),
+    const response = await fetch('/cart/add.js', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const message = data.description || data.message || 'No se pudo agregar al carrito';
+      throw new Error(message);
+    }
+
+    const addedItems = parseCartAddResponse(data);
+    if (!addedItems.length) {
+      throw new Error('No se pudo agregar al carrito');
+    }
+
+    return data;
   });
-
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    const message = data.description || data.message || 'No se pudo agregar al carrito';
-    throw new Error(message);
-  }
-
-  const addedItems = parseCartAddResponse(data);
-  if (!addedItems.length) {
-    throw new Error('No se pudo agregar al carrito');
-  }
-
-  return data;
 }
 
 function updateHeaderCartCount(count) {
@@ -512,7 +581,36 @@ function syncCartHeaderFromSession() {
   }
 }
 
+function initBaulEasifyGuard() {
+  if (initBaulEasifyGuard.done) return;
+  initBaulEasifyGuard.done = true;
+
+  const descriptor = Object.getOwnPropertyDescriptor(window.Location.prototype, 'href');
+  const setHref = descriptor?.set;
+  if (!setHref) return;
+
+  Object.defineProperty(window.location, 'href', {
+    configurable: true,
+    enumerable: descriptor.enumerable,
+    get() {
+      return descriptor.get.call(window.location);
+    },
+    set(url) {
+      if (window.easifyAddToCartEvent && typeof url === 'string') {
+        try {
+          const path = new URL(url, window.location.href).pathname.replace(/\/$/, '') || '/';
+          if (path === '/cart') return;
+        } catch (e) {
+          if (/\/cart\/?(\?|$)/.test(url)) return;
+        }
+      }
+      setHref.call(window.location, url);
+    },
+  });
+}
+
 function initBaulCartSync() {
+  initBaulEasifyGuard();
   syncCartHeaderFromSession();
   refreshHeaderCartCount();
 
@@ -594,6 +692,10 @@ if (productJsonEl && productForm) {
     event.preventDefault();
   });
 
+  isolateBaulProductButtons();
+  window.addEventListener('load', isolateBaulProductButtons);
+  window.setTimeout(isolateBaulProductButtons, 2000);
+
   async function submitProductForm(redirectToCheckout) {
     await addProductFormToCart(productForm);
     await refreshHeaderCartCount();
@@ -608,35 +710,47 @@ if (productJsonEl && productForm) {
     }
   }
 
-  buyBtn?.addEventListener('click', async () => {
-    if (buyBtn.disabled) return;
-    buyBtn.disabled = true;
-    const originalText = buyBtn.textContent;
-    buyBtn.textContent = 'PROCESANDO…';
+  productForm.addEventListener(
+    'click',
+    async (event) => {
+      const addBtn = event.target.closest('#bp-add-cart-btn');
+      const buyBtnTarget = event.target.closest('#bp-buy-btn');
+      if (!addBtn && !buyBtnTarget) return;
 
-    try {
-      await submitProductForm(true);
-    } catch (e) {
-      buyBtn.disabled = false;
-      buyBtn.textContent = originalText;
-    }
-  });
+      event.preventDefault();
+      event.stopImmediatePropagation();
 
-  addCartBtn?.addEventListener('click', async () => {
-    if (addCartBtn.disabled) return;
-    addCartBtn.disabled = true;
+      if (addBtn) {
+        if (addBtn.disabled) return;
+        addBtn.disabled = true;
 
-    try {
-      await submitProductForm(false);
-      addCartBtn.classList.add('is-added');
-      window.setTimeout(() => addCartBtn.classList.remove('is-added'), 900);
-    } catch (e) {
-      /* keep cart intact; avoid native form submit */
-    } finally {
-      const variant = findVariant();
-      addCartBtn.disabled = !(variant && variant.available);
-    }
-  });
+        try {
+          await submitProductForm(false);
+          addBtn.classList.add('is-added');
+          window.setTimeout(() => addBtn.classList.remove('is-added'), 900);
+        } catch (e) {
+          /* keep cart intact */
+        } finally {
+          const variant = findVariant();
+          addBtn.disabled = !(variant && variant.available);
+        }
+        return;
+      }
+
+      if (buyBtnTarget.disabled) return;
+      buyBtnTarget.disabled = true;
+      const originalText = buyBtnTarget.textContent;
+      buyBtnTarget.textContent = 'PROCESANDO…';
+
+      try {
+        await submitProductForm(true);
+      } catch (e) {
+        buyBtnTarget.disabled = false;
+        buyBtnTarget.textContent = originalText;
+      }
+    },
+    true
+  );
 
   document.querySelectorAll('.bp-variant-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
