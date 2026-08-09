@@ -1,0 +1,44 @@
+{% comment %}
+  Página de contenido liviana — La Cábala
+{% endcomment %}
+
+{% render 'baul-header-lite', section: section %}
+
+<section class="terms-page">
+  <div class="sec-bg-grid"></div>
+  <div class="terms-wrap">
+    <h1 class="terms-title">{{ page.title }}</h1>
+
+    {% if page.content != blank %}
+      <div class="terms-content">
+        {{ page.content }}
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Baúl Página",
+  "tag": "section",
+  "class": "baul-page-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "promo_text",
+      "label": "Texto del banner",
+      "default": "🎽 Lleva 3 camisetas y te llevas la 4ª a mitad de precio 🔥"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_secundario",
+      "label": "Imagen junto al logo"
+    }
+  ]
+}
+{% endschema %}
