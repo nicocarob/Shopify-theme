@@ -6,6 +6,8 @@
   assign logo_width = width | default: 104
   if section != blank and section.settings.logo != blank
     assign baul_logo_url = section.settings.logo | image_url: width: logo_width
+  elsif settings.logo != blank
+    assign baul_logo_url = settings.logo | image_url: width: logo_width
   else
     assign baul_logo_url = 'baul-logo.png' | asset_url
   endif

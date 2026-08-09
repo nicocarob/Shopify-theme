@@ -1,28 +1,18 @@
 {% comment %}
-  Header liviano: solo banner promo + navbar (sin countdown ni ticker).
+  Header liviano: solo navbar (sin countdown, ticker ni promo).
 {% endcomment %}
 
 {% liquid
   assign logo_secundario = blank
-  assign promo_text = '🎽 Lleva 3 camisetas y te llevas la 4ª a mitad de precio 🔥'
 
   if section != blank
     assign logo_secundario = section.settings.logo_secundario
-    assign promo_text = section.settings.promo_text | default: promo_text
   endif
 %}
 
 {% capture logo_src %}{% render 'baul-logo-url', section: section, width: 104 %}{% endcapture %}
 
 <div class="baul-header-stick" id="baul-header-stick">
-  <div class="promo-banner" role="note" aria-label="Promoción activa">
-    <div class="promo-banner__inner">
-      <span class="promo-banner__badge">Promo exclusiva</span>
-      <p class="promo-banner__text">{{ promo_text }}</p>
-      <span class="promo-banner__accent" aria-hidden="true">−50%</span>
-    </div>
-  </div>
-
   <nav>
     <a class="n-logo" href="{{ routes.root_url }}">
       <img src="{{ logo_src }}" alt="{{ shop.name | escape }}" width="52" height="52">
