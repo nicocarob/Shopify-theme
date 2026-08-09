@@ -3795,14 +3795,6 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     letter-spacing: 0.1em; color: var(--text-muted); text-transform: uppercase;
   }
 
-  /* ── Lite layout (páginas de contenido) ── */
-  html.baul-lite {
-    --baul-cbar-h: 0px;
-  }
-  html.baul-lite .baul-header-stick {
-    top: 0;
-  }
-
   /* ── Terms of service page ── */
   .terms-page {
     background: #0a0a0a;
