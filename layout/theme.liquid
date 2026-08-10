@@ -35,16 +35,17 @@
       {%- render 'theme-editor' -%}
     {% endif %}
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18031789308">
-</script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-18031789308"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
 
-  gtag('config', 'AW-18031789308');
-</script>
-<meta name="google-site-verification" content="Vx74ZdGh82SocxYMlb3ZNWm5AFrEkMoppM5NI9r2oBo" />
+      gtag('config', 'AW-18031789308');
+    </script>
+    <meta name="google-site-verification" content="Vx74ZdGh82SocxYMlb3ZNWm5AFrEkMoppM5NI9r2oBo" />
     {{ content_for_header }}
   </head>
 
@@ -142,5 +143,31 @@
     {% if settings.quick_add or settings.mobile_quick_add %}
       {% render 'quick-add-modal' %}
     {% endif %}
+    <script>
+      const input = document.querySelector('[name="properties[Parches]"]');
+      const form = document.getElementById('baul-product-form');
+
+      const mo = new MutationObserver(() => {
+        console.log('[Parches VALUE CHANGE]', input.value, performance.now());
+      });
+      mo.observe(input, { attributes: true, attributeFilter: ['value'] });
+      let last = input.value;
+      setInterval(() => {
+        if (input.value !== last) {
+          console.log('[Parches poll change]', input.value, performance.now());
+          last = input.value;
+        }
+      }, 50);
+
+      document.addEventListener(
+        'click',
+        (e) => {
+          if (e.target.closest('.bp-atc, [name="add"], button[type="submit"]')) {
+            console.log('[ATC CLICK]', input.value, performance.now());
+          }
+        },
+        true
+      );
+    </script>
   </body>
 </html>
