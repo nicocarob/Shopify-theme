@@ -1,0 +1,61 @@
+{% comment %}
+  Página de contenido — La Cábala
+  Mismo formato que Política de envíos, Términos y Reembolso.
+{% endcomment %}
+
+{% render 'baul-header', section: section %}
+
+<section class="terms-page">
+  <div class="sec-bg-grid"></div>
+  <div class="terms-wrap">
+    <h1 class="terms-title">{{ page.title }}</h1>
+
+    <div class="terms-content">
+      {% if page.content != blank %}
+        {{ page.content }}
+      {% elsif page.handle == 'terminos-del-servicio' %}
+        {% render 'baul-terminos-content' %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Baúl Página",
+  "tag": "section",
+  "class": "baul-page-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Barra superior"
+    },
+    {
+      "type": "text",
+      "id": "countdown_text",
+      "label": "Texto countdown",
+      "default": "ENVÍO GRATIS POR TIEMPO LIMITADO — TERMINA EN:"
+    },
+    {
+      "type": "text",
+      "id": "promo_text",
+      "label": "Banner promo",
+      "default": "🎽 Lleva 3 camisetas y te llevas la 4ª a mitad de precio 🔥"
+    },
+    {
+      "type": "header",
+      "content": "Navbar"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_secundario",
+      "label": "Imagen junto al logo"
+    }
+  ]
+}
+{% endschema %}
