@@ -331,7 +331,6 @@ function syncEasifyFormFields(form) {
   const checked = [...container.querySelectorAll('input[type="checkbox"]:checked')]
     .map((el) => el.value)
     .filter(Boolean);
-
   parchesField.value = checked.join(', ');
 }
 
