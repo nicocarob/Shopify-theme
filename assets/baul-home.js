@@ -322,16 +322,19 @@ function hasPersonalizationInput(form) {
 }
 
 function syncEasifyFormFields(form) {
-  const container = form.querySelector('.easify-product-options');
-  if (!container) return;
-
   const parchesField = form.querySelector('[name="properties[Parches]"]');
   if (!parchesField) return;
 
-  const checked = [...container.querySelectorAll('input[type="checkbox"]:checked')]
-    .map((el) => el.value)
-    .filter(Boolean);
-  parchesField.value = checked.join(', ');
+  const propsField = form.querySelector('[name="properties[_po:items:properties]"]');
+  if (!propsField || !propsField.value) return;
+
+  try {
+    const props = JSON.parse(propsField.value);
+    if (Object.prototype.hasOwnProperty.call(props, 'Parches')) {
+      parchesField.value = props['Parches'] || '';
+    }
+  } catch (e) {
+  }
 }
 
 function collectLineItemProperties(form) {
