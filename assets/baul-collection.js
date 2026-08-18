@@ -14,7 +14,6 @@
   const status = document.getElementById('bc-infinite-status');
   const filtersRoot = document.getElementById('bc-filters');
   const filtersPills = document.getElementById('bc-filters-pills');
-  const filtersClear = document.getElementById('bc-filters-clear');
   const filtersCount = document.getElementById('bc-filters-count');
   const filtersEmpty = document.getElementById('bc-filters-empty');
 
@@ -30,7 +29,7 @@
   let allProductsLoaded = totalPages <= 1;
   let preloadPromise = null;
 
-  const activeFilters = new Set();
+  let activeFilter = null;
   const productTagsByHandle = new Map();
 
   function isNinos(title) {
@@ -101,12 +100,9 @@
   }
 
   function itemMatchesFilters(handle, title) {
-    if (activeFilters.size === 0) return true;
+    if (!activeFilter) return true;
     const tags = productTagsByHandle.get(handle) || getTagsForTitle(title);
-    for (const filterId of activeFilters) {
-      if (!tags.has(filterId)) return false;
-    }
-    return true;
+    return tags.has(activeFilter);
   }
 
   function getHandlesInDom() {
@@ -189,7 +185,7 @@
         window.baulInitProductSocialProof();
       }
 
-      if (activeFilters.size > 0) applyFilters();
+      if (activeFilter) applyFilters();
     })().catch(() => {
       preloadPromise = null;
     });
@@ -198,18 +194,11 @@
   }
 
   function countMatchingInCollection() {
-    if (activeFilters.size === 0) return productTagsByHandle.size;
+    if (!activeFilter) return productTagsByHandle.size;
 
     let count = 0;
     productTagsByHandle.forEach((tags) => {
-      let match = true;
-      for (const filterId of activeFilters) {
-        if (!tags.has(filterId)) {
-          match = false;
-          break;
-        }
-      }
-      if (match) count += 1;
+      if (tags.has(activeFilter)) count += 1;
     });
     return count;
   }
@@ -221,15 +210,13 @@
       item.hidden = !itemMatchesFilters(handle, title);
     });
 
-    if (filtersClear) filtersClear.hidden = activeFilters.size === 0;
-
-    const totalMatching = activeFilters.size > 0 ? countMatchingInCollection() : 0;
+    const totalMatching = activeFilter ? countMatchingInCollection() : 0;
     if (filtersEmpty) {
-      filtersEmpty.hidden = activeFilters.size === 0 || totalMatching > 0;
+      filtersEmpty.hidden = !activeFilter || totalMatching > 0;
     }
 
     if (filtersCount) {
-      if (activeFilters.size === 0) {
+      if (!activeFilter) {
         filtersCount.hidden = true;
       } else {
         filtersCount.hidden = false;
@@ -240,8 +227,9 @@
 
     filtersPills?.querySelectorAll('.bc-filter-pill').forEach((pill) => {
       const id = pill.dataset.filterId;
-      pill.classList.toggle('is-active', activeFilters.has(id));
-      pill.setAttribute('aria-pressed', activeFilters.has(id) ? 'true' : 'false');
+      const isActive = id === 'all' ? !activeFilter : activeFilter === id;
+      pill.classList.toggle('is-active', isActive);
+      pill.setAttribute('aria-pressed', isActive ? 'true' : 'false');
     });
   }
 
@@ -299,6 +287,15 @@
       return;
     }
 
+    const allBtn = document.createElement('button');
+    allBtn.type = 'button';
+    allBtn.className = 'bc-filter-pill is-active';
+    allBtn.dataset.filterId = 'all';
+    allBtn.textContent = 'Todos';
+    allBtn.setAttribute('aria-pressed', 'true');
+    allBtn.addEventListener('click', () => onFilterToggle('all'));
+    filtersPills.appendChild(allBtn);
+
     available.forEach((filter) => {
       const btn = document.createElement('button');
       btn.type = 'button';
@@ -314,13 +311,15 @@
   }
 
   async function onFilterToggle(filterId) {
-    if (activeFilters.has(filterId)) {
-      activeFilters.delete(filterId);
+    if (filterId === 'all') {
+      activeFilter = null;
+    } else if (activeFilter === filterId) {
+      activeFilter = null;
     } else {
-      activeFilters.add(filterId);
+      activeFilter = filterId;
     }
 
-    if (activeFilters.size > 0) {
+    if (activeFilter) {
       observer?.disconnect();
       if (status) status.hidden = true;
       await preloadAllPages();
@@ -339,7 +338,7 @@
   }
 
   async function loadMore() {
-    if (activeFilters.size > 0 || loading || !nextUrl || allProductsLoaded) return;
+    if (activeFilter || loading || !nextUrl || allProductsLoaded) return;
     loading = true;
     if (status) status.hidden = false;
 
@@ -367,17 +366,9 @@
       observer?.disconnect();
     } finally {
       loading = false;
-      if (status && activeFilters.size === 0) status.hidden = true;
+      if (status && !activeFilter) status.hidden = true;
     }
   }
-
-  filtersClear?.addEventListener('click', async () => {
-    activeFilters.clear();
-    if (!allProductsLoaded && sentinel && nextUrl) {
-      observer?.observe(sentinel);
-    }
-    applyFilters();
-  });
 
   if (sentinel) {
     observer = new IntersectionObserver(
