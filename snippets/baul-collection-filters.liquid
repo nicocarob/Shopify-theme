@@ -1,13 +1,92 @@
 {% comment %}
-  Barra de filtros por título — se rellena con JS según productos de la colección.
+  Filtros por título — renderizados en servidor; JS aplica el filtrado.
 {% endcomment %}
 
-<div class="bc-filters rev" id="bc-filters" hidden>
-  <div class="bc-filters-inner">
-    <span class="bc-filters-label">Filtrar</span>
-    <div class="bc-filters-pills" id="bc-filters-pills" role="group" aria-label="Filtros de colección"></div>
-    <button type="button" class="bc-filters-clear" id="bc-filters-clear" hidden>Limpiar</button>
+{% liquid
+  assign has_retro = false
+  assign has_ninos = false
+  assign has_mujer = false
+  assign has_adultos = false
+  assign has_player = false
+  assign has_manga_larga = false
+  assign has_cortavientos = false
+
+  for product in collection.products limit: 250
+    assign t = product.title | downcase
+
+    if t contains 'niño' or t contains 'nino' or t contains 'niños' or t contains 'ninos'
+      assign has_ninos = true
+    endif
+
+    if t contains 'mujer'
+      assign has_mujer = true
+    endif
+
+    unless t contains 'niño' or t contains 'nino' or t contains 'niños' or t contains 'ninos' or t contains 'mujer'
+      assign has_adultos = true
+    endunless
+
+    if t contains 'adulto' or t contains 'adultos'
+      assign has_adultos = true
+    endif
+
+    if t contains 'player'
+      assign has_player = true
+    endif
+
+    if t contains 'manga larga' or t contains 'manga-larga' or t contains 'mangalarga'
+      assign has_manga_larga = true
+    endif
+
+    if t contains 'cortaviento' or t contains 'chaqueta'
+      assign has_cortavientos = true
+    endif
+
+    if t contains '1990' or t contains '1991' or t contains '1992' or t contains '1993' or t contains '1994' or t contains '1995' or t contains '1996' or t contains '1997' or t contains '1998' or t contains '1999' or t contains '2000' or t contains '2001' or t contains '2002' or t contains '2003' or t contains '2004' or t contains '2005' or t contains '2006' or t contains '2007' or t contains '2008' or t contains '2009' or t contains '2010' or t contains '2011' or t contains '2012' or t contains '2013' or t contains '2014' or t contains '2015' or t contains '2016' or t contains '2017' or t contains '2018' or t contains '2019' or t contains '2020'
+      assign has_retro = true
+    endif
+
+    if t contains '19/20' or t contains '18/19' or t contains '17/18' or t contains '16/17' or t contains '15/16' or t contains '14/15' or t contains '13/14' or t contains '12/13' or t contains '11/12' or t contains '10/11' or t contains '09/10' or t contains '08/09' or t contains '07/08' or t contains '06/07' or t contains '05/06' or t contains '04/05' or t contains '03/04' or t contains '02/03' or t contains '01/02' or t contains '00/01' or t contains '20/21'
+      assign has_retro = true
+    endif
+  endfor
+
+  assign has_any_filter = false
+  if has_retro or has_ninos or has_mujer or has_adultos or has_player or has_manga_larga or has_cortavientos
+    assign has_any_filter = true
+  endif
+%}
+
+{% if has_any_filter %}
+  <div class="bc-filters" id="bc-filters">
+    <div class="bc-filters-inner">
+      <span class="bc-filters-label">Filtrar</span>
+      <div class="bc-filters-pills" id="bc-filters-pills" role="group" aria-label="Filtros de colección">
+        {% if has_retro %}
+          <button type="button" class="bc-filter-pill" data-filter-id="retro" aria-pressed="false">Retro</button>
+        {% endif %}
+        {% if has_ninos %}
+          <button type="button" class="bc-filter-pill" data-filter-id="ninos" aria-pressed="false">Niños</button>
+        {% endif %}
+        {% if has_mujer %}
+          <button type="button" class="bc-filter-pill" data-filter-id="mujer" aria-pressed="false">Mujer</button>
+        {% endif %}
+        {% if has_adultos %}
+          <button type="button" class="bc-filter-pill" data-filter-id="adultos" aria-pressed="false">Adultos</button>
+        {% endif %}
+        {% if has_player %}
+          <button type="button" class="bc-filter-pill" data-filter-id="player" aria-pressed="false">Player Version</button>
+        {% endif %}
+        {% if has_manga_larga %}
+          <button type="button" class="bc-filter-pill" data-filter-id="manga-larga" aria-pressed="false">Manga Larga</button>
+        {% endif %}
+        {% if has_cortavientos %}
+          <button type="button" class="bc-filter-pill" data-filter-id="cortavientos" aria-pressed="false">Cortavientos</button>
+        {% endif %}
+      </div>
+      <button type="button" class="bc-filters-clear" id="bc-filters-clear" hidden>Limpiar</button>
+    </div>
+    <p class="bc-filters-count" id="bc-filters-count" hidden></p>
+    <p class="bc-filters-empty" id="bc-filters-empty" hidden>No hay productos con estos filtros.</p>
   </div>
-  <p class="bc-filters-count" id="bc-filters-count" hidden></p>
-  <p class="bc-filters-empty" id="bc-filters-empty" hidden>No hay productos con estos filtros.</p>
-</div>
+{% endif %}

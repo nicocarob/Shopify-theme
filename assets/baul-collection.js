@@ -1,14 +1,4 @@
 (function () {
-  const FILTERS = [
-    { id: 'retro', label: 'Retro' },
-    { id: 'ninos', label: 'Niños' },
-    { id: 'mujer', label: 'Mujer' },
-    { id: 'adultos', label: 'Adultos' },
-    { id: 'player', label: 'Player Version' },
-    { id: 'manga-larga', label: 'Manga Larga' },
-    { id: 'cortavientos', label: 'Cortavientos' },
-  ];
-
   const grid = document.querySelector('[data-collection-infinite]');
   const sentinel = document.getElementById('bc-infinite-sentinel');
   const status = document.getElementById('bc-infinite-status');
@@ -24,8 +14,8 @@
   let loading = false;
   let nextUrl = sentinel?.dataset.nextUrl || '';
   let observer = null;
-  let activeFilters = new Set();
-  let productTagsByHandle = new Map();
+  const activeFilters = new Set();
+  const productTagsByHandle = new Map();
 
   function isNinos(title) {
     return /niñ[oa]s?|ninos?/i.test(title);
@@ -63,8 +53,7 @@
 
     const fullYears = t.match(/\b(19\d{2}|20\d{2})\b/g) || [];
     for (const yearStr of fullYears) {
-      const year = parseInt(yearStr, 10);
-      if (year < 2021) return true;
+      if (parseInt(yearStr, 10) < 2021) return true;
     }
 
     const seasonFull = t.match(/\b(19\d{2}|20\d{2})\s*[\/\-]\s*(19\d{2}|20\d{2})\b/g) || [];
@@ -164,37 +153,6 @@
     });
   }
 
-  function buildFilterBar(availableIds) {
-    if (!filtersRoot || !filtersPills) return;
-
-    filtersPills.innerHTML = '';
-    const available = FILTERS.filter((f) => availableIds.has(f.id));
-    if (available.length === 0) {
-      filtersRoot.hidden = true;
-      return;
-    }
-
-    available.forEach((filter) => {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'bc-filter-pill';
-      btn.dataset.filterId = filter.id;
-      btn.textContent = filter.label;
-      btn.setAttribute('aria-pressed', 'false');
-      btn.addEventListener('click', () => {
-        if (activeFilters.has(filter.id)) {
-          activeFilters.delete(filter.id);
-        } else {
-          activeFilters.add(filter.id);
-        }
-        applyFilters();
-      });
-      filtersPills.appendChild(btn);
-    });
-
-    filtersRoot.hidden = false;
-  }
-
   async function fetchAllCollectionProducts(handle) {
     const products = [];
     let page = 1;
@@ -214,34 +172,33 @@
     return products;
   }
 
-  async function initFilters() {
-    tagFilterItems(document);
+  async function enrichProductTags() {
+    if (!collectionHandle) return;
 
-    const availableIds = new Set();
-    let products = [];
-
-    if (collectionHandle) {
-      try {
-        products = await fetchAllCollectionProducts(collectionHandle);
-      } catch (e) {
-        products = [];
-      }
-    }
-
-    if (products.length) {
+    try {
+      const products = await fetchAllCollectionProducts(collectionHandle);
       products.forEach((product) => {
-        const tags = getTagsForTitle(product.title);
-        productTagsByHandle.set(product.handle, tags);
-        tags.forEach((tag) => availableIds.add(tag));
+        productTagsByHandle.set(product.handle, getTagsForTitle(product.title));
       });
-    } else {
-      productTagsByHandle.forEach((tags) => {
-        tags.forEach((tag) => availableIds.add(tag));
-      });
+      applyFilters();
+    } catch (e) {
+      /* fallback: tags from rendered DOM cards */
     }
+  }
 
-    buildFilterBar(availableIds);
-    applyFilters();
+  function bindFilterPills() {
+    filtersPills?.querySelectorAll('.bc-filter-pill').forEach((pill) => {
+      pill.addEventListener('click', () => {
+        const filterId = pill.dataset.filterId;
+        if (!filterId) return;
+        if (activeFilters.has(filterId)) {
+          activeFilters.delete(filterId);
+        } else {
+          activeFilters.add(filterId);
+        }
+        applyFilters();
+      });
+    });
   }
 
   function revealCards(items) {
@@ -289,6 +246,13 @@
     }
   }
 
+  function init() {
+    tagFilterItems(document);
+    bindFilterPills();
+    applyFilters();
+    enrichProductTags();
+  }
+
   filtersClear?.addEventListener('click', () => {
     activeFilters.clear();
     applyFilters();
@@ -304,5 +268,5 @@
     if (nextUrl) observer.observe(sentinel);
   }
 
-  initFilters();
+  init();
 })();
