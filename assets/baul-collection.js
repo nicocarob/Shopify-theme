@@ -1,4 +1,14 @@
 (function () {
+  const FILTERS = [
+    { id: 'retro', label: 'Retro' },
+    { id: 'ninos', label: 'Niños' },
+    { id: 'mujer', label: 'Mujer' },
+    { id: 'adultos', label: 'Adultos' },
+    { id: 'player', label: 'Player Version' },
+    { id: 'manga-larga', label: 'Manga Larga' },
+    { id: 'cortavientos', label: 'Cortavientos' },
+  ];
+
   const grid = document.querySelector('[data-collection-infinite]');
   const sentinel = document.getElementById('bc-infinite-sentinel');
   const status = document.getElementById('bc-infinite-status');
@@ -37,7 +47,7 @@
   }
 
   function isPlayer(title) {
-    return /player/i.test(title);
+    return /player[\s_-]*version|player/i.test(title);
   }
 
   function isMangaLarga(title) {
@@ -259,13 +269,48 @@
 
     try {
       const products = await fetchAllCollectionProducts(collectionHandle);
+      const availableIds = new Set();
+
       products.forEach((product) => {
-        productTagsByHandle.set(product.handle, getTagsForTitle(product.title));
+        const tags = getTagsForTitle(product.title);
+        productTagsByHandle.set(product.handle, tags);
+        tags.forEach((tag) => availableIds.add(tag));
       });
+
+      buildFilterBar(availableIds);
       applyFilters();
     } catch (e) {
-      /* fallback: tags from rendered DOM cards */
+      const availableIds = new Set();
+      productTagsByHandle.forEach((tags) => {
+        tags.forEach((tag) => availableIds.add(tag));
+      });
+      buildFilterBar(availableIds);
     }
+  }
+
+  function buildFilterBar(availableIds) {
+    if (!filtersRoot || !filtersPills) return;
+
+    filtersPills.innerHTML = '';
+    const available = FILTERS.filter((f) => availableIds.has(f.id));
+
+    if (available.length === 0) {
+      filtersRoot.hidden = true;
+      return;
+    }
+
+    available.forEach((filter) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'bc-filter-pill';
+      btn.dataset.filterId = filter.id;
+      btn.textContent = filter.label;
+      btn.setAttribute('aria-pressed', 'false');
+      btn.addEventListener('click', () => onFilterToggle(filter.id));
+      filtersPills.appendChild(btn);
+    });
+
+    filtersRoot.hidden = false;
   }
 
   async function onFilterToggle(filterId) {
@@ -286,14 +331,11 @@
     applyFilters();
   }
 
-  function bindFilterPills() {
-    filtersPills?.querySelectorAll('.bc-filter-pill').forEach((pill) => {
-      pill.addEventListener('click', () => {
-        const filterId = pill.dataset.filterId;
-        if (!filterId) return;
-        onFilterToggle(filterId);
-      });
-    });
+  function init() {
+    tagFilterItems(document);
+    applyFilters();
+    enrichProductTags();
+    preloadAllPages();
   }
 
   async function loadMore() {
@@ -327,14 +369,6 @@
       loading = false;
       if (status && activeFilters.size === 0) status.hidden = true;
     }
-  }
-
-  function init() {
-    tagFilterItems(document);
-    bindFilterPills();
-    applyFilters();
-    enrichProductTags();
-    preloadAllPages();
   }
 
   filtersClear?.addEventListener('click', async () => {
