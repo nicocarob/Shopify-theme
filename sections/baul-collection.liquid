@@ -25,13 +25,12 @@
     {% endif %}
     <div class="bc-hero-text">
       <h1 class="sec-title">{{ collection.title }}</h1>
+      {% render 'baul-collection-filters' %}
       {% if collection.description != blank %}
         <div class="bc-hero-desc">{{ collection.description }}</div>
       {% endif %}
     </div>
   </div>
-
-  {% render 'baul-collection-filters' %}
 
   {% paginate collection.products by products_per_page %}
     <div

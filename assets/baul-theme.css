@@ -2634,7 +2634,7 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
 
   .bc-filters {
     max-width: 1200px;
-    margin: 0 auto 28px;
+    margin: 20px auto 8px;
     position: relative;
     z-index: 1;
   }
