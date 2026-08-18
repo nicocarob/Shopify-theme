@@ -1,18 +1,257 @@
 (function () {
+  const FILTERS = [
+    { id: 'retro', label: 'Retro' },
+    { id: 'ninos', label: 'Niños' },
+    { id: 'mujer', label: 'Mujer' },
+    { id: 'adultos', label: 'Adultos' },
+    { id: 'player', label: 'Player Version' },
+    { id: 'manga-larga', label: 'Manga Larga' },
+    { id: 'cortavientos', label: 'Cortavientos' },
+  ];
+
   const grid = document.querySelector('[data-collection-infinite]');
   const sentinel = document.getElementById('bc-infinite-sentinel');
   const status = document.getElementById('bc-infinite-status');
-  if (!grid || !sentinel) return;
+  const filtersRoot = document.getElementById('bc-filters');
+  const filtersPills = document.getElementById('bc-filters-pills');
+  const filtersClear = document.getElementById('bc-filters-clear');
+  const filtersCount = document.getElementById('bc-filters-count');
+  const filtersEmpty = document.getElementById('bc-filters-empty');
 
+  if (!grid) return;
+
+  const collectionHandle = grid.dataset.collectionHandle || '';
   let loading = false;
-  let nextUrl = sentinel.dataset.nextUrl || '';
+  let nextUrl = sentinel?.dataset.nextUrl || '';
   let observer = null;
+  let activeFilters = new Set();
+  let productTagsByHandle = new Map();
 
-  function revealCards(cards) {
-    cards.forEach((card) => {
-      card.classList.add('in');
-      grid.appendChild(card);
+  function isNinos(title) {
+    return /niñ[oa]s?|ninos?/i.test(title);
+  }
+
+  function isMujer(title) {
+    return /mujer/i.test(title);
+  }
+
+  function isAdultos(title) {
+    if (/adultos?/i.test(title)) return true;
+    return !isNinos(title) && !isMujer(title);
+  }
+
+  function isPlayer(title) {
+    return /player/i.test(title);
+  }
+
+  function isMangaLarga(title) {
+    return /manga[\s-]*larga/i.test(title);
+  }
+
+  function isCortavientos(title) {
+    return /cortavientos?|chaqueta/i.test(title);
+  }
+
+  function yearFromShort(part) {
+    const n = parseInt(part, 10);
+    if (Number.isNaN(n)) return null;
+    return n < 50 ? 2000 + n : 1900 + n;
+  }
+
+  function isRetro(title) {
+    const t = title.toLowerCase();
+
+    const fullYears = t.match(/\b(19\d{2}|20\d{2})\b/g) || [];
+    for (const yearStr of fullYears) {
+      const year = parseInt(yearStr, 10);
+      if (year < 2021) return true;
+    }
+
+    const seasonFull = t.match(/\b(19\d{2}|20\d{2})\s*[\/\-]\s*(19\d{2}|20\d{2})\b/g) || [];
+    for (const season of seasonFull) {
+      const start = parseInt(season.match(/\d{4}/)[0], 10);
+      if (start < 2021) return true;
+    }
+
+    const seasonShort = t.match(/\b(\d{2})\s*[\/\-]\s*(\d{2})\b/g) || [];
+    for (const season of seasonShort) {
+      const parts = season.split(/[\/\-]/);
+      const start = yearFromShort(parts[0].trim());
+      if (start !== null && start < 2021) return true;
+    }
+
+    return false;
+  }
+
+  function getTagsForTitle(title) {
+    const tags = new Set();
+    if (isRetro(title)) tags.add('retro');
+    if (isNinos(title)) tags.add('ninos');
+    if (isMujer(title)) tags.add('mujer');
+    if (isAdultos(title)) tags.add('adultos');
+    if (isPlayer(title)) tags.add('player');
+    if (isMangaLarga(title)) tags.add('manga-larga');
+    if (isCortavientos(title)) tags.add('cortavientos');
+    return tags;
+  }
+
+  function itemMatchesFilters(handle, title) {
+    if (activeFilters.size === 0) return true;
+    const tags = productTagsByHandle.get(handle) || getTagsForTitle(title);
+    for (const filterId of activeFilters) {
+      if (!tags.has(filterId)) return false;
+    }
+    return true;
+  }
+
+  function tagFilterItems(scope) {
+    const root = scope || document;
+    root.querySelectorAll('.bc-filter-item').forEach((item) => {
+      const handle = item.dataset.bcHandle;
+      const title = item.dataset.bcTitle || '';
+      if (!handle) return;
+      const tags = getTagsForTitle(title);
+      productTagsByHandle.set(handle, tags);
+      item.dataset.bcTags = Array.from(tags).join(',');
     });
+  }
+
+  function countMatchingInCollection() {
+    if (activeFilters.size === 0) return productTagsByHandle.size;
+
+    let count = 0;
+    productTagsByHandle.forEach((tags) => {
+      let match = true;
+      for (const filterId of activeFilters) {
+        if (!tags.has(filterId)) {
+          match = false;
+          break;
+        }
+      }
+      if (match) count += 1;
+    });
+    return count;
+  }
+
+  function applyFilters() {
+    grid.querySelectorAll('.bc-filter-item').forEach((item) => {
+      const handle = item.dataset.bcHandle;
+      const title = item.dataset.bcTitle || '';
+      item.hidden = !itemMatchesFilters(handle, title);
+    });
+
+    if (filtersClear) filtersClear.hidden = activeFilters.size === 0;
+
+    const totalMatching = activeFilters.size > 0 ? countMatchingInCollection() : 0;
+    if (filtersEmpty) {
+      filtersEmpty.hidden = activeFilters.size === 0 || totalMatching > 0;
+    }
+
+    if (filtersCount) {
+      if (activeFilters.size === 0) {
+        filtersCount.hidden = true;
+      } else {
+        filtersCount.hidden = false;
+        filtersCount.textContent =
+          totalMatching === 1 ? '1 producto' : `${totalMatching} productos`;
+      }
+    }
+
+    filtersPills?.querySelectorAll('.bc-filter-pill').forEach((pill) => {
+      const id = pill.dataset.filterId;
+      pill.classList.toggle('is-active', activeFilters.has(id));
+      pill.setAttribute('aria-pressed', activeFilters.has(id) ? 'true' : 'false');
+    });
+  }
+
+  function buildFilterBar(availableIds) {
+    if (!filtersRoot || !filtersPills) return;
+
+    filtersPills.innerHTML = '';
+    const available = FILTERS.filter((f) => availableIds.has(f.id));
+    if (available.length === 0) {
+      filtersRoot.hidden = true;
+      return;
+    }
+
+    available.forEach((filter) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'bc-filter-pill';
+      btn.dataset.filterId = filter.id;
+      btn.textContent = filter.label;
+      btn.setAttribute('aria-pressed', 'false');
+      btn.addEventListener('click', () => {
+        if (activeFilters.has(filter.id)) {
+          activeFilters.delete(filter.id);
+        } else {
+          activeFilters.add(filter.id);
+        }
+        applyFilters();
+      });
+      filtersPills.appendChild(btn);
+    });
+
+    filtersRoot.hidden = false;
+  }
+
+  async function fetchAllCollectionProducts(handle) {
+    const products = [];
+    let page = 1;
+
+    while (true) {
+      const res = await fetch(
+        `/collections/${encodeURIComponent(handle)}/products.json?limit=250&page=${page}`
+      );
+      if (!res.ok) break;
+      const data = await res.json();
+      if (!data.products?.length) break;
+      products.push(...data.products);
+      if (data.products.length < 250) break;
+      page += 1;
+    }
+
+    return products;
+  }
+
+  async function initFilters() {
+    tagFilterItems(document);
+
+    const availableIds = new Set();
+    let products = [];
+
+    if (collectionHandle) {
+      try {
+        products = await fetchAllCollectionProducts(collectionHandle);
+      } catch (e) {
+        products = [];
+      }
+    }
+
+    if (products.length) {
+      products.forEach((product) => {
+        const tags = getTagsForTitle(product.title);
+        productTagsByHandle.set(product.handle, tags);
+        tags.forEach((tag) => availableIds.add(tag));
+      });
+    } else {
+      productTagsByHandle.forEach((tags) => {
+        tags.forEach((tag) => availableIds.add(tag));
+      });
+    }
+
+    buildFilterBar(availableIds);
+    applyFilters();
+  }
+
+  function revealCards(items) {
+    items.forEach((item) => {
+      const card = item.querySelector('.pc');
+      if (card) card.classList.add('in');
+      grid.appendChild(item);
+    });
+    tagFilterItems(grid);
+    applyFilters();
     if (typeof window.baulInitProductSocialProof === 'function') {
       window.baulInitProductSocialProof();
     }
@@ -32,15 +271,15 @@
       const newSentinel = doc.getElementById('bc-infinite-sentinel');
 
       if (newGrid) {
-        revealCards(Array.from(newGrid.querySelectorAll('.pc')));
+        revealCards(Array.from(newGrid.querySelectorAll('.bc-filter-item')));
       }
 
       nextUrl = newSentinel?.dataset.nextUrl || '';
-      sentinel.dataset.nextUrl = nextUrl;
+      if (sentinel) sentinel.dataset.nextUrl = nextUrl;
 
       if (!nextUrl) {
         observer?.disconnect();
-        sentinel.remove();
+        sentinel?.remove();
       }
     } catch (e) {
       observer?.disconnect();
@@ -50,12 +289,20 @@
     }
   }
 
-  observer = new IntersectionObserver(
-    (entries) => {
-      if (entries.some((entry) => entry.isIntersecting)) loadMore();
-    },
-    { rootMargin: '240px' }
-  );
+  filtersClear?.addEventListener('click', () => {
+    activeFilters.clear();
+    applyFilters();
+  });
 
-  if (nextUrl) observer.observe(sentinel);
+  if (sentinel) {
+    observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) loadMore();
+      },
+      { rootMargin: '240px' }
+    );
+    if (nextUrl) observer.observe(sentinel);
+  }
+
+  initFilters();
 })();

@@ -31,10 +31,22 @@
     </div>
   </div>
 
+  {% render 'baul-collection-filters' %}
+
   {% paginate collection.products by products_per_page %}
-    <div class="prod-grid bc-grid" data-collection-infinite>
+    <div
+      class="prod-grid bc-grid"
+      data-collection-infinite
+      data-collection-handle="{{ collection.handle }}"
+    >
       {% for product in collection.products %}
-        {% render 'baul-product-card', product: product %}
+        <div
+          class="bc-filter-item"
+          data-bc-title="{{ product.title | escape }}"
+          data-bc-handle="{{ product.handle }}"
+        >
+          {% render 'baul-product-card', product: product %}
+        </div>
       {% endfor %}
     </div>
 

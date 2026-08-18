@@ -2631,6 +2631,89 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     margin: 0 auto;
     padding: 0 8px;
   }
+
+  .bc-filters {
+    max-width: 1200px;
+    margin: 0 auto 28px;
+    position: relative;
+    z-index: 1;
+  }
+  .bc-filters-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .bc-filters-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+  .bc-filters-pills {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .bc-filter-pill {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 100px;
+    border: 1px solid var(--border-hover);
+    background: var(--bg-card);
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+  }
+  .bc-filter-pill:hover {
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+  }
+  .bc-filter-pill.is-active {
+    background: var(--accent-gold);
+    border-color: var(--accent-gold);
+    color: #0a0a0a;
+  }
+  .bc-filters-clear {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 4px 0;
+  }
+  .bc-filters-clear:hover { color: var(--accent-gold); }
+  .bc-filters-count,
+  .bc-filters-empty {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-align: center;
+    margin: 14px 0 0;
+  }
+  .bc-filters-empty { color: #ff8888; }
+  .bc-filter-item[hidden] {
+    display: none;
+  }
+
   .bc-grid { margin-bottom: 40px; }
 
   .bc-infinite-sentinel {
@@ -4101,6 +4184,14 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     }
     .bc-hero-banner img { max-height: 200px; }
     .bc-hero-text .sec-title { margin-bottom: 12px; }
+    .bc-filters-inner {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+    }
+    .bc-filters-label { text-align: center; }
+    .bc-filters-pills { justify-content: flex-start; }
+    .bc-filter-pill { font-size: 11px; padding: 7px 12px; }
     .blc-page { padding: 32px 16px 40px; }
     .blc-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .blc-name { font-size: 22px; margin: 12px 12px 10px; }

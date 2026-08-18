@@ -1,0 +1,13 @@
+{% comment %}
+  Barra de filtros por título — se rellena con JS según productos de la colección.
+{% endcomment %}
+
+<div class="bc-filters rev" id="bc-filters" hidden>
+  <div class="bc-filters-inner">
+    <span class="bc-filters-label">Filtrar</span>
+    <div class="bc-filters-pills" id="bc-filters-pills" role="group" aria-label="Filtros de colección"></div>
+    <button type="button" class="bc-filters-clear" id="bc-filters-clear" hidden>Limpiar</button>
+  </div>
+  <p class="bc-filters-count" id="bc-filters-count" hidden></p>
+  <p class="bc-filters-empty" id="bc-filters-empty" hidden>No hay productos con estos filtros.</p>
+</div>
