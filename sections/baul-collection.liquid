@@ -124,6 +124,8 @@
       class="prod-grid bc-grid"
       data-collection-infinite
       data-collection-handle="{{ collection.handle }}"
+      data-collection-pages="{{ paginate.pages }}"
+      data-collection-base="{{ collection.url }}"
     >
       {% for product in collection.products %}
         <div

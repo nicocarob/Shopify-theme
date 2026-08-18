@@ -11,9 +11,15 @@
   if (!grid) return;
 
   const collectionHandle = grid.dataset.collectionHandle || '';
+  const totalPages = parseInt(grid.dataset.collectionPages, 10) || 1;
+  const collectionBase = grid.dataset.collectionBase || window.location.pathname;
+
   let loading = false;
   let nextUrl = sentinel?.dataset.nextUrl || '';
   let observer = null;
+  let allProductsLoaded = totalPages <= 1;
+  let preloadPromise = null;
+
   const activeFilters = new Set();
   const productTagsByHandle = new Map();
 
@@ -93,6 +99,14 @@
     return true;
   }
 
+  function getHandlesInDom() {
+    return new Set(
+      Array.from(grid.querySelectorAll('.bc-filter-item'))
+        .map((el) => el.dataset.bcHandle)
+        .filter(Boolean)
+    );
+  }
+
   function tagFilterItems(scope) {
     const root = scope || document;
     root.querySelectorAll('.bc-filter-item').forEach((item) => {
@@ -103,6 +117,74 @@
       productTagsByHandle.set(handle, tags);
       item.dataset.bcTags = Array.from(tags).join(',');
     });
+  }
+
+  function appendFilterItems(items) {
+    const handlesInDom = getHandlesInDom();
+    const added = [];
+
+    items.forEach((item) => {
+      const handle = item.dataset.bcHandle;
+      if (!handle || handlesInDom.has(handle)) return;
+      handlesInDom.add(handle);
+      const card = item.querySelector('.pc');
+      if (card) card.classList.add('in');
+      grid.appendChild(item);
+      added.push(item);
+    });
+
+    if (added.length) tagFilterItems(grid);
+    return added;
+  }
+
+  function finishPreload() {
+    allProductsLoaded = true;
+    nextUrl = '';
+    observer?.disconnect();
+    if (sentinel) sentinel.remove();
+    if (status) status.hidden = true;
+  }
+
+  function preloadAllPages() {
+    if (allProductsLoaded) return Promise.resolve();
+    if (preloadPromise) return preloadPromise;
+
+    if (totalPages <= 1) {
+      allProductsLoaded = true;
+      return Promise.resolve();
+    }
+
+    preloadPromise = (async () => {
+      const urls = [];
+      for (let page = 2; page <= totalPages; page += 1) {
+        urls.push(`${collectionBase}?page=${page}`);
+      }
+
+      const pages = await Promise.all(
+        urls.map((url) =>
+          fetch(url).then((res) => (res.ok ? res.text() : ''))
+        )
+      );
+
+      pages.forEach((html) => {
+        if (!html) return;
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const items = Array.from(doc.querySelectorAll('.bc-filter-item'));
+        appendFilterItems(items);
+      });
+
+      finishPreload();
+
+      if (typeof window.baulInitProductSocialProof === 'function') {
+        window.baulInitProductSocialProof();
+      }
+
+      if (activeFilters.size > 0) applyFilters();
+    })().catch(() => {
+      preloadPromise = null;
+    });
+
+    return preloadPromise;
   }
 
   function countMatchingInCollection() {
@@ -186,36 +268,36 @@
     }
   }
 
+  async function onFilterToggle(filterId) {
+    if (activeFilters.has(filterId)) {
+      activeFilters.delete(filterId);
+    } else {
+      activeFilters.add(filterId);
+    }
+
+    if (activeFilters.size > 0) {
+      observer?.disconnect();
+      if (status) status.hidden = true;
+      await preloadAllPages();
+    } else if (!allProductsLoaded && sentinel && nextUrl) {
+      observer?.observe(sentinel);
+    }
+
+    applyFilters();
+  }
+
   function bindFilterPills() {
     filtersPills?.querySelectorAll('.bc-filter-pill').forEach((pill) => {
       pill.addEventListener('click', () => {
         const filterId = pill.dataset.filterId;
         if (!filterId) return;
-        if (activeFilters.has(filterId)) {
-          activeFilters.delete(filterId);
-        } else {
-          activeFilters.add(filterId);
-        }
-        applyFilters();
+        onFilterToggle(filterId);
       });
     });
   }
 
-  function revealCards(items) {
-    items.forEach((item) => {
-      const card = item.querySelector('.pc');
-      if (card) card.classList.add('in');
-      grid.appendChild(item);
-    });
-    tagFilterItems(grid);
-    applyFilters();
-    if (typeof window.baulInitProductSocialProof === 'function') {
-      window.baulInitProductSocialProof();
-    }
-  }
-
   async function loadMore() {
-    if (loading || !nextUrl) return;
+    if (activeFilters.size > 0 || loading || !nextUrl || allProductsLoaded) return;
     loading = true;
     if (status) status.hidden = false;
 
@@ -228,21 +310,22 @@
       const newSentinel = doc.getElementById('bc-infinite-sentinel');
 
       if (newGrid) {
-        revealCards(Array.from(newGrid.querySelectorAll('.bc-filter-item')));
+        appendFilterItems(Array.from(newGrid.querySelectorAll('.bc-filter-item')));
+        applyFilters();
+        if (typeof window.baulInitProductSocialProof === 'function') {
+          window.baulInitProductSocialProof();
+        }
       }
 
       nextUrl = newSentinel?.dataset.nextUrl || '';
       if (sentinel) sentinel.dataset.nextUrl = nextUrl;
 
-      if (!nextUrl) {
-        observer?.disconnect();
-        sentinel?.remove();
-      }
+      if (!nextUrl) finishPreload();
     } catch (e) {
       observer?.disconnect();
     } finally {
       loading = false;
-      if (status) status.hidden = true;
+      if (status && activeFilters.size === 0) status.hidden = true;
     }
   }
 
@@ -251,10 +334,14 @@
     bindFilterPills();
     applyFilters();
     enrichProductTags();
+    preloadAllPages();
   }
 
-  filtersClear?.addEventListener('click', () => {
+  filtersClear?.addEventListener('click', async () => {
     activeFilters.clear();
+    if (!allProductsLoaded && sentinel && nextUrl) {
+      observer?.observe(sentinel);
+    }
     applyFilters();
   });
 
@@ -265,7 +352,7 @@
       },
       { rootMargin: '240px' }
     );
-    if (nextUrl) observer.observe(sentinel);
+    if (totalPages <= 1 && nextUrl) observer.observe(sentinel);
   }
 
   init();
