@@ -15,9 +15,10 @@
       "blocks": {
         "venti_widget_ventipay_widget_hNEiyT": {
           "type": "shopify://apps/venti-widget/blocks/ventipay-widget/593e972e-0379-4dab-ab73-fcfb3301399e",
+          "disabled": true,
           "settings": {
             "message_type": "IF_DC_IC",
-            "remove_anchor_logo": false
+            "remove_anchor_logo": true
           }
         }
       },
