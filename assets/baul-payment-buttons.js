@@ -39,14 +39,37 @@
     const style = document.createElement('style');
     style.id = 'baul-payment-btn-styles';
     style.textContent =
-      'button.payment-btn-dual{display:flex!important;align-items:center!important;justify-content:flex-start!important;text-align:left!important;width:100%!important;min-height:72px!important;height:auto!important;padding:14px 18px!important;background:#fff!important;border:none!important;border-radius:14px!important}' +
+      'button.payment-btn-dual{display:flex!important;align-items:center!important;justify-content:flex-start!important;text-align:left!important;width:100%!important;min-height:72px!important;height:auto!important;padding:14px 18px!important;border:none!important;border-radius:14px!important;margin:0!important}' +
+      '.payment-btn-dual--card{background:#000!important;color:#fff!important;box-shadow:inset 0 0 0 2px #fff!important}' +
+      '.payment-btn-dual--card .payment-btn__title,.payment-btn-dual--card .payment-btn__subtitle,.payment-btn-dual--card .payment-btn__icon{color:#fff!important}' +
+      '.payment-btn-dual--card .payment-btn__subtitle{opacity:.7!important}' +
+      '.payment-btn-dual--fintoc{background:#fff!important;color:#000!important}' +
+      '.payment-btn-dual--fintoc .payment-btn__title{color:#000!important}' +
+      '.payment-btn-dual--fintoc .payment-btn__subtitle{color:#666!important}' +
       '.payment-btn__layout{display:flex;align-items:center;gap:14px;width:100%}' +
       '.payment-btn__icon{display:flex;align-items:center;justify-content:center;flex-shrink:0;min-width:28px}' +
       '.payment-btn__icon svg{width:26px;height:26px}' +
+      '.payment-btn__icon img{max-height:22px;width:auto}' +
       '.payment-btn__copy{display:flex;flex-direction:column;gap:2px;min-width:0}' +
-      '.payment-btn__title{display:block;font-size:15px;font-weight:700;line-height:1.25;color:#000!important}' +
-      '.payment-btn__subtitle{display:block;font-size:12px;font-weight:400;line-height:1.3;color:#666!important}';
+      '.payment-btn__title{display:block;font-size:15px;font-weight:700;line-height:1.25}' +
+      '.payment-btn__subtitle{display:block;font-size:12px;font-weight:400;line-height:1.3}';
     shadowRoot.appendChild(style);
+  }
+
+  function enhanceCardButton(button) {
+    if (!button || button.dataset.baulPaymentEnhanced === 'card') return;
+    if (button.querySelector('.payment-btn__title')) {
+      button.dataset.baulPaymentEnhanced = 'card';
+      return;
+    }
+
+    button.dataset.baulPaymentEnhanced = 'card';
+    button.classList.add('payment-btn-dual', 'payment-btn-dual--card');
+    button.innerHTML = buildDualContent(
+      'Pagar con tarjeta',
+      'Crédito o débito • Sin descuento',
+      CARD_ICON
+    );
   }
 
   function enhanceFintocButton(button) {
@@ -73,28 +96,43 @@
     );
   }
 
-  function findFintocButton() {
-    const form = document.getElementById('baul-product-form');
-    const searchRoot = form || document;
+  function findScalaButton(host) {
+    if (!host?.shadowRoot) return null;
+    return (
+      host.shadowRoot.querySelector('#scala-button') ||
+      host.shadowRoot.querySelector('button[data-trigger]') ||
+      host.shadowRoot.querySelector('button')
+    );
+  }
 
-    const scalaHost = searchRoot.querySelector('scala-cart-button');
-    if (scalaHost?.shadowRoot) {
-      return (
-        scalaHost.shadowRoot.querySelector('#scala-button') ||
-        scalaHost.shadowRoot.querySelector('button[data-trigger]') ||
-        scalaHost.shadowRoot.querySelector('button')
-      );
+  function findFintocButton() {
+    const productForm = document.getElementById('baul-product-form');
+    const cartSummary = document.querySelector('.bcart-summary');
+    const searchRoot = productForm || cartSummary || document;
+
+    const scalaHosts = new Set();
+    searchRoot.querySelectorAll('scala-cart-button').forEach((host) => scalaHosts.add(host));
+    if (cartSummary) {
+      cartSummary.querySelectorAll('scala-cart-button').forEach((host) => scalaHosts.add(host));
+    }
+
+    for (const scalaHost of scalaHosts) {
+      const btn = findScalaButton(scalaHost);
+      if (btn) return btn;
     }
 
     const candidates = [
       ...searchRoot.querySelectorAll(
-        '.bp-app-block button, .easify-product-options button, .tpo-buy-it-now-btn, button[id*="scala"]'
+        '.bp-app-block button, .easify-product-options button, .bcart-summary button, .tpo-buy-it-now-btn, button[id*="scala"]'
       ),
     ].filter(
       (el) =>
         !isOverlayElement(el) &&
         el.id !== 'bp-buy-btn' &&
-        !el.classList.contains('payment-btn-dual--card')
+        !el.classList.contains('payment-btn-dual--card') &&
+        !el.classList.contains('bcart-checkout') &&
+        el.name !== 'checkout' &&
+        el.name !== 'update'
     );
 
     const byText = candidates.find((btn) =>
@@ -108,7 +146,7 @@
       candidates.find(
         (btn) =>
           btn.classList.contains('tpo-buy-it-now-btn') ||
-          btn.closest('.bp-app-block, .easify-product-options')
+          btn.closest('.bp-app-block, .easify-product-options, .bcart-summary')
       ) || null
     );
   }
@@ -123,9 +161,16 @@
   }
 
   function initPaymentButtons() {
-    if (!document.getElementById('baul-product-form')) return;
+    const isProduct = !!document.getElementById('baul-product-form');
+    const isCart = !!document.querySelector('.bcart-summary');
+
+    if (!isProduct && !isCart) return;
 
     hideOverlayButtons();
+
+    document
+      .querySelectorAll('.bcart-checkout:not(.payment-btn-dual--card)')
+      .forEach((button) => enhanceCardButton(button));
 
     const fintocButton = findFintocButton();
     if (fintocButton) enhanceFintocButton(fintocButton);

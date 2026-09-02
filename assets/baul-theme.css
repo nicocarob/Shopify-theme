@@ -2717,7 +2717,9 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
 
   .bp-app-block .payment-btn-dual,
   .bp-app-block button.payment-btn-dual--fintoc,
+  .bcart-summary .payment-btn-dual,
   .bcart-summary .payment-btn-dual--fintoc,
+  .bcart-summary .payment-btn-dual--card,
   .cart-page .payment-btn-dual--fintoc {
     box-sizing: border-box;
     width: 100%;
@@ -3416,7 +3418,30 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     font-family: 'Bebas Neue', sans-serif; font-size: 32px;
     color: #fff; letter-spacing: 0.04em;
   }
-  .bcart-checkout { margin-bottom: 0; }
+  .bcart-checkout { margin-bottom: 0; width: 100%; }
+
+  .bcart-payment-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .bcart-payment-actions form {
+    width: 100%;
+    margin: 0;
+  }
+
+  .bcart-summary .payment-btn-dual--card,
+  .bcart-summary .payment-btn-dual--fintoc {
+    width: 100%;
+  }
+
+  .bcart-summary scala-cart-button {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+  }
 
   /* ── Mundial 2026 collection page ── */
   .bm-hero {
