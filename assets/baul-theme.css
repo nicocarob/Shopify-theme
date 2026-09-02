@@ -2483,6 +2483,48 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   .bp-app-block {
     width: 100%;
   }
+  .bp-app-block button,
+  .bcart-summary .tpo-buy-it-now-btn,
+  .cart-page .tpo-buy-it-now-btn {
+    width: 100%;
+    display: block;
+    margin-top: 8px;
+    padding: 14px 20px;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 215, 0, 0.07) 0%,
+      rgba(10, 10, 10, 0.92) 60%,
+      rgba(255, 215, 0, 0.05) 100%
+    );
+    border: 1.5px solid var(--accent-gold);
+    border-radius: var(--radius-sm);
+    color: var(--accent-gold) !important;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow:
+      0 0 18px rgba(255, 215, 0, 0.1),
+      inset 0 1px 0 rgba(255, 215, 0, 0.15);
+  }
+  .bp-app-block button:hover,
+  .bcart-summary .tpo-buy-it-now-btn:hover,
+  .cart-page .tpo-buy-it-now-btn:hover {
+    background: linear-gradient(135deg, #ffe566 0%, var(--accent-gold) 50%, #e6c200 100%);
+    border-color: #ffe566;
+    color: #0a0a0a !important;
+    box-shadow: 0 6px 28px rgba(255, 215, 0, 0.35);
+    transform: translateY(-1px);
+  }
+  .bp-app-block button:active,
+  .bcart-summary .tpo-buy-it-now-btn:active,
+  .cart-page .tpo-buy-it-now-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 12px rgba(255, 215, 0, 0.2);
+  }
   .bp-trust {
     display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 28px;
     font-family: 'Barlow Condensed', sans-serif; font-size: 13px;

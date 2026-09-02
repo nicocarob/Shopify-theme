@@ -5081,21 +5081,44 @@ a.contents .rte p {
   stroke: #00e676 !important;
 }
 
-/* ── Botón Comprar ahora (tpo) ── */
+/* ── Botón descuento extra (tpo) ── */
 .tpo-buy-it-now-btn {
-  background-color: transparent !important;
-  border: 2px solid #ffffff !important;
-  border-radius: 10px !important;
-  color: #ffffff !important;
-  font-weight: 800 !important;
+  width: 100% !important;
+  display: block !important;
+  margin-top: 8px !important;
+  padding: 14px 20px !important;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 215, 0, 0.07) 0%,
+    rgba(10, 10, 10, 0.92) 60%,
+    rgba(255, 215, 0, 0.05) 100%
+  ) !important;
+  border: 1.5px solid #ffd700 !important;
+  border-radius: 6px !important;
+  color: #ffd700 !important;
+  font-family: 'Bebas Neue', sans-serif !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.14em !important;
   text-transform: uppercase !important;
-  letter-spacing: 1px !important;
-  transition: all 0.2s ease !important;
+  cursor: pointer !important;
+  transition: all 0.25s ease !important;
+  box-shadow:
+    0 0 18px rgba(255, 215, 0, 0.1),
+    inset 0 1px 0 rgba(255, 215, 0, 0.15) !important;
 }
 
 .tpo-buy-it-now-btn:hover {
-  background-color: #ffffff !important;
-  color: #000000 !important;
+  background: linear-gradient(135deg, #ffe566 0%, #ffd700 50%, #e6c200 100%) !important;
+  border-color: #ffe566 !important;
+  color: #0a0a0a !important;
+  box-shadow: 0 6px 28px rgba(255, 215, 0, 0.35) !important;
+  transform: translateY(-1px) !important;
+}
+
+.tpo-buy-it-now-btn:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 12px rgba(255, 215, 0, 0.2) !important;
 }/* ── Todo el texto en BLANCO ── */
 body,
 p, h1, h2, h3, h4, h5, h6,
