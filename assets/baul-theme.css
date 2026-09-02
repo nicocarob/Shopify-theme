@@ -2729,6 +2729,65 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     font-family: 'Barlow Condensed', sans-serif; font-size: 13px;
     font-weight: 600; color: var(--text-soft); letter-spacing: 0.06em;
   }
+
+  .bp-ship-countdown {
+    width: 100%;
+    margin: 14px 0 18px;
+    box-sizing: border-box;
+  }
+
+  .bp-ship-countdown__bar {
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    align-items: center;
+    column-gap: 10px;
+    padding: 12px 16px;
+    background: rgba(239, 68, 68, 0.08);
+    border: 2px solid #ef4444;
+    border-radius: 16px;
+    box-shadow: 0 0 18px rgba(239, 68, 68, 0.18);
+    box-sizing: border-box;
+  }
+
+  .bp-ship-countdown__icon {
+    width: 20px;
+    height: 20px;
+    color: #ef4444;
+    justify-self: start;
+  }
+
+  .bp-ship-countdown__text {
+    display: grid;
+    row-gap: 3px;
+    text-align: center;
+    line-height: 1.2;
+    min-width: 0;
+  }
+
+  .bp-ship-countdown__title {
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #fff !important;
+  }
+
+  .bp-ship-countdown__desc {
+    font-family: 'Barlow', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.88) !important;
+  }
+
+  .bp-ship-countdown__timer {
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    color: #ef4444 !important;
+    font-variant-numeric: tabular-nums;
+  }
   .bp-desc-wrap {
     max-width: 1200px; margin: 0 auto; position: relative; z-index: 1;
     padding-top: 20px;
@@ -4623,6 +4682,24 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
       gap: 12px 20px;
       margin-bottom: 0;
       font-size: 12px;
+    }
+    .bp-ship-countdown {
+      margin: 12px 0 14px;
+    }
+    .bp-ship-countdown__bar {
+      padding: 10px 12px;
+      column-gap: 8px;
+    }
+    .bp-ship-countdown__title {
+      font-size: 11px;
+      white-space: normal;
+    }
+    .bp-ship-countdown__desc {
+      font-size: 11px;
+      white-space: normal;
+    }
+    .bp-ship-countdown__timer {
+      font-size: 14px;
     }
     .bp-desc-wrap { padding: 16px 12px 0; }
     .bp-desc {
