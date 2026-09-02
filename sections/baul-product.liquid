@@ -168,35 +168,73 @@
 
         <div class="easify-product-options"></div>
 
-        <div class="bp-actions">
-          <button
-            type="button"
-            class="bp-buy-now payment-btn-dual payment-btn-dual--card"
-            id="bp-buy-btn"
-            {% unless current_variant.available %}disabled{% endunless %}
-          >
-            <span class="payment-btn__layout">
-              <span class="payment-btn__icon" aria-hidden="true">
+        <div class="bp-checkout-stack">
+          <div class="bp-cart-row">
+            <div class="bp-qty" aria-label="Cantidad">
+              <button
+                type="button"
+                class="bp-qty-btn bp-qty-minus"
+                id="bp-qty-minus"
+                aria-label="Disminuir cantidad"
+              >−</button>
+              <input
+                type="number"
+                name="quantity"
+                id="bp-qty-input"
+                class="bp-qty-input"
+                value="1"
+                min="1"
+                max="99"
+                inputmode="numeric"
+                aria-label="Cantidad"
+              >
+              <button
+                type="button"
+                class="bp-qty-btn bp-qty-plus"
+                id="bp-qty-plus"
+                aria-label="Aumentar cantidad"
+              >+</button>
+            </div>
+            <button
+              type="button"
+              class="bp-add-cart"
+              id="bp-add-cart-btn"
+              {% unless current_variant.available %}disabled{% endunless %}
+            >
+              <span class="bp-add-cart__icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
-                  <rect x="2" y="5" width="20" height="14" rx="2"/>
-                  <line x1="2" y1="10" x2="22" y2="10"/>
+                  <path d="M6 6h15l-1.5 9h-12z"/>
+                  <path d="M6 6l-1-3H2"/>
+                  <circle cx="9" cy="20" r="1" fill="currentColor" stroke="none"/>
+                  <circle cx="18" cy="20" r="1" fill="currentColor" stroke="none"/>
+                  <path d="M17 6V4a2 2 0 0 0-4 0v2"/>
                 </svg>
               </span>
-              <span class="payment-btn__copy">
-                <strong class="payment-btn__title">Pagar con tarjeta</strong>
-                <span class="payment-btn__subtitle">Crédito o débito • Sin descuento</span>
+              <span class="bp-add-cart__text">Agregar al carrito</span>
+            </button>
+          </div>
+
+          <div class="bp-actions">
+            <button
+              type="button"
+              class="bp-buy-now payment-btn-dual payment-btn-dual--card"
+              id="bp-buy-btn"
+              {% unless current_variant.available %}disabled{% endunless %}
+            >
+              <span class="payment-btn__layout">
+                <span class="payment-btn__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                    <rect x="2" y="5" width="20" height="14" rx="2"/>
+                    <line x1="2" y1="10" x2="22" y2="10"/>
+                  </svg>
+                </span>
+                <span class="payment-btn__copy">
+                  <strong class="payment-btn__title">Pagar con tarjeta</strong>
+                  <span class="payment-btn__subtitle">Crédito o débito • Sin descuento</span>
+                </span>
               </span>
-            </span>
-          </button>
-          <button
-            type="button"
-            class="bp-add-cart"
-            id="bp-add-cart-btn"
-            aria-label="Agregar al carrito"
-            {% unless current_variant.available %}disabled{% endunless %}
-          >
-            <span class="bp-add-cart__icon" aria-hidden="true">🛒</span>
-          </button>
+            </button>
+          </div>
         </div>
 
         {% if section.blocks.size > 0 %}

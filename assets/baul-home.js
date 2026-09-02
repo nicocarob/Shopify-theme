@@ -653,6 +653,9 @@ if (productJsonEl && productForm) {
   const variantInput = document.getElementById('baul-variant-id');
   const buyBtn = document.getElementById('bp-buy-btn');
   const addCartBtn = document.getElementById('bp-add-cart-btn');
+  const qtyInput = document.getElementById('bp-qty-input');
+  const qtyMinus = document.getElementById('bp-qty-minus');
+  const qtyPlus = document.getElementById('bp-qty-plus');
   const priceEl = document.getElementById('bp-price');
   const compareEl = document.getElementById('bp-compare-price');
   const discountEl = document.querySelector('.bp-discount-badge');
@@ -670,6 +673,42 @@ if (productJsonEl && productForm) {
     return productData.variants.find((v) =>
       v.options.every((opt, i) => opt === selected[i])
     );
+  }
+
+  function getQuantity() {
+    if (!qtyInput) return 1;
+    const qty = parseInt(qtyInput.value, 10);
+    return Number.isFinite(qty) && qty > 0 ? qty : 1;
+  }
+
+  function setQuantity(value) {
+    if (!qtyInput) return;
+    const next = Math.max(1, Math.min(99, value));
+    qtyInput.value = String(next);
+    if (qtyMinus) qtyMinus.disabled = next <= 1;
+    if (qtyPlus) qtyPlus.disabled = next >= 99;
+  }
+
+  function initQuantityControls() {
+    if (!qtyInput) return;
+
+    setQuantity(getQuantity());
+
+    qtyMinus?.addEventListener('click', () => {
+      setQuantity(getQuantity() - 1);
+    });
+
+    qtyPlus?.addEventListener('click', () => {
+      setQuantity(getQuantity() + 1);
+    });
+
+    qtyInput.addEventListener('change', () => {
+      setQuantity(getQuantity());
+    });
+
+    qtyInput.addEventListener('blur', () => {
+      setQuantity(getQuantity());
+    });
   }
 
   function setBuyButtonState(variant) {
@@ -725,6 +764,7 @@ if (productJsonEl && productForm) {
   isolateBaulProductButtons();
   window.addEventListener('load', isolateBaulProductButtons);
   window.setTimeout(isolateBaulProductButtons, 2000);
+  initQuantityControls();
 
   async function submitProductForm(redirectToCheckout) {
     await addProductFormToCart(productForm);
@@ -745,6 +785,8 @@ if (productJsonEl && productForm) {
     async (event) => {
       const addBtn = event.target.closest('#bp-add-cart-btn');
       const buyBtnTarget = event.target.closest('#bp-buy-btn');
+      const qtyControl = event.target.closest('#bp-qty-minus, #bp-qty-plus, #bp-qty-input');
+      if (qtyControl) return;
       if (!addBtn && !buyBtnTarget) return;
 
       event.preventDefault();

@@ -2423,12 +2423,154 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   .bp-atc:hover:not(:disabled) { background: #fff; transform: translateY(-1px); }
   .bp-atc:disabled { opacity: 0.45; cursor: not-allowed; }
 
-  .bp-actions {
+  .bp-checkout-stack {
     display: flex;
-    align-items: stretch;
+    flex-direction: column;
     gap: 10px;
     margin-top: 8px;
     margin-bottom: 12px;
+  }
+
+  .bp-cart-row {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .bp-qty {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 0 0 118px;
+    width: 118px;
+    min-height: 52px;
+    padding: 0 4px;
+    background: #141414;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .bp-qty-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 36px;
+    width: 36px;
+    height: 44px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: #fff;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .bp-qty-btn:hover:not(:disabled) {
+    background: #00e676;
+    color: #000;
+  }
+
+  .bp-qty-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .bp-qty-input {
+    flex: 1 1 auto;
+    width: 100%;
+    min-width: 0;
+    border: none;
+    background: transparent;
+    color: #fff !important;
+    font-family: 'Barlow', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  .bp-qty-input::-webkit-outer-spin-button,
+  .bp-qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .bp-add-cart {
+    flex: 1;
+    min-width: 0;
+    min-height: 52px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 18px;
+    background: #00e676;
+    color: #000 !important;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: normal;
+    text-transform: none;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .bp-add-cart:hover:not(:disabled) {
+    background: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(0, 230, 118, 0.25);
+  }
+
+  .bp-add-cart:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .bp-add-cart__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+  }
+
+  .bp-add-cart__icon svg {
+    width: 22px;
+    height: 22px;
+    stroke: #000;
+  }
+
+  .bp-add-cart__text {
+    color: #000 !important;
+    white-space: nowrap;
+  }
+
+  .bp-add-cart.is-added {
+    background: #fff;
+    transform: scale(0.98);
+    box-shadow: 0 0 0 2px #00e676;
+  }
+
+  .bp-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    width: 100%;
   }
 
   /* ── Botones de pago dual (tarjeta / transferencia) ── */
@@ -2558,34 +2700,8 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   }
 
   .bp-buy-now {
-    flex: 1;
+    width: 100%;
     min-width: 0;
-  }
-  .bp-add-cart {
-    flex: 0 0 72px;
-    width: 72px;
-    min-height: 72px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg-card);
-    color: #fff;
-    border: 2px solid var(--border);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: border-color 0.2s, background 0.2s, transform 0.2s;
-  }
-  .bp-add-cart:hover:not(:disabled) {
-    border-color: var(--accent);
-    background: rgba(0, 200, 81, 0.08);
-    transform: translateY(-1px);
-  }
-  .bp-add-cart:disabled { opacity: 0.45; cursor: not-allowed; }
-  .bp-add-cart__icon { font-size: 22px; line-height: 1; }
-  .bp-add-cart.is-added {
-    border-color: var(--accent);
-    background: rgba(0, 200, 81, 0.15);
-    transform: scale(0.96);
   }
   .bp-app-blocks {
     width: 100%;
@@ -4411,7 +4527,7 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     }
     .bp-form { min-width: 0; }
     .easify-product-options { min-width: 0; max-width: 100%; }
-    .bp-actions {
+    .bp-checkout-stack {
       position: sticky;
       bottom: max(10px, env(safe-area-inset-bottom));
       z-index: 40;
@@ -4420,14 +4536,47 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
       padding-top: 4px;
       background: linear-gradient(180deg, rgba(10, 10, 10, 0) 0%, rgba(10, 10, 10, 0.92) 28%, #0a0a0a 100%);
     }
+    .bp-cart-row {
+      gap: 8px;
+    }
+    .bp-qty {
+      flex-basis: 104px;
+      width: 104px;
+      min-height: 50px;
+    }
+    .bp-qty-btn {
+      flex-basis: 32px;
+      width: 32px;
+      height: 40px;
+      font-size: 18px;
+    }
+    .bp-qty-input {
+      font-size: 15px;
+    }
+    .bp-add-cart {
+      min-height: 50px;
+      padding: 12px 14px;
+      gap: 8px;
+      font-size: 14px;
+    }
+    .bp-add-cart__icon,
+    .bp-add-cart__icon svg {
+      width: 20px;
+      height: 20px;
+    }
+    .bp-actions {
+      position: static;
+      margin-top: 0;
+      margin-bottom: 0;
+      padding-top: 0;
+      background: none;
+    }
     .bp-buy-now {
       min-height: 68px;
       box-shadow: inset 0 0 0 2px #fff, 0 6px 28px rgba(0, 0, 0, 0.55);
     }
     .bp-add-cart {
-      flex-basis: 68px;
-      width: 68px;
-      min-height: 68px;
+      min-height: 50px;
       box-shadow: 0 6px 28px rgba(0, 0, 0, 0.35);
     }
     .bp-app-block .payment-btn-dual--fintoc,
