@@ -2483,13 +2483,23 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   .bp-app-block {
     width: 100%;
   }
+  .bp-app-block > *,
+  .bp-app-block .shopify-app-block {
+    width: 100%;
+  }
   .bp-app-block button,
   .bcart-summary .tpo-buy-it-now-btn,
-  .cart-page .tpo-buy-it-now-btn {
+  .cart-page .tpo-buy-it-now-btn,
+  .tpo-buy-it-now-btn {
+    box-sizing: border-box;
     width: 100%;
-    display: block;
+    min-height: 50px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
     margin-top: 8px;
-    padding: 14px 20px;
+    padding: 12px 18px;
+    padding-left: calc(18px + 0.05em);
     background: linear-gradient(
       135deg,
       rgba(255, 215, 0, 0.07) 0%,
@@ -2502,9 +2512,16 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     font-family: 'Bebas Neue', sans-serif;
     font-size: 16px;
     font-weight: 400;
-    letter-spacing: 0.14em;
+    line-height: 1.15;
+    letter-spacing: 0.1em;
+    text-align: center;
     text-transform: uppercase;
+    white-space: normal;
+    word-break: break-word;
+    hyphens: auto;
     cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
     transition: all 0.25s ease;
     box-shadow:
       0 0 18px rgba(255, 215, 0, 0.1),
@@ -2512,7 +2529,8 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   }
   .bp-app-block button:hover,
   .bcart-summary .tpo-buy-it-now-btn:hover,
-  .cart-page .tpo-buy-it-now-btn:hover {
+  .cart-page .tpo-buy-it-now-btn:hover,
+  .tpo-buy-it-now-btn:hover {
     background: linear-gradient(135deg, #ffe566 0%, var(--accent-gold) 50%, #e6c200 100%);
     border-color: #ffe566;
     color: #0a0a0a !important;
@@ -2521,7 +2539,8 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   }
   .bp-app-block button:active,
   .bcart-summary .tpo-buy-it-now-btn:active,
-  .cart-page .tpo-buy-it-now-btn:active {
+  .cart-page .tpo-buy-it-now-btn:active,
+  .tpo-buy-it-now-btn:active {
     transform: translateY(0);
     box-shadow: 0 2px 12px rgba(255, 215, 0, 0.2);
   }
@@ -4348,6 +4367,18 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
       flex-basis: 52px;
       width: 52px;
       box-shadow: 0 6px 28px rgba(0, 0, 0, 0.35);
+    }
+    .bp-app-block button,
+    .bcart-summary .tpo-buy-it-now-btn,
+    .cart-page .tpo-buy-it-now-btn,
+    .tpo-buy-it-now-btn {
+      min-height: 46px;
+      margin-top: 6px;
+      padding: 10px 14px;
+      padding-left: calc(14px + 0.04em);
+      font-size: 14px;
+      letter-spacing: 0.07em;
+      line-height: 1.2;
     }
     .bp-trust {
       justify-content: center;
