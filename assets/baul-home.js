@@ -672,6 +672,25 @@ if (productJsonEl && productForm) {
     );
   }
 
+  function setBuyButtonState(variant) {
+    if (!buyBtn) return;
+
+    const titleEl = buyBtn.querySelector('.payment-btn__title');
+    const subtitleEl = buyBtn.querySelector('.payment-btn__subtitle');
+
+    if (variant.available) {
+      buyBtn.disabled = false;
+      if (titleEl) titleEl.textContent = 'Pagar con tarjeta';
+      else buyBtn.textContent = 'Pagar con tarjeta';
+      if (subtitleEl) subtitleEl.textContent = 'Crédito o débito • Sin descuento';
+    } else {
+      buyBtn.disabled = true;
+      if (titleEl) titleEl.textContent = 'AGOTADO';
+      else buyBtn.textContent = 'AGOTADO';
+      if (subtitleEl) subtitleEl.textContent = 'Sin stock disponible';
+    }
+  }
+
   function updateUI() {
     const variant = findVariant();
     if (!variant || !variantInput) return;
@@ -693,10 +712,7 @@ if (productJsonEl && productForm) {
         if (discountEl) discountEl.style.display = 'none';
       }
     }
-    if (buyBtn) {
-      buyBtn.disabled = !variant.available;
-      buyBtn.textContent = variant.available ? 'COMPRAR AHORA' : 'AGOTADO';
-    }
+    setBuyButtonState(variant);
     if (addCartBtn) {
       addCartBtn.disabled = !variant.available;
     }
@@ -753,14 +769,17 @@ if (productJsonEl && productForm) {
 
       if (buyBtnTarget.disabled) return;
       buyBtnTarget.disabled = true;
-      const originalText = buyBtnTarget.textContent;
-      buyBtnTarget.textContent = 'PROCESANDO…';
+      const titleEl = buyBtnTarget.querySelector('.payment-btn__title');
+      const originalTitle = titleEl ? titleEl.textContent : buyBtnTarget.textContent;
+      if (titleEl) titleEl.textContent = 'PROCESANDO…';
+      else buyBtnTarget.textContent = 'PROCESANDO…';
 
       try {
         await submitProductForm(true);
       } catch (e) {
         buyBtnTarget.disabled = false;
-        buyBtnTarget.textContent = originalText;
+        if (titleEl) titleEl.textContent = originalTitle;
+        else buyBtnTarget.textContent = originalTitle;
       }
     },
     true
