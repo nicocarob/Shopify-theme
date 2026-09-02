@@ -98,7 +98,7 @@
         "disabled": false,
         "settings": {
           "textSelector": "Finalizar compra",
-          "textSelector2": "Comprar ahora, Check out, checkout, check-out, pagar pedido, pagar ahora",
+          "textSelector2": "Comprar ahora, Pagar con tarjeta",
           "selector": ":is(button,input)[name=\"checkout\"]",
           "message": "Pagar con un 5% de descuento extra",
           "icon": "shopify://shop_images/wf-eed7879ed721.png",
