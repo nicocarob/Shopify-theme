@@ -102,7 +102,7 @@
           "selector": ":is(button,input)[name=\"checkout\"]",
           "message": "Pagar con un 5% de descuento extra",
           "icon": "shopify://shop_images/wf-dfe9da1e072f.png",
-          "position": "before",
+          "position": "after",
           "customliquid": "{% comment %}\n<style>\nbutton { \n background: #000000;\n}\n</style>\n{% endcomment %}\n\n{% # delete the comment to apply, styles here apply to the app button only %}"
         }
       }
