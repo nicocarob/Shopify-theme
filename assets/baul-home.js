@@ -212,12 +212,10 @@ document.querySelectorAll('.eyebrow').forEach((el) => eyeObs.observe(el));
   let headerCompact = false;
   let scrollRaf = 0;
   let scrollIdleTimer = 0;
-  const compactAt = 72;
-  const expandAt = 10;
 
   function measureHeader() {
     if (cbar) {
-      const nextCbarHeight = cbar.offsetHeight;
+      const nextCbarHeight = cbar.scrollHeight || cbar.offsetHeight;
       if (nextCbarHeight > 0) cbarHeight = nextCbarHeight;
     }
     if (headerMain) {
@@ -226,26 +224,39 @@ document.querySelectorAll('.eyebrow').forEach((el) => eyeObs.observe(el));
     }
 
     html.style.setProperty('--baul-cbar-full-h', cbarHeight + 'px');
-    syncHeaderOffset();
+    applyCbarScroll(window.scrollY);
   }
 
-  function syncHeaderOffset() {
-    const offset = headerCompact ? mainHeight : cbarHeight + mainHeight;
+  function applyCbarScroll(scrollTop) {
+    if (!headerFixed || !cbarHeight) {
+      const fallback = mainHeight || 0;
+      html.style.setProperty('--baul-header-offset', fallback + 'px');
+      html.style.setProperty('--baul-cbar-h', '0px');
+      html.style.setProperty('--cbar-hidden', '0px');
+      if (headerSpacer) headerSpacer.style.height = fallback + 'px';
+      if (headerFixed) headerFixed.style.height = fallback + 'px';
+      return;
+    }
+
+    const hidden = Math.min(Math.max(scrollTop, 0), cbarHeight);
+    const visible = cbarHeight - hidden;
+    const offset = mainHeight + visible;
+    const isCompact = hidden >= cbarHeight - 1;
+
+    html.style.setProperty('--cbar-hidden', hidden + 'px');
+    html.style.setProperty('--baul-cbar-h', visible + 'px');
     html.style.setProperty('--baul-header-offset', offset + 'px');
-    html.style.setProperty('--baul-cbar-h', headerCompact ? '0px' : cbarHeight + 'px');
+    headerFixed.style.height = offset + 'px';
 
     if (headerSpacer) {
       headerSpacer.style.height = offset + 'px';
     }
-  }
 
-  function setHeaderCompact(compact) {
-    if (compact === headerCompact) return;
-    headerCompact = compact;
-
-    html.classList.toggle('baul-header-compact', compact);
-    html.classList.toggle('baul-cbar-hidden', compact);
-    window.requestAnimationFrame(syncHeaderOffset);
+    if (isCompact !== headerCompact) {
+      headerCompact = isCompact;
+      html.classList.toggle('baul-header-compact', isCompact);
+      html.classList.toggle('baul-cbar-hidden', isCompact);
+    }
   }
 
   function updateOnScroll() {
@@ -258,13 +269,7 @@ document.querySelectorAll('.eyebrow').forEach((el) => eyeObs.observe(el));
       scrollBar.style.transform = 'scaleX(' + progress + ')';
     }
 
-    if (headerFixed) {
-      if (!headerCompact && scrollTop > compactAt) {
-        setHeaderCompact(true);
-      } else if (headerCompact && scrollTop <= expandAt) {
-        setHeaderCompact(false);
-      }
-    }
+    applyCbarScroll(scrollTop);
 
     html.classList.add('is-scrolling');
     window.clearTimeout(scrollIdleTimer);
@@ -286,8 +291,10 @@ document.querySelectorAll('.eyebrow').forEach((el) => eyeObs.observe(el));
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('load', measureHeader);
 
-  if (typeof ResizeObserver !== 'undefined' && headerFixed) {
-    new ResizeObserver(measureHeader).observe(headerFixed);
+  if (typeof ResizeObserver !== 'undefined') {
+    const resizeObserver = new ResizeObserver(measureHeader);
+    if (cbar) resizeObserver.observe(cbar);
+    if (headerMain) resizeObserver.observe(headerMain);
   }
 })();
 
