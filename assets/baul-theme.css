@@ -4926,83 +4926,28 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
 
     .hero { min-height: auto; overflow-x: hidden; }
     .hero--slideshow {
-      min-height: min(78dvh, 640px);
-      align-items: flex-end;
-    }
-    .hero--slideshow .hero-overlay {
-      background: linear-gradient(
-        to top,
-        rgba(0, 0, 0, 0.9) 0%,
-        rgba(0, 0, 0, 0.68) 38%,
-        rgba(0, 0, 0, 0.32) 72%,
-        rgba(0, 0, 0, 0.18) 100%
-      );
+      min-height: clamp(460px, 72vh, 720px);
     }
     .hero-content {
-      width: 100%;
-      min-height: 100%;
-      padding: 88px 20px 32px;
-      justify-content: flex-end;
-      align-items: flex-start;
-    }
-    .hero--slideshow .hero-tag {
-      margin-bottom: 10px;
-      max-width: 100%;
-    }
-    .hero--slideshow .hero-tag span {
-      display: block;
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.14em;
-      line-height: 1.45;
-      max-width: 28ch;
+      padding: 56px 18px 48px;
     }
     .hero--slideshow .hero-title {
-      font-size: clamp(40px, 11.8vw, 56px);
-      line-height: 0.94;
-      letter-spacing: 0.01em;
-      margin-bottom: 10px;
-      max-width: 10ch;
-      text-wrap: balance;
+      font-size: clamp(48px, 14vw, 72px);
+      max-width: none;
     }
     .hero--slideshow .hero-desc {
       font-size: 15px;
-      line-height: 1.5;
-      margin-bottom: 18px;
-      max-width: 34ch;
-      color: rgba(255, 255, 255, 0.92);
+      margin-bottom: 22px;
     }
     .hero--slideshow .hero-btns {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      gap: 8px;
-      width: 100%;
-      max-width: 100%;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
     }
     .hero--slideshow .btn-gold,
     .hero--slideshow .btn-hero-link {
-      width: 100%;
-      min-height: 48px;
-      padding: 13px 18px;
-      font-size: 13px;
-      letter-spacing: 0.1em;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-    .hero--slideshow .btn-gold {
-      order: 1;
-    }
-    .hero--slideshow .btn-hero-link {
-      order: 2;
-      padding: 10px 16px;
-      min-height: 40px;
-      color: rgba(255, 255, 255, 0.95);
-    }
-    .hero--slideshow .btn-hero-link:hover {
-      transform: none;
-      color: #f3c623;
+      padding: 12px 18px;
+      font-size: 12px;
     }
     .hero-grid {
       grid-template-columns: 1fr 1fr;
@@ -5436,37 +5381,6 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .promo-banner__accent { display: none; }
     .promo-banner__text { text-align: center; font-size: 11px; }
     .liga-grid { grid-template-columns: repeat(2, 1fr); }
-
-    .hero--slideshow {
-      min-height: min(74dvh, 560px);
-    }
-    .hero-content {
-      padding: 76px 16px 24px;
-    }
-    .hero--slideshow .hero-tag span {
-      font-size: 9px;
-      letter-spacing: 0.1em;
-      max-width: 100%;
-    }
-    .hero--slideshow .hero-title {
-      font-size: clamp(36px, 10.8vw, 46px);
-      margin-bottom: 8px;
-      max-width: none;
-    }
-    .hero--slideshow .hero-desc {
-      font-size: 14px;
-      margin-bottom: 16px;
-      max-width: none;
-    }
-    .hero--slideshow .hero-btns {
-      gap: 6px;
-    }
-    .hero--slideshow .btn-gold,
-    .hero--slideshow .btn-hero-link {
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      padding: 12px 14px;
-    }
 
     .elige-liga-sec { padding: 36px 12px; }
     .elige-liga-sec__hdr { margin-bottom: 28px; }
