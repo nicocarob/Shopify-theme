@@ -90,6 +90,36 @@
             "author": "Nico F.",
             "show_verified": true
           }
+        },
+        "review_DFzYAy": {
+          "type": "review",
+          "settings": {
+            "image": "shopify://shop_images/todays-pick-up-v0-7axqopyjpelh1.webp",
+            "rating": 5,
+            "text": "buena calidad de la tela, vino con sus etiquetas... linda presentación",
+            "author": "Seba L.",
+            "show_verified": true
+          }
+        },
+        "review_UcFw6C": {
+          "type": "review",
+          "settings": {
+            "image": "shopify://shop_images/my-real-madrid-ronaldo-era-collection-v0-rsdxf0xd2gv51.webp",
+            "rating": 5,
+            "text": "Se pasaron con la calidad!! super recomendado 👌",
+            "author": "Cristopher A.",
+            "show_verified": true
+          }
+        },
+        "review_YFrwzb": {
+          "type": "review",
+          "settings": {
+            "image": "shopify://shop_images/okkinetic-review-v0-lcdcw1zd54nh1.webp",
+            "rating": 5,
+            "text": "me quedaron excelente!",
+            "author": "Fabi",
+            "show_verified": true
+          }
         }
       },
       "block_order": [
@@ -100,7 +130,10 @@
         "review_D88tFD",
         "review_2",
         "review_3",
-        "review_L3gL9A"
+        "review_L3gL9A",
+        "review_DFzYAy",
+        "review_UcFw6C",
+        "review_YFrwzb"
       ],
       "settings": {
         "reviews_heading": "Lo que dicen nuestros clientes",
