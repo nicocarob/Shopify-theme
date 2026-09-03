@@ -81,6 +81,36 @@ const io = new IntersectionObserver(
 );
 document.querySelectorAll('.rev,.rev-l,.rev-r,.rev-s').forEach((el) => io.observe(el));
 
+(function initHeroSlideshow() {
+  const hero = document.querySelector('[data-hero-slideshow]');
+  if (!hero) return;
+
+  const slides = hero.querySelectorAll('.hero-slide');
+  if (slides.length <= 1) return;
+
+  const autoplay = parseInt(hero.dataset.autoplay, 10) || 5000;
+  const fade = parseInt(hero.dataset.fade, 10) || 900;
+  hero.style.setProperty('--hero-fade', fade + 'ms');
+
+  let current = 0;
+  let timer;
+
+  function goTo(index) {
+    slides[current].classList.remove('is-active');
+    current = (index + slides.length) % slides.length;
+    slides[current].classList.add('is-active');
+  }
+
+  function start() {
+    clearInterval(timer);
+    timer = setInterval(() => goTo(current + 1), autoplay);
+  }
+
+  hero.addEventListener('mouseenter', () => clearInterval(timer));
+  hero.addEventListener('mouseleave', start);
+  start();
+})();
+
 setInterval(() => {
   document.querySelectorAll('.urg-timer').forEach((el) => {
     const parts = el.textContent.split(':');

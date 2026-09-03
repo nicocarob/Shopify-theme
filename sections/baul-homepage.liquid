@@ -4,13 +4,6 @@
 {% endcomment %}
 
 {% liquid
-  assign trophy_img = section.settings.trophy_image
-  if trophy_img == blank
-    assign trophy_src = 'baul-trophy.png' | asset_url
-  else
-    assign trophy_src = trophy_img | image_url: width: 800
-  endif
-
   assign mv_collection = section.settings.mv_collection
   if mv_collection == blank
     assign mv_collection = collections['mas-vendidos']
@@ -74,39 +67,79 @@
 
 {% render 'baul-header', section: section %}
 
-<section class="hero">
-  <div class="sec-bg-grid"></div>
-  <div class="sec-bg-light"></div>
-  <div class="hero-grid">
-    <div class="rev-l">
-      <div class="hero-tag"><span>🏆 {{ section.settings.hero_tag }}</span></div>
-      <h1 class="hero-title">COPA<br>DEL<br>MUNDO<br><em>{{ section.settings.hero_year }}</em></h1>
-      <div class="hero-sub-line">{{ section.settings.hero_subtitle }}</div>
+{%- liquid
+  assign hero_slides = section.blocks | where: 'type', 'hero_slide'
+  assign hero_slide_count = 0
+  for block in hero_slides
+    if block.settings.image != blank
+      assign hero_slide_count = hero_slide_count | plus: 1
+    endif
+  endfor
+  assign hero_primary_url = section.settings.hero_btn_primary_url | default: routes.all_products_collection_url
+  assign hero_secondary_url = section.settings.hero_btn_secondary_url | default: '#retro'
+-%}
+
+<section
+  class="hero hero--slideshow"
+  data-hero-slideshow
+  data-autoplay="{{ section.settings.hero_autoplay_speed }}"
+  data-fade="{{ section.settings.hero_fade_speed }}"
+>
+  <div class="hero-slides" aria-hidden="true">
+    {%- if hero_slide_count > 0 -%}
+      {%- assign slide_index = 0 -%}
+      {%- for block in hero_slides -%}
+        {%- if block.settings.image != blank -%}
+          <div
+            class="hero-slide{% if slide_index == 0 %} is-active{% endif %}"
+            data-index="{{ slide_index }}"
+            {{ block.shopify_attributes }}
+          >
+            <img
+              src="{{ block.settings.image | image_url: width: 2400 }}"
+              srcset="{{ block.settings.image | image_url: width: 800 }} 800w, {{ block.settings.image | image_url: width: 1400 }} 1400w, {{ block.settings.image | image_url: width: 2400 }} 2400w"
+              sizes="100vw"
+              alt="{{ block.settings.image.alt | default: section.settings.hero_title_line1 | escape }}"
+              width="{{ block.settings.image.width }}"
+              height="{{ block.settings.image.height }}"
+              {% if slide_index == 0 %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}
+            >
+          </div>
+          {%- assign slide_index = slide_index | plus: 1 -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- else -%}
+      <div class="hero-slide is-active hero-slide--fallback"></div>
+    {%- endif -%}
+  </div>
+
+  <div class="hero-overlay" aria-hidden="true"></div>
+
+  <div class="hero-content rev-l">
+    {%- if section.settings.hero_tag != blank -%}
+      <div class="hero-tag"><span>{{ section.settings.hero_tag }}</span></div>
+    {%- endif -%}
+
+    <h1 class="hero-title">
+      {%- if section.settings.hero_title_line1 != blank -%}
+        {{ section.settings.hero_title_line1 }}<br>
+      {%- endif -%}
+      {%- if section.settings.hero_title_line2 != blank -%}
+        <em>{{ section.settings.hero_title_line2 }}</em>
+      {%- endif -%}
+    </h1>
+
+    {%- if section.settings.hero_description != blank -%}
       <p class="hero-desc">{{ section.settings.hero_description }}</p>
-      <div class="hero-btns">
-        <a href="#colsec" class="btn-gold">{{ section.settings.hero_btn_primary }}</a>
-        <a href="#elige-liga" class="btn-ghost">{{ section.settings.hero_btn_secondary }}</a>
-      </div>
-      <div class="hero-flags">
-        <a href="{{ routes.search_url }}?q={{ 'Chile' | url_encode }}&type=product" class="flag-b" aria-label="Buscar camisetas de Chile">🇨🇱</a>
-        <a href="{{ routes.search_url }}?q={{ 'Argentina' | url_encode }}&type=product" class="flag-b" aria-label="Buscar camisetas de Argentina">🇦🇷</a>
-        <a href="{{ routes.search_url }}?q={{ 'Brasil' | url_encode }}&type=product" class="flag-b" aria-label="Buscar camisetas de Brasil">🇧🇷</a>
-        <a href="{{ routes.search_url }}?q={{ 'Portugal' | url_encode }}&type=product" class="flag-b" aria-label="Buscar camisetas de Portugal">🇵🇹</a>
-        <a href="{{ routes.search_url }}?q={{ 'Alemania' | url_encode }}&type=product" class="flag-b" aria-label="Buscar camisetas de Alemania">🇩🇪</a>
-        <a href="{{ routes.search_url }}?q={{ 'Francia' | url_encode }}&type=product" class="flag-b" aria-label="Buscar camisetas de Francia">🇫🇷</a>
-        <a href="{{ routes.search_url }}?q={{ 'España' | url_encode }}&type=product" class="flag-b" aria-label="Buscar camisetas de España">🇪🇸</a>
-        <a href="{{ routes.search_url }}?q={{ 'Inglaterra' | url_encode }}&type=product" class="flag-b" aria-label="Buscar camisetas de Inglaterra">🏴󠁧󠁢󠁥󠁮󠁧󠁿</a>
-      </div>
-    </div>
-    <div class="hero-r rev-r">
-      <div class="trophy-scene">
-        <div class="trophy-glow"></div>
-        <div class="trophy-shadow"></div>
-        <div class="spark s1"></div><div class="spark s2"></div>
-        <div class="spark s3"></div><div class="spark s4"></div>
-        <div class="spark s5"></div><div class="spark s6"></div>
-        <img class="trophy-img" src="{{ trophy_src }}" alt="Copa del Mundo FIFA" width="320" height="420" loading="eager">
-      </div>
+    {%- endif -%}
+
+    <div class="hero-btns">
+      {%- if section.settings.hero_btn_primary != blank -%}
+        <a href="{{ hero_primary_url }}" class="btn-gold">{{ section.settings.hero_btn_primary }}</a>
+      {%- endif -%}
+      {%- if section.settings.hero_btn_secondary != blank -%}
+        <a href="{{ hero_secondary_url }}" class="btn-hero-link">{{ section.settings.hero_btn_secondary }}</a>
+      {%- endif -%}
     </div>
   </div>
 </section>
@@ -408,45 +441,68 @@
       "label": "Logo"
     },
     {
-      "type": "image_picker",
-      "id": "trophy_image",
-      "label": "Imagen trofeo"
-    },
-    {
       "type": "text",
       "id": "hero_tag",
-      "label": "Etiqueta hero",
-      "default": "Colección Oficial 2026"
+      "label": "Etiqueta superior",
+      "default": "TIENDA DE CAMISETAS DE FÚTBOL ONLINE"
     },
     {
       "type": "text",
-      "id": "hero_year",
-      "label": "Año hero (destacado en dorado)",
-      "default": "2026"
+      "id": "hero_title_line1",
+      "label": "Título línea 1 (blanco)",
+      "default": "EL FÚTBOL"
     },
     {
       "type": "text",
-      "id": "hero_subtitle",
-      "label": "Subtítulo hero",
-      "default": "USA · CANADÁ · MÉXICO"
+      "id": "hero_title_line2",
+      "label": "Título línea 2 (dorado)",
+      "default": "ES DE TODOS."
     },
     {
       "type": "textarea",
       "id": "hero_description",
       "label": "Descripción hero",
-      "default": "Viste los colores de tu selección en el evento más grande del fútbol. Versión hincha, calidad premium, envío gratis a todo Chile."
+      "default": "Camisetas de fútbol retro y actuales. Envíos a todo Chile."
     },
     {
       "type": "text",
       "id": "hero_btn_primary",
       "label": "Botón primario",
-      "default": "Ver Colección ⚽"
+      "default": "VER TODAS LAS CAMISETAS"
+    },
+    {
+      "type": "url",
+      "id": "hero_btn_primary_url",
+      "label": "Enlace botón primario"
     },
     {
       "type": "text",
       "id": "hero_btn_secondary",
       "label": "Botón secundario",
-      "default": "Buscar mi equipo"
+      "default": "VER CAMISETAS RETRO →"
+    },
+    {
+      "type": "url",
+      "id": "hero_btn_secondary_url",
+      "label": "Enlace botón secundario"
+    },
+    {
+      "type": "range",
+      "id": "hero_autoplay_speed",
+      "label": "Tiempo entre slides (ms)",
+      "min": 2000,
+      "max": 9000,
+      "step": 500,
+      "default": 5000
+    },
+    {
+      "type": "range",
+      "id": "hero_fade_speed",
+      "label": "Velocidad de transición (ms)",
+      "min": 400,
+      "max": 1500,
+      "step": 100,
+      "default": 900
     },
     {
       "type": "header",
@@ -932,6 +988,17 @@
     }
   ],
   "blocks": [
+    {
+      "type": "hero_slide",
+      "name": "Imagen del hero",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagen de fondo"
+        }
+      ]
+    },
     {
       "type": "testimonial",
       "name": "Foto cliente",
