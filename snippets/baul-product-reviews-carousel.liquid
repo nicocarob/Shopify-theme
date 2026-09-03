@@ -89,36 +89,37 @@
             data-bp-reviews-panel
             data-bp-reviews-index="{{ review_index }}"
           >
+            <div class="bp-reviews__card-top">
+              {% if block.settings.author != blank %}
+                <span class="bp-reviews__avatar" aria-hidden="true">{{ block.settings.author | strip | slice: 0 | upcase }}</span>
+                <div class="bp-reviews__author-wrap">
+                  <span class="bp-reviews__name">{{ block.settings.author }}</span>
+                  {% if block.settings.show_verified %}
+                    <span class="bp-reviews__verified-label">
+                      <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10" fill="#1a73e8"/>
+                        <path d="M8 12.5l2.5 2.5L16 9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                      Compra verificada
+                    </span>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+
             <div class="bp-reviews__stars" aria-label="{{ block.settings.rating }} de 5 estrellas">
               {% assign rating = block.settings.rating | default: 5 %}
               {% for i in (1..5) %}
-                <span class="bp-reviews__star{% if i > rating %} is-empty{% endif %}" aria-hidden="true">★</span>
+                <span class="bp-reviews__star{% if i > rating %} is-empty{% endif %}" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="16" height="16" focusable="false" aria-hidden="true">
+                    <path fill="currentColor" d="M12 2l2.9 6.9 7.5.6-5.7 4.8 1.8 7.3L12 18.8 5.5 21.6l1.8-7.3-5.7-4.8 7.5-.6L12 2z"/>
+                  </svg>
+                </span>
               {% endfor %}
             </div>
 
             {% if block.settings.text != blank %}
               <p class="bp-reviews__text">{{ block.settings.text }}</p>
-            {% endif %}
-
-            {% if block.settings.author != blank %}
-              <div class="bp-reviews__footer">
-                <div class="bp-reviews__author">
-                  {% if block.settings.show_verified %}
-                    <span class="bp-reviews__verified" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                        <circle cx="12" cy="12" r="10" fill="currentColor"/>
-                        <path d="M8 12.5l2.5 2.5L16 9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </span>
-                  {% endif %}
-                  <span class="bp-reviews__name">{{ block.settings.author }}</span>
-                </div>
-                <div class="bp-reviews__quote" aria-hidden="true">&ldquo;</div>
-              </div>
-            {% else %}
-              <div class="bp-reviews__footer">
-                <div class="bp-reviews__quote" aria-hidden="true">&ldquo;</div>
-              </div>
             {% endif %}
           </article>
           {% assign review_index = review_index | plus: 1 %}
