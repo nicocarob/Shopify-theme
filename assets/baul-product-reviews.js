@@ -1,56 +1,88 @@
 (function () {
+  var SLIDE_GAP = 10;
+
   function initReviewsCarousel(root) {
     if (!root || root.dataset.bpReviewsReady === '1') return;
 
-    const mediaViewport = root.querySelector('[data-bp-reviews-media]');
-    const panels = [...root.querySelectorAll('[data-bp-reviews-panel]')];
-    const dotsWrap = root.querySelector('[data-bp-reviews-dots]');
+    var mediaViewport = root.querySelector('[data-bp-reviews-media]');
+    var panels = [].slice.call(root.querySelectorAll('[data-bp-reviews-panel]'));
+    var dotsWrap = root.querySelector('[data-bp-reviews-dots]');
 
     if (!mediaViewport || panels.length === 0) return;
 
-    root.dataset.bpReviewsReady = '1';
-
-    const scrollItems = [...mediaViewport.querySelectorAll('[data-bp-reviews-index]')];
-
+    var scrollItems = [].slice.call(
+      mediaViewport.querySelectorAll('[data-bp-reviews-index]')
+    );
     if (scrollItems.length === 0) return;
 
-    let dots = [];
+    root.dataset.bpReviewsReady = '1';
 
-    function setActive(index) {
-      panels.forEach((panel, panelIndex) => {
-        panel.classList.toggle('is-active', panelIndex === index);
-        panel.setAttribute('aria-hidden', panelIndex === index ? 'false' : 'true');
-      });
+    var dots = [];
+    var activeIndex = 0;
+    var rafId = null;
 
-      dots.forEach((dot, dotIndex) => {
-        const isActive = dotIndex === index;
+    function readGap() {
+      var track = mediaViewport.querySelector('.bp-reviews__media-track');
+      if (!track) return SLIDE_GAP;
+      var styles = window.getComputedStyle(track);
+      var gap = parseFloat(styles.columnGap || styles.gap);
+      return Number.isFinite(gap) ? gap : SLIDE_GAP;
+    }
+
+    function updateDots(index) {
+      dots.forEach(function (dot, dotIndex) {
+        var isActive = dotIndex === index;
         dot.classList.toggle('is-active', isActive);
         dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
       });
     }
 
-    function getClosestIndex() {
-      const center = mediaViewport.scrollLeft + mediaViewport.clientWidth / 2;
-      let closest = 0;
-      let closestDistance = Infinity;
+    function updateFromScroll() {
+      rafId = null;
 
-      scrollItems.forEach((item, index) => {
-        const itemCenter = item.offsetLeft + item.offsetWidth / 2;
-        const distance = Math.abs(itemCenter - center);
+      var gap = readGap();
+      var center = mediaViewport.scrollLeft + mediaViewport.clientWidth / 2;
+      var closest = 0;
+      var closestDistance = Infinity;
+
+      scrollItems.forEach(function (item, index) {
+        var itemCenter = item.offsetLeft + item.offsetWidth / 2;
+        var distance = Math.abs(center - itemCenter);
+        var range = item.offsetWidth + gap;
+        var progress = Math.max(0, 1 - distance / range);
+        var eased = progress * progress * (3 - 2 * progress);
+        var panel = panels[index];
+
+        if (panel) {
+          panel.style.opacity = String(eased);
+          panel.style.transform = 'translateY(' + (1 - eased) * 6 + 'px)';
+          panel.style.visibility = eased > 0.03 ? 'visible' : 'hidden';
+          panel.setAttribute('aria-hidden', eased < 0.5 ? 'true' : 'false');
+        }
+
         if (distance < closestDistance) {
           closestDistance = distance;
           closest = index;
         }
       });
 
-      return closest;
+      if (closest !== activeIndex) {
+        activeIndex = closest;
+        updateDots(activeIndex);
+      }
+    }
+
+    function scheduleUpdate() {
+      if (rafId === null) {
+        rafId = window.requestAnimationFrame(updateFromScroll);
+      }
     }
 
     function scrollToIndex(index) {
-      const item = scrollItems[index];
+      var item = scrollItems[index];
       if (!item) return;
 
-      const target =
+      var target =
         item.offsetLeft - (mediaViewport.clientWidth - item.offsetWidth) / 2;
 
       mediaViewport.scrollTo({
@@ -58,39 +90,35 @@
         behavior: 'smooth',
       });
 
-      setActive(index);
+      activeIndex = index;
+      updateDots(index);
+      scheduleUpdate();
     }
 
     function buildDots() {
       if (!dotsWrap) return;
 
       dotsWrap.innerHTML = '';
-      dots = panels.map((_, index) => {
-        const dot = document.createElement('button');
+      dots = panels.map(function (_, index) {
+        var dot = document.createElement('button');
         dot.type = 'button';
         dot.className = 'bp-reviews__dot';
         dot.setAttribute('role', 'tab');
         dot.setAttribute('aria-label', 'Ver reseña ' + (index + 1));
-        dot.addEventListener('click', () => scrollToIndex(index));
+        dot.addEventListener('click', function () {
+          scrollToIndex(index);
+        });
         dotsWrap.appendChild(dot);
         return dot;
       });
     }
 
-    let scrollTimer = null;
-    mediaViewport.addEventListener(
-      'scroll',
-      () => {
-        window.clearTimeout(scrollTimer);
-        scrollTimer = window.setTimeout(() => {
-          setActive(getClosestIndex());
-        }, 60);
-      },
-      { passive: true }
-    );
+    mediaViewport.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate);
 
     buildDots();
-    setActive(0);
+    updateFromScroll();
+    updateDots(0);
 
     root._bpReviewsScrollTo = scrollToIndex;
   }
@@ -101,20 +129,20 @@
 
   document.addEventListener('DOMContentLoaded', initAll);
   document.addEventListener('shopify:section:load', initAll);
-  document.addEventListener('shopify:block:select', (event) => {
-    const blockId = event.detail && event.detail.blockId;
+  document.addEventListener('shopify:block:select', function (event) {
+    var blockId = event.detail && event.detail.blockId;
     if (!blockId) return;
 
-    const blockEl = document.getElementById('shopify-block-' + blockId);
+    var blockEl = document.getElementById('shopify-block-' + blockId);
     if (!blockEl) return;
 
-    const root = blockEl.closest('[data-bp-reviews]');
+    var root = blockEl.closest('[data-bp-reviews]');
     if (!root || typeof root._bpReviewsScrollTo !== 'function') {
       initAll();
       return;
     }
 
-    const index = Number(blockEl.dataset.bpReviewsIndex);
+    var index = Number(blockEl.dataset.bpReviewsIndex);
     if (!Number.isNaN(index)) root._bpReviewsScrollTo(index);
   });
 })();
