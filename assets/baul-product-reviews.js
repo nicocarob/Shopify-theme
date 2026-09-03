@@ -2,21 +2,70 @@
   function initReviewsCarousel(root) {
     if (!root || root.dataset.bpReviewsReady === '1') return;
 
-    const viewport = root.querySelector('[data-bp-reviews-viewport]');
-    const track = root.querySelector('[data-bp-reviews-track]');
+    const mediaViewport = root.querySelector('[data-bp-reviews-media]');
+    const panels = [...root.querySelectorAll('[data-bp-reviews-panel]')];
     const dotsWrap = root.querySelector('[data-bp-reviews-dots]');
-    const slides = [...root.querySelectorAll('[data-bp-reviews-slide]')];
 
-    if (!viewport || !track || !dotsWrap || slides.length === 0) return;
+    if (!mediaViewport || panels.length === 0) return;
 
     root.dataset.bpReviewsReady = '1';
 
-    let activeIndex = 0;
+    const scrollItems = [...mediaViewport.querySelectorAll('[data-bp-reviews-index]')];
+
+    if (scrollItems.length === 0) return;
+
     let dots = [];
 
+    function setActive(index) {
+      panels.forEach((panel, panelIndex) => {
+        panel.classList.toggle('is-active', panelIndex === index);
+        panel.setAttribute('aria-hidden', panelIndex === index ? 'false' : 'true');
+      });
+
+      dots.forEach((dot, dotIndex) => {
+        const isActive = dotIndex === index;
+        dot.classList.toggle('is-active', isActive);
+        dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+    }
+
+    function getClosestIndex() {
+      const center = mediaViewport.scrollLeft + mediaViewport.clientWidth / 2;
+      let closest = 0;
+      let closestDistance = Infinity;
+
+      scrollItems.forEach((item, index) => {
+        const itemCenter = item.offsetLeft + item.offsetWidth / 2;
+        const distance = Math.abs(itemCenter - center);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closest = index;
+        }
+      });
+
+      return closest;
+    }
+
+    function scrollToIndex(index) {
+      const item = scrollItems[index];
+      if (!item) return;
+
+      const target =
+        item.offsetLeft - (mediaViewport.clientWidth - item.offsetWidth) / 2;
+
+      mediaViewport.scrollTo({
+        left: Math.max(0, target),
+        behavior: 'smooth',
+      });
+
+      setActive(index);
+    }
+
     function buildDots() {
+      if (!dotsWrap) return;
+
       dotsWrap.innerHTML = '';
-      dots = slides.map((_, index) => {
+      dots = panels.map((_, index) => {
         const dot = document.createElement('button');
         dot.type = 'button';
         dot.className = 'bp-reviews__dot';
@@ -28,61 +77,20 @@
       });
     }
 
-    function getClosestIndex() {
-      const viewportCenter = viewport.scrollLeft + viewport.clientWidth / 2;
-      let closest = 0;
-      let closestDistance = Infinity;
-
-      slides.forEach((slide, index) => {
-        const slideCenter = slide.offsetLeft + slide.offsetWidth / 2;
-        const distance = Math.abs(slideCenter - viewportCenter);
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closest = index;
-        }
-      });
-
-      return closest;
-    }
-
-    function updateDots(index) {
-      activeIndex = index;
-      dots.forEach((dot, dotIndex) => {
-        const isActive = dotIndex === index;
-        dot.classList.toggle('is-active', isActive);
-        dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
-      });
-    }
-
-    function scrollToIndex(index) {
-      const slide = slides[index];
-      if (!slide) return;
-
-      const target =
-        slide.offsetLeft - (viewport.clientWidth - slide.offsetWidth) / 2;
-
-      viewport.scrollTo({
-        left: Math.max(0, target),
-        behavior: 'smooth',
-      });
-    }
-
     let scrollTimer = null;
-    viewport.addEventListener(
+    mediaViewport.addEventListener(
       'scroll',
       () => {
         window.clearTimeout(scrollTimer);
         scrollTimer = window.setTimeout(() => {
-          updateDots(getClosestIndex());
-        }, 80);
+          setActive(getClosestIndex());
+        }, 60);
       },
       { passive: true }
     );
 
     buildDots();
-    updateDots(0);
-
-    window.addEventListener('resize', () => updateDots(getClosestIndex()));
+    setActive(0);
 
     root._bpReviewsScrollTo = scrollToIndex;
   }
@@ -97,17 +105,16 @@
     const blockId = event.detail && event.detail.blockId;
     if (!blockId) return;
 
-    const slide = document.getElementById('shopify-block-' + blockId);
-    if (!slide) return;
+    const blockEl = document.getElementById('shopify-block-' + blockId);
+    if (!blockEl) return;
 
-    const root = slide.closest('[data-bp-reviews]');
+    const root = blockEl.closest('[data-bp-reviews]');
     if (!root || typeof root._bpReviewsScrollTo !== 'function') {
       initAll();
       return;
     }
 
-    const slides = [...root.querySelectorAll('[data-bp-reviews-slide]')];
-    const index = slides.indexOf(slide);
-    if (index >= 0) root._bpReviewsScrollTo(index);
+    const index = Number(blockEl.dataset.bpReviewsIndex);
+    if (!Number.isNaN(index)) root._bpReviewsScrollTo(index);
   });
 })();

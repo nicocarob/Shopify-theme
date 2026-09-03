@@ -2809,16 +2809,17 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     color: #fff;
   }
 
-  /* ── Reseñas de producto (carrusel estilo Shimmer) ── */
+  /* ── Reseñas de producto (carrusel estilo Shimmer / Loox) ── */
   .bp-reviews {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 28px 0 8px;
+    padding: 28px 0 12px;
     position: relative;
     z-index: 1;
+    overflow: visible;
   }
   .bp-reviews__heading {
-    margin: 0 0 20px;
+    margin: 0 0 18px;
     padding: 0 16px;
     font-family: 'Barlow Condensed', sans-serif;
     font-size: clamp(22px, 4vw, 28px);
@@ -2828,40 +2829,38 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     text-align: center;
     color: #fff;
   }
-  .bp-reviews__viewport {
+
+  /* Carrusel de imágenes (solo arriba, con peek) */
+  .bp-reviews__media-viewport {
     overflow-x: auto;
     overflow-y: visible;
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
-    scroll-padding-inline: 11vw;
+    scroll-padding-inline: 14vw;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     overscroll-behavior-x: contain;
+    margin-bottom: 12px;
   }
-  .bp-reviews__viewport::-webkit-scrollbar { display: none; }
-  .bp-reviews__track {
+  .bp-reviews__media-viewport::-webkit-scrollbar { display: none; }
+  .bp-reviews__media-track {
     display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 0 max(12px, calc((100% - 360px) / 2));
+    align-items: stretch;
+    gap: 10px;
+    padding: 0 14vw;
     width: max-content;
-    min-width: 100%;
   }
-  .bp-reviews__slide {
-    flex: 0 0 min(78vw, 360px);
-    width: min(78vw, 360px);
+  .bp-reviews__media-slide {
+    flex: 0 0 72vw;
+    width: 72vw;
+    max-width: 300px;
     scroll-snap-align: center;
     scroll-snap-stop: always;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .bp-reviews__media {
-    border-radius: 22px;
+    border-radius: 24px;
     overflow: hidden;
     aspect-ratio: 4 / 5;
     background: #1a1a1a;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
   }
   .bp-reviews__image {
     display: block;
@@ -2869,20 +2868,36 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     height: 100%;
     object-fit: cover;
   }
+  .bp-reviews__media-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(160deg, #ece6dc 0%, #ddd5c8 100%);
+  }
+
+  /* Tarjeta de texto (ancho completo, fija abajo) */
+  .bp-reviews__panels {
+    margin: 0 12px;
+    position: relative;
+    min-height: 160px;
+  }
   .bp-reviews__card {
-    display: flex;
+    display: none;
     flex-direction: column;
     background: #f5f0e8;
-    border-radius: 22px;
-    padding: 22px 20px 18px;
+    border-radius: 24px;
+    padding: 22px 18px 16px;
     text-align: center;
     color: #3d3d3d;
+  }
+  .bp-reviews__card.is-active {
+    display: flex;
+    animation: bp-reviews-fade 0.22s ease;
   }
   .bp-reviews__stars {
     display: flex;
     justify-content: center;
     gap: 2px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
     line-height: 1;
   }
   .bp-reviews__star {
@@ -2904,7 +2919,7 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     margin-top: auto;
     padding-top: 2px;
   }
@@ -2932,8 +2947,8 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   }
   .bp-reviews__quote {
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: 42px;
-    line-height: 1;
+    font-size: 44px;
+    line-height: 0.85;
     color: #4a3428;
     pointer-events: none;
     user-select: none;
@@ -2943,7 +2958,7 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin-top: 18px;
+    margin-top: 16px;
     padding: 0 16px;
   }
   .bp-reviews__dot {
@@ -2960,31 +2975,35 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     width: 28px;
     background: #4a3428;
   }
+  @keyframes bp-reviews-fade {
+    from { opacity: 0.35; }
+    to { opacity: 1; }
+  }
 
   @media (min-width: 750px) {
     .bp-reviews {
-      padding: 32px 16px 12px;
+      padding: 32px 16px 16px;
     }
-    .bp-reviews__viewport {
-      scroll-padding-inline: max(16px, calc((100% - 380px) / 2));
+    .bp-reviews__media-viewport {
+      scroll-padding-inline: max(16px, calc((100% - 300px) / 2));
     }
-    .bp-reviews__track {
-      gap: 16px;
-      padding: 0 max(16px, calc((100% - 380px) / 2));
+    .bp-reviews__media-track {
+      gap: 14px;
+      padding: 0 max(16px, calc((100% - 300px) / 2));
     }
-    .bp-reviews__slide {
-      flex: 0 0 380px;
-      width: 380px;
+    .bp-reviews__media-slide {
+      flex-basis: 300px;
+      width: 300px;
+    }
+    .bp-reviews__panels {
+      max-width: 520px;
+      margin: 0 auto;
     }
     .bp-reviews__card {
-      padding: 24px 24px 20px;
+      padding: 24px 24px 18px;
     }
     .bp-reviews__text {
       font-size: 17px;
-      margin-bottom: 16px;
-    }
-    .bp-reviews__quote {
-      font-size: 44px;
     }
   }
 
@@ -4898,25 +4917,26 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
       line-height: 1.6;
     }
     .bp-reviews {
-      padding: 20px 0 4px;
+      padding: 20px 0 8px;
     }
     .bp-reviews__heading {
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       font-size: 20px;
     }
-    .bp-reviews__track {
-      gap: 10px;
-      padding: 0 11vw;
+    .bp-reviews__media-track {
+      gap: 8px;
+      padding: 0 14vw;
     }
-    .bp-reviews__slide {
-      flex-basis: 78vw;
-      width: 78vw;
+    .bp-reviews__media-slide {
+      flex-basis: 72vw;
+      width: 72vw;
+      border-radius: 20px;
     }
-    .bp-reviews__media {
-      border-radius: 18px;
+    .bp-reviews__panels {
+      margin: 0 10px;
     }
     .bp-reviews__card {
-      border-radius: 18px;
+      border-radius: 20px;
       padding: 18px 16px 14px;
     }
     .bp-reviews__text {

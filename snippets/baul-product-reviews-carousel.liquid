@@ -1,13 +1,12 @@
 {% comment %}
-  Carrusel de reseñas de producto (estilo Shimmer / Loox)
-  Parámetros:
-  - heading
-  - section_id
-  - blocks (review blocks)
+  Carrusel de reseñas estilo Shimmer / Loox
+  - Imágenes deslizables arriba (peek lateral)
+  - Tarjeta de texto ancho completo abajo (sincronizada)
 {% endcomment %}
 
 {% liquid
   assign review_blocks_count = 0
+
   for block in blocks
     if block.type == 'review'
       assign review_blocks_count = review_blocks_count | plus: 1
@@ -26,69 +25,85 @@
       <h2 class="bp-reviews__heading">{{ heading }}</h2>
     {% endif %}
 
-    <div class="bp-reviews__viewport" data-bp-reviews-viewport>
-      <div class="bp-reviews__track" data-bp-reviews-track>
+    <div class="bp-reviews__media-viewport" data-bp-reviews-media>
+      <div class="bp-reviews__media-track">
+        {% assign review_index = 0 %}
         {% for block in blocks %}
           {% if block.type == 'review' %}
-            <article
-              class="bp-reviews__slide"
-              data-bp-reviews-slide
+            <div
+              class="bp-reviews__media-slide"
+              data-bp-reviews-index="{{ review_index }}"
               {{ block.shopify_attributes }}
             >
               {% if block.settings.image != blank %}
-                <div class="bp-reviews__media">
-                  {{
-                    block.settings.image
-                    | image_url: width: 900
-                    | image_tag:
-                      loading: 'lazy',
-                      widths: '360, 540, 720, 900',
-                      sizes: '(max-width: 749px) 78vw, 360px',
-                      class: 'bp-reviews__image',
-                      alt: block.settings.author | default: 'Reseña de cliente' | escape
-                  }}
-                </div>
+                {{
+                  block.settings.image
+                  | image_url: width: 900
+                  | image_tag:
+                    loading: 'lazy',
+                    widths: '360, 540, 720, 900',
+                    sizes: '(max-width: 749px) 72vw, 300px',
+                    class: 'bp-reviews__image',
+                    alt: block.settings.author | default: 'Reseña de cliente' | escape
+                }}
+              {% else %}
+                <div class="bp-reviews__media-placeholder" aria-hidden="true"></div>
               {% endif %}
-
-              <div class="bp-reviews__card">
-                <div class="bp-reviews__stars" aria-label="{{ block.settings.rating }} de 5 estrellas">
-                  {% assign rating = block.settings.rating | default: 5 %}
-                  {% for i in (1..5) %}
-                    <span class="bp-reviews__star{% if i > rating %} is-empty{% endif %}" aria-hidden="true">★</span>
-                  {% endfor %}
-                </div>
-
-                {% if block.settings.text != blank %}
-                  <p class="bp-reviews__text">{{ block.settings.text }}</p>
-                {% endif %}
-
-                {% if block.settings.author != blank %}
-                  <div class="bp-reviews__footer">
-                    <div class="bp-reviews__author">
-                      {% if block.settings.show_verified %}
-                        <span class="bp-reviews__verified" aria-hidden="true">
-                          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                            <circle cx="12" cy="12" r="10" fill="currentColor"/>
-                            <path d="M8 12.5l2.5 2.5L16 9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                          </svg>
-                        </span>
-                      {% endif %}
-                      <span class="bp-reviews__name">{{ block.settings.author }}</span>
-                    </div>
-                    <div class="bp-reviews__quote" aria-hidden="true">&ldquo;</div>
-                  </div>
-                {% else %}
-                  <div class="bp-reviews__footer">
-                    <div class="bp-reviews__quote" aria-hidden="true">&ldquo;</div>
-                  </div>
-                {% endif %}
-              </div>
-            </article>
+            </div>
+            {% assign review_index = review_index | plus: 1 %}
           {% endif %}
         {% endfor %}
       </div>
     </div>
 
-    <div class="bp-reviews__dots" data-bp-reviews-dots role="tablist" aria-label="Navegación de reseñas"></div>
+    <div class="bp-reviews__panels">
+      {% assign review_index = 0 %}
+      {% for block in blocks %}
+        {% if block.type == 'review' %}
+          <article
+            class="bp-reviews__card{% if review_index == 0 %} is-active{% endif %}"
+            data-bp-reviews-panel
+            data-bp-reviews-index="{{ review_index }}"
+          >
+            <div class="bp-reviews__stars" aria-label="{{ block.settings.rating }} de 5 estrellas">
+              {% assign rating = block.settings.rating | default: 5 %}
+              {% for i in (1..5) %}
+                <span class="bp-reviews__star{% if i > rating %} is-empty{% endif %}" aria-hidden="true">★</span>
+              {% endfor %}
+            </div>
+
+            {% if block.settings.text != blank %}
+              <p class="bp-reviews__text">{{ block.settings.text }}</p>
+            {% endif %}
+
+            {% if block.settings.author != blank %}
+              <div class="bp-reviews__footer">
+                <div class="bp-reviews__author">
+                  {% if block.settings.show_verified %}
+                    <span class="bp-reviews__verified" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10" fill="currentColor"/>
+                        <path d="M8 12.5l2.5 2.5L16 9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </span>
+                  {% endif %}
+                  <span class="bp-reviews__name">{{ block.settings.author }}</span>
+                </div>
+                <div class="bp-reviews__quote" aria-hidden="true">&ldquo;</div>
+              </div>
+            {% else %}
+              <div class="bp-reviews__footer">
+                <div class="bp-reviews__quote" aria-hidden="true">&ldquo;</div>
+              </div>
+            {% endif %}
+          </article>
+          {% assign review_index = review_index | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% if review_blocks_count > 1 %}
+      <div class="bp-reviews__dots" data-bp-reviews-dots role="tablist" aria-label="Navegación de reseñas"></div>
+    {% endif %}
   </section>
 {% endif %}
