@@ -14,11 +14,11 @@
 %}
 
 {% if has_ligas %}
-<section class="elige-liga-sec" id="elige-liga">
+<section class="elige-liga-sec">
   <div class="sec-bg-grid"></div>
   <div class="sec-bg-light"></div>
 
-  <header class="elige-liga-sec__hdr rev sec-hdr--center">
+  <header class="elige-liga-sec__hdr rev sec-hdr--center" id="elige-liga">
     <div class="eyebrow">{{ section.settings.elige_eyebrow | default: 'ELIGE TU LIGA' }}</div>
     <h2 class="sec-title">{{ section.settings.elige_title | default: 'LAS GRANDES LIGAS' }}</h2>
     <p class="sec-sub">{{ section.settings.elige_subtitle | default: 'Toca el escudo de tu liga y luego el de tu equipo.' }}</p>

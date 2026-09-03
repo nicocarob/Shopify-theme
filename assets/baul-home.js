@@ -81,6 +81,31 @@ const io = new IntersectionObserver(
 );
 document.querySelectorAll('.rev,.rev-l,.rev-r,.rev-s').forEach((el) => io.observe(el));
 
+function getHeaderScrollOffset() {
+  const offset = parseInt(
+    getComputedStyle(document.documentElement).getPropertyValue('--baul-header-offset'),
+    10
+  );
+  return (Number.isFinite(offset) ? offset : 120) + 16;
+}
+
+function scrollToPageAnchor(selector) {
+  const target = document.querySelector(selector);
+  if (!target) return false;
+
+  const top = target.getBoundingClientRect().top + window.scrollY - getHeaderScrollOffset();
+  window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+  return true;
+}
+
+document.addEventListener('click', (event) => {
+  const link = event.target.closest('a[href="#elige-liga"]');
+  if (!link) return;
+
+  event.preventDefault();
+  scrollToPageAnchor('#elige-liga');
+});
+
 (function initHeroSlideshow() {
   const hero = document.querySelector('[data-hero-slideshow]');
   if (!hero) return;

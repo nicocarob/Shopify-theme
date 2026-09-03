@@ -4241,6 +4241,9 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     overflow: hidden;
     background: var(--bg);
   }
+  #elige-liga {
+    scroll-margin-top: calc(var(--baul-header-offset, 120px) + 24px);
+  }
   .elige-liga-sec__hdr {
     text-align: center;
     max-width: 760px;
