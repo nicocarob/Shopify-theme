@@ -1545,7 +1545,7 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   .product-stars--pdp { margin-bottom: 10px; }
   .product-stars--pdp .ps-stars { font-size: 14px; }
   .product-stars--pdp .ps-rating { font-size: 14px; }
-  .product-stars--pdp .ps-sold { font-size: 12px; }
+  .product-stars--pdp .ps-sold { font-size: 12px; color: #fff; }
   
   .pc-price-row {
     display: flex; align-items: center; justify-content: space-between;
@@ -1555,6 +1555,9 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   .p-old {
     font-family: 'Barlow Condensed', sans-serif; font-size: 12px;
     color: var(--text-muted); text-decoration: line-through;
+  }
+  .bp-price-row .p-old {
+    color: #fff;
   }
   .p-new {
     font-family: 'Bebas Neue', sans-serif; font-size: 24px;
@@ -2794,10 +2797,17 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   }
   .bp-desc {
     font-family: 'Barlow Condensed', sans-serif; font-size: 15px;
-    line-height: 1.7; color: var(--text-muted);
+    line-height: 1.7; color: #fff;
     border-top: 1px solid var(--border); padding-top: 24px;
   }
-  .bp-desc p { margin: 0 0 12px; }
+  .bp-desc p { margin: 0 0 12px; color: #fff; }
+  .bp-desc li,
+  .bp-desc span,
+  .bp-desc strong,
+  .bp-desc em,
+  .bp-desc a {
+    color: #fff;
+  }
   .bp-team-collection {
     max-width: 1200px;
     margin: 0 auto;
