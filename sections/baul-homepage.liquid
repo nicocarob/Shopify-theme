@@ -68,13 +68,6 @@
 {% render 'baul-header', section: section %}
 
 {%- liquid
-  assign hero_slides = section.blocks | where: 'type', 'hero_slide'
-  assign hero_slide_count = 0
-  for block in hero_slides
-    if block.settings.image != blank
-      assign hero_slide_count = hero_slide_count | plus: 1
-    endif
-  endfor
   assign hero_primary_url = section.settings.hero_btn_primary_url | default: routes.all_products_collection_url
   assign hero_secondary_url = section.settings.hero_btn_secondary_url | default: '#retro'
 -%}
@@ -86,31 +79,31 @@
   data-fade="{{ section.settings.hero_fade_speed }}"
 >
   <div class="hero-slides" aria-hidden="true">
-    {%- if hero_slide_count > 0 -%}
-      {%- assign slide_index = 0 -%}
-      {%- for block in hero_slides -%}
-        {%- if block.settings.image != blank -%}
-          <div
-            class="hero-slide{% if slide_index == 0 %} is-active{% endif %}"
-            data-index="{{ slide_index }}"
-            {{ block.shopify_attributes }}
+    {%- assign hero_has_images = false -%}
+    {%- assign slide_index = 0 -%}
+    {%- for i in (1..6) -%}
+      {%- capture image_key -%}hero_image_{{ i }}{%- endcapture -%}
+      {%- assign slide_image = section.settings[image_key] -%}
+      {%- if slide_image != blank -%}
+        {%- assign hero_has_images = true -%}
+        <div class="hero-slide{% if slide_index == 0 %} is-active{% endif %}" data-index="{{ slide_index }}">
+          <img
+            src="{{ slide_image | image_url: width: 2400 }}"
+            srcset="{{ slide_image | image_url: width: 800 }} 800w, {{ slide_image | image_url: width: 1400 }} 1400w, {{ slide_image | image_url: width: 2400 }} 2400w"
+            sizes="100vw"
+            alt="{{ slide_image.alt | default: section.settings.hero_title_line1 | escape }}"
+            width="{{ slide_image.width }}"
+            height="{{ slide_image.height }}"
+            {% if slide_index == 0 %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}
           >
-            <img
-              src="{{ block.settings.image | image_url: width: 2400 }}"
-              srcset="{{ block.settings.image | image_url: width: 800 }} 800w, {{ block.settings.image | image_url: width: 1400 }} 1400w, {{ block.settings.image | image_url: width: 2400 }} 2400w"
-              sizes="100vw"
-              alt="{{ block.settings.image.alt | default: section.settings.hero_title_line1 | escape }}"
-              width="{{ block.settings.image.width }}"
-              height="{{ block.settings.image.height }}"
-              {% if slide_index == 0 %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}
-            >
-          </div>
-          {%- assign slide_index = slide_index | plus: 1 -%}
-        {%- endif -%}
-      {%- endfor -%}
-    {%- else -%}
+        </div>
+        {%- assign slide_index = slide_index | plus: 1 -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- unless hero_has_images -%}
       <div class="hero-slide is-active hero-slide--fallback"></div>
-    {%- endif -%}
+    {%- endunless -%}
   </div>
 
   <div class="hero-overlay" aria-hidden="true"></div>
@@ -434,6 +427,40 @@
     {
       "type": "header",
       "content": "Hero"
+    },
+    {
+      "type": "paragraph",
+      "content": "Sube hasta 6 imágenes de fondo. Se mostrarán en carrusel automático detrás del texto."
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image_1",
+      "label": "Imagen de fondo 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image_2",
+      "label": "Imagen de fondo 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image_3",
+      "label": "Imagen de fondo 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image_4",
+      "label": "Imagen de fondo 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image_5",
+      "label": "Imagen de fondo 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image_6",
+      "label": "Imagen de fondo 6"
     },
     {
       "type": "image_picker",
@@ -988,17 +1015,6 @@
     }
   ],
   "blocks": [
-    {
-      "type": "hero_slide",
-      "name": "Imagen del hero",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Imagen de fondo"
-        }
-      ]
-    },
     {
       "type": "testimonial",
       "name": "Foto cliente",
