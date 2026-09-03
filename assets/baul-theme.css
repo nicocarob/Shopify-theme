@@ -3073,22 +3073,27 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
 
   @media (min-width: 750px) {
     .bp-reviews {
-      padding: 32px 16px 16px;
+      padding: 32px 20px 16px;
+      width: 100%;
+    }
+    .bp-reviews__header-card {
+      margin: 0 0 20px;
     }
     .bp-reviews__media-viewport {
-      scroll-padding-inline: max(16px, calc((100% - 300px) / 2));
+      scroll-padding-inline: 20px;
+      width: 100%;
     }
     .bp-reviews__media-track {
-      gap: 14px;
-      padding: 0 max(16px, calc((100% - 300px) / 2));
+      gap: 16px;
+      padding: 0 20px;
     }
     .bp-reviews__media-slide {
-      flex-basis: 300px;
-      width: 300px;
+      flex-basis: 280px;
+      width: 280px;
     }
     .bp-reviews__panels {
-      max-width: 520px;
-      margin: 0 auto;
+      max-width: none;
+      margin: 0 20px;
     }
     .bp-reviews__card {
       padding: 24px 24px 18px;
