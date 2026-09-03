@@ -2818,16 +2818,73 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     z-index: 1;
     overflow: visible;
   }
-  .bp-reviews__heading {
-    margin: 0 0 18px;
-    padding: 0 16px;
+  .bp-reviews__header-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0 12px 18px;
+    padding: 14px 16px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  }
+  .bp-reviews__google-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .bp-reviews__google-logo {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+  .bp-reviews__google-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .bp-reviews__google-top {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .bp-reviews__google-score {
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(22px, 4vw, 28px);
+    font-size: 22px;
     font-weight: 800;
-    letter-spacing: 0.04em;
+    line-height: 1;
+    color: #2b2d42;
+    letter-spacing: -0.02em;
+  }
+  .bp-reviews__google-stars {
+    display: flex;
+    gap: 1px;
+    line-height: 1;
+    color: #f7d060;
+    font-size: 14px;
+  }
+  .bp-reviews__google-count {
+    margin: 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: #2b2d42;
+    white-space: nowrap;
+  }
+  .bp-reviews__title {
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(15px, 3.8vw, 18px);
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: 0.02em;
     text-transform: uppercase;
-    text-align: center;
-    color: #fff;
+    color: #2b2d42;
   }
 
   /* Carrusel de imágenes (solo arriba, con peek) */
@@ -4925,9 +4982,26 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     .bp-reviews {
       padding: 20px 0 8px;
     }
-    .bp-reviews__heading {
-      margin-bottom: 14px;
+    .bp-reviews__header-card {
+      margin: 0 10px 14px;
+      padding: 12px 14px;
+      gap: 12px;
+    }
+    .bp-reviews__google-logo {
+      width: 36px;
+      height: 36px;
+    }
+    .bp-reviews__google-score {
       font-size: 20px;
+    }
+    .bp-reviews__google-stars {
+      font-size: 12px;
+    }
+    .bp-reviews__google-count {
+      font-size: 12px;
+    }
+    .bp-reviews__title {
+      font-size: 14px;
     }
     .bp-reviews__media-track {
       gap: 8px;

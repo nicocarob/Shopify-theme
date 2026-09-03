@@ -4,6 +4,8 @@
 
 {% render 'baul-product-reviews-carousel',
   heading: section.settings.heading,
+  google_rating: section.settings.google_rating,
+  google_reviews_count: section.settings.google_reviews_count,
   section_id: section.id,
   blocks: section.blocks
 %}
@@ -19,6 +21,18 @@
       "id": "heading",
       "label": "Título",
       "default": "Lo que dicen nuestros clientes"
+    },
+    {
+      "type": "text",
+      "id": "google_rating",
+      "label": "Calificación Google",
+      "default": "4.9"
+    },
+    {
+      "type": "text",
+      "id": "google_reviews_count",
+      "label": "Texto cantidad de reseñas Google",
+      "default": "+800 reseñas"
     }
   ],
   "blocks": [
