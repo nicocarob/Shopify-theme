@@ -34,13 +34,18 @@
             <div class="bp-reviews__google-top">
               <span class="bp-reviews__google-score">{{ google_rating | default: '4.9' }}</span>
               <div class="bp-reviews__google-stars" aria-hidden="true">
-                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                {% for i in (1..5) %}
+                  <svg viewBox="0 0 24 24" width="12" height="12" focusable="false" aria-hidden="true">
+                    <path fill="currentColor" d="M12 2l2.9 6.9 7.5.6-5.7 4.8 1.8 7.3L12 18.8 5.5 21.6l1.8-7.3-5.7-4.8 7.5-.6L12 2z"/>
+                  </svg>
+                {% endfor %}
               </div>
             </div>
             <p class="bp-reviews__google-count">{{ google_reviews_count | default: '+800 reseñas' }}</p>
           </div>
         </div>
-        <h2 class="bp-reviews__title">{{ heading }}</h2>
+        <span class="bp-reviews__header-divider" aria-hidden="true"></span>
+        <p class="bp-reviews__title">{{ heading }}</p>
       </div>
     {% endif %}
 
