@@ -24,6 +24,7 @@
         "review_1": {
           "type": "review",
           "settings": {
+            "image": "shopify://shop_images/vvkky-review-martin-odegaard-arsenal-26-27-away-kit-player-v0-irgkft1ey7lh1.webp",
             "rating": 5,
             "text": "La camiseta es tal cual las fotos, muy buena calidad y el envío fue rapidísimo.",
             "author": "Matías R.",
@@ -33,6 +34,7 @@
         "review_2": {
           "type": "review",
           "settings": {
+            "image": "shopify://shop_images/first-order-from-tmfc7-norway-man-city-review-v0-mui308e275ih1.webp",
             "rating": 5,
             "text": "Segunda compra en La Cábala, siempre impecable. Recomendado 100%.",
             "author": "Camila S.",
@@ -42,6 +44,7 @@
         "review_3": {
           "type": "review",
           "settings": {
+            "image": "shopify://shop_images/from-kkoog-26-27-barca-away-quality-as-perfect-as-our-new-v0-zlfi0gt4aqlh1.webp",
             "rating": 5,
             "text": "Me encantó el detalle del estampado, quedó perfecto con el nombre y número.",
             "author": "Andrés L.",
@@ -56,12 +59,12 @@
         "review_3"
       ],
       "settings": {
+        "reviews_heading": "Lo que dicen nuestros clientes",
         "countdown_text": "ENVÍO GRATIS POR TIEMPO LIMITADO — TERMINA EN:",
         "promo_text": "🎽 Lleva 3 camisetas y te llevas la 4ª a mitad de precio 🔥",
         "logo": "shopify://shop_images/ANUNCIOS_5.png",
         "logo_secundario": "shopify://shop_images/ANUNCIOS_5_343e85a0-0c4d-40df-b716-03f16b3bd7b9.png",
-        "whatsapp_url": "https://wa.me/message/Z5XXALWPDL4GI1",
-        "reviews_heading": "Lo que dicen nuestros clientes"
+        "whatsapp_url": "https://wa.me/message/Z5XXALWPDL4GI1"
       }
     },
     "1784238532dab6e080": {
