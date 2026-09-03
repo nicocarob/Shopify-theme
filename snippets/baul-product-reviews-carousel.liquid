@@ -63,20 +63,25 @@
                 {% endif %}
 
                 {% if block.settings.author != blank %}
-                  <div class="bp-reviews__author">
-                    {% if block.settings.show_verified %}
-                      <span class="bp-reviews__verified" aria-hidden="true">
-                        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                          <circle cx="12" cy="12" r="10" fill="currentColor"/>
-                          <path d="M8 12.5l2.5 2.5L16 9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                      </span>
-                    {% endif %}
-                    <span class="bp-reviews__name">{{ block.settings.author }}</span>
+                  <div class="bp-reviews__footer">
+                    <div class="bp-reviews__author">
+                      {% if block.settings.show_verified %}
+                        <span class="bp-reviews__verified" aria-hidden="true">
+                          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10" fill="currentColor"/>
+                            <path d="M8 12.5l2.5 2.5L16 9" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                          </svg>
+                        </span>
+                      {% endif %}
+                      <span class="bp-reviews__name">{{ block.settings.author }}</span>
+                    </div>
+                    <div class="bp-reviews__quote" aria-hidden="true">&ldquo;</div>
+                  </div>
+                {% else %}
+                  <div class="bp-reviews__footer">
+                    <div class="bp-reviews__quote" aria-hidden="true">&ldquo;</div>
                   </div>
                 {% endif %}
-
-                <div class="bp-reviews__quote" aria-hidden="true">“</div>
               </div>
             </article>
           {% endif %}
