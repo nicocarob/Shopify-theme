@@ -15,6 +15,8 @@
 
 {% capture logo_src %}{% render 'baul-logo-url', section: section, width: 104 %}{% endcapture %}
 
+<div class="baul-header-spacer" id="baul-header-spacer" aria-hidden="true"></div>
+<div class="baul-header-fixed" id="baul-header-fixed">
 <div id="cbar">
   <div class="cbar-inner">
     <div class="cbar-main">
@@ -83,6 +85,7 @@
     <button type="button" class="n-hamburger" id="n-hamburger" aria-expanded="false" aria-label="Abrir menú de navegación">☰</button>
   </div>
 </nav>
+</div>
 </div>
 
 {% render 'baul-search-popular' %}

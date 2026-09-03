@@ -81,14 +81,6 @@ const io = new IntersectionObserver(
 );
 document.querySelectorAll('.rev,.rev-l,.rev-r,.rev-s').forEach((el) => io.observe(el));
 
-window.addEventListener('scroll', () => {
-  const scrollBar = document.getElementById('scroll-bar');
-  if (!scrollBar) return;
-  const st = window.scrollY;
-  const dh = document.documentElement.scrollHeight - window.innerHeight;
-  scrollBar.style.width = dh > 0 ? (st / dh) * 100 + '%' : '0%';
-});
-
 setInterval(() => {
   document.querySelectorAll('.urg-timer').forEach((el) => {
     const parts = el.textContent.split(':');
@@ -114,78 +106,96 @@ const eyeObs = new IntersectionObserver(
 );
 document.querySelectorAll('.eyebrow').forEach((el) => eyeObs.observe(el));
 
-let cbarFullHeight = 0;
-
-function syncCbarHeight() {
+(function initSmoothScrollUi() {
+  const html = document.documentElement;
+  const scrollBar = document.getElementById('scroll-bar');
+  const headerFixed = document.getElementById('baul-header-fixed');
+  const headerSpacer = document.getElementById('baul-header-spacer');
   const cbar = document.getElementById('cbar');
-  if (!cbar) return;
-  if (document.documentElement.classList.contains('baul-cbar-hidden')) return;
+  const headerMain = document.getElementById('baul-header-stick');
 
-  const height = cbar.offsetHeight;
-  if (height > 0) {
-    cbarFullHeight = height;
-    document.documentElement.style.setProperty('--baul-cbar-full-h', height + 'px');
-    document.documentElement.style.setProperty('--baul-cbar-h', height + 'px');
-  }
-}
-syncCbarHeight();
-window.addEventListener('resize', syncCbarHeight);
-if (typeof ResizeObserver !== 'undefined') {
-  const cbarEl = document.getElementById('cbar');
-  if (cbarEl) {
-    new ResizeObserver(() => {
-      if (!document.documentElement.classList.contains('baul-cbar-hidden')) {
-        syncCbarHeight();
-      }
-    }).observe(cbarEl);
-  }
-}
+  let cbarHeight = 0;
+  let mainHeight = 0;
+  let headerCompact = false;
+  let scrollRaf = 0;
+  let scrollIdleTimer = 0;
+  const compactAt = 72;
+  const expandAt = 10;
 
-(function initCbarScrollHide() {
-  const threshold = 56;
-  let ticking = false;
-  let cbarIsHidden = document.documentElement.classList.contains('baul-cbar-hidden');
-
-  function setCbarHidden(hidden) {
-    const html = document.documentElement;
-    const cbar = document.getElementById('cbar');
-    if (!cbar || hidden === cbarIsHidden) return;
-    cbarIsHidden = hidden;
-
-    if (hidden) {
-      if (cbar.offsetHeight > 0) cbarFullHeight = cbar.offsetHeight;
-      cbar.style.maxHeight = cbarFullHeight + 'px';
-      requestAnimationFrame(() => {
-        html.classList.add('baul-cbar-hidden');
-        cbar.style.maxHeight = '';
-        html.style.setProperty('--baul-cbar-h', '0px');
-      });
-      return;
+  function measureHeader() {
+    if (cbar) {
+      const nextCbarHeight = cbar.offsetHeight;
+      if (nextCbarHeight > 0) cbarHeight = nextCbarHeight;
+    }
+    if (headerMain) {
+      const nextMainHeight = headerMain.offsetHeight;
+      if (nextMainHeight > 0) mainHeight = nextMainHeight;
     }
 
-    html.classList.remove('baul-cbar-hidden');
-    cbar.style.maxHeight = '';
-    const height = cbarFullHeight || cbar.scrollHeight;
-    html.style.setProperty('--baul-cbar-h', height + 'px');
-    requestAnimationFrame(syncCbarHeight);
+    html.style.setProperty('--baul-cbar-full-h', cbarHeight + 'px');
+    syncHeaderOffset();
   }
 
-  function updateCbarVisibility() {
-    setCbarHidden(window.scrollY > threshold);
-    ticking = false;
+  function syncHeaderOffset() {
+    const offset = headerCompact ? mainHeight : cbarHeight + mainHeight;
+    html.style.setProperty('--baul-header-offset', offset + 'px');
+    html.style.setProperty('--baul-cbar-h', headerCompact ? '0px' : cbarHeight + 'px');
+
+    if (headerSpacer) {
+      headerSpacer.style.height = offset + 'px';
+    }
   }
 
-  window.addEventListener(
-    'scroll',
-    () => {
-      if (!ticking) {
-        requestAnimationFrame(updateCbarVisibility);
-        ticking = true;
+  function setHeaderCompact(compact) {
+    if (compact === headerCompact) return;
+    headerCompact = compact;
+
+    html.classList.toggle('baul-header-compact', compact);
+    html.classList.toggle('baul-cbar-hidden', compact);
+    window.requestAnimationFrame(syncHeaderOffset);
+  }
+
+  function updateOnScroll() {
+    scrollRaf = 0;
+    const scrollTop = window.scrollY;
+
+    if (scrollBar) {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = maxScroll > 0 ? Math.min(1, Math.max(0, scrollTop / maxScroll)) : 0;
+      scrollBar.style.transform = 'scaleX(' + progress + ')';
+    }
+
+    if (headerFixed) {
+      if (!headerCompact && scrollTop > compactAt) {
+        setHeaderCompact(true);
+      } else if (headerCompact && scrollTop <= expandAt) {
+        setHeaderCompact(false);
       }
-    },
-    { passive: true }
-  );
-  updateCbarVisibility();
+    }
+
+    html.classList.add('is-scrolling');
+    window.clearTimeout(scrollIdleTimer);
+    scrollIdleTimer = window.setTimeout(() => {
+      html.classList.remove('is-scrolling');
+    }, 140);
+  }
+
+  function onScroll() {
+    if (!scrollRaf) {
+      scrollRaf = window.requestAnimationFrame(updateOnScroll);
+    }
+  }
+
+  measureHeader();
+  updateOnScroll();
+
+  window.addEventListener('resize', measureHeader, { passive: true });
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('load', measureHeader);
+
+  if (typeof ResizeObserver !== 'undefined' && headerFixed) {
+    new ResizeObserver(measureHeader).observe(headerFixed);
+  }
 })();
 
 const navToggle = document.getElementById('n-hamburger');
