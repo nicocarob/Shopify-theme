@@ -2808,6 +2808,155 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   .bp-desc a {
     color: #fff;
   }
+
+  /* ── Reseñas de producto (carrusel estilo Shimmer) ── */
+  .bp-reviews {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 28px 0 8px;
+    position: relative;
+    z-index: 1;
+  }
+  .bp-reviews__heading {
+    margin: 0 0 20px;
+    padding: 0 16px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(22px, 4vw, 28px);
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-align: center;
+    color: #fff;
+  }
+  .bp-reviews__viewport {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scroll-padding-inline: 11vw;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x;
+  }
+  .bp-reviews__viewport::-webkit-scrollbar { display: none; }
+  .bp-reviews__track {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 0 max(12px, calc((100% - 360px) / 2));
+    width: max-content;
+    min-width: 100%;
+  }
+  .bp-reviews__slide {
+    flex: 0 0 min(78vw, 360px);
+    width: min(78vw, 360px);
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .bp-reviews__media {
+    border-radius: 22px;
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    background: #1a1a1a;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  }
+  .bp-reviews__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .bp-reviews__card {
+    position: relative;
+    background: #f5f0e8;
+    border-radius: 22px;
+    padding: 22px 20px 36px;
+    text-align: center;
+    color: #3d3d3d;
+    min-height: 180px;
+  }
+  .bp-reviews__stars {
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+    margin-bottom: 14px;
+    line-height: 1;
+  }
+  .bp-reviews__star {
+    font-size: 18px;
+    color: #e8872a;
+  }
+  .bp-reviews__star.is-empty {
+    color: #d4cfc6;
+  }
+  .bp-reviews__text {
+    margin: 0 0 16px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    font-weight: 500;
+    color: #3d3d3d;
+  }
+  .bp-reviews__author {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #2a2a2a;
+  }
+  .bp-reviews__verified {
+    display: inline-flex;
+    width: 18px;
+    height: 18px;
+    color: #2a2a2a;
+    flex-shrink: 0;
+  }
+  .bp-reviews__verified svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .bp-reviews__quote {
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    transform: translateX(-50%);
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 56px;
+    line-height: 1;
+    color: #4a3428;
+    pointer-events: none;
+  }
+  .bp-reviews__dots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 18px;
+    padding: 0 16px;
+  }
+  .bp-reviews__dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.28);
+    cursor: pointer;
+    transition: width 0.25s ease, background 0.25s ease;
+  }
+  .bp-reviews__dot.is-active {
+    width: 28px;
+    background: #4a3428;
+  }
+
   .bp-team-collection {
     max-width: 1200px;
     margin: 0 auto;
@@ -4716,6 +4865,38 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
       padding-top: 16px;
       font-size: 14px;
       line-height: 1.6;
+    }
+    .bp-reviews {
+      padding: 20px 0 4px;
+    }
+    .bp-reviews__heading {
+      margin-bottom: 16px;
+      font-size: 20px;
+    }
+    .bp-reviews__track {
+      gap: 10px;
+      padding: 0 11vw;
+    }
+    .bp-reviews__slide {
+      flex-basis: 78vw;
+      width: 78vw;
+    }
+    .bp-reviews__media {
+      border-radius: 18px;
+    }
+    .bp-reviews__card {
+      border-radius: 18px;
+      padding: 18px 16px 32px;
+    }
+    .bp-reviews__text {
+      font-size: 15px;
+    }
+    .bp-reviews__quote {
+      font-size: 48px;
+      bottom: 6px;
+    }
+    .bp-reviews__dots {
+      margin-top: 14px;
     }
     .bp-related {
       padding-top: 28px;

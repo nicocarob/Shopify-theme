@@ -1,0 +1,99 @@
+{% comment %}
+  Sección de reseñas deslizables para página de producto
+{% endcomment %}
+
+{% render 'baul-product-reviews-carousel',
+  heading: section.settings.heading,
+  section_id: section.id,
+  blocks: section.blocks
+%}
+
+{% schema %}
+{
+  "name": "Reseñas de producto",
+  "tag": "section",
+  "class": "baul-product-reviews-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Título",
+      "default": "Lo que dicen nuestros clientes"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Reseña",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagen"
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Estrellas",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Texto de la reseña",
+          "default": "Excelente calidad, llegó rápido y la talla calzó perfecto."
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Nombre del cliente",
+          "default": "Cliente verificado"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_verified",
+          "label": "Mostrar comprador verificado",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reseñas de producto",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "text": "La camiseta es tal cual las fotos, muy buena calidad y el envío fue rapidísimo.",
+            "author": "Matías R.",
+            "show_verified": true
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "text": "Segunda compra en La Cábala, siempre impecable. Recomendado 100%.",
+            "author": "Camila S.",
+            "show_verified": true
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "text": "Me encantó el detalle del estampado, quedó perfecto con el nombre y número.",
+            "author": "Andrés L.",
+            "show_verified": true
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

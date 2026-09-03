@@ -240,9 +240,11 @@
         {% if section.blocks.size > 0 %}
           <div class="bp-app-blocks">
             {% for block in section.blocks %}
-              <div class="bp-app-block" {{ block.shopify_attributes }}>
-                {% render block %}
-              </div>
+              {% if block.type == '@app' %}
+                <div class="bp-app-block" {{ block.shopify_attributes }}>
+                  {% render block %}
+                </div>
+              {% endif %}
             {% endfor %}
           </div>
         {% endif %}
@@ -268,6 +270,12 @@
       </div>
     </div>
   {% endif %}
+
+  {% render 'baul-product-reviews-carousel',
+    heading: section.settings.reviews_heading,
+    section_id: section.id,
+    blocks: section.blocks
+  %}
 
   {% liquid
     assign team_tag = ''
@@ -692,9 +700,57 @@
   "blocks": [
     {
       "type": "@app"
+    },
+    {
+      "type": "review",
+      "name": "Reseña",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagen"
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Estrellas",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Texto de la reseña",
+          "default": "Excelente calidad, llegó rápido y la talla calzó perfecto."
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Nombre del cliente",
+          "default": "Cliente verificado"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_verified",
+          "label": "Mostrar comprador verificado",
+          "default": true
+        }
+      ]
     }
   ],
   "settings": [
+    {
+      "type": "header",
+      "content": "Reseñas de clientes"
+    },
+    {
+      "type": "text",
+      "id": "reviews_heading",
+      "label": "Título de reseñas",
+      "default": "Lo que dicen nuestros clientes"
+    },
     {
       "type": "header",
       "content": "Barra superior"
