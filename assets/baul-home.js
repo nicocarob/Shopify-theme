@@ -118,18 +118,8 @@ function scrollToPageAnchor(selector) {
 
   revealScrollTarget(target);
 
-  const alignTarget = () => {
-    const top = target.getBoundingClientRect().top + window.scrollY - getHeaderScrollOffset(true);
-    window.scrollTo({ top: Math.max(0, top), behavior: 'auto' });
-  };
-
-  window.scrollTo({
-    top: Math.max(0, target.getBoundingClientRect().top + window.scrollY - getHeaderScrollOffset(true)),
-    behavior: 'smooth',
-  });
-
-  window.setTimeout(alignTarget, 650);
-  window.setTimeout(alignTarget, 1100);
+  const top = target.getBoundingClientRect().top + window.scrollY - getHeaderScrollOffset(true);
+  window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
 
   return true;
 }
