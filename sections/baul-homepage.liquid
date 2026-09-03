@@ -68,7 +68,7 @@
 {% render 'baul-header', section: section %}
 
 {%- liquid
-  assign hero_primary_url = section.settings.hero_btn_primary_url | default: routes.all_products_collection_url
+  assign hero_primary_url = section.settings.hero_btn_primary_url | default: '#elige-liga'
   assign hero_secondary_url = section.settings.hero_btn_secondary_url | default: '#retro'
 -%}
 
@@ -500,7 +500,8 @@
     {
       "type": "url",
       "id": "hero_btn_primary_url",
-      "label": "Enlace botón primario"
+      "label": "Enlace botón primario",
+      "info": "Deja vacío para ir a la sección Elige tu liga."
     },
     {
       "type": "text",
