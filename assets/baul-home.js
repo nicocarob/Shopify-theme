@@ -212,19 +212,23 @@ document.querySelectorAll('.eyebrow').forEach((el) => eyeObs.observe(el));
   let headerCompact = false;
   let scrollRaf = 0;
   let scrollIdleTimer = 0;
+  let lastHideAmount = -1;
+  let isMobileHeader = window.matchMedia('(max-width: 768px)');
 
   function measureHeader() {
     if (cbar) {
-      const nextCbarHeight = cbar.offsetHeight;
+      const nextCbarHeight = Math.round(cbar.getBoundingClientRect().height);
       if (nextCbarHeight > 0) cbarHeight = nextCbarHeight;
     }
     if (headerMain) {
-      const nextMainHeight = headerMain.offsetHeight;
+      const nextMainHeight = Math.round(headerMain.getBoundingClientRect().height);
       if (nextMainHeight > 0) mainHeight = nextMainHeight;
     }
 
     html.style.setProperty('--baul-cbar-full-h', cbarHeight + 'px');
+    lastHideAmount = -1;
     syncHeaderOffset(window.scrollY);
+    updateHeaderOnScroll(window.scrollY);
   }
 
   function syncHeaderOffset(scrollTop) {
@@ -240,20 +244,34 @@ document.querySelectorAll('.eyebrow').forEach((el) => eyeObs.observe(el));
     }
   }
 
+  function getHideAmount(scrollTop) {
+    if (cbarHeight <= 0) return 0;
+
+    if (isMobileHeader.matches) {
+      if (!headerCompact && scrollTop >= cbarHeight) return cbarHeight;
+      if (headerCompact && scrollTop <= 8) return 0;
+      return headerCompact ? cbarHeight : 0;
+    }
+
+    return Math.round(Math.min(scrollTop, cbarHeight));
+  }
+
   function updateHeaderOnScroll(scrollTop) {
     if (!headerFixed || cbarHeight <= 0) return;
 
-    const hideAmount = Math.min(scrollTop, cbarHeight);
-    headerFixed.style.transform = 'translate3d(0, ' + (-hideAmount) + 'px, 0)';
+    const hideAmount = getHideAmount(scrollTop);
+    if (hideAmount !== lastHideAmount) {
+      lastHideAmount = hideAmount;
+      headerFixed.style.transform = 'translate3d(0, ' + (-hideAmount) + 'px, 0)';
+    }
 
-    const isCompact = scrollTop >= cbarHeight;
+    const isCompact = hideAmount >= cbarHeight;
     if (isCompact !== headerCompact) {
       headerCompact = isCompact;
       html.classList.toggle('baul-header-compact', isCompact);
       html.classList.toggle('baul-cbar-hidden', isCompact);
+      syncHeaderOffset(scrollTop);
     }
-
-    syncHeaderOffset(scrollTop);
   }
 
   function updateOnScroll() {
@@ -276,6 +294,11 @@ document.querySelectorAll('.eyebrow').forEach((el) => eyeObs.observe(el));
   }
 
   function onScroll() {
+    if (isMobileHeader.matches) {
+      updateOnScroll();
+      return;
+    }
+
     if (!scrollRaf) {
       scrollRaf = window.requestAnimationFrame(updateOnScroll);
     }
@@ -287,9 +310,12 @@ document.querySelectorAll('.eyebrow').forEach((el) => eyeObs.observe(el));
   window.addEventListener('resize', measureHeader, { passive: true });
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('load', measureHeader);
+  isMobileHeader.addEventListener('change', measureHeader);
 
-  if (typeof ResizeObserver !== 'undefined' && headerFixed) {
-    new ResizeObserver(measureHeader).observe(headerFixed);
+  if (typeof ResizeObserver !== 'undefined') {
+    const resizeObserver = new ResizeObserver(measureHeader);
+    if (cbar) resizeObserver.observe(cbar);
+    if (headerMain) resizeObserver.observe(headerMain);
   }
 })();
 

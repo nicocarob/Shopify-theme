@@ -110,8 +110,7 @@
     z-index: 200;
     background: var(--bg);
     overflow: hidden;
-    contain: layout style paint;
-    transform: translateZ(0);
+    transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
   }
   #cbar {
@@ -4804,6 +4803,12 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
   
   /* ── Mobile ── */
   @media (max-width: 768px) {
+    .baul-header-fixed {
+      -webkit-transform: translate3d(0, 0, 0);
+    }
+    html.is-scrolling #cbar .cb-pill {
+      animation-play-state: paused;
+    }
     #cbar {
       padding: 16px 12px;
       overflow-x: hidden;
