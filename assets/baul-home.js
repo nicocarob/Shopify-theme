@@ -212,6 +212,8 @@ document.querySelectorAll('.eyebrow').forEach((el) => eyeObs.observe(el));
   let headerCompact = false;
   let scrollRaf = 0;
   let scrollIdleTimer = 0;
+  const compactAt = 72;
+  const expandAt = 10;
 
   function measureHeader() {
     if (cbar) {
@@ -224,39 +226,26 @@ document.querySelectorAll('.eyebrow').forEach((el) => eyeObs.observe(el));
     }
 
     html.style.setProperty('--baul-cbar-full-h', cbarHeight + 'px');
-    applyCbarScroll(window.scrollY);
+    syncHeaderOffset();
   }
 
-  function applyCbarScroll(scrollTop) {
-    if (!headerFixed || !cbarHeight) {
-      const fallback = mainHeight || 0;
-      html.style.setProperty('--baul-header-offset', fallback + 'px');
-      html.style.setProperty('--baul-cbar-h', '0px');
-      html.style.setProperty('--cbar-hidden', '0px');
-      if (headerSpacer) headerSpacer.style.height = fallback + 'px';
-      if (headerFixed) headerFixed.style.height = fallback + 'px';
-      return;
-    }
-
-    const hidden = Math.min(Math.max(scrollTop, 0), cbarHeight);
-    const visible = cbarHeight - hidden;
-    const offset = mainHeight + visible;
-    const isCompact = hidden >= cbarHeight - 1;
-
-    html.style.setProperty('--cbar-hidden', hidden + 'px');
-    html.style.setProperty('--baul-cbar-h', visible + 'px');
+  function syncHeaderOffset() {
+    const offset = headerCompact ? mainHeight : cbarHeight + mainHeight;
     html.style.setProperty('--baul-header-offset', offset + 'px');
-    headerFixed.style.height = offset + 'px';
+    html.style.setProperty('--baul-cbar-h', headerCompact ? '0px' : cbarHeight + 'px');
 
     if (headerSpacer) {
       headerSpacer.style.height = offset + 'px';
     }
+  }
 
-    if (isCompact !== headerCompact) {
-      headerCompact = isCompact;
-      html.classList.toggle('baul-header-compact', isCompact);
-      html.classList.toggle('baul-cbar-hidden', isCompact);
-    }
+  function setHeaderCompact(compact) {
+    if (compact === headerCompact) return;
+    headerCompact = compact;
+
+    html.classList.toggle('baul-header-compact', compact);
+    html.classList.toggle('baul-cbar-hidden', compact);
+    syncHeaderOffset();
   }
 
   function updateOnScroll() {
@@ -269,7 +258,13 @@ document.querySelectorAll('.eyebrow').forEach((el) => eyeObs.observe(el));
       scrollBar.style.transform = 'scaleX(' + progress + ')';
     }
 
-    applyCbarScroll(scrollTop);
+    if (headerFixed) {
+      if (!headerCompact && scrollTop > compactAt) {
+        setHeaderCompact(true);
+      } else if (headerCompact && scrollTop <= expandAt) {
+        setHeaderCompact(false);
+      }
+    }
 
     html.classList.add('is-scrolling');
     window.clearTimeout(scrollIdleTimer);
@@ -291,10 +286,8 @@ document.querySelectorAll('.eyebrow').forEach((el) => eyeObs.observe(el));
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('load', measureHeader);
 
-  if (typeof ResizeObserver !== 'undefined') {
-    const resizeObserver = new ResizeObserver(measureHeader);
-    if (cbar) resizeObserver.observe(cbar);
-    if (headerMain) resizeObserver.observe(headerMain);
+  if (typeof ResizeObserver !== 'undefined' && headerFixed) {
+    new ResizeObserver(measureHeader).observe(headerFixed);
   }
 })();
 
