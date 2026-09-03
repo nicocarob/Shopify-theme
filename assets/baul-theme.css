@@ -2827,6 +2827,8 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     background: #fff;
     border-radius: 14px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+    color: #2d325a;
   }
   .bp-reviews__google-badge {
     display: flex;
@@ -2851,40 +2853,40 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
     gap: 6px;
   }
   .bp-reviews__google-score {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 22px;
-    font-weight: 800;
+    font-family: inherit;
+    font-size: 26px;
+    font-weight: 700;
     line-height: 1;
-    color: #2b2d42;
-    letter-spacing: -0.02em;
+    color: #2d325a;
+    letter-spacing: -0.03em;
   }
   .bp-reviews__google-stars {
     display: flex;
     gap: 1px;
     line-height: 1;
-    color: #f7d060;
-    font-size: 14px;
+    color: #fbc02d;
+    font-size: 15px;
   }
   .bp-reviews__google-count {
     margin: 0;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 1.2;
-    color: #2b2d42;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.15;
+    color: #2d325a;
     white-space: nowrap;
   }
   .bp-reviews__title {
     margin: 0;
     flex: 1;
     min-width: 0;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: clamp(15px, 3.8vw, 18px);
-    font-weight: 800;
-    line-height: 1.25;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    color: #2b2d42;
+    font-family: inherit;
+    font-size: clamp(14px, 3.6vw, 16px);
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: 0;
+    text-transform: none;
+    color: #2d325a;
   }
 
   /* Carrusel de imágenes (solo arriba, con peek) */
@@ -4992,16 +4994,17 @@ body.baul-home .content-for-layout { padding: 0; margin: 0; max-width: none; }
       height: 36px;
     }
     .bp-reviews__google-score {
-      font-size: 20px;
+      font-size: 24px;
     }
     .bp-reviews__google-stars {
-      font-size: 12px;
+      font-size: 14px;
     }
     .bp-reviews__google-count {
-      font-size: 12px;
+      font-size: 13px;
     }
     .bp-reviews__title {
-      font-size: 14px;
+      font-size: 13px;
+      line-height: 1.3;
     }
     .bp-reviews__media-track {
       gap: 8px;
