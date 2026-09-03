@@ -31,12 +31,42 @@
             "show_verified": true
           }
         },
+        "review_N9Uh8c": {
+          "type": "review",
+          "settings": {
+            "image": "shopify://shop_images/arsenal-3rd-question-v0-x3tmuyu614nh1.webp",
+            "rating": 5,
+            "text": "Muy linda camiseta y parches de buena calidad",
+            "author": "José M.",
+            "show_verified": true
+          }
+        },
+        "review_czMG4A": {
+          "type": "review",
+          "settings": {
+            "image": "shopify://shop_images/2nd-order-from-kitddcom-v0-stv1c946a8mh1.webp",
+            "rating": 5,
+            "text": "Mi bebé quedó encantado,hermosas muy buena calidad",
+            "author": "Andrea C.",
+            "show_verified": true
+          }
+        },
+        "review_D88tFD": {
+          "type": "review",
+          "settings": {
+            "image": "shopify://shop_images/arsenal-26-27-fan-version-home-jersey-from-ccsty-v0-uskgsq7xq0nh1.webp",
+            "rating": 5,
+            "text": "La camiseta esta perfecta, el pedido llego en el tiempo indicado y los detalles... Uf nada que decir, volveré a comprar",
+            "author": "Toño G.",
+            "show_verified": true
+          }
+        },
         "review_2": {
           "type": "review",
           "settings": {
             "image": "shopify://shop_images/first-order-from-tmfc7-norway-man-city-review-v0-mui308e275ih1.webp",
             "rating": 5,
-            "text": "Segunda compra en La Cábala, siempre impecable. Recomendado 100%.",
+            "text": "segunda compra en tienda,100% recomendado",
             "author": "Camila S.",
             "show_verified": true
           }
@@ -46,8 +76,48 @@
           "settings": {
             "image": "shopify://shop_images/from-kkoog-26-27-barca-away-quality-as-perfect-as-our-new-v0-zlfi0gt4aqlh1.webp",
             "rating": 5,
-            "text": "Me encantó el detalle del estampado, quedó perfecto con el nombre y número.",
+            "text": "Me encantó el detalle del estampado, nada que decir",
             "author": "Andrés L.",
+            "show_verified": true
+          }
+        },
+        "review_L3gL9A": {
+          "type": "review",
+          "settings": {
+            "image": "shopify://shop_images/portugal-home-kit-2026-v0-uyz05chekkzg1.webp",
+            "rating": 5,
+            "text": "me quedo excelente la polera era lo que yo queria muy bonita ademas.",
+            "author": "Nico F.",
+            "show_verified": true
+          }
+        },
+        "review_DFzYAy": {
+          "type": "review",
+          "settings": {
+            "image": "shopify://shop_images/todays-pick-up-v0-7axqopyjpelh1.webp",
+            "rating": 5,
+            "text": "buena calidad de la tela, vino con sus etiquetas... linda presentación",
+            "author": "Seba L.",
+            "show_verified": true
+          }
+        },
+        "review_UcFw6C": {
+          "type": "review",
+          "settings": {
+            "image": "shopify://shop_images/my-real-madrid-ronaldo-era-collection-v0-rsdxf0xd2gv51.webp",
+            "rating": 5,
+            "text": "Se pasaron con la calidad!! super recomendado 👌",
+            "author": "Cristopher A.",
+            "show_verified": true
+          }
+        },
+        "review_YFrwzb": {
+          "type": "review",
+          "settings": {
+            "image": "shopify://shop_images/okkinetic-review-v0-lcdcw1zd54nh1.webp",
+            "rating": 5,
+            "text": "me quedaron excelente!",
+            "author": "Fabi",
             "show_verified": true
           }
         }
@@ -55,8 +125,15 @@
       "block_order": [
         "venti_widget_ventipay_widget_hNEiyT",
         "review_1",
+        "review_N9Uh8c",
+        "review_czMG4A",
+        "review_D88tFD",
         "review_2",
-        "review_3"
+        "review_3",
+        "review_L3gL9A",
+        "review_DFzYAy",
+        "review_UcFw6C",
+        "review_YFrwzb"
       ],
       "settings": {
         "reviews_heading": "Lo que dicen nuestros clientes",
