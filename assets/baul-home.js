@@ -81,29 +81,66 @@ const io = new IntersectionObserver(
 );
 document.querySelectorAll('.rev,.rev-l,.rev-r,.rev-s').forEach((el) => io.observe(el));
 
-function getHeaderScrollOffset() {
+function getHeaderScrollOffset(compact) {
+  const headerFixed = document.getElementById('baul-header-fixed');
+  const headerStick = document.getElementById('baul-header-stick');
+
+  if (compact && headerStick) {
+    return headerStick.offsetHeight + 28;
+  }
+
+  if (headerFixed) {
+    return headerFixed.offsetHeight + 28;
+  }
+
   const offset = parseInt(
     getComputedStyle(document.documentElement).getPropertyValue('--baul-header-offset'),
     10
   );
-  return (Number.isFinite(offset) ? offset : 120) + 16;
+  return (Number.isFinite(offset) ? offset : 120) + 28;
+}
+
+function revealScrollTarget(target) {
+  if (!target) return;
+
+  target.classList.add('in');
+  const section = target.closest('.elige-liga-sec');
+  if (!section) return;
+
+  section.querySelectorAll('.rev, .rev-l, .rev-r, .rev-s, .eyebrow').forEach((node) => {
+    node.classList.add('in');
+  });
 }
 
 function scrollToPageAnchor(selector) {
   const target = document.querySelector(selector);
   if (!target) return false;
 
-  const top = target.getBoundingClientRect().top + window.scrollY - getHeaderScrollOffset();
-  window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+  revealScrollTarget(target);
+
+  const alignTarget = () => {
+    const top = target.getBoundingClientRect().top + window.scrollY - getHeaderScrollOffset(true);
+    window.scrollTo({ top: Math.max(0, top), behavior: 'auto' });
+  };
+
+  window.scrollTo({
+    top: Math.max(0, target.getBoundingClientRect().top + window.scrollY - getHeaderScrollOffset(true)),
+    behavior: 'smooth',
+  });
+
+  window.setTimeout(alignTarget, 650);
+  window.setTimeout(alignTarget, 1100);
+
   return true;
 }
 
 document.addEventListener('click', (event) => {
-  const link = event.target.closest('a[href="#elige-liga"]');
+  const link = event.target.closest('[data-scroll-anchor], a[href="#elige-liga"], a[href$="#elige-liga"]');
   if (!link) return;
 
   event.preventDefault();
-  scrollToPageAnchor('#elige-liga');
+  const anchorId = link.dataset.scrollAnchor || 'elige-liga';
+  scrollToPageAnchor('#' + anchorId);
 });
 
 (function initHeroSlideshow() {

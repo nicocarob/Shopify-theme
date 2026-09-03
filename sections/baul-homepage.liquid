@@ -68,7 +68,6 @@
 {% render 'baul-header', section: section %}
 
 {%- liquid
-  assign hero_primary_url = section.settings.hero_btn_primary_url | default: '#elige-liga'
   assign hero_secondary_url = section.settings.hero_btn_secondary_url | default: '#retro'
 -%}
 
@@ -128,7 +127,7 @@
 
     <div class="hero-btns">
       {%- if section.settings.hero_btn_primary != blank -%}
-        <a href="{{ hero_primary_url }}" class="btn-gold">{{ section.settings.hero_btn_primary }}</a>
+        <a href="#elige-liga" class="btn-gold" data-scroll-anchor="elige-liga">{{ section.settings.hero_btn_primary }}</a>
       {%- endif -%}
       {%- if section.settings.hero_btn_secondary != blank -%}
         <a href="{{ hero_secondary_url }}" class="btn-hero-link">{{ section.settings.hero_btn_secondary }}</a>
