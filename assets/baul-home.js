@@ -158,9 +158,20 @@ document.addEventListener('click', (event) => {
     timer = setInterval(() => goTo(current + 1), autoplay);
   }
 
-  hero.addEventListener('mouseenter', () => clearInterval(timer));
-  hero.addEventListener('mouseleave', start);
+  function stop() {
+    clearInterval(timer);
+    timer = null;
+  }
+
   start();
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      stop();
+    } else {
+      start();
+    }
+  });
 })();
 
 setInterval(() => {
