@@ -1,5 +1,6 @@
 (function () {
   var SLIDE_GAP = 10;
+  var DESKTOP_MQ = window.matchMedia('(min-width: 750px)');
 
   function initReviewsCarousel(root) {
     if (!root || root.dataset.bpReviewsReady === '1') return;
@@ -29,6 +30,59 @@
       return Number.isFinite(gap) ? gap : SLIDE_GAP;
     }
 
+    function getClosestIndex() {
+      var gap = readGap();
+      var scrollLeft = mediaViewport.scrollLeft;
+      var viewportWidth = mediaViewport.clientWidth;
+
+      if (DESKTOP_MQ.matches) {
+        var step = scrollItems[0].offsetWidth + gap;
+        if (step <= 0) return 0;
+        return Math.min(
+          scrollItems.length - 1,
+          Math.max(0, Math.round(scrollLeft / step))
+        );
+      }
+
+      var center = scrollLeft + viewportWidth / 2;
+      var closest = 0;
+      var closestDistance = Infinity;
+
+      scrollItems.forEach(function (item, index) {
+        var itemCenter = item.offsetLeft + item.offsetWidth / 2;
+        var distance = Math.abs(center - itemCenter);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closest = index;
+        }
+      });
+
+      return closest;
+    }
+
+    function setActivePanel(index, animate) {
+      activeIndex = index;
+
+      panels.forEach(function (panel, panelIndex) {
+        var isActive = panelIndex === index;
+        panel.classList.toggle('is-active', isActive);
+        panel.style.opacity = isActive ? '1' : '0';
+        panel.style.transform = isActive ? 'translateY(0)' : 'translateY(6px)';
+        panel.style.visibility = isActive ? 'visible' : 'hidden';
+        panel.style.zIndex = isActive ? '2' : '1';
+        panel.style.pointerEvents = isActive ? 'auto' : 'none';
+        panel.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+
+        if (!animate) {
+          panel.style.transition = 'none';
+          panel.offsetHeight;
+          panel.style.transition = '';
+        }
+      });
+
+      updateDots(index);
+    }
+
     function updateDots(index) {
       dots.forEach(function (dot, dotIndex) {
         var isActive = dotIndex === index;
@@ -39,36 +93,9 @@
 
     function updateFromScroll() {
       rafId = null;
-
-      var gap = readGap();
-      var center = mediaViewport.scrollLeft + mediaViewport.clientWidth / 2;
-      var closest = 0;
-      var closestDistance = Infinity;
-
-      scrollItems.forEach(function (item, index) {
-        var itemCenter = item.offsetLeft + item.offsetWidth / 2;
-        var distance = Math.abs(center - itemCenter);
-        var range = item.offsetWidth + gap;
-        var progress = Math.max(0, 1 - distance / range);
-        var eased = progress * progress * (3 - 2 * progress);
-        var panel = panels[index];
-
-        if (panel) {
-          panel.style.opacity = String(eased);
-          panel.style.transform = 'translateY(' + (1 - eased) * 6 + 'px)';
-          panel.style.visibility = eased > 0.03 ? 'visible' : 'hidden';
-          panel.setAttribute('aria-hidden', eased < 0.5 ? 'true' : 'false');
-        }
-
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closest = index;
-        }
-      });
-
+      var closest = getClosestIndex();
       if (closest !== activeIndex) {
-        activeIndex = closest;
-        updateDots(activeIndex);
+        setActivePanel(closest, true);
       }
     }
 
@@ -82,17 +109,20 @@
       var item = scrollItems[index];
       if (!item) return;
 
-      var target =
-        item.offsetLeft - (mediaViewport.clientWidth - item.offsetWidth) / 2;
+      var target;
+      if (DESKTOP_MQ.matches) {
+        target = item.offsetLeft - parseFloat(getComputedStyle(mediaViewport).paddingLeft || 0);
+      } else {
+        target =
+          item.offsetLeft - (mediaViewport.clientWidth - item.offsetWidth) / 2;
+      }
 
       mediaViewport.scrollTo({
         left: Math.max(0, target),
         behavior: 'smooth',
       });
 
-      activeIndex = index;
-      updateDots(index);
-      scheduleUpdate();
+      setActivePanel(index, true);
     }
 
     function buildDots() {
@@ -114,11 +144,14 @@
     }
 
     mediaViewport.addEventListener('scroll', scheduleUpdate, { passive: true });
-    window.addEventListener('resize', scheduleUpdate);
+    window.addEventListener('resize', function () {
+      setActivePanel(getClosestIndex(), false);
+      scheduleUpdate();
+    });
 
     buildDots();
-    updateFromScroll();
-    updateDots(0);
+    setActivePanel(0, false);
+    scheduleUpdate();
 
     root._bpReviewsScrollTo = scrollToIndex;
   }
