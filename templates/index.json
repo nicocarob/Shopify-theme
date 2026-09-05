@@ -186,6 +186,16 @@
             "emoji": "🏆"
           }
         },
+        "eq_chile_03": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-chilena",
+            "collection_handle": "colo-colo",
+            "team_name": "Colo Colo",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/colo-colo-logo-footylogos-320.webp"
+          }
+        },
         "eq_chile_01": {
           "type": "equipo",
           "settings": {
@@ -206,14 +216,14 @@
             "logo": "shopify://shop_images/LogoCDUC.png"
           }
         },
-        "eq_chile_03": {
+        "equipo_ybnji4": {
           "type": "equipo",
           "settings": {
             "liga_handle": "liga-chilena",
-            "collection_handle": "colo-colo",
-            "team_name": "Colo Colo",
+            "collection_handle": "palestino",
+            "team_name": "Palestino",
             "emoji": "⚽",
-            "logo": "shopify://shop_images/colo-colo-logo-footylogos-320.webp"
+            "logo": "shopify://shop_images/Escudo_Palestino_Oficial.png"
           }
         },
         "eq_esp_01": {
@@ -452,9 +462,10 @@
         "liga_08",
         "liga_09",
         "liga_10",
+        "eq_chile_03",
         "eq_chile_01",
         "eq_chile_02",
-        "eq_chile_03",
+        "equipo_ybnji4",
         "eq_esp_01",
         "eq_esp_02",
         "eq_pl_01",
