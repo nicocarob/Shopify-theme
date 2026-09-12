@@ -15,15 +15,15 @@ window.SEGUIMIENTO_CONFIG = {
   /*
     URL de tu proxy (el Cloudflare Worker).
     Reemplazala por la tuya cuando lo tengas publicado.
-    Ejemplo: 'https://seguimiento-lacabala.TU-CUENTA.workers.dev'
+    Ejemplo: 'https://seguimiento-lacabala.lacabalachile.workers.dev'
   */
-  proxyUrl: 'https://seguimiento-lacabala.TU-CUENTA.workers.dev',
+  proxyUrl: 'https://seguimiento-lacabala.lacabalachile.workers.dev',
 
   /*
     Poner en true para ver la pagina con datos de ejemplo,
     sin necesidad de tener el proxy funcionando todavia.
   */
-  modoDemo: true,
+  modoDemo: false,
 
   /*
     ------------------------------------------------------------

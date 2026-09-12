@@ -9,11 +9,9 @@ Configurado para `www.lacabala.cl` (`0aap7q-qc.myshopify.com`).
 - `sections/seguimiento.liquid`
 - `templates/page.seguimiento.json`
 
-`modoDemo` esta en `true` hasta publicar el Worker. Despues:
+Worker publicado: `https://seguimiento-lacabala.lacabalachile.workers.dev`
 
-1. Pega la URL real del Worker en `proxyUrl`.
-2. Pon `modoDemo: false`.
-3. Sube el asset:
+`proxyUrl` y `modoDemo: false` ya estan en el tema. Sube el asset:
 
 ```sh
 shopify theme push --only assets/seguimiento-estados.js \
