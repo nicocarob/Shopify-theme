@@ -1,0 +1,10 @@
+{
+  "name": "seguimiento-lacabala",
+  "private": true,
+  "type": "module",
+  "description": "Proxy de seguimiento SUNYOU para Shopify",
+  "scripts": {
+    "local": "node local.mjs",
+    "deploy": "wrangler deploy"
+  }
+}

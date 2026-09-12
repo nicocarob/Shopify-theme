@@ -1,0 +1,22 @@
+{
+  "layout": "baul",
+  "sections": {
+    "seguimiento": {
+      "type": "seguimiento",
+      "settings": {
+        "titulo": "Sigue tu pedido",
+        "bajada": "Ingresa tu numero de seguimiento o busca con tu numero de pedido y tu email.",
+        "tab_numero": "Numero de seguimiento",
+        "tab_pedido": "Numero de pedido",
+        "texto_ayuda": "<p>Los envios suelen demorar entre 9 y 16 dias corridos. Si tu pedido lleva mas de 15 dias, <a href=\"https://wa.me/message/Z5XXALWPDL4GI1\" target=\"_blank\">escribenos</a> y lo revisamos.</p>",
+        "accent_color": "#00E676",
+        "card_color": "#101010",
+        "padding_top": 48,
+        "padding_bottom": 72
+      }
+    }
+  },
+  "order": [
+    "seguimiento"
+  ]
+}

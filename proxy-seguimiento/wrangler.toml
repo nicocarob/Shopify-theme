@@ -1,0 +1,27 @@
+name = "seguimiento-lacabala"
+main = "worker.js"
+compatibility_date = "2025-01-01"
+
+# ========= CONFIG LA CÁBALA =========
+[vars]
+COURIER_CODE = "sunyou"
+SHOPIFY_STORE = "0aap7q-qc.myshopify.com"
+LINK_SEGUIMIENTO = "https://www.lacabala.cl/pages/seguimiento-de-pedido"
+WHATSAPP_URL = "https://wa.me/message/Z5XXALWPDL4GI1"
+EMAIL_FROM = "La Cábala <onboarding@resend.dev>"
+# Cuando verifiques dominio en Resend:
+# EMAIL_FROM = "La Cábala <avisos@lacabala.cl>"
+
+ALLOWED_ORIGINS = "https://lacabala.cl,https://www.lacabala.cl,https://0aap7q-qc.myshopify.com,http://127.0.0.1:9292"
+
+# Opcional: KV anti-duplicados de mails
+# [[kv_namespaces]]
+# binding = "MAIL_DEDUPE"
+# id = "xxxxxxxx"
+
+# Secretos (no van aca):
+#   npx wrangler secret put TRACKING_API_KEY
+#   npx wrangler secret put SHOPIFY_CLIENT_ID
+#   npx wrangler secret put SHOPIFY_CLIENT_SECRET
+#   npx wrangler secret put RESEND_API_KEY
+#   npx wrangler secret put WEBHOOK_TOKEN

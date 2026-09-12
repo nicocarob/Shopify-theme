@@ -1,0 +1,1390 @@
+{% comment %}
+  Seguimiento de pedidos SUNYOU
+  Archivo: sections/seguimiento.liquid
+
+  Las traducciones de los estados estan en:
+  assets/seguimiento-estados.js
+{% endcomment %}
+
+<script src="{{ 'seguimiento-estados.js' | asset_url }}"></script>
+<script src="{{ 'seguimiento-motor.js' | asset_url }}"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+
+{% render 'baul-header' %}
+
+{%- assign sid = section.id -%}
+
+<style>
+  .sg-{{ sid }} {
+    --sg-accent: {{ section.settings.accent_color }};
+    --sg-card: {{ section.settings.card_color }};
+    --sg-linea: rgba(255, 255, 255, 0.09);
+    --sg-suave: rgba(255, 255, 255, 0.5);
+    --sg-verde: #00e676;
+    --sg-azul: #3b9eff;
+    --sg-amarillo: #ffb020;
+    --sg-rojo: #ff4d4d;
+    --sg-gris: #8a8a8a;
+
+    max-width: 760px;
+    margin: 0 auto;
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px 20px;
+  }
+
+  /* ---------- Encabezado ---------- */
+  .sg-{{ sid }} .sg-head {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .sg-{{ sid }} .sg-head h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(30px, 6vw, 44px);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin: 0 0 8px 0;
+    color: #fff !important;
+  }
+
+  .sg-{{ sid }} .sg-head p {
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+    color: var(--sg-suave) !important;
+  }
+
+  /* ---------- Buscador ---------- */
+  .sg-{{ sid }} .sg-box {
+    background: var(--sg-card);
+    border: 1px solid var(--sg-linea);
+    border-radius: 16px;
+    padding: 20px;
+  }
+
+  .sg-{{ sid }} .sg-tabs {
+    display: flex;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 18px;
+  }
+
+  .sg-{{ sid }} .sg-tab {
+    flex: 1;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    padding: 10px 8px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    color: var(--sg-suave) !important;
+  }
+
+  .sg-{{ sid }} .sg-tab[aria-selected='true'] {
+    background: var(--sg-accent);
+    color: #000 !important;
+  }
+
+  .sg-{{ sid }} .sg-panel {
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .sg-{{ sid }} .sg-panel[data-activo='true'] {
+    display: flex;
+  }
+
+  .sg-{{ sid }} .sg-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    color: var(--sg-suave) !important;
+  }
+
+  .sg-{{ sid }} .sg-input {
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid var(--sg-linea);
+    border-radius: 10px;
+    padding: 13px 14px;
+    font-family: inherit;
+    font-size: 15px;
+    transition: border-color 0.18s, background 0.18s;
+    color: #fff !important;
+  }
+
+  .sg-{{ sid }} .sg-input::placeholder {
+    color: rgba(255, 255, 255, 0.28);
+  }
+
+  .sg-{{ sid }} .sg-input:focus {
+    outline: none;
+    border-color: var(--sg-accent);
+    background: rgba(255, 255, 255, 0.07);
+  }
+
+  .sg-{{ sid }} .sg-fila {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: 560px) {
+    .sg-{{ sid }} .sg-fila {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .sg-{{ sid }} .sg-submit {
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    background: var(--sg-accent);
+    padding: 15px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: filter 0.18s, opacity 0.18s;
+    color: #000 !important;
+  }
+
+  .sg-{{ sid }} .sg-submit:hover:not([disabled]) {
+    filter: brightness(1.08);
+  }
+
+  .sg-{{ sid }} .sg-submit[disabled] {
+    opacity: 0.55;
+    cursor: default;
+  }
+
+  /* ---------- Aviso de error ---------- */
+  .sg-{{ sid }} .sg-aviso {
+    display: none;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 16px;
+    padding: 13px 15px;
+    border-radius: 10px;
+    background: rgba(255, 77, 77, 0.09);
+    border: 1px solid rgba(255, 77, 77, 0.3);
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: #ffb3b3 !important;
+  }
+
+  .sg-{{ sid }} .sg-aviso[data-visible='true'] {
+    display: flex;
+  }
+
+  .sg-{{ sid }} .sg-aviso svg {
+    width: 17px;
+    height: 17px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    stroke: #ff8080;
+  }
+
+  /* ---------- Cargando ---------- */
+  .sg-{{ sid }} .sg-cargando {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 48px 20px;
+  }
+
+  .sg-{{ sid }} .sg-cargando[data-visible='true'] {
+    display: flex;
+  }
+
+  .sg-{{ sid }} .sg-spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(255, 255, 255, 0.12);
+    border-top-color: var(--sg-accent);
+    border-radius: 50%;
+    animation: sg-girar-{{ sid }} 0.75s linear infinite;
+  }
+
+  @keyframes sg-girar-{{ sid }} {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .sg-{{ sid }} .sg-cargando span {
+    font-size: 13.5px;
+    color: var(--sg-suave) !important;
+  }
+
+  /* ---------- Resultado ---------- */
+  .sg-{{ sid }} .sg-result {
+    display: none;
+    margin-top: 22px;
+  }
+
+  .sg-{{ sid }} .sg-result[data-visible='true'] {
+    display: block;
+  }
+
+  /* Cartel de estado */
+  .sg-{{ sid }} .sg-estado {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--sg-card);
+    border: 1px solid var(--sg-linea);
+    border-left: 4px solid var(--sg-tono);
+    border-radius: 14px;
+    padding: 20px;
+  }
+
+  .sg-{{ sid }} .sg-estado-icono {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--sg-tono) 16%, transparent);
+  }
+
+  .sg-{{ sid }} .sg-estado-icono svg {
+    width: 23px;
+    height: 23px;
+    stroke: var(--sg-tono);
+    fill: none;
+    stroke-width: 2;
+  }
+
+  .sg-{{ sid }} .sg-estado-txt {
+    min-width: 0;
+  }
+
+  .sg-{{ sid }} .sg-estado-txt strong {
+    display: block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.15;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    color: var(--sg-tono) !important;
+  }
+
+  .sg-{{ sid }} .sg-estado-txt span {
+    display: block;
+    font-size: 13.5px;
+    line-height: 1.45;
+    color: var(--sg-suave) !important;
+  }
+
+  /* Dias en transito */
+  .sg-{{ sid }} .sg-dias {
+    display: inline-block;
+    margin-top: 9px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--sg-tono) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--sg-tono) 35%, transparent);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    color: var(--sg-tono) !important;
+  }
+
+  .sg-{{ sid }} .sg-dias[hidden] {
+    display: none;
+  }
+
+  /* Entrega estimada */
+  .sg-{{ sid }} .sg-estimado {
+    margin-top: 10px;
+    padding: 14px 18px;
+    background: rgba(0, 230, 118, 0.07);
+    border: 1px solid rgba(0, 230, 118, 0.28);
+    border-radius: 12px;
+  }
+
+  .sg-{{ sid }} .sg-estimado[hidden] {
+    display: none;
+  }
+
+  .sg-{{ sid }} .sg-estimado[data-atrasado] {
+    background: rgba(255, 176, 32, 0.08);
+    border-color: rgba(255, 176, 32, 0.35);
+  }
+
+  .sg-{{ sid }} .sg-estimado-label {
+    margin: 0 0 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.48) !important;
+  }
+
+  .sg-{{ sid }} .sg-estimado-txt {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 650;
+    line-height: 1.35;
+    color: #ffffff !important;
+  }
+
+  .sg-{{ sid }} .sg-estimado[data-atrasado] .sg-estimado-txt {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: rgba(255, 207, 128, 0.95) !important;
+  }
+
+  /* Numero de Correos de Chile */
+  .sg-{{ sid }} .sg-correos {
+    margin-top: 10px;
+    padding: 16px 18px;
+    background: rgba(59, 158, 255, 0.07);
+    border: 1px solid rgba(59, 158, 255, 0.3);
+    border-radius: 12px;
+  }
+
+  .sg-{{ sid }} .sg-correos[hidden] {
+    display: none;
+  }
+
+  .sg-{{ sid }} .sg-correos-titulo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 11px 0;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+    color: var(--sg-azul) !important;
+  }
+
+  .sg-{{ sid }} .sg-correos-titulo svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    stroke: var(--sg-azul);
+  }
+
+  .sg-{{ sid }} .sg-correos-titulo span {
+    color: var(--sg-azul) !important;
+  }
+
+  .sg-{{ sid }} .sg-correos-num {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 11px 14px;
+    background: rgba(0, 0, 0, 0.32);
+    border-radius: 9px;
+  }
+
+  .sg-{{ sid }} .sg-correos-num b {
+    min-width: 0;
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 15px;
+    letter-spacing: 1px;
+    word-break: break-all;
+    color: #fff !important;
+  }
+
+  .sg-{{ sid }} .sg-correos-exp {
+    margin: 11px 0 0 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.62) !important;
+  }
+
+  .sg-{{ sid }} .sg-correos-link {
+    display: inline-block;
+    margin-top: 9px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    color: var(--sg-azul) !important;
+  }
+
+  .sg-{{ sid }} .sg-correos-link:not([href]) {
+    display: none;
+  }
+
+  /* Numero de seguimiento */
+  .sg-{{ sid }} .sg-numero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 10px;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--sg-linea);
+    border-radius: 10px;
+  }
+
+  .sg-{{ sid }} .sg-numero-val {
+    min-width: 0;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--sg-suave) !important;
+  }
+
+  .sg-{{ sid }} .sg-numero-val b {
+    display: block;
+    margin-top: 3px;
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 14px;
+    letter-spacing: 0.8px;
+    text-transform: none;
+    word-break: break-all;
+    color: #fff !important;
+  }
+
+  .sg-{{ sid }} .sg-copiar {
+    flex-shrink: 0;
+    background: transparent;
+    border: 1.5px solid var(--sg-linea);
+    border-radius: 8px;
+    padding: 8px 13px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.18s, color 0.18s;
+    color: var(--sg-suave) !important;
+  }
+
+  .sg-{{ sid }} .sg-copiar:hover {
+    border-color: var(--sg-accent);
+    color: var(--sg-accent) !important;
+  }
+
+  /* ---------- Barra de progreso ---------- */
+  .sg-{{ sid }} .sg-barra {
+    display: flex;
+    margin: 26px 0 6px 0;
+  }
+
+  .sg-{{ sid }} .sg-paso {
+    position: relative;
+    flex: 1;
+    text-align: center;
+  }
+
+  /* linea entre puntos */
+  .sg-{{ sid }} .sg-paso::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.11);
+  }
+
+  .sg-{{ sid }} .sg-paso:first-child::before {
+    left: 50%;
+    width: 50%;
+  }
+
+  .sg-{{ sid }} .sg-paso:last-child::before {
+    width: 50%;
+  }
+
+  .sg-{{ sid }} .sg-paso[data-hecho='true']::before {
+    background: var(--sg-accent);
+  }
+
+  .sg-{{ sid }} .sg-punto {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 22px;
+    height: 22px;
+    margin: 0 auto 9px auto;
+    border-radius: 50%;
+    background: #0d0d0d;
+    border: 2px solid rgba(255, 255, 255, 0.16);
+    transition: background 0.25s, border-color 0.25s;
+  }
+
+  .sg-{{ sid }} .sg-paso[data-hecho='true'] .sg-punto {
+    background: var(--sg-accent);
+    border-color: var(--sg-accent);
+  }
+
+  .sg-{{ sid }} .sg-paso[data-actual='true'] .sg-punto {
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--sg-accent) 22%, transparent);
+  }
+
+  .sg-{{ sid }} .sg-punto svg {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 11px;
+    height: 11px;
+    stroke: #000;
+    stroke-width: 3.5;
+    fill: none;
+    opacity: 0;
+  }
+
+  .sg-{{ sid }} .sg-paso[data-hecho='true'] .sg-punto svg {
+    opacity: 1;
+  }
+
+  .sg-{{ sid }} .sg-paso small {
+    display: block;
+    padding: 0 2px;
+    font-size: 10.5px;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: 0.2px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.35) !important;
+  }
+
+  .sg-{{ sid }} .sg-paso[data-hecho='true'] small {
+    color: #fff !important;
+  }
+
+  /* ---------- Historial ---------- */
+  .sg-{{ sid }} .sg-hist {
+    margin-top: 26px;
+    background: var(--sg-card);
+    border: 1px solid var(--sg-linea);
+    border-radius: 14px;
+    padding: 22px;
+  }
+
+  .sg-{{ sid }} .sg-hist-titulo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    margin: 0 0 18px 0;
+    color: var(--sg-suave) !important;
+  }
+
+  .sg-{{ sid }} .sg-lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .sg-{{ sid }} .sg-item {
+    position: relative;
+    padding: 0 0 20px 26px;
+  }
+
+  .sg-{{ sid }} .sg-item:last-child {
+    padding-bottom: 0;
+  }
+
+  /* linea vertical */
+  .sg-{{ sid }} .sg-item::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    bottom: 0;
+    left: 4px;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .sg-{{ sid }} .sg-item:last-child::before {
+    display: none;
+  }
+
+  /* punto */
+  .sg-{{ sid }} .sg-item::after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.22);
+  }
+
+  .sg-{{ sid }} .sg-item:first-child::after {
+    background: var(--sg-accent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--sg-accent) 20%, transparent);
+  }
+
+  .sg-{{ sid }} .sg-item-txt {
+    display: block;
+    font-size: 14.5px;
+    font-weight: 600;
+    line-height: 1.35;
+    margin-bottom: 3px;
+    color: rgba(255, 255, 255, 0.62) !important;
+  }
+
+  .sg-{{ sid }} .sg-item:first-child .sg-item-txt {
+    color: #fff !important;
+  }
+
+  .sg-{{ sid }} .sg-item-meta {
+    display: block;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.38) !important;
+  }
+
+  /* Nota explicativa de un movimiento puntual */
+  .sg-{{ sid }} .sg-item-nota {
+    display: block;
+    margin-top: 8px;
+    padding: 10px 12px;
+    border-left: 2px solid var(--sg-amarillo);
+    border-radius: 0 8px 8px 0;
+    background: rgba(255, 176, 32, 0.08);
+    font-size: 12.5px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: rgba(255, 207, 128, 0.92) !important;
+  }
+
+  /* ---------- Ayuda ---------- */
+  .sg-{{ sid }} .sg-ayuda {
+    margin-top: 22px;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--sg-suave) !important;
+  }
+
+  .sg-{{ sid }} .sg-ayuda a {
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    color: var(--sg-accent) !important;
+  }
+
+  .sg-{{ sid }} .sg-demo {
+    margin-top: 14px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: rgba(255, 176, 32, 0.09);
+    border: 1px solid rgba(255, 176, 32, 0.28);
+    font-size: 12.5px;
+    line-height: 1.5;
+    text-align: center;
+    color: #ffcf80 !important;
+  }
+</style>
+
+<div class="sg-{{ sid }}" data-seguimiento>
+  <div class="sg-head">
+    <h1>{{ section.settings.titulo }}</h1>
+    <p>{{ section.settings.bajada }}</p>
+  </div>
+
+  <div class="sg-box">
+    <div class="sg-tabs" role="tablist">
+      <button
+        class="sg-tab"
+        type="button"
+        role="tab"
+        aria-selected="true"
+        data-tab="numero"
+      >
+        {{ section.settings.tab_numero }}
+      </button>
+      <button
+        class="sg-tab"
+        type="button"
+        role="tab"
+        aria-selected="false"
+        data-tab="pedido"
+      >
+        {{ section.settings.tab_pedido }}
+      </button>
+    </div>
+
+    <form class="sg-panel" data-panel="numero" data-activo="true" novalidate>
+      <div>
+        <label class="sg-label" for="sg-num-{{ sid }}">Numero de seguimiento</label>
+        <input
+          class="sg-input"
+          id="sg-num-{{ sid }}"
+          name="numero"
+          type="text"
+          inputmode="latin"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Ej: SYAE123456789"
+        >
+      </div>
+      <button class="sg-submit" type="submit">Buscar mi pedido</button>
+    </form>
+
+    <form class="sg-panel" data-panel="pedido" novalidate>
+      <div class="sg-fila">
+        <div>
+          <label class="sg-label" for="sg-ped-{{ sid }}">Numero de pedido</label>
+          <input
+            class="sg-input"
+            id="sg-ped-{{ sid }}"
+            name="pedido"
+            type="text"
+            autocomplete="off"
+            placeholder="Ej: 1234"
+          >
+        </div>
+        <div>
+          <label class="sg-label" for="sg-mail-{{ sid }}">Tu email</label>
+          <input
+            class="sg-input"
+            id="sg-mail-{{ sid }}"
+            name="email"
+            type="email"
+            autocomplete="email"
+            placeholder="tucorreo@ejemplo.cl"
+          >
+        </div>
+      </div>
+      <button class="sg-submit" type="submit">Buscar mi pedido</button>
+    </form>
+
+    <div class="sg-aviso" role="alert" data-aviso>
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <span data-aviso-txt></span>
+    </div>
+  </div>
+
+  <div class="sg-cargando" data-cargando>
+    <div class="sg-spinner"></div>
+    <span>Consultando al courier...</span>
+  </div>
+
+  <div class="sg-result" data-result>
+    <div class="sg-estado" data-estado>
+      <div class="sg-estado-icono" data-estado-icono></div>
+      <div class="sg-estado-txt">
+        <strong data-estado-titulo></strong>
+        <span data-estado-bajada></span>
+        <span class="sg-dias" data-dias hidden></span>
+      </div>
+    </div>
+
+    <div class="sg-estimado" data-estimado hidden>
+      <p class="sg-estimado-label" data-estimado-label></p>
+      <p class="sg-estimado-txt" data-estimado-txt></p>
+    </div>
+
+    <div class="sg-numero">
+      <div class="sg-numero-val">
+        Numero de seguimiento
+        <b data-numero></b>
+      </div>
+      <button class="sg-copiar" type="button" data-copiar>Copiar</button>
+    </div>
+
+    <div class="sg-correos" data-correos hidden>
+      <p class="sg-correos-titulo">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16v16H4z"/>
+          <path d="M4 7l8 6 8-6"/>
+        </svg>
+        <span data-correos-titulo></span>
+      </p>
+      <div class="sg-correos-num">
+        <b data-correos-num></b>
+        <button class="sg-copiar" type="button" data-correos-copiar>Copiar</button>
+      </div>
+      <p class="sg-correos-exp" data-correos-exp></p>
+      <a class="sg-correos-link" data-correos-link target="_blank" rel="noopener"></a>
+    </div>
+
+    <div class="sg-barra" data-barra></div>
+
+    <div class="sg-hist">
+      <p class="sg-hist-titulo">Recorrido de tu pedido</p>
+      <ul class="sg-lista" data-lista></ul>
+    </div>
+  </div>
+
+  {% if section.settings.texto_ayuda != blank %}
+    <div class="sg-ayuda">{{ section.settings.texto_ayuda }}</div>
+  {% endif %}
+
+  <div class="sg-demo" data-demo hidden>
+    Modo de ejemplo activado. Los datos que ves son de prueba. Para conectar
+    los datos reales, edita <b>proxyUrl</b> y pon <b>modoDemo: false</b> en el
+    archivo <b>assets/seguimiento-estados.js</b>.
+  </div>
+</div>
+
+<script>
+  (function () {
+    var raiz = document.currentScript.previousElementSibling;
+    if (!raiz || !raiz.hasAttribute('data-seguimiento')) {
+      raiz = document.querySelector('.sg-{{ sid }}');
+    }
+    if (!raiz) return;
+
+    var CFG = window.SEGUIMIENTO_CONFIG;
+    if (!CFG || !window.SEGUIMIENTO_MOTOR) return;
+
+    var MOTOR = window.SEGUIMIENTO_MOTOR.crear(CFG);
+
+    var TONOS = {
+      verde: 'var(--sg-verde)',
+      azul: 'var(--sg-azul)',
+      amarillo: 'var(--sg-amarillo)',
+      rojo: 'var(--sg-rojo)',
+      gris: 'var(--sg-gris)',
+    };
+
+    var ICONOS = {
+      caja:
+        '<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg>',
+      camion:
+        '<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7"/>' +
+        '<circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>',
+      check:
+        '<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M20 6L9 17l-5-5"/></svg>',
+      alerta:
+        '<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">' +
+        '<circle cx="12" cy="12" r="10"/><line x1="12" y1="7" x2="12" y2="13"/>' +
+        '<line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+      reloj:
+        '<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">' +
+        '<circle cx="12" cy="12" r="10"/><path d="M12 7v5l3.5 2"/></svg>',
+    };
+
+    var ICONO_POR_ESTADO = {
+      pending: 'reloj',
+      inforeceived: 'caja',
+      transit: 'camion',
+      pickup: 'camion',
+      delivered: 'check',
+      undelivered: 'alerta',
+      exception: 'alerta',
+      expired: 'reloj',
+      notfound: 'reloj',
+    };
+
+    var MENSAJES_ERROR = {
+      numero_invalido: 'Ese numero no parece valido. Revisalo y prueba de nuevo.',
+      faltan_datos: 'Completa los campos para poder buscar tu pedido.',
+      no_encontrado:
+        'No encontramos ese pedido. Revisa que el numero y el email sean los mismos que usaste al comprar.',
+      pedido_sin_despachar:
+        'Tu pedido ya esta confirmado pero todavia no sale de bodega. Te avisamos por email en cuanto tenga numero de seguimiento.',
+      api_no_configurada: 'El seguimiento esta en mantencion. Escribenos y lo revisamos por ti.',
+      clave_invalida: 'El seguimiento esta en mantencion. Escribenos y lo revisamos por ti.',
+      courier_incorrecto: 'El seguimiento esta en mantencion. Escribenos y lo revisamos por ti.',
+      limite_alcanzado: 'Estamos recibiendo muchas consultas. Intenta de nuevo en unos minutos.',
+      busqueda_por_pedido_no_configurada:
+        'Por ahora la busqueda por pedido no esta disponible. Usa tu numero de seguimiento.',
+      error_shopify: 'No pudimos leer tu pedido en este momento. Intenta en unos minutos.',
+      error_servidor: 'Algo falló de nuestro lado. Intenta de nuevo en unos minutos.',
+      sin_conexion: 'No pudimos conectarnos. Revisa tu internet y prueba otra vez.',
+      sin_movimientos:
+        'El courier todavia no carga movimientos para este envio. Suele tardar entre 2 y 5 dias en aparecer.',
+    };
+
+    /* ---------- Elementos ---------- */
+    var tabs = raiz.querySelectorAll('[data-tab]');
+    var paneles = raiz.querySelectorAll('[data-panel]');
+    var aviso = raiz.querySelector('[data-aviso]');
+    var avisoTxt = raiz.querySelector('[data-aviso-txt]');
+    var cargando = raiz.querySelector('[data-cargando]');
+    var result = raiz.querySelector('[data-result]');
+    var elEstado = raiz.querySelector('[data-estado]');
+    var elIcono = raiz.querySelector('[data-estado-icono]');
+    var elTitulo = raiz.querySelector('[data-estado-titulo]');
+    var elBajada = raiz.querySelector('[data-estado-bajada]');
+    var elNumero = raiz.querySelector('[data-numero]');
+    var elBarra = raiz.querySelector('[data-barra]');
+    var elLista = raiz.querySelector('[data-lista]');
+    var elCopiar = raiz.querySelector('[data-copiar]');
+    var elDemo = raiz.querySelector('[data-demo]');
+    var elDias = raiz.querySelector('[data-dias]');
+    var elEstimado = raiz.querySelector('[data-estimado]');
+    var elEstimadoLabel = raiz.querySelector('[data-estimado-label]');
+    var elEstimadoTxt = raiz.querySelector('[data-estimado-txt]');
+    var elCorreos = raiz.querySelector('[data-correos]');
+    var elCorreosTitulo = raiz.querySelector('[data-correos-titulo]');
+    var elCorreosNum = raiz.querySelector('[data-correos-num]');
+    var elCorreosExp = raiz.querySelector('[data-correos-exp]');
+    var elCorreosLink = raiz.querySelector('[data-correos-link]');
+    var elCorreosCopiar = raiz.querySelector('[data-correos-copiar]');
+
+    /* ---------- Pestanas ---------- */
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var destino = tab.dataset.tab;
+        tabs.forEach(function (otra) {
+          otra.setAttribute('aria-selected', String(otra === tab));
+        });
+        paneles.forEach(function (panel) {
+          if (panel.dataset.panel === destino) {
+            panel.setAttribute('data-activo', 'true');
+          } else {
+            panel.removeAttribute('data-activo');
+          }
+        });
+        ocultarAviso();
+      });
+    });
+
+    /* ---------- Envio de formularios ---------- */
+    paneles.forEach(function (panel) {
+      panel.addEventListener('submit', function (evento) {
+        evento.preventDefault();
+        var datos = new FormData(panel);
+
+        if (panel.dataset.panel === 'numero') {
+          var numero = (datos.get('numero') || '').trim();
+          if (!numero) return mostrarAviso(MENSAJES_ERROR.faltan_datos);
+          buscar({ numero: numero }, panel);
+        } else {
+          var pedido = (datos.get('pedido') || '').trim();
+          var email = (datos.get('email') || '').trim();
+          if (!pedido || !email) return mostrarAviso(MENSAJES_ERROR.faltan_datos);
+          buscar({ pedido: pedido, email: email }, panel);
+        }
+      });
+    });
+
+    /* ---------- Busqueda ---------- */
+    function buscar(consulta, panel) {
+      ocultarAviso();
+      result.removeAttribute('data-visible');
+      cargando.setAttribute('data-visible', 'true');
+
+      var boton = panel ? panel.querySelector('.sg-submit') : null;
+      if (boton) boton.disabled = true;
+
+      pedirDatos(consulta)
+        .then(function (datos) {
+          if (!datos.eventos || datos.eventos.length === 0) {
+            mostrarAviso(MENSAJES_ERROR.sin_movimientos);
+            return;
+          }
+          pintar(datos);
+        })
+        .catch(function (error) {
+          mostrarAviso(MENSAJES_ERROR[error.message] || MENSAJES_ERROR.error_servidor);
+        })
+        .finally(function () {
+          cargando.removeAttribute('data-visible');
+          if (boton) boton.disabled = false;
+        });
+    }
+
+    function pedirDatos(consulta) {
+      if (CFG.modoDemo || !CFG.proxyUrl) {
+        if (elDemo) elDemo.hidden = false;
+        return datosDeEjemplo(consulta);
+      }
+
+      return fetch(CFG.proxyUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(consulta),
+      })
+        .then(function (respuesta) {
+          return respuesta.json().catch(function () {
+            throw new Error('error_servidor');
+          });
+        })
+        .then(function (payload) {
+          if (!payload.ok) throw new Error(payload.error || 'error_servidor');
+          return payload;
+        })
+        .catch(function (error) {
+          if (error instanceof TypeError) throw new Error('sin_conexion');
+          throw error;
+        });
+    }
+
+    /* ---------- Pintado ---------- */
+    function pintar(datos) {
+      // Toda la traduccion la hace el motor (seguimiento-motor.js).
+      // Aca solo se dibuja lo que devuelve.
+      var vista = MOTOR.procesar(datos);
+
+      elEstado.style.setProperty('--sg-tono', TONOS[vista.info.color] || TONOS.gris);
+      elIcono.innerHTML = ICONOS[ICONO_POR_ESTADO[vista.estado] || 'caja'];
+      elTitulo.textContent = vista.info.titulo;
+      elBajada.textContent = vista.info.bajada || '';
+      elNumero.textContent = vista.numero;
+
+      actualizarUrlConNums(vista.numero);
+      pintarDias(vista.dias);
+      pintarEstimado(vista.estimado);
+      pintarCorreos(vista.numeroCorreos);
+      pintarBarra(vista.alcanzado);
+      pintarLista(vista.eventos);
+
+      result.setAttribute('data-visible', 'true');
+      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Deja ?nums= en la barra del navegador para poder copiar el link.
+    function actualizarUrlConNums(numero) {
+      var limpio = String(numero || '').trim().toUpperCase();
+      if (!limpio) return;
+
+      try {
+        var url = new URL(window.location.href);
+        url.searchParams.delete('n');
+        url.searchParams.delete('numero');
+        url.searchParams.delete('demo');
+        url.searchParams.set('nums', limpio);
+        window.history.replaceState({}, '', url.pathname + '?' + url.searchParams.toString());
+      } catch (error) {}
+    }
+
+    function pintarDias(texto) {
+      if (!elDias) return;
+      elDias.textContent = texto || '';
+      elDias.hidden = !texto;
+    }
+
+    function pintarEstimado(estimado) {
+      if (!elEstimado) return;
+
+      if (!estimado || !estimado.texto) {
+        elEstimado.hidden = true;
+        elEstimado.removeAttribute('data-atrasado');
+        return;
+      }
+
+      var cfg = CFG.entregaEstimada || {};
+      elEstimadoLabel.textContent = cfg.titulo || 'Entrega estimada';
+      elEstimadoTxt.textContent = estimado.texto;
+      if (estimado.atrasado) {
+        elEstimado.setAttribute('data-atrasado', 'true');
+      } else {
+        elEstimado.removeAttribute('data-atrasado');
+      }
+      elEstimado.hidden = false;
+    }
+
+    function pintarCorreos(numero) {
+      if (!elCorreos) return;
+
+      if (!numero) {
+        elCorreos.hidden = true;
+        return;
+      }
+
+      var cfg = CFG.correosChile || {};
+      elCorreosTitulo.textContent = cfg.titulo || 'Numero para Correos de Chile';
+      elCorreosNum.textContent = numero;
+      elCorreosExp.textContent = cfg.explicacion || '';
+
+      if (cfg.enlace) {
+        elCorreosLink.setAttribute('href', cfg.enlace);
+        elCorreosLink.textContent = cfg.textoEnlace || 'Seguir en Correos de Chile';
+      } else {
+        elCorreosLink.removeAttribute('href');
+      }
+
+      elCorreos.hidden = false;
+    }
+
+    function pintarBarra(alcanzado) {
+      var etapas = CFG.etapas || [];
+      elBarra.innerHTML = etapas
+        .map(function (etapa) {
+          var hecho = etapa.nivel <= alcanzado;
+          var actual = etapa.nivel === alcanzado;
+          return (
+            '<div class="sg-paso"' +
+            (hecho ? ' data-hecho="true"' : '') +
+            (actual ? ' data-actual="true"' : '') +
+            '><span class="sg-punto">' +
+            '<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">' +
+            '<path d="M20 6L9 17l-5-5"/></svg></span>' +
+            '<small>' +
+            escapar(etapa.nombre) +
+            '</small></div>'
+          );
+        })
+        .join('');
+    }
+
+    function pintarLista(eventos) {
+      elLista.innerHTML = eventos
+        .map(function (evento) {
+          var meta = [formatearFecha(evento.fecha), evento.lugar].filter(Boolean).join(' · ');
+          var nota = evento.nota
+            ? '<span class="sg-item-nota">' + escapar(evento.nota) + '</span>'
+            : '';
+
+          return (
+            '<li class="sg-item">' +
+            '<span class="sg-item-txt">' +
+            escapar(evento.es) +
+            '</span>' +
+            '<span class="sg-item-meta">' +
+            escapar(meta) +
+            '</span>' +
+            nota +
+            '</li>'
+          );
+        })
+        .join('');
+    }
+
+    /* ---------- Avisos ---------- */
+    function mostrarAviso(texto) {
+      avisoTxt.textContent = texto;
+      aviso.setAttribute('data-visible', 'true');
+    }
+
+    function ocultarAviso() {
+      aviso.removeAttribute('data-visible');
+    }
+
+    /* ---------- Utilidades ---------- */
+    function escapar(valor) {
+      var div = document.createElement('div');
+      div.textContent = valor == null ? '' : String(valor);
+      return div.innerHTML;
+    }
+
+    function formatearFecha(valor) {
+      if (!valor) return '';
+      var fecha = MOTOR.aFecha(valor);
+      if (!fecha) return String(valor);
+
+      var dia = fecha.toLocaleDateString('es-CL', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      });
+      var hora = fecha.toLocaleTimeString('es-CL', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+      return dia + ', ' + hora;
+    }
+
+    /* ---------- Copiar numeros ---------- */
+    function conectarCopiar(boton, origen) {
+      if (!boton || !origen) return;
+
+      boton.addEventListener('click', function () {
+        var texto = origen.textContent || '';
+        if (!texto || !navigator.clipboard) return;
+
+        navigator.clipboard.writeText(texto).then(function () {
+          boton.textContent = 'Copiado';
+          setTimeout(function () {
+            boton.textContent = 'Copiar';
+          }, 1800);
+        }, function () {});
+      });
+    }
+
+    conectarCopiar(elCopiar, elNumero);
+    conectarCopiar(elCorreosCopiar, elCorreosNum);
+
+    /* ---------- Datos de ejemplo ---------- */
+    function datosDeEjemplo(consulta) {
+      var parametros = new URLSearchParams(window.location.search);
+      var escenario = parametros.get('demo') || 'transit';
+
+      // Copia exacta de un envio real (SYCL014614007), con los mismos
+      // textos y ubicaciones que devuelve SUNYOU. Ojo que en los
+      // movimientos de origen la ubicacion viene vacia.
+      var recorrido = [
+        { texto: 'Delivered', lugar: 'VIÑA DEL MAR', horas: 0 },
+        { texto: 'Delivery In Progress', lugar: 'VIÑA DEL MAR', horas: 2 },
+        { texto: 'Arrived At Regional Facility', lugar: 'VIÑA DEL MAR', horas: 9 },
+        { texto: 'Hand Over To Last Mile', lugar: 'AEROPUERTO', horas: 40 },
+        { texto: 'Customs Clearance Successed', lugar: '', horas: 43 },
+        { texto: 'Customs Clearance Inspection', lugar: '', horas: 90 },
+        { texto: 'Customs Clearance In Process', lugar: '', horas: 117 },
+        { texto: 'Arrived At Destination Country Airport', lugar: '', horas: 125 },
+        { texto: 'Departed From Port Of Origin', lugar: '', horas: 199 },
+        { texto: 'Arrived At The Port Of Origin', lugar: '', horas: 283 },
+        {
+          texto: 'Departed Sunyou Facility, Carrier Tracking Number:  SX013809834CL',
+          lugar: '',
+          horas: 295,
+        },
+        { texto: 'Acceptance, Sent To Chile', lugar: '', horas: 300 },
+        { texto: 'Pre-Shipment Info Sent To Chile', lugar: '', horas: 339 },
+      ];
+
+      // Cada escenario corta el recorrido en un punto distinto, para
+      // poder ver la pagina en cualquier etapa del envio.
+      var ESCENARIOS = {
+        delivered: { corte: 0, estado: 'delivered' },
+        pickup: { corte: 1, estado: 'pickup' },
+        aduana: { corte: 5, estado: 'transit' },
+        transit: { corte: 8, estado: 'transit' },
+        inforeceived: { corte: 12, estado: 'inforeceived' },
+      };
+
+      var elegido = ESCENARIOS[escenario] || ESCENARIOS.transit;
+
+      var ahora = Date.now();
+      var eventos = recorrido.slice(elegido.corte).map(function (paso) {
+        return {
+          texto: paso.texto,
+          lugar: paso.lugar,
+          fecha: new Date(ahora - paso.horas * 3600 * 1000).toISOString().slice(0, 19),
+        };
+      });
+
+      var numero = consulta.numero || 'SYAE' + String(ahora).slice(-9);
+
+      return new Promise(function (resolver) {
+        setTimeout(function () {
+          resolver({ ok: true, numero: numero, estado: elegido.estado, eventos: eventos });
+        }, 650);
+      });
+    }
+
+    /* ---------- Autobusqueda desde la URL ---------- */
+    (function () {
+      var parametros = new URLSearchParams(window.location.search);
+      // nums= es el formato para mandarle al cliente.
+      // n= y numero= siguen funcionando por compatibilidad.
+      var numero =
+        parametros.get('nums') || parametros.get('n') || parametros.get('numero');
+      var pedido = parametros.get('p') || parametros.get('pedido');
+      var email = parametros.get('e') || parametros.get('email');
+
+      if (numero) {
+        var campoNumero = raiz.querySelector('[name="numero"]');
+        if (campoNumero) campoNumero.value = numero;
+        buscar({ numero: numero }, raiz.querySelector('[data-panel="numero"]'));
+        return;
+      }
+
+      if (pedido && email) {
+        tabs[1].click();
+        var campoPedido = raiz.querySelector('[name="pedido"]');
+        var campoEmail = raiz.querySelector('[name="email"]');
+        if (campoPedido) campoPedido.value = pedido;
+        if (campoEmail) campoEmail.value = email;
+        buscar({ pedido: pedido, email: email }, raiz.querySelector('[data-panel="pedido"]'));
+      }
+    })();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Seguimiento de pedidos",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "titulo",
+      "label": "Titulo",
+      "default": "Sigue tu pedido"
+    },
+    {
+      "type": "textarea",
+      "id": "bajada",
+      "label": "Texto bajo el titulo",
+      "default": "Ingresa tu numero de seguimiento o busca con tu numero de pedido y tu email."
+    },
+    {
+      "type": "text",
+      "id": "tab_numero",
+      "label": "Nombre de la pestana 1",
+      "default": "Numero de seguimiento"
+    },
+    {
+      "type": "text",
+      "id": "tab_pedido",
+      "label": "Nombre de la pestana 2",
+      "default": "Numero de pedido"
+    },
+    {
+      "type": "richtext",
+      "id": "texto_ayuda",
+      "label": "Texto de ayuda al final",
+      "default": "<p>Los envios suelen demorar entre 9 y 16 dias corridos. Si tu pedido lleva mas de 15 dias, <a href=\"https://wa.me/message/Z5XXALWPDL4GI1\" target=\"_blank\">escribenos</a> y lo revisamos.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Colores"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Color principal",
+      "default": "#00E676"
+    },
+    {
+      "type": "color",
+      "id": "card_color",
+      "label": "Fondo de las tarjetas",
+      "default": "#101010"
+    },
+    {
+      "type": "header",
+      "content": "Espaciado"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding superior",
+      "min": 16,
+      "max": 120,
+      "step": 4,
+      "default": 48,
+      "unit": "px"
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding inferior",
+      "min": 16,
+      "max": 120,
+      "step": 4,
+      "default": 72,
+      "unit": "px"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Seguimiento de pedidos"
+    }
+  ]
+}
+{% endschema %}
