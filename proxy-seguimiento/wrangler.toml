@@ -8,9 +8,7 @@ COURIER_CODE = "sunyou"
 SHOPIFY_STORE = "0aap7q-qc.myshopify.com"
 LINK_SEGUIMIENTO = "https://www.lacabala.cl/pages/seguimiento-de-pedido"
 WHATSAPP_URL = "https://wa.me/message/Z5XXALWPDL4GI1"
-EMAIL_FROM = "La Cábala <onboarding@resend.dev>"
-# Cuando verifiques dominio en Resend:
-# EMAIL_FROM = "La Cábala <avisos@lacabala.cl>"
+EMAIL_FROM = "La Cábala <avisos@lacabala.cl>"
 
 ALLOWED_ORIGINS = "https://lacabala.cl,https://www.lacabala.cl,https://0aap7q-qc.myshopify.com,http://127.0.0.1:9292"
 

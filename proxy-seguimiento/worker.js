@@ -416,7 +416,7 @@ async function manejarWebhook(cuerpo, url, env, cors) {
   }
 
   const linkSeguimiento = env.LINK_SEGUIMIENTO || LINK_SEGUIMIENTO_DEFAULT;
-  const from = env.EMAIL_FROM || 'La Cábala <onboarding@resend.dev>';
+  const from = env.EMAIL_FROM || 'La Cábala <avisos@lacabala.cl>';
 
   const enviado = await enviarResend({
     apiKey: env.RESEND_API_KEY,

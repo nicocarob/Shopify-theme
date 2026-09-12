@@ -11,6 +11,8 @@ Configurado para `www.lacabala.cl` (`0aap7q-qc.myshopify.com`).
 
 Worker publicado: `https://seguimiento-lacabala.lacabalachile.workers.dev`
 
+Remitente de mails: `La Cábala <avisos@lacabala.cl>` (dominio verificado en Resend).
+
 `proxyUrl` y `modoDemo: false` ya estan en el tema. Sube el asset:
 
 ```sh
