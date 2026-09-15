@@ -36,7 +36,7 @@ window.SEGUIMIENTO_CONFIG = {
     { nivel: 1, nombre: 'Pedido recibido' },
     { nivel: 2, nombre: 'Enviado' },
     { nivel: 3, nombre: 'En transito' },
-    { nivel: 4, nombre: 'En Chile' },
+    { nivel: 4, nombre: 'En reparto' },
     { nivel: 5, nombre: 'Entregado' },
   ],
 
@@ -212,18 +212,18 @@ window.SEGUIMIENTO_CONFIG = {
   */
   estados: {
     pending: {
-      titulo: 'Preparando tu pedido',
-      bajada: 'Estamos armando tu envio. Pronto tendras novedades.',
+      titulo: 'Pedido confirmado',
+      bajada: 'Tu pedido ya fue armado. Pronto tendrás novedades.',
       color: 'gris',
     },
     inforeceived: {
       titulo: 'Pedido registrado',
-      bajada: 'Ya tenemos tu pedido y esta en fila para despacho.',
+      bajada: 'Tu pedido ya está en fila para despacho.',
       color: 'azul',
     },
     transit: {
       titulo: 'Tu pedido va en camino',
-      bajada: 'El paquete esta viajando hacia Chile.',
+      bajada: 'Tu paquete fue despachado desde nuestro centro logístico y va en camino.',
       color: 'azul',
     },
     /*
@@ -307,9 +307,9 @@ window.SEGUIMIENTO_CONFIG = {
       mas abajo, una regla generica como "sent to" los atraparia
       antes y los traduciria mal.
     */
-    { busca: 'pre-shipment info sent to', es: 'Estamos preparando tu pedido', nivel: 1 },
-    { busca: 'acceptance, sent to', es: 'Tu pedido salio hacia Chile', nivel: 2 },
-    { busca: 'departed sunyou facility', es: 'Tu pedido fue enviado', nivel: 3 },
+    { busca: 'pre-shipment info sent to', es: 'Tu pedido fue preparado', nivel: 1 },
+    { busca: 'acceptance, sent to', es: 'Tu pedido fue enviado', nivel: 2 },
+    { busca: 'departed sunyou facility', es: 'El paquete está en tránsito', nivel: 3 },
 
     // Salio del aeropuerto de Santiago: desde aca lo mueve Correos de Chile
     {
@@ -367,8 +367,8 @@ window.SEGUIMIENTO_CONFIG = {
       busca: 'customs clearance inspection',
       es: 'En revision de aduana',
       nota:
-        'Aduana esta revisando el pago de impuestos. Los impuestos ya estan pagados por nosotros, ' +
-        'asi que deberian liberarlo pronto. Si pasan varios dias sin cambios, escribenos y lo vemos.',
+        'Aduanas está revisando el pago de impuestos. Los impuestos ya están pagados por nosotros, ' +
+        'así que deberían liberarlo pronto. Si pasan varios días sin cambios, escríbenos y lo vemos.',
       nivel: 4,
     },
     { busca: 'customs clearance was completed', es: 'Aduana liberada', nivel: 4 },

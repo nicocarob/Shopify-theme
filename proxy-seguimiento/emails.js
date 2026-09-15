@@ -85,19 +85,19 @@ export const REGLAS_EMAIL = [
   {
     id: 'enviado',
     busca: 'acceptance, sent to',
-    asunto: 'Tu pedido ya salio — La Cábala',
-    titulo: 'Tu pedido ya salio hacia Chile',
+    asunto: 'Tu pedido ya salió — La Cábala',
+    titulo: 'Tu pedido ya se envió.',
     cuerpo: [
-      'El courier ya registro tu envio. Los primeros movimientos suelen tardar unos dias en aparecer.',
+      'El courier ya registro tu envío. Los primeros movimientos suelen tardar unos dias en aparecer.',
     ],
   },
   {
     id: 'salio_origen',
     busca: 'departed from port of origin',
-    asunto: 'Tu pedido salio del pais de origen — La Cábala',
-    titulo: 'Tu pedido salio del pais de origen',
+    asunto: 'Tu pedido ya está en camino — La Cábala',
+    titulo: 'Tu pedido ya está en camino',
     cuerpo: [
-      'Ya va en camino internacional hacia Chile.',
+      'Tu paquete fue despachado desde nuestro centro logístico y va en camino.',
     ],
   },
 ];
