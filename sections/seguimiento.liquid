@@ -713,21 +713,39 @@
   }
 
   .sg-{{ sid }} .sg-recs-track {
+    overflow: hidden;
+    padding: 4px 0 8px 0;
+  }
+
+  .sg-{{ sid }} .sg-recs-inner {
+    display: flex;
+    width: max-content;
+    animation: sg-recs-marquee-{{ sid }} 45s linear infinite;
+  }
+
+  .sg-{{ sid }} .sg-recs-inner:hover {
+    animation-play-state: paused;
+  }
+
+  .sg-{{ sid }} .sg-recs-set {
     display: flex;
     gap: 16px;
-    overflow-x: auto;
-    padding: 4px 2px 18px 2px;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
+    padding-right: 16px;
   }
 
-  .sg-{{ sid }} .sg-recs-track::-webkit-scrollbar {
-    height: 6px;
+  @keyframes sg-recs-marquee-{{ sid }} {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
   }
 
-  .sg-{{ sid }} .sg-recs-track::-webkit-scrollbar-thumb {
-    background: #444;
-    border-radius: 99px;
+  @media (prefers-reduced-motion: reduce) {
+    .sg-{{ sid }} .sg-recs-inner {
+      animation: none;
+    }
+
+    .sg-{{ sid }} .sg-recs-track {
+      overflow-x: auto;
+    }
   }
 
   .sg-{{ sid }} .sg-rec {
@@ -927,35 +945,44 @@
   {% liquid
     assign recs = section.settings.coleccion_recomendados
     if recs == blank
+      assign recs = collections['mas-vendidos']
+    endif
+    if recs == blank
       assign recs = collections.all
     endif
   %}
   {% if recs != blank and recs.products_count > 0 %}
+    {% capture sg_rec_cards %}
+      {% for product in recs.products limit: 12 %}
+        <a class="sg-rec" href="{{ product.url }}">
+          <span class="sg-rec-img">
+            {% if product.featured_image %}
+              <img
+                src="{{ product.featured_image | image_url: width: 600 }}"
+                alt="{{ product.title | escape }}"
+                width="300"
+                height="300"
+                loading="lazy"
+              >
+            {% endif %}
+          </span>
+          <span class="sg-rec-name">{{ product.title }}</span>
+          <span class="sg-rec-price">
+            {% if product.compare_at_price > product.price %}
+              <s>{{ product.compare_at_price | money }}</s>
+            {% endif %}
+            <b>{{ product.price | money }}</b>
+          </span>
+        </a>
+      {% endfor %}
+    {% endcapture %}
     <div class="sg-recs">
       <h2>También te podría gustar...</h2>
       <div class="sg-recs-track">
-        {% for product in recs.products limit: 10 %}
-          <a class="sg-rec" href="{{ product.url }}">
-            <span class="sg-rec-img">
-              {% if product.featured_image %}
-                <img
-                  src="{{ product.featured_image | image_url: width: 600 }}"
-                  alt="{{ product.title | escape }}"
-                  width="300"
-                  height="300"
-                  loading="lazy"
-                >
-              {% endif %}
-            </span>
-            <span class="sg-rec-name">{{ product.title }}</span>
-            <span class="sg-rec-price">
-              {% if product.compare_at_price > product.price %}
-                <s>{{ product.compare_at_price | money }}</s>
-              {% endif %}
-              <b>{{ product.price | money }}</b>
-            </span>
-          </a>
-        {% endfor %}
+        <div class="sg-recs-inner">
+          <div class="sg-recs-set">{{ sg_rec_cards }}</div>
+          <div class="sg-recs-set" aria-hidden="true">{{ sg_rec_cards }}</div>
+        </div>
       </div>
     </div>
   {% endif %}
@@ -1462,7 +1489,7 @@
       "type": "collection",
       "id": "coleccion_recomendados",
       "label": "Coleccion Tambien te podria gustar",
-      "info": "Si lo dejas vacio, usa el catalogo completo."
+      "info": "Por defecto usa Mas vendidos. En Shopify, esa coleccion debe estar ordenada por mas vendidos."
     },
     {
       "type": "header",
