@@ -13,11 +13,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 
-{% render 'baul-header' %}
-
 {%- assign sid = section.id -%}
 
 <style>
+  .sg-theme-pp {
+    background: #000;
+  }
+
   .sg-{{ sid }} {
     --sg-accent: {{ section.settings.accent_color }};
     --sg-card: {{ section.settings.card_color }};
@@ -696,6 +698,85 @@
     text-align: center;
     color: #ffcf80 !important;
   }
+
+  .sg-{{ sid }} .sg-recs {
+    margin: 56px 0 8px 0;
+  }
+
+  .sg-{{ sid }} .sg-recs h2 {
+    font-family: Inter, sans-serif;
+    font-size: clamp(24px, 4vw, 32px);
+    font-weight: 700;
+    text-align: center;
+    margin: 0 0 28px 0;
+    color: #fff !important;
+  }
+
+  .sg-{{ sid }} .sg-recs-track {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding: 4px 2px 18px 2px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sg-{{ sid }} .sg-recs-track::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .sg-{{ sid }} .sg-recs-track::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 99px;
+  }
+
+  .sg-{{ sid }} .sg-rec {
+    flex: 0 0 220px;
+    scroll-snap-align: start;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .sg-{{ sid }} .sg-rec-img {
+    display: block;
+    aspect-ratio: 1;
+    background: #1a1a1a;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+
+  .sg-{{ sid }} .sg-rec-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .sg-{{ sid }} .sg-rec-name {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.35;
+    margin-bottom: 6px;
+    color: #fff !important;
+  }
+
+  .sg-{{ sid }} .sg-rec-price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 13px;
+  }
+
+  .sg-{{ sid }} .sg-rec-price s {
+    color: rgba(255, 255, 255, 0.4) !important;
+  }
+
+  .sg-{{ sid }} .sg-rec-price b {
+    font-weight: 700;
+    color: #fff !important;
+  }
 </style>
 
 <div class="sg-{{ sid }}" data-seguimiento>
@@ -842,6 +923,42 @@
     los datos reales, edita <b>proxyUrl</b> y pon <b>modoDemo: false</b> en el
     archivo <b>assets/seguimiento-estados.js</b>.
   </div>
+
+  {% liquid
+    assign recs = section.settings.coleccion_recomendados
+    if recs == blank
+      assign recs = collections.all
+    endif
+  %}
+  {% if recs != blank and recs.products_count > 0 %}
+    <div class="sg-recs">
+      <h2>También te podría gustar...</h2>
+      <div class="sg-recs-track">
+        {% for product in recs.products limit: 10 %}
+          <a class="sg-rec" href="{{ product.url }}">
+            <span class="sg-rec-img">
+              {% if product.featured_image %}
+                <img
+                  src="{{ product.featured_image | image_url: width: 600 }}"
+                  alt="{{ product.title | escape }}"
+                  width="300"
+                  height="300"
+                  loading="lazy"
+                >
+              {% endif %}
+            </span>
+            <span class="sg-rec-name">{{ product.title }}</span>
+            <span class="sg-rec-price">
+              {% if product.compare_at_price > product.price %}
+                <s>{{ product.compare_at_price | money }}</s>
+              {% endif %}
+              <b>{{ product.price | money }}</b>
+            </span>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
 </div>
 
 <script>
@@ -1309,6 +1426,7 @@
 {
   "name": "Seguimiento de pedidos",
   "tag": "section",
+  "class": "sg-theme-pp",
   "settings": [
     {
       "type": "text",
@@ -1339,6 +1457,12 @@
       "id": "texto_ayuda",
       "label": "Texto de ayuda al final",
       "default": "<p>Los envios suelen demorar entre 9 y 16 dias corridos. Si tu pedido lleva mas de 15 dias, <a href=\"https://wa.me/message/Z5XXALWPDL4GI1\" target=\"_blank\">escribenos</a> y lo revisamos.</p>"
+    },
+    {
+      "type": "collection",
+      "id": "coleccion_recomendados",
+      "label": "Coleccion Tambien te podria gustar",
+      "info": "Si lo dejas vacio, usa el catalogo completo."
     },
     {
       "type": "header",
