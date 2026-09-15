@@ -218,21 +218,22 @@
       var cfg = CFG.correosChile;
       if (!cfg || !cfg.patron) return '';
 
-      // Solo cuando aduana ya libero. Antes el codigo de Correos
-      // aparece en el texto de SUNYOU, pero el cliente aun no lo usa.
+      // Solo desde last mile. Antes el codigo de Correos aparece
+      // en el texto de SUNYOU, pero el cliente aun no lo usa.
       if (cfg.mostrarDesde) {
-        var liberada = false;
+        var gatillos = [].concat(cfg.mostrarDesde);
+        var listo = false;
         for (var j = 0; j < eventos.length; j++) {
-          if (
-            String(eventos[j].original || '')
-              .toLowerCase()
-              .indexOf(cfg.mostrarDesde) !== -1
-          ) {
-            liberada = true;
-            break;
+          var original = String(eventos[j].original || '').toLowerCase();
+          for (var g = 0; g < gatillos.length; g++) {
+            if (original.indexOf(String(gatillos[g]).toLowerCase()) !== -1) {
+              listo = true;
+              break;
+            }
           }
+          if (listo) break;
         }
-        if (!liberada) return '';
+        if (!listo) return '';
       }
 
       var regex;

@@ -188,13 +188,13 @@ window.SEGUIMIENTO_CONFIG = {
 
       "Departed Sunyou Facility, Carrier Tracking Number: SX016414685CL"
 
-    Solo se muestra DESPUES de que aduana libero el paquete
+    Solo se muestra DESPUES de Hand Over To Last Mile
     ("mostrarDesde"). Antes de eso el cliente aun no lo puede
     usar en Correos de Chile, asi que no tiene sentido mostrarlo.
   */
   correosChile: {
     patron: '\\b[A-Z]{2}\\d{9}CL\\b',
-    mostrarDesde: 'customs clearance success',
+    mostrarDesde: ['hand over to last mile', 'handed over to last mile'],
     titulo: 'Numero para Correos de Chile',
     explicacion:
       'Con este numero puedes seguir tu pedido en el sitio de Correos de Chile.',
