@@ -701,6 +701,7 @@
 
   .sg-{{ sid }} .sg-recs {
     margin: 56px 0 8px 0;
+    position: relative;
   }
 
   .sg-{{ sid }} .sg-recs h2 {
@@ -712,47 +713,55 @@
     color: #fff !important;
   }
 
-  .sg-{{ sid }} .sg-recs-track {
+  .sg-{{ sid }} .sg-recs-viewport {
+    position: relative;
     overflow: hidden;
-    padding: 4px 0 8px 0;
   }
 
-  .sg-{{ sid }} .sg-recs-inner {
+  .sg-{{ sid }} .sg-recs-track {
     display: flex;
-    width: max-content;
-    animation: sg-recs-marquee-{{ sid }} 45s linear infinite;
-  }
-
-  .sg-{{ sid }} .sg-recs-inner:hover {
-    animation-play-state: paused;
-  }
-
-  .sg-{{ sid }} .sg-recs-set {
-    display: flex;
-    gap: 16px;
-    padding-right: 16px;
-  }
-
-  @keyframes sg-recs-marquee-{{ sid }} {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .sg-{{ sid }} .sg-recs-inner {
-      animation: none;
-    }
-
-    .sg-{{ sid }} .sg-recs-track {
-      overflow-x: auto;
-    }
+    will-change: transform;
   }
 
   .sg-{{ sid }} .sg-rec {
-    flex: 0 0 220px;
-    scroll-snap-align: start;
+    flex: 0 0 auto;
+    box-sizing: border-box;
     text-decoration: none;
     color: inherit;
+  }
+
+  .sg-{{ sid }} .sg-recs-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    color: #111;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  }
+
+  .sg-{{ sid }} .sg-recs-nav svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+  }
+
+  .sg-{{ sid }} .sg-recs-nav[data-dir='prev'] { left: -8px; }
+  .sg-{{ sid }} .sg-recs-nav[data-dir='next'] { right: -8px; }
+
+  @media (max-width: 640px) {
+    .sg-{{ sid }} .sg-recs-nav[data-dir='prev'] { left: 4px; }
+    .sg-{{ sid }} .sg-recs-nav[data-dir='next'] { right: 4px; }
   }
 
   .sg-{{ sid }} .sg-rec-img {
@@ -952,37 +961,39 @@
     endif
   %}
   {% if recs != blank and recs.products_count > 0 %}
-    {% capture sg_rec_cards %}
-      {% for product in recs.products limit: 12 %}
-        <a class="sg-rec" href="{{ product.url }}">
-          <span class="sg-rec-img">
-            {% if product.featured_image %}
-              <img
-                src="{{ product.featured_image | image_url: width: 600 }}"
-                alt="{{ product.title | escape }}"
-                width="300"
-                height="300"
-                loading="lazy"
-              >
-            {% endif %}
-          </span>
-          <span class="sg-rec-name">{{ product.title }}</span>
-          <span class="sg-rec-price">
-            {% if product.compare_at_price > product.price %}
-              <s>{{ product.compare_at_price | money }}</s>
-            {% endif %}
-            <b>{{ product.price | money }}</b>
-          </span>
-        </a>
-      {% endfor %}
-    {% endcapture %}
-    <div class="sg-recs">
+    <div class="sg-recs" data-sg-recs>
       <h2>También te podría gustar...</h2>
-      <div class="sg-recs-track">
-        <div class="sg-recs-inner">
-          <div class="sg-recs-set">{{ sg_rec_cards }}</div>
-          <div class="sg-recs-set" aria-hidden="true">{{ sg_rec_cards }}</div>
+      <div class="sg-recs-viewport">
+        <button class="sg-recs-nav" type="button" data-dir="prev" aria-label="Anterior">
+          <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="sg-recs-track">
+          {% for product in recs.products limit: 12 %}
+            <a class="sg-rec" href="{{ product.url }}">
+              <span class="sg-rec-img">
+                {% if product.featured_image %}
+                  <img
+                    src="{{ product.featured_image | image_url: width: 600 }}"
+                    alt="{{ product.title | escape }}"
+                    width="300"
+                    height="300"
+                    loading="lazy"
+                  >
+                {% endif %}
+              </span>
+              <span class="sg-rec-name">{{ product.title }}</span>
+              <span class="sg-rec-price">
+                {% if product.compare_at_price > product.price %}
+                  <s>{{ product.compare_at_price | money }}</s>
+                {% endif %}
+                <b>{{ product.price | money }}</b>
+              </span>
+            </a>
+          {% endfor %}
         </div>
+        <button class="sg-recs-nav" type="button" data-dir="next" aria-label="Siguiente">
+          <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
       </div>
     </div>
   {% endif %}
@@ -1446,6 +1457,108 @@
         buscar({ pedido: pedido, email: email }, raiz.querySelector('[data-panel="pedido"]'));
       }
     })();
+  })();
+
+  (function () {
+    var root = document.querySelector('.sg-{{ sid }} [data-sg-recs]');
+    if (!root) return;
+
+    var viewport = root.querySelector('.sg-recs-viewport');
+    var track = root.querySelector('.sg-recs-track');
+    var originals = Array.prototype.slice.call(track.children);
+    if (originals.length < 2) return;
+
+    originals.forEach(function (card) {
+      track.appendChild(card.cloneNode(true));
+    });
+
+    var slides = Array.prototype.slice.call(track.children);
+    var totalOriginal = originals.length;
+    var index = 0;
+    var step = 0;
+    var timer = null;
+    var hovering = false;
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function medidas() {
+      var w = viewport.clientWidth;
+      var porVista = 4;
+      var gap = 24;
+      if (w < 480) {
+        porVista = 2;
+        gap = 8;
+      } else if (w < 640) {
+        porVista = 3;
+        gap = 20;
+      }
+      var ancho = (w - gap * (porVista - 1)) / porVista;
+      slides.forEach(function (slide) {
+        slide.style.width = ancho + 'px';
+        slide.style.marginRight = gap + 'px';
+      });
+      step = ancho + gap;
+      ir(index, false);
+    }
+
+    function ir(i, animar) {
+      index = i;
+      track.style.transition = animar ? 'transform 300ms ease' : 'none';
+      track.style.transform = 'translate3d(' + -(index * step) + 'px,0,0)';
+    }
+
+    function siguiente() {
+      ir(index + 1, true);
+      if (index >= totalOriginal) {
+        window.setTimeout(function () {
+          ir(0, false);
+        }, 300);
+      }
+    }
+
+    function anterior() {
+      if (index <= 0) {
+        ir(totalOriginal, false);
+        window.requestAnimationFrame(function () {
+          window.requestAnimationFrame(function () {
+            ir(totalOriginal - 1, true);
+          });
+        });
+        return;
+      }
+      ir(index - 1, true);
+    }
+
+    function arrancar() {
+      parar();
+      if (reduceMotion || hovering) return;
+      timer = window.setInterval(siguiente, 5000);
+    }
+
+    function parar() {
+      if (timer) window.clearInterval(timer);
+      timer = null;
+    }
+
+    root.querySelector('[data-dir="next"]').addEventListener('click', function () {
+      siguiente();
+      arrancar();
+    });
+    root.querySelector('[data-dir="prev"]').addEventListener('click', function () {
+      anterior();
+      arrancar();
+    });
+    root.addEventListener('mouseenter', function () {
+      hovering = true;
+      parar();
+    });
+    root.addEventListener('mouseleave', function () {
+      hovering = false;
+      arrancar();
+    });
+    window.addEventListener('resize', medidas);
+
+    medidas();
+    arrancar();
   })();
 </script>
 
