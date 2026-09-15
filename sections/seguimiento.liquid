@@ -243,6 +243,57 @@
     display: block;
   }
 
+  /* Paquetes del mismo pedido */
+  .sg-{{ sid }} .sg-paquetes {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 0 0 18px;
+  }
+
+  .sg-{{ sid }} .sg-paquetes[hidden] {
+    display: none;
+  }
+
+  .sg-{{ sid }} .sg-orden {
+    margin: 0;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: clamp(28px, 5vw, 32px);
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    line-height: 1.1;
+    color: #fff !important;
+  }
+
+  .sg-{{ sid }} .sg-orden[hidden] {
+    display: none;
+  }
+
+  .sg-{{ sid }} .sg-paq-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .sg-{{ sid }} .sg-paq {
+    border: 1px solid #c6c6c6;
+    background: transparent;
+    border-radius: 7px;
+    padding: 7px 12px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.2;
+    cursor: pointer;
+    color: #fff !important;
+  }
+
+  .sg-{{ sid }} .sg-paq[aria-current='true'] {
+    border-color: #fff;
+  }
+
   /* Cartel de estado */
   .sg-{{ sid }} .sg-estado {
     display: flex;
@@ -895,6 +946,11 @@
   </div>
 
   <div class="sg-result" data-result>
+    <div class="sg-paquetes" data-paquetes hidden>
+      <h2 class="sg-orden" data-orden hidden></h2>
+      <div class="sg-paq-tabs" data-paq-tabs></div>
+    </div>
+
     <div class="sg-estado" data-estado>
       <div class="sg-estado-icono" data-estado-icono></div>
       <div class="sg-estado-txt">
@@ -1098,6 +1154,13 @@
     var elCorreosExp = raiz.querySelector('[data-correos-exp]');
     var elCorreosLink = raiz.querySelector('[data-correos-link]');
     var elCorreosCopiar = raiz.querySelector('[data-correos-copiar]');
+    var elPaquetes = raiz.querySelector('[data-paquetes]');
+    var elOrden = raiz.querySelector('[data-orden]');
+    var elPaqTabs = raiz.querySelector('[data-paq-tabs]');
+    var paquetesActuales = [];
+    var pedidoActual = '';
+    var cachePaquetes = {};
+    var cambiandoPaquete = false;
 
     /* ---------- Pestanas ---------- */
     tabs.forEach(function (tab) {
@@ -1139,8 +1202,13 @@
     /* ---------- Busqueda ---------- */
     function buscar(consulta, panel) {
       ocultarAviso();
-      result.removeAttribute('data-visible');
-      cargando.setAttribute('data-visible', 'true');
+      if (!cambiandoPaquete) {
+        result.removeAttribute('data-visible');
+        cachePaquetes = {};
+        paquetesActuales = [];
+        pedidoActual = '';
+        cargando.setAttribute('data-visible', 'true');
+      }
 
       var boton = panel ? panel.querySelector('.sg-submit') : null;
       if (boton) boton.disabled = true;
@@ -1159,6 +1227,7 @@
         .finally(function () {
           cargando.removeAttribute('data-visible');
           if (boton) boton.disabled = false;
+          cambiandoPaquete = false;
         });
     }
 
@@ -1201,6 +1270,7 @@
       elNumero.textContent = vista.numero;
 
       actualizarUrlConNums(vista.numero);
+      pintarPaquetes(datos);
       pintarDias(vista.dias);
       pintarEstimado(vista.estimado);
       pintarCorreos(vista.numeroCorreos);
@@ -1208,7 +1278,94 @@
       pintarLista(vista.eventos);
 
       result.setAttribute('data-visible', 'true');
-      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      if (!cambiandoPaquete) {
+        result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    function tituloOrden(nombre) {
+      var n = String(nombre || '').trim();
+      if (!n) return '';
+      if (n.charAt(0) !== '#') n = '#' + n;
+      return 'Orden ' + n;
+    }
+
+    function normalizarPaquetes(lista) {
+      if (!Array.isArray(lista)) return [];
+      return lista
+        .map(function (paq, i) {
+          var numero = String(typeof paq === 'string' ? paq : paq && paq.numero || '').trim().toUpperCase();
+          if (!numero) return null;
+          return { numero: numero, indice: (paq && paq.indice) || i + 1 };
+        })
+        .filter(Boolean);
+    }
+
+    function pintarPaquetes(datos) {
+      if (!elPaquetes || !elPaqTabs) return;
+
+      var nuevos = normalizarPaquetes(datos.paquetes);
+      if (nuevos.length > 1) {
+        paquetesActuales = nuevos;
+      } else if (
+        paquetesActuales.length > 1 &&
+        paquetesActuales.some(function (paq) {
+          return paq.numero === String(datos.numero || '').toUpperCase();
+        })
+      ) {
+        nuevos = paquetesActuales;
+      } else {
+        paquetesActuales = nuevos;
+      }
+
+      pedidoActual = datos.pedido || pedidoActual || '';
+      if (datos.numero) cachePaquetes[String(datos.numero).toUpperCase()] = datos;
+
+      if (pedidoActual) {
+        elOrden.textContent = tituloOrden(pedidoActual);
+        elOrden.hidden = false;
+      } else {
+        elOrden.textContent = '';
+        elOrden.hidden = true;
+      }
+
+      elPaqTabs.innerHTML = '';
+      var mostrarTabs = nuevos.length > 1;
+      if (mostrarTabs) {
+        nuevos.forEach(function (paq) {
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'sg-paq';
+          btn.textContent = 'Paquete #' + paq.indice;
+          if (paq.numero === String(datos.numero || '').toUpperCase()) {
+            btn.setAttribute('aria-current', 'true');
+          }
+          btn.addEventListener('click', function () {
+            cambiarPaquete(paq.numero);
+          });
+          elPaqTabs.appendChild(btn);
+        });
+      }
+
+      elPaquetes.hidden = !(pedidoActual || mostrarTabs);
+    }
+
+    function cambiarPaquete(numero) {
+      var limpio = String(numero || '').trim().toUpperCase();
+      if (!limpio || limpio === String(elNumero.textContent || '').trim().toUpperCase()) return;
+
+      var campoNumero = raiz.querySelector('[name="numero"]');
+      if (campoNumero) campoNumero.value = limpio;
+
+      if (cachePaquetes[limpio] && cachePaquetes[limpio].eventos) {
+        cambiandoPaquete = true;
+        pintar(cachePaquetes[limpio]);
+        cambiandoPaquete = false;
+        return;
+      }
+
+      cambiandoPaquete = true;
+      buscar({ numero: limpio }, raiz.querySelector('[data-panel="numero"]'));
     }
 
     // Deja ?nums= en la barra del navegador para poder copiar el link.

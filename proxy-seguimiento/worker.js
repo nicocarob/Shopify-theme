@@ -76,7 +76,19 @@ export default {
         email: resuelto.email,
         pedido: resuelto.pedido,
       });
-      return json({ ok: true, ...datos }, 200, cors);
+
+      const pedidoInfo = await completarPaquetesDelPedido(resuelto, datos, env);
+      const { customerEmail, orderNumber, ...publico } = datos;
+      return json(
+        {
+          ok: true,
+          ...publico,
+          pedido: nombrePedidoVisible(pedidoInfo?.pedido || resuelto.pedido || orderNumber),
+          paquetes: armarPaquetes(pedidoInfo?.paquetes || resuelto.paquetes, resuelto.numero),
+        },
+        200,
+        cors
+      );
     } catch (error) {
       if (error instanceof ErrorCliente) {
         const respuesta = { ok: false, error: error.codigo };
@@ -142,19 +154,16 @@ async function buscarPedidoEnShopify(pedido, email, env) {
 
   if (!pedidoEncontrado) return null;
 
-  const numero = (pedidoEncontrado.fulfillments || [])
-    .map((envio) => envio.tracking_number)
-    .filter(Boolean)
-    .pop();
-
-  if (!numero) {
+  const numeros = extraerNumerosRest(pedidoEncontrado);
+  if (!numeros.length) {
     throw new ErrorCliente('pedido_sin_despachar', 200);
   }
 
   return {
-    numero: String(numero).trim().toUpperCase(),
+    numero: numeros[0],
     email: emailBuscado,
     pedido: pedidoEncontrado.name || nombrePedido,
+    paquetes: numeros,
   };
 }
 
@@ -353,6 +362,8 @@ function normalizar(numero, datos) {
     numero,
     estado: datos?.delivery_status || datos?.status || 'notfound',
     diasEnTransito: datos?.transit_time || 0,
+    orderNumber: datos?.order_number || datos?.orderNumber || null,
+    customerEmail: datos?.customer_email || datos?.customerEmail || null,
     eventos,
   };
 }
@@ -480,7 +491,165 @@ function extraerUltimoEvento(data) {
   return { fecha: data?.latest_checkpoint_time || '', texto: String(latest).split(',')[0].trim() };
 }
 
+async function completarPaquetesDelPedido(resuelto, datosTM, env) {
+  if (resuelto?.paquetes?.length > 1 && resuelto.pedido) {
+    return { pedido: resuelto.pedido, paquetes: resuelto.paquetes };
+  }
+
+  const email = resuelto.email || datosTM?.customerEmail || null;
+  if (email) {
+    const porEmail = await buscarPedidoPorEmailYTracking(email, resuelto.numero, env).catch((error) => {
+      console.error('shopify_email_tracking', error);
+      return null;
+    });
+    if (porEmail?.numeros?.length) {
+      return { pedido: porEmail.pedido, paquetes: porEmail.numeros };
+    }
+  }
+
+  const nombre = nombrePedidoVisible(resuelto.pedido || datosTM?.orderNumber);
+  if (nombre) {
+    const porNombre = await buscarPedidoPorNombre(nombre, env).catch((error) => {
+      console.error('shopify_pedido_nombre', error);
+      return null;
+    });
+    if (porNombre?.numeros?.length) {
+      return { pedido: porNombre.pedido, paquetes: porNombre.numeros };
+    }
+  }
+
+  const porParcel = await buscarHermanosParcelPanel(resuelto.numero, env).catch((error) => {
+    console.error('parcelpanel_hermanos', error);
+    return null;
+  });
+  if (porParcel?.pedido) {
+    const porNombrePP = await buscarPedidoPorNombre(porParcel.pedido, env).catch(() => null);
+    if (porNombrePP?.numeros?.length) {
+      return { pedido: porNombrePP.pedido, paquetes: porNombrePP.numeros };
+    }
+  }
+  if (porParcel?.numeros?.length) {
+    return { pedido: porParcel.pedido, paquetes: porParcel.numeros };
+  }
+
+  const porTracking = await buscarPedidoPorTracking(resuelto.numero, env).catch((error) => {
+    console.error('shopify_tracking_error', error);
+    return null;
+  });
+  if (porTracking?.numeros?.length) {
+    return { pedido: porTracking.pedido, paquetes: porTracking.numeros };
+  }
+
+  return {
+    pedido: nombrePedidoVisible(resuelto.pedido),
+    paquetes: resuelto.paquetes || [resuelto.numero],
+  };
+}
+
+function nombrePedidoVisible(nombre) {
+  const n = String(nombre || '').trim();
+  if (!n) return null;
+  if (/^[A-Z]{2}\d/i.test(n) || /^SYCL/i.test(n)) return null;
+  return n;
+}
+
+async function buscarPedidoPorEmailYTracking(email, numero, env) {
+  if (!env.SHOPIFY_STORE || !env.SHOPIFY_CLIENT_ID || !env.SHOPIFY_CLIENT_SECRET) {
+    return null;
+  }
+
+  const emailBuscado = String(email || '').trim().toLowerCase();
+  const actual = String(numero || '').trim().toUpperCase();
+  if (!emailBuscado.includes('@') || !actual) return null;
+
+  const url =
+    `https://${env.SHOPIFY_STORE}/admin/api/${VERSION_API_SHOPIFY}/orders.json` +
+    `?status=any&limit=50&email=${encodeURIComponent(emailBuscado)}`;
+
+  let respuesta = await fetchShopifyConToken(url, env);
+  if (respuesta.status === 401) {
+    invalidarTokenShopify();
+    respuesta = await fetchShopifyConToken(url, env);
+  }
+  if (!respuesta.ok) return null;
+
+  const { orders = [] } = await respuesta.json();
+  for (const orden of orders) {
+    const numeros = extraerNumerosRest(orden);
+    if (!numeros.includes(actual)) continue;
+    return {
+      email: emailBuscado,
+      pedido: orden.name || null,
+      numeros,
+    };
+  }
+  return null;
+}
+
+async function buscarPedidoPorNombre(nombre, env) {
+  if (!env.SHOPIFY_STORE || !env.SHOPIFY_CLIENT_ID || !env.SHOPIFY_CLIENT_SECRET) {
+    return null;
+  }
+
+  const nombrePedido = String(nombre || '').trim().replace(/^#/, '');
+  if (!nombrePedido) return null;
+
+  const url =
+    `https://${env.SHOPIFY_STORE}/admin/api/${VERSION_API_SHOPIFY}/orders.json` +
+    `?status=any&limit=5&name=${encodeURIComponent(nombrePedido)}`;
+
+  let respuesta = await fetchShopifyConToken(url, env);
+  if (respuesta.status === 401) {
+    invalidarTokenShopify();
+    respuesta = await fetchShopifyConToken(url, env);
+  }
+  if (!respuesta.ok) return null;
+
+  const { orders = [] } = await respuesta.json();
+  const pedidoEncontrado =
+    orders.find((orden) => String(orden.name || '').replace(/^#/, '') === nombrePedido) ||
+    orders[0];
+  if (!pedidoEncontrado) return null;
+
+  const numeros = extraerNumerosRest(pedidoEncontrado);
+  return {
+    email: (pedidoEncontrado.email || '').trim().toLowerCase() || null,
+    pedido: pedidoEncontrado.name || nombrePedido,
+    numeros,
+  };
+}
+
+async function buscarHermanosParcelPanel(numero, env) {
+  const shop = env.SHOPIFY_STORE;
+  if (!shop) return null;
+
+  const url =
+    'https://pp-proxy.parcelwill.com/api/v2/tracking-info' +
+    `?track_number=${encodeURIComponent(numero)}` +
+    `&shop=${encodeURIComponent(shop)}`;
+
+  const respuesta = await fetch(url, { headers: { Accept: 'application/json' } });
+  if (!respuesta.ok) return null;
+
+  const payload = await respuesta.json().catch(() => null);
+  const envios = payload?.data?.tracking;
+  if (!Array.isArray(envios) || envios.length === 0) return null;
+
+  const numeros = unicosMayusculas(envios.map((envio) => envio?.track_number));
+  if (!numeros.length) return null;
+
+  return {
+    pedido: nombrePedidoVisible(payload?.data?.order),
+    numeros,
+  };
+}
+
 async function buscarEmailPorTracking(numero, env) {
+  const pedido = await buscarPedidoPorTracking(numero, env);
+  return pedido?.email || null;
+}
+
+async function buscarPedidoPorTracking(numero, env) {
   if (!env.SHOPIFY_STORE || !env.SHOPIFY_CLIENT_ID || !env.SHOPIFY_CLIENT_SECRET) {
     return null;
   }
@@ -492,7 +661,7 @@ async function buscarEmailPorTracking(numero, env) {
           node {
             email
             name
-            customer { email }
+            legacyResourceId
           }
         }
       }
@@ -500,30 +669,100 @@ async function buscarEmailPorTracking(numero, env) {
   `;
 
   const url = `https://${env.SHOPIFY_STORE}/admin/api/${VERSION_API_SHOPIFY}/graphql.json`;
-  let respuesta = await fetchShopifyConToken(url, env, {
-    method: 'POST',
-    body: JSON.stringify({
-      query,
-      variables: { q: `tracking_number:${numero}` },
-    }),
+  const cuerpo = JSON.stringify({
+    query,
+    variables: { q: `tracking_number:${numero}` },
   });
 
+  let respuesta = await fetchShopifyConToken(url, env, { method: 'POST', body: cuerpo });
   if (respuesta.status === 401) {
     invalidarTokenShopify();
-    respuesta = await fetchShopifyConToken(url, env, {
-      method: 'POST',
-      body: JSON.stringify({
-        query,
-        variables: { q: `tracking_number:${numero}` },
-      }),
-    });
+    respuesta = await fetchShopifyConToken(url, env, { method: 'POST', body: cuerpo });
+  }
+  if (!respuesta.ok) {
+    console.error('shopify_graphql_http', respuesta.status);
+    return null;
   }
 
-  if (!respuesta.ok) return null;
-
   const payload = await respuesta.json().catch(() => null);
-  const nodo = payload?.data?.orders?.edges?.[0]?.node;
-  return (nodo?.email || nodo?.customer?.email || '').trim().toLowerCase() || null;
+  if (payload?.errors?.length) console.error('shopify_graphql', payload.errors);
+
+  const edges = payload?.data?.orders?.edges || [];
+  const actual = String(numero).trim().toUpperCase();
+  let elegido = null;
+  let numeros = [];
+
+  for (const edge of edges) {
+    const nodo = edge?.node;
+    if (!nodo) continue;
+    const idRest = String(nodo.legacyResourceId || '').trim();
+    const pedidoRest = idRest ? await obtenerPedidoRest(idRest, env).catch(() => null) : null;
+    const encontrados = extraerNumerosRest(pedidoRest || {});
+    if (!encontrados.includes(actual)) continue;
+    elegido = nodo;
+    numeros = encontrados;
+    break;
+  }
+
+  if (!elegido) return null;
+
+  const email = (elegido.email || '').trim().toLowerCase() || null;
+  return {
+    email,
+    pedido: elegido.name || null,
+    numeros: unicosMayusculas(numeros),
+  };
+}
+
+async function obtenerPedidoRest(id, env) {
+  const url =
+    `https://${env.SHOPIFY_STORE}/admin/api/${VERSION_API_SHOPIFY}/orders/${encodeURIComponent(id)}.json`;
+  let respuesta = await fetchShopifyConToken(url, env);
+  if (respuesta.status === 401) {
+    invalidarTokenShopify();
+    respuesta = await fetchShopifyConToken(url, env);
+  }
+  if (!respuesta.ok) return null;
+  const payload = await respuesta.json().catch(() => null);
+  return payload?.order || null;
+}
+
+function extraerNumerosRest(pedido) {
+  const numeros = [];
+  for (const envio of pedido?.fulfillments || []) {
+    if (fulfillmentOmitido(envio?.status)) continue;
+    const candidatos = Array.isArray(envio.tracking_numbers) && envio.tracking_numbers.length
+      ? envio.tracking_numbers
+      : [envio.tracking_number];
+    for (const n of candidatos) numeros.push(n);
+  }
+  return unicosMayusculas(numeros);
+}
+
+function fulfillmentOmitido(status) {
+  const valor = String(status || '').toLowerCase();
+  return valor === 'cancelled' || valor === 'canceled' || valor === 'error' || valor === 'failure';
+}
+
+function unicosMayusculas(valores) {
+  const vistos = new Set();
+  const out = [];
+  for (const valor of valores || []) {
+    const limpio = String(valor || '').trim().toUpperCase();
+    if (!limpio || vistos.has(limpio)) continue;
+    vistos.add(limpio);
+    out.push(limpio);
+  }
+  return out;
+}
+
+function armarPaquetes(paquetes, numeroActual) {
+  const actual = String(numeroActual || '').trim().toUpperCase();
+  const numeros = unicosMayusculas(
+    Array.isArray(paquetes) && paquetes.length ? paquetes : [actual]
+  );
+  if (actual && !numeros.includes(actual)) numeros.unshift(actual);
+  return numeros.map((numero, i) => ({ numero, indice: i + 1 }));
 }
 
 async function enviarResend({ apiKey, from, to, subject, html, text }) {
