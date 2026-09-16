@@ -1304,18 +1304,29 @@
     function pintarPaquetes(datos) {
       if (!elPaquetes || !elPaqTabs) return;
 
-      var nuevos = normalizarPaquetes(datos.paquetes);
-      if (nuevos.length > 1) {
+      var numeroActual = String(datos.numero || '').toUpperCase();
+      var nuevos = normalizarPaquetes(datos.paquetes).filter(function (paq) {
+        return paq.numero;
+      });
+      var listaTieneActual = nuevos.some(function (paq) {
+        return paq.numero === numeroActual;
+      });
+
+      if (nuevos.length > 1 && listaTieneActual) {
         paquetesActuales = nuevos;
+        if (datos.pedido) pedidoActual = datos.pedido;
       } else if (
         paquetesActuales.length > 1 &&
         paquetesActuales.some(function (paq) {
-          return paq.numero === String(datos.numero || '').toUpperCase();
-        })
+          return paq.numero === numeroActual;
+        }) &&
+        (!datos.pedido || !pedidoActual || datos.pedido === pedidoActual)
       ) {
         nuevos = paquetesActuales;
       } else {
-        paquetesActuales = nuevos;
+        paquetesActuales = listaTieneActual ? nuevos : [];
+        pedidoActual = datos.pedido || '';
+        nuevos = paquetesActuales;
       }
 
       pedidoActual = datos.pedido || pedidoActual || '';

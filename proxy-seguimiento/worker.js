@@ -493,7 +493,11 @@ function extraerUltimoEvento(data) {
 
 async function completarPaquetesDelPedido(resuelto, datosTM, env) {
   if (resuelto?.paquetes?.length > 1 && resuelto.pedido) {
-    return { pedido: resuelto.pedido, paquetes: resuelto.paquetes };
+    const actual = String(resuelto.numero || '').trim().toUpperCase();
+    const numeros = unicosMayusculas(resuelto.paquetes);
+    if (!actual || numeros.includes(actual)) {
+      return { pedido: resuelto.pedido, paquetes: numeros };
+    }
   }
 
   const email = resuelto.email || datosTM?.customerEmail || null;
@@ -509,7 +513,7 @@ async function completarPaquetesDelPedido(resuelto, datosTM, env) {
 
   const nombre = nombrePedidoVisible(resuelto.pedido || datosTM?.orderNumber);
   if (nombre) {
-    const porNombre = await buscarPedidoPorNombre(nombre, env).catch((error) => {
+    const porNombre = await buscarPedidoPorNombre(nombre, env, resuelto.numero).catch((error) => {
       console.error('shopify_pedido_nombre', error);
       return null;
     });
@@ -523,26 +527,17 @@ async function completarPaquetesDelPedido(resuelto, datosTM, env) {
     return null;
   });
   if (porParcel?.pedido) {
-    const porNombrePP = await buscarPedidoPorNombre(porParcel.pedido, env).catch(() => null);
+    const porNombrePP = await buscarPedidoPorNombre(porParcel.pedido, env, resuelto.numero).catch(
+      () => null
+    );
     if (porNombrePP?.numeros?.length) {
       return { pedido: porNombrePP.pedido, paquetes: porNombrePP.numeros };
     }
   }
-  if (porParcel?.numeros?.length) {
-    return { pedido: porParcel.pedido, paquetes: porParcel.numeros };
-  }
-
-  const porTracking = await buscarPedidoPorTracking(resuelto.numero, env).catch((error) => {
-    console.error('shopify_tracking_error', error);
-    return null;
-  });
-  if (porTracking?.numeros?.length) {
-    return { pedido: porTracking.pedido, paquetes: porTracking.numeros };
-  }
 
   return {
     pedido: nombrePedidoVisible(resuelto.pedido),
-    paquetes: resuelto.paquetes || [resuelto.numero],
+    paquetes: [resuelto.numero],
   };
 }
 
@@ -586,7 +581,7 @@ async function buscarPedidoPorEmailYTracking(email, numero, env) {
   return null;
 }
 
-async function buscarPedidoPorNombre(nombre, env) {
+async function buscarPedidoPorNombre(nombre, env, numeroBuscado) {
   if (!env.SHOPIFY_STORE || !env.SHOPIFY_CLIENT_ID || !env.SHOPIFY_CLIENT_SECRET) {
     return null;
   }
@@ -606,12 +601,15 @@ async function buscarPedidoPorNombre(nombre, env) {
   if (!respuesta.ok) return null;
 
   const { orders = [] } = await respuesta.json();
-  const pedidoEncontrado =
-    orders.find((orden) => String(orden.name || '').replace(/^#/, '') === nombrePedido) ||
-    orders[0];
+  const pedidoEncontrado = orders.find(
+    (orden) => String(orden.name || '').replace(/^#/, '') === nombrePedido
+  );
   if (!pedidoEncontrado) return null;
 
   const numeros = extraerNumerosRest(pedidoEncontrado);
+  const actual = String(numeroBuscado || '').trim().toUpperCase();
+  if (actual && !numeros.includes(actual)) return null;
+
   return {
     email: (pedidoEncontrado.email || '').trim().toLowerCase() || null,
     pedido: pedidoEncontrado.name || nombrePedido,
@@ -731,10 +729,15 @@ function extraerNumerosRest(pedido) {
   const numeros = [];
   for (const envio of pedido?.fulfillments || []) {
     if (fulfillmentOmitido(envio?.status)) continue;
-    const candidatos = Array.isArray(envio.tracking_numbers) && envio.tracking_numbers.length
-      ? envio.tracking_numbers
-      : [envio.tracking_number];
-    for (const n of candidatos) numeros.push(n);
+    const candidatos = [];
+    if (Array.isArray(envio.tracking_numbers) && envio.tracking_numbers.length) {
+      candidatos.push(...envio.tracking_numbers);
+    } else if (envio.tracking_number) {
+      candidatos.push(envio.tracking_number);
+    }
+    for (const n of candidatos) {
+      for (const parte of String(n || '').split(/[\s,;]+/)) numeros.push(parte);
+    }
   }
   return unicosMayusculas(numeros);
 }
@@ -758,10 +761,12 @@ function unicosMayusculas(valores) {
 
 function armarPaquetes(paquetes, numeroActual) {
   const actual = String(numeroActual || '').trim().toUpperCase();
-  const numeros = unicosMayusculas(
-    Array.isArray(paquetes) && paquetes.length ? paquetes : [actual]
-  );
-  if (actual && !numeros.includes(actual)) numeros.unshift(actual);
+  const numeros = unicosMayusculas(Array.isArray(paquetes) ? paquetes : []);
+  // Solo se muestran hermanos si el codigo buscado esta en ese mismo pedido.
+  // Si no, nunca se mezcla con el seguimiento de otro cliente.
+  if (!actual || !numeros.includes(actual)) {
+    return actual ? [{ numero: actual, indice: 1 }] : [];
+  }
   return numeros.map((numero, i) => ({ numero, indice: i + 1 }));
 }
 
