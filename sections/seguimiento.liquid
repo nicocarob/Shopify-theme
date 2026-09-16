@@ -1249,11 +1249,91 @@
         })
         .then(function (payload) {
           if (!payload.ok) throw new Error(payload.error || 'error_servidor');
-          return payload;
+          if (payload.eventos && payload.eventos.length) return payload;
+          return respaldarEventos(payload, consulta);
         })
         .catch(function (error) {
           if (error instanceof TypeError) throw new Error('sin_conexion');
           throw error;
+        });
+    }
+
+    function textoParcelAIngles(texto) {
+      var original = String(texto || '').trim();
+      var lower = original.toLowerCase();
+      var reglas = [
+        ['información del envío registrada', 'Pre-Shipment Info Sent To Chile'],
+        ['informacion del envio registrada', 'Pre-Shipment Info Sent To Chile'],
+        ['el paquete está en tránsito', 'The shipment is in transit'],
+        ['el paquete esta en transito', 'The shipment is in transit'],
+        ['salió de las instalaciones', 'Departed Sunyou Facility'],
+        ['salio de las instalaciones', 'Departed Sunyou Facility'],
+        ['llegó al centro de origen', 'Arrived At The Port Of Origin'],
+        ['llego al centro de origen', 'Arrived At The Port Of Origin'],
+        ['salió del centro de origen', 'Departed From Port Of Origin'],
+        ['salio del centro de origen', 'Departed From Port Of Origin'],
+      ];
+      for (var i = 0; i < reglas.length; i++) {
+        if (lower.indexOf(reglas[i][0]) !== -1) {
+          var extra = original.match(/\b[A-Z]{2}\d{9}CL\b/);
+          if (extra && reglas[i][1] === 'Departed Sunyou Facility') {
+            return reglas[i][1] + ', Carrier Tracking Number: ' + extra[0];
+          }
+          return reglas[i][1];
+        }
+      }
+      return original;
+    }
+
+    function respaldarEventos(payload, consulta) {
+      var numero = String((consulta && consulta.numero) || payload.numero || '').trim();
+      var shop = CFG.shopMyshopify;
+      if (!numero || !shop) return Promise.resolve(payload);
+
+      var url =
+        'https://pp-proxy.parcelwill.com/api/v2/tracking-info' +
+        '?track_number=' +
+        encodeURIComponent(numero) +
+        '&shop=' +
+        encodeURIComponent(shop);
+
+      return fetch(url)
+        .then(function (respuesta) {
+          return respuesta.json().catch(function () {
+            return null;
+          });
+        })
+        .then(function (pp) {
+          var envios = pp && pp.data && pp.data.tracking;
+          if (!envios || !envios.length) return payload;
+          var actual = numero.toUpperCase();
+          var envio = null;
+          for (var i = 0; i < envios.length; i++) {
+            if (String(envios[i].track_number || '').toUpperCase() === actual) {
+              envio = envios[i];
+              break;
+            }
+          }
+          if (!envio) envio = envios[0];
+          var pista = envio.trackinfo || [];
+          if (!pista.length) return payload;
+          payload.eventos = pista
+            .map(function (item) {
+              return {
+                fecha: item.date_carbon || item.Date || '',
+                texto: textoParcelAIngles(item.StatusDescription || ''),
+                lugar: item.Details || '',
+              };
+            })
+            .filter(function (evento) {
+              return evento.texto;
+            });
+          if (!payload.estado || payload.estado === 'notfound') payload.estado = 'transit';
+          if (!payload.numero) payload.numero = numero;
+          return payload;
+        })
+        .catch(function () {
+          return payload;
         });
     }
 

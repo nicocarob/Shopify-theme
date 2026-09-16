@@ -18,6 +18,7 @@ window.SEGUIMIENTO_CONFIG = {
     Ejemplo: 'https://seguimiento-lacabala.lacabalachile.workers.dev'
   */
   proxyUrl: 'https://seguimiento-lacabala.lacabalachile.workers.dev',
+  shopMyshopify: '0aap7q-qc.myshopify.com',
 
   /*
     Poner en true para ver la pagina con datos de ejemplo,

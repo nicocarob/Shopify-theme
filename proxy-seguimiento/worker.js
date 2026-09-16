@@ -285,22 +285,36 @@ async function consultarTrackingMore(numero, env, extras = {}) {
     }
   }
 
-  let datos = payload?.data;
+  let datos = extraerItemTracking(payload?.data, numero);
 
-  if (yaExistia || !datos) {
-    datos = await obtenerTrackingExistente(numero, courier, env);
+  // Create a veces devuelve el stub sin historial. Siempre leemos
+  // el tracking guardado si no hay movimientos.
+  if (yaExistia || !datos || !tieneMovimientos(datos)) {
+    const existente = await obtenerTrackingExistente(numero, courier, env);
+    if (existente) datos = existente;
   }
 
   if (!datos) {
     throw new ErrorCliente('no_encontrado', 404, mensaje);
   }
 
-  // Si el tracking ya existia sin email, intentamos actualizarlo.
   if (extras.email && !datos.customer_email) {
     await actualizarEmailTracking(datos.id, extras.email, env).catch(() => {});
   }
 
-  return normalizar(numero, datos);
+  const normalizado = normalizar(numero, datos);
+  if (normalizado.eventos.length) return normalizado;
+
+  const respaldo = await eventosDesdeParcelPanel(numero, env).catch(() => null);
+  if (respaldo?.eventos?.length) {
+    return {
+      ...normalizado,
+      estado: respaldo.estado || 'transit',
+      eventos: respaldo.eventos,
+    };
+  }
+
+  return normalizado;
 }
 
 async function actualizarEmailTracking(id, email, env) {
@@ -316,23 +330,120 @@ async function actualizarEmailTracking(id, email, env) {
 }
 
 async function obtenerTrackingExistente(numero, courier, env) {
-  const url =
+  const urls = [
     'https://api.trackingmore.com/v4/trackings/get' +
-    `?tracking_numbers=${encodeURIComponent(numero)}&courier_code=${encodeURIComponent(courier)}`;
+      `?tracking_numbers=${encodeURIComponent(numero)}&courier_code=${encodeURIComponent(courier)}`,
+    'https://api.trackingmore.com/v4/trackings/get' +
+      `?tracking_numbers=${encodeURIComponent(numero)}`,
+  ];
 
-  const respuesta = await fetch(url, {
-    headers: {
-      'Tracking-Api-Key': env.TRACKING_API_KEY,
-      'Content-Type': 'application/json',
-    },
-  });
+  for (const url of urls) {
+    const respuesta = await fetch(url, {
+      headers: {
+        'Tracking-Api-Key': env.TRACKING_API_KEY,
+        'Content-Type': 'application/json',
+      },
+    });
+    const payload = await respuesta.json().catch(() => null);
+    const item = extraerItemTracking(payload?.data, numero);
+    if (item && tieneMovimientos(item)) return item;
+    if (item) return item;
+  }
+  return null;
+}
+
+function extraerItemTracking(data, numero) {
+  if (!data) return null;
+  const actual = String(numero || '').trim().toUpperCase();
+  const candidatos = [];
+  if (Array.isArray(data)) candidatos.push(...data);
+  if (Array.isArray(data.trackings)) candidatos.push(...data.trackings);
+  if (Array.isArray(data.success)) candidatos.push(...data.success);
+  if (Array.isArray(data.items)) candidatos.push(...data.items);
+  if (data.tracking_number || data.origin_info || data.destination_info) candidatos.push(data);
+
+  const match = candidatos.find(
+    (item) => String(item?.tracking_number || '').trim().toUpperCase() === actual
+  );
+  return match || candidatos[0] || null;
+}
+
+function tieneMovimientos(datos) {
+  const origen = datos?.origin_info?.trackinfo;
+  const destino = datos?.destination_info?.trackinfo;
+  return (Array.isArray(origen) && origen.length > 0) || (Array.isArray(destino) && destino.length > 0);
+}
+
+const PP_A_INGLES = [
+  { busca: 'información del envío registrada', en: 'Pre-Shipment Info Sent To Chile' },
+  { busca: 'informacion del envio registrada', en: 'Pre-Shipment Info Sent To Chile' },
+  { busca: 'el paquete está en tránsito', en: 'The shipment is in transit' },
+  { busca: 'el paquete esta en transito', en: 'The shipment is in transit' },
+  { busca: 'salió de las instalaciones', en: 'Departed Sunyou Facility' },
+  { busca: 'salio de las instalaciones', en: 'Departed Sunyou Facility' },
+  { busca: 'llegó al centro de origen', en: 'Arrived At The Port Of Origin' },
+  { busca: 'llego al centro de origen', en: 'Arrived At The Port Of Origin' },
+  { busca: 'salió del centro de origen', en: 'Departed From Port Of Origin' },
+  { busca: 'salio del centro de origen', en: 'Departed From Port Of Origin' },
+  { busca: 'aduana liberada', en: 'Customs Clearance Successed' },
+  { busca: 'aduana', en: 'Customs Clearance In Process' },
+  { busca: 'hand over to last mile', en: 'Hand Over To Last Mile' },
+  { busca: 'entregado', en: 'Delivered' },
+];
+
+function textoParcelAIngles(texto) {
+  const original = String(texto || '').trim();
+  const lower = original.toLowerCase();
+  for (const regla of PP_A_INGLES) {
+    if (lower.includes(regla.busca)) {
+      const extra = original.match(/\b[A-Z]{2}\d{9}CL\b/);
+      if (extra && regla.en.startsWith('Departed Sunyou')) {
+        return `${regla.en}, Carrier Tracking Number: ${extra[0]}`;
+      }
+      return regla.en;
+    }
+  }
+  return original;
+}
+
+async function eventosDesdeParcelPanel(numero, env) {
+  const shop = env.SHOPIFY_STORE;
+  if (!shop) return null;
+
+  const url =
+    'https://pp-proxy.parcelwill.com/api/v2/tracking-info' +
+    `?track_number=${encodeURIComponent(numero)}` +
+    `&shop=${encodeURIComponent(shop)}`;
+
+  const respuesta = await fetch(url, { headers: { Accept: 'application/json' } });
+  if (!respuesta.ok) return null;
 
   const payload = await respuesta.json().catch(() => null);
-  const lista = payload?.data;
+  const envios = payload?.data?.tracking;
+  if (!Array.isArray(envios)) return null;
 
-  if (Array.isArray(lista)) return lista[0] || null;
-  if (lista?.trackings && Array.isArray(lista.trackings)) return lista.trackings[0] || null;
-  return lista || null;
+  const actual = String(numero).trim().toUpperCase();
+  const envio =
+    envios.find((item) => String(item?.track_number || '').trim().toUpperCase() === actual) ||
+    envios[0];
+  const pista = envio?.trackinfo;
+  if (!Array.isArray(pista) || !pista.length) return null;
+
+  const eventos = pista
+    .map((item) => ({
+      fecha: item.date_carbon || item.Date || '',
+      texto: textoParcelAIngles(item.StatusDescription || item.checkpoint_status || ''),
+      lugar: item.Details || '',
+    }))
+    .filter((evento) => evento.texto);
+
+  const estadoPp = String(envio?.status || '').toLowerCase();
+  let estado = 'transit';
+  if (estadoPp.includes('entreg')) estado = 'delivered';
+  else if (estadoPp.includes('reparto') || estadoPp.includes('entrega')) estado = 'pickup';
+  else if (estadoPp.includes('tránsito') || estadoPp.includes('transito')) estado = 'transit';
+
+  return { eventos, estado };
 }
 
 function normalizar(numero, datos) {
