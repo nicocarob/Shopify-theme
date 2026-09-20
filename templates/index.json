@@ -256,6 +256,16 @@
             "logo": "shopify://shop_images/atletico-madrid-logo-1-1.png"
           }
         },
+        "equipo_ab3rdV": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "sevilla",
+            "team_name": "Sevilla",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/gfg.png"
+          }
+        },
         "eq_pl_01": {
           "type": "equipo",
           "settings": {
@@ -479,6 +489,7 @@
         "eq_esp_01",
         "eq_esp_02",
         "equipo_Yd99NQ",
+        "equipo_ab3rdV",
         "eq_pl_01",
         "eq_pl_02",
         "eq_pl_03",
