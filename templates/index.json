@@ -346,6 +346,16 @@
             "logo": "shopify://shop_images/images_5.png"
           }
         },
+        "equipo_XtJKwQ": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "manchester-city",
+            "team_name": "Manchester City",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/manchester-city-fc-1.svg"
+          }
+        },
         "eq_pl_02": {
           "type": "equipo",
           "settings": {
@@ -374,6 +384,46 @@
             "team_name": "Chelsea",
             "emoji": "⚽",
             "logo": "shopify://shop_images/363.png"
+          }
+        },
+        "equipo_XzhVaN": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "everton",
+            "team_name": "Everton",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Everton_FC_logo_svg.webp"
+          }
+        },
+        "equipo_GXHmXt": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "leeds",
+            "team_name": "Leeds",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/leeds-united-logo-footylogos-1200.webp"
+          }
+        },
+        "equipo_TpEKRt": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "tottenham",
+            "team_name": "Tottenham",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Tottenham-Hotspur-Logo.png"
+          }
+        },
+        "equipo_MWRix6": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "aston-villa",
+            "team_name": "Aston Villa",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/aston_villa_fc-logo_brandlogos.net_9duqy.png"
           }
         },
         "eq_sa_01": {
@@ -568,9 +618,14 @@
         "equipo_ifiBXq",
         "equipo_9LpH8R",
         "eq_pl_01",
+        "equipo_XtJKwQ",
         "eq_pl_02",
         "eq_pl_03",
         "eq_pl_04",
+        "equipo_XzhVaN",
+        "equipo_GXHmXt",
+        "equipo_TpEKRt",
+        "equipo_MWRix6",
         "eq_sa_01",
         "eq_sa_02",
         "eq_sa_03",
