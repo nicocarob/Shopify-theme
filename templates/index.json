@@ -516,6 +516,56 @@
             "logo": "shopify://shop_images/Borussia_Dortmund_logo_svg.webp"
           }
         },
+        "equipo_pExRT6": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-alemana",
+            "collection_handle": "st-pauli",
+            "team_name": "St. Pauli",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Fc_st_pauli_logo_svg.webp"
+          }
+        },
+        "equipo_H6AfyV": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-alemana",
+            "collection_handle": "leipzig",
+            "team_name": "Leipzig",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/red-bull-leipzig-logo-png-transparent.png"
+          }
+        },
+        "equipo_JpLw3E": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-alemana",
+            "collection_handle": "schalke-04",
+            "team_name": "Schalke 04",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/FC_Schalke_04_Logo.png"
+          }
+        },
+        "equipo_inCLWe": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-alemana",
+            "collection_handle": "frankfurt",
+            "team_name": "Frankfurt",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Eintracht-Frankfurt-logo.png"
+          }
+        },
+        "equipo_8JUb8X": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-alemana",
+            "collection_handle": "hamburgo-sv",
+            "team_name": "Hamburgo SV",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Hamburger_SV_logo_svg.webp"
+          }
+        },
         "eq_l1_01": {
           "type": "equipo",
           "settings": {
@@ -675,6 +725,11 @@
         "equipo_yQebaP",
         "eq_bun_01",
         "eq_bun_02",
+        "equipo_pExRT6",
+        "equipo_H6AfyV",
+        "equipo_JpLw3E",
+        "equipo_inCLWe",
+        "equipo_8JUb8X",
         "eq_l1_01",
         "eq_sel_01",
         "eq_sel_02",
