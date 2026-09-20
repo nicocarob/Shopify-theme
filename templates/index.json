@@ -178,6 +178,15 @@
             "logo": "shopify://shop_images/Campeonato_Brasileiro_Serie_A_logo__2024__svg.webp"
           }
         },
+        "liga_McTn8a": {
+          "type": "liga",
+          "settings": {
+            "collection_handle": "liga-mx",
+            "liga_name": "Liga MX",
+            "emoji": "🇧🇷",
+            "logo": "shopify://shop_images/MX_logo.png"
+          }
+        },
         "liga_10": {
           "type": "liga",
           "settings": {
@@ -822,6 +831,26 @@
             "logo": "shopify://shop_images/bahia-1-logo-png-transparent.png"
           }
         },
+        "equipo_yCLGMe": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-mx",
+            "collection_handle": "chivas-de-guadalajara",
+            "team_name": "Chivas de Guadalajara",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/cd-guadalajara-logo-footylogos-1200.webp"
+          }
+        },
+        "equipo_EdqGbN": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-mx",
+            "collection_handle": "club-america",
+            "team_name": "Club América",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/club-america-logo-footylogos-1200.webp"
+          }
+        },
         "cw_01": {
           "type": "cortaviento",
           "settings": {
@@ -871,6 +900,7 @@
         "liga_07",
         "liga_08",
         "liga_09",
+        "liga_McTn8a",
         "liga_10",
         "eq_chile_03",
         "eq_chile_01",
@@ -936,6 +966,8 @@
         "equipo_RhXA8z",
         "equipo_peNkiC",
         "equipo_DKjtAj",
+        "equipo_yCLGMe",
+        "equipo_EdqGbN",
         "cw_01",
         "cw_02",
         "cw_03"
