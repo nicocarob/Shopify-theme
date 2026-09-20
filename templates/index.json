@@ -632,6 +632,36 @@
             "logo": "shopify://shop_images/16_710a1d92-6a8b-4518-a4b7-a1857993f40d.png"
           }
         },
+        "equipo_femWrn": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-argentina-1",
+            "collection_handle": "racing",
+            "team_name": "Racing",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Racing_logo14.png"
+          }
+        },
+        "equipo_JtJV8D": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-argentina-1",
+            "collection_handle": "estudiantes",
+            "team_name": "Estudiantes",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Escudo_del_Club_Estudiantes_de_La_Plata.svg"
+          }
+        },
+        "equipo_6VjVTE": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-argentina-1",
+            "collection_handle": "newells-old-boys",
+            "team_name": "Newell's Old Boys",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Newells-old-boys-logo.png"
+          }
+        },
         "eq_bra_01": {
           "type": "equipo",
           "settings": {
@@ -737,6 +767,9 @@
         "eq_sel_04",
         "eq_arg_01",
         "eq_arg_02",
+        "equipo_femWrn",
+        "equipo_JtJV8D",
+        "equipo_6VjVTE",
         "eq_bra_01",
         "cw_01",
         "cw_02",
