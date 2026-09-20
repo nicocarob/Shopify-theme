@@ -672,6 +672,156 @@
             "logo": "shopify://shop_images/Clube_de_Regatas_do_Flamengo_logo_svg.webp"
           }
         },
+        "equipo_rVkJEU": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "santos",
+            "team_name": "Santos",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Santos_logo_svg.webp"
+          }
+        },
+        "equipo_XiLwBG": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "palmeiras",
+            "team_name": "Palmeiras",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Palmeiras_logo_svg.webp"
+          }
+        },
+        "equipo_nQQtmB": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "sao-paulo",
+            "team_name": "Sao Paulo",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Sao_paulo_fc_starslogo.png"
+          }
+        },
+        "equipo_ciVRHP": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "corinthians",
+            "team_name": "Corinthians",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/corinthians-logo-footylogos-1200.webp"
+          }
+        },
+        "equipo_UhUzrY": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "cruzeiro",
+            "team_name": "Cruzeiro",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Logo_Cruzeiro_1996.png"
+          }
+        },
+        "equipo_wGUJNB": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "atletico-mineiro",
+            "team_name": "Atlético Mineiro",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/atletico-mineiro-logo-png_seeklogo-13132.png"
+          }
+        },
+        "equipo_krJtcq": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "internacional",
+            "team_name": "Internacional",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/internacional.3585d508.png"
+          }
+        },
+        "equipo_FGMyzA": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "fluminense",
+            "team_name": "Fluminense",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Fluminense_FC_escudo.png"
+          }
+        },
+        "equipo_93QXfb": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "gremio",
+            "team_name": "Gremio",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Gremio_logo.svg"
+          }
+        },
+        "equipo_GbqrGQ": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "vasco-da-gama",
+            "team_name": "Vasco da Gama",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/vasco-da-gama-logo-footylogos.svg"
+          }
+        },
+        "equipo_4FhK7E": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "botafogo",
+            "team_name": "Botafogo",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Botafogo_de_Futebol_e_Regatas_logo_svg.webp"
+          }
+        },
+        "equipo_kdheNy": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "remo",
+            "team_name": "Remo",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/i.png"
+          }
+        },
+        "equipo_RhXA8z": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "coritiba",
+            "team_name": "Coritiba",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Coritiba_Foot_Ball_Club_logo_svg.webp"
+          }
+        },
+        "equipo_peNkiC": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "chapecoense",
+            "team_name": "Chapecoense",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Simbolo_Chapecoense_sem_estrelas.svg"
+          }
+        },
+        "equipo_DKjtAj": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "bahia",
+            "team_name": "Bahia",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/bahia-1-logo-png-transparent.png"
+          }
+        },
         "cw_01": {
           "type": "cortaviento",
           "settings": {
@@ -771,6 +921,21 @@
         "equipo_JtJV8D",
         "equipo_6VjVTE",
         "eq_bra_01",
+        "equipo_rVkJEU",
+        "equipo_XiLwBG",
+        "equipo_nQQtmB",
+        "equipo_ciVRHP",
+        "equipo_UhUzrY",
+        "equipo_wGUJNB",
+        "equipo_krJtcq",
+        "equipo_FGMyzA",
+        "equipo_93QXfb",
+        "equipo_GbqrGQ",
+        "equipo_4FhK7E",
+        "equipo_kdheNy",
+        "equipo_RhXA8z",
+        "equipo_peNkiC",
+        "equipo_DKjtAj",
         "cw_01",
         "cw_02",
         "cw_03"
