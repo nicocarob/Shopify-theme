@@ -266,6 +266,16 @@
             "logo": "shopify://shop_images/gfg.png"
           }
         },
+        "equipo_rJw6rp": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "real-betis",
+            "team_name": "Real Betis",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Escudo_del_Real_Betis_Balompie.png"
+          }
+        },
         "eq_pl_01": {
           "type": "equipo",
           "settings": {
@@ -490,6 +500,7 @@
         "eq_esp_02",
         "equipo_Yd99NQ",
         "equipo_ab3rdV",
+        "equipo_rJw6rp",
         "eq_pl_01",
         "eq_pl_02",
         "eq_pl_03",
