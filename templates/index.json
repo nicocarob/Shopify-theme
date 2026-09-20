@@ -300,8 +300,8 @@
           "type": "equipo",
           "settings": {
             "liga_handle": "liga-espanola",
-            "collection_handle": "villareal",
-            "team_name": "Villareal",
+            "collection_handle": "villarreal",
+            "team_name": "Villarreal",
             "emoji": "⚽",
             "logo": "shopify://shop_images/villarreal-cf-logo-1.png"
           }
