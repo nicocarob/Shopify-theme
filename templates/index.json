@@ -276,6 +276,66 @@
             "logo": "shopify://shop_images/Escudo_del_Real_Betis_Balompie.png"
           }
         },
+        "equipo_QgzMFE": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "malaga",
+            "team_name": "Málaga",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/malaga-cf-logo-footylogos-1200.webp"
+          }
+        },
+        "equipo_trdaJ6": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "celta-de-vigo",
+            "team_name": "Celta de Vigo",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/rc-celta-vigo-0.png"
+          }
+        },
+        "equipo_Xe4EJy": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "villareal",
+            "team_name": "Villareal",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/villarreal-cf-logo-1.png"
+          }
+        },
+        "equipo_ttwL43": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "deportivo-la-coruna",
+            "team_name": "La Coruña",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/deportivo-la-coruna-logo-png-transparent.png"
+          }
+        },
+        "equipo_ifiBXq": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "espanyol",
+            "team_name": "Espanyol",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/espanyol.7c679962.png"
+          }
+        },
+        "equipo_9LpH8R": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "real-oviedo",
+            "team_name": "Real Oviedo",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/real-oviedo-logo-footylogos-1200.webp"
+          }
+        },
         "eq_pl_01": {
           "type": "equipo",
           "settings": {
@@ -501,6 +561,12 @@
         "equipo_Yd99NQ",
         "equipo_ab3rdV",
         "equipo_rJw6rp",
+        "equipo_QgzMFE",
+        "equipo_trdaJ6",
+        "equipo_Xe4EJy",
+        "equipo_ttwL43",
+        "equipo_ifiBXq",
+        "equipo_9LpH8R",
         "eq_pl_01",
         "eq_pl_02",
         "eq_pl_03",
