@@ -236,16 +236,6 @@
             "logo": "shopify://shop_images/images_3.png"
           }
         },
-        "equipo_Yd99NQ": {
-          "type": "equipo",
-          "settings": {
-            "liga_handle": "liga-espanola",
-            "collection_handle": "atletico-de-madrid",
-            "team_name": "Atlético de Madrid",
-            "emoji": "⚽",
-            "logo": "shopify://shop_images/atletico-madrid-logo-1-1.png"
-          }
-        },
         "eq_esp_02": {
           "type": "equipo",
           "settings": {
@@ -254,6 +244,16 @@
             "team_name": "Real Madrid",
             "emoji": "⚽",
             "logo": "shopify://shop_images/images_4.png"
+          }
+        },
+        "equipo_Yd99NQ": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "atletico-de-madrid",
+            "team_name": "Atlético de Madrid",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/atletico-madrid-logo-1-1.png"
           }
         },
         "eq_pl_01": {
@@ -477,8 +477,8 @@
         "eq_chile_02",
         "equipo_ybnji4",
         "eq_esp_01",
-        "equipo_Yd99NQ",
         "eq_esp_02",
+        "equipo_Yd99NQ",
         "eq_pl_01",
         "eq_pl_02",
         "eq_pl_03",
