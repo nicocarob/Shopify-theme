@@ -530,8 +530,8 @@
           "type": "equipo",
           "settings": {
             "liga_handle": "liga-alemana",
-            "collection_handle": "leipzig",
-            "team_name": "Leipzig",
+            "collection_handle": "rb-leipzig",
+            "team_name": "RB Leipzig",
             "emoji": "⚽",
             "logo": "shopify://shop_images/red-bull-leipzig-logo-png-transparent.png"
           }
@@ -550,7 +550,7 @@
           "type": "equipo",
           "settings": {
             "liga_handle": "liga-alemana",
-            "collection_handle": "frankfurt",
+            "collection_handle": "eintracht-frankfurt",
             "team_name": "Frankfurt",
             "emoji": "⚽",
             "logo": "shopify://shop_images/Eintracht-Frankfurt-logo.png"
