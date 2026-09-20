@@ -187,6 +187,15 @@
             "logo": "shopify://shop_images/MX_logo.png"
           }
         },
+        "liga_hr8erT": {
+          "type": "liga",
+          "settings": {
+            "collection_handle": "liga-portugal",
+            "liga_name": "Liga Portugal",
+            "emoji": "",
+            "logo": "shopify://shop_images/Simbolo_da_Liga_Portuguesa_de_Futebol_Profissional.png"
+          }
+        },
         "liga_10": {
           "type": "liga",
           "settings": {
@@ -851,6 +860,36 @@
             "logo": "shopify://shop_images/club-america-logo-footylogos-1200.webp"
           }
         },
+        "equipo_CFgf7a": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-portugal",
+            "collection_handle": "benfica",
+            "team_name": "Benfica",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/benfica.373a95ac.png"
+          }
+        },
+        "equipo_NAeBYJ": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-portugal",
+            "collection_handle": "sporting-lisboa",
+            "team_name": "Sporting Lisboa",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/2250.png"
+          }
+        },
+        "equipo_DhUcjm": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-portugal",
+            "collection_handle": "porto",
+            "team_name": "Porto",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/FC_Porto_svg.webp"
+          }
+        },
         "cw_01": {
           "type": "cortaviento",
           "settings": {
@@ -901,6 +940,7 @@
         "liga_08",
         "liga_09",
         "liga_McTn8a",
+        "liga_hr8erT",
         "liga_10",
         "eq_chile_03",
         "eq_chile_01",
@@ -968,6 +1008,9 @@
         "equipo_DKjtAj",
         "equipo_yCLGMe",
         "equipo_EdqGbN",
+        "equipo_CFgf7a",
+        "equipo_NAeBYJ",
+        "equipo_DhUcjm",
         "cw_01",
         "cw_02",
         "cw_03"
