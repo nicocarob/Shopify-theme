@@ -456,6 +456,46 @@
             "logo": "shopify://shop_images/Juventus_FC_2017_logo.png"
           }
         },
+        "equipo_CDaLem": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "serie-a",
+            "collection_handle": "napoli",
+            "team_name": "Napoli",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/SSC_Napoli_svg.webp"
+          }
+        },
+        "equipo_zyCMhM": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "serie-a",
+            "collection_handle": "roma",
+            "team_name": "Roma",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/AS_Roma_s_logo_from_2017.png"
+          }
+        },
+        "equipo_xGMD6N": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "serie-a",
+            "collection_handle": "lazio",
+            "team_name": "Lazio",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Lazio-Logo.png"
+          }
+        },
+        "equipo_yQebaP": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "serie-a",
+            "collection_handle": "parma",
+            "team_name": "Parma",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Logo_Parma_Calcio_1913__adozione_2016.png"
+          }
+        },
         "eq_bun_01": {
           "type": "equipo",
           "settings": {
@@ -629,6 +669,10 @@
         "eq_sa_01",
         "eq_sa_02",
         "eq_sa_03",
+        "equipo_CDaLem",
+        "equipo_zyCMhM",
+        "equipo_xGMD6N",
+        "equipo_yQebaP",
         "eq_bun_01",
         "eq_bun_02",
         "eq_l1_01",
