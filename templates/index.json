@@ -470,8 +470,8 @@
           "type": "equipo",
           "settings": {
             "liga_handle": "serie-a",
-            "collection_handle": "roma",
-            "team_name": "Roma",
+            "collection_handle": "as-roma",
+            "team_name": "AS Roma",
             "emoji": "⚽",
             "logo": "shopify://shop_images/AS_Roma_s_logo_from_2017.png"
           }
