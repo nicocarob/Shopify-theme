@@ -178,6 +178,24 @@
             "logo": "shopify://shop_images/Campeonato_Brasileiro_Serie_A_logo__2024__svg.webp"
           }
         },
+        "liga_McTn8a": {
+          "type": "liga",
+          "settings": {
+            "collection_handle": "liga-mx",
+            "liga_name": "Liga MX",
+            "emoji": "🇧🇷",
+            "logo": "shopify://shop_images/MX_logo.png"
+          }
+        },
+        "liga_hr8erT": {
+          "type": "liga",
+          "settings": {
+            "collection_handle": "liga-portugal",
+            "liga_name": "Liga Portugal",
+            "emoji": "",
+            "logo": "shopify://shop_images/Simbolo_da_Liga_Portuguesa_de_Futebol_Profissional.png"
+          }
+        },
         "liga_10": {
           "type": "liga",
           "settings": {
@@ -246,6 +264,96 @@
             "logo": "shopify://shop_images/images_4.png"
           }
         },
+        "equipo_Yd99NQ": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "atletico-de-madrid",
+            "team_name": "Atlético de Madrid",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/atletico-madrid-logo-1-1.png"
+          }
+        },
+        "equipo_ab3rdV": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "sevilla",
+            "team_name": "Sevilla",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/gfg.png"
+          }
+        },
+        "equipo_rJw6rp": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "real-betis",
+            "team_name": "Real Betis",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Escudo_del_Real_Betis_Balompie.png"
+          }
+        },
+        "equipo_QgzMFE": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "malaga",
+            "team_name": "Málaga",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/malaga-cf-logo-footylogos-1200.webp"
+          }
+        },
+        "equipo_trdaJ6": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "celta-de-vigo",
+            "team_name": "Celta de Vigo",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/rc-celta-vigo-0.png"
+          }
+        },
+        "equipo_Xe4EJy": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "villarreal",
+            "team_name": "Villarreal",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/villarreal-cf-logo-1.png"
+          }
+        },
+        "equipo_ttwL43": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "deportivo-la-coruna",
+            "team_name": "La Coruña",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/deportivo-la-coruna-logo-png-transparent.png"
+          }
+        },
+        "equipo_ifiBXq": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "espanyol",
+            "team_name": "Espanyol",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/espanyol.7c679962.png"
+          }
+        },
+        "equipo_9LpH8R": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "real-oviedo",
+            "team_name": "Real Oviedo",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/real-oviedo-logo-footylogos-1200.webp"
+          }
+        },
         "eq_pl_01": {
           "type": "equipo",
           "settings": {
@@ -254,6 +362,16 @@
             "team_name": "Arsenal",
             "emoji": "⚽",
             "logo": "shopify://shop_images/images_5.png"
+          }
+        },
+        "equipo_XtJKwQ": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "manchester-city",
+            "team_name": "Manchester City",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/manchester-city-fc-1.svg"
           }
         },
         "eq_pl_02": {
@@ -286,6 +404,46 @@
             "logo": "shopify://shop_images/363.png"
           }
         },
+        "equipo_XzhVaN": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "everton",
+            "team_name": "Everton",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Everton_FC_logo_svg.webp"
+          }
+        },
+        "equipo_GXHmXt": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "leeds",
+            "team_name": "Leeds",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/leeds-united-logo-footylogos-1200.webp"
+          }
+        },
+        "equipo_TpEKRt": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "tottenham",
+            "team_name": "Tottenham",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Tottenham-Hotspur-Logo.png"
+          }
+        },
+        "equipo_MWRix6": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "aston-villa",
+            "team_name": "Aston Villa",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/aston_villa_fc-logo_brandlogos.net_9duqy.png"
+          }
+        },
         "eq_sa_01": {
           "type": "equipo",
           "settings": {
@@ -316,6 +474,46 @@
             "logo": "shopify://shop_images/Juventus_FC_2017_logo.png"
           }
         },
+        "equipo_CDaLem": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "serie-a",
+            "collection_handle": "napoli",
+            "team_name": "Napoli",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/SSC_Napoli_svg.webp"
+          }
+        },
+        "equipo_zyCMhM": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "serie-a",
+            "collection_handle": "as-roma",
+            "team_name": "AS Roma",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/AS_Roma_s_logo_from_2017.png"
+          }
+        },
+        "equipo_xGMD6N": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "serie-a",
+            "collection_handle": "lazio",
+            "team_name": "Lazio",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Lazio-Logo.png"
+          }
+        },
+        "equipo_yQebaP": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "serie-a",
+            "collection_handle": "parma",
+            "team_name": "Parma",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Logo_Parma_Calcio_1913__adozione_2016.png"
+          }
+        },
         "eq_bun_01": {
           "type": "equipo",
           "settings": {
@@ -334,6 +532,56 @@
             "team_name": "Borussia Dortmund",
             "emoji": "⚽",
             "logo": "shopify://shop_images/Borussia_Dortmund_logo_svg.webp"
+          }
+        },
+        "equipo_pExRT6": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-alemana",
+            "collection_handle": "st-pauli",
+            "team_name": "St. Pauli",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Fc_st_pauli_logo_svg.webp"
+          }
+        },
+        "equipo_H6AfyV": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-alemana",
+            "collection_handle": "rb-leipzig",
+            "team_name": "RB Leipzig",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/red-bull-leipzig-logo-png-transparent.png"
+          }
+        },
+        "equipo_JpLw3E": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-alemana",
+            "collection_handle": "schalke-04",
+            "team_name": "Schalke 04",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/FC_Schalke_04_Logo.png"
+          }
+        },
+        "equipo_inCLWe": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-alemana",
+            "collection_handle": "eintracht-frankfurt",
+            "team_name": "Frankfurt",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Eintracht-Frankfurt-logo.png"
+          }
+        },
+        "equipo_8JUb8X": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-alemana",
+            "collection_handle": "hamburgo-sv",
+            "team_name": "Hamburgo SV",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Hamburger_SV_logo_svg.webp"
           }
         },
         "eq_l1_01": {
@@ -402,6 +650,36 @@
             "logo": "shopify://shop_images/16_710a1d92-6a8b-4518-a4b7-a1857993f40d.png"
           }
         },
+        "equipo_femWrn": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-argentina-1",
+            "collection_handle": "racing",
+            "team_name": "Racing",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Racing_logo14.png"
+          }
+        },
+        "equipo_JtJV8D": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-argentina-1",
+            "collection_handle": "estudiantes",
+            "team_name": "Estudiantes",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Escudo_del_Club_Estudiantes_de_La_Plata.svg"
+          }
+        },
+        "equipo_6VjVTE": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-argentina-1",
+            "collection_handle": "newells-old-boys",
+            "team_name": "Newell's Old Boys",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Newells-old-boys-logo.png"
+          }
+        },
         "eq_bra_01": {
           "type": "equipo",
           "settings": {
@@ -410,6 +688,206 @@
             "team_name": "Flamengo",
             "emoji": "⚽",
             "logo": "shopify://shop_images/Clube_de_Regatas_do_Flamengo_logo_svg.webp"
+          }
+        },
+        "equipo_rVkJEU": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "santos",
+            "team_name": "Santos",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Santos_logo_svg.webp"
+          }
+        },
+        "equipo_XiLwBG": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "palmeiras",
+            "team_name": "Palmeiras",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Palmeiras_logo_svg.webp"
+          }
+        },
+        "equipo_nQQtmB": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "sao-paulo",
+            "team_name": "Sao Paulo",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Sao_paulo_fc_starslogo.png"
+          }
+        },
+        "equipo_ciVRHP": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "corinthians",
+            "team_name": "Corinthians",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/corinthians-logo-footylogos-1200.webp"
+          }
+        },
+        "equipo_UhUzrY": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "cruzeiro",
+            "team_name": "Cruzeiro",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Logo_Cruzeiro_1996.png"
+          }
+        },
+        "equipo_wGUJNB": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "atletico-mineiro",
+            "team_name": "Atlético Mineiro",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/atletico-mineiro-logo-png_seeklogo-13132.png"
+          }
+        },
+        "equipo_krJtcq": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "internacional",
+            "team_name": "Internacional",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/internacional.3585d508.png"
+          }
+        },
+        "equipo_FGMyzA": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "fluminense",
+            "team_name": "Fluminense",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Fluminense_FC_escudo.png"
+          }
+        },
+        "equipo_93QXfb": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "gremio",
+            "team_name": "Gremio",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Gremio_logo.svg"
+          }
+        },
+        "equipo_GbqrGQ": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "vasco-da-gama",
+            "team_name": "Vasco da Gama",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/vasco-da-gama-logo-footylogos.svg"
+          }
+        },
+        "equipo_4FhK7E": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "botafogo",
+            "team_name": "Botafogo",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Botafogo_de_Futebol_e_Regatas_logo_svg.webp"
+          }
+        },
+        "equipo_kdheNy": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "remo",
+            "team_name": "Remo",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/i.png"
+          }
+        },
+        "equipo_RhXA8z": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "coritiba",
+            "team_name": "Coritiba",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Coritiba_Foot_Ball_Club_logo_svg.webp"
+          }
+        },
+        "equipo_peNkiC": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "chapecoense",
+            "team_name": "Chapecoense",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Simbolo_Chapecoense_sem_estrelas.svg"
+          }
+        },
+        "equipo_DKjtAj": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-brasilena",
+            "collection_handle": "bahia",
+            "team_name": "Bahia",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/bahia-1-logo-png-transparent.png"
+          }
+        },
+        "equipo_yCLGMe": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-mx",
+            "collection_handle": "chivas-de-guadalajara",
+            "team_name": "Chivas de Guadalajara",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/cd-guadalajara-logo-footylogos-1200.webp"
+          }
+        },
+        "equipo_EdqGbN": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-mx",
+            "collection_handle": "club-america",
+            "team_name": "Club América",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/club-america-logo-footylogos-1200.webp"
+          }
+        },
+        "equipo_CFgf7a": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-portugal",
+            "collection_handle": "benfica",
+            "team_name": "Benfica",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/benfica.373a95ac.png"
+          }
+        },
+        "equipo_NAeBYJ": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-portugal",
+            "collection_handle": "sporting-lisboa",
+            "team_name": "Sporting Lisboa",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/2250.png"
+          }
+        },
+        "equipo_DhUcjm": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-portugal",
+            "collection_handle": "porto",
+            "team_name": "Porto",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/FC_Porto_svg.webp"
           }
         },
         "cw_01": {
@@ -461,6 +939,8 @@
         "liga_07",
         "liga_08",
         "liga_09",
+        "liga_McTn8a",
+        "liga_hr8erT",
         "liga_10",
         "eq_chile_03",
         "eq_chile_01",
@@ -468,15 +948,38 @@
         "equipo_ybnji4",
         "eq_esp_01",
         "eq_esp_02",
+        "equipo_Yd99NQ",
+        "equipo_ab3rdV",
+        "equipo_rJw6rp",
+        "equipo_QgzMFE",
+        "equipo_trdaJ6",
+        "equipo_Xe4EJy",
+        "equipo_ttwL43",
+        "equipo_ifiBXq",
+        "equipo_9LpH8R",
         "eq_pl_01",
+        "equipo_XtJKwQ",
         "eq_pl_02",
         "eq_pl_03",
         "eq_pl_04",
+        "equipo_XzhVaN",
+        "equipo_GXHmXt",
+        "equipo_TpEKRt",
+        "equipo_MWRix6",
         "eq_sa_01",
         "eq_sa_02",
         "eq_sa_03",
+        "equipo_CDaLem",
+        "equipo_zyCMhM",
+        "equipo_xGMD6N",
+        "equipo_yQebaP",
         "eq_bun_01",
         "eq_bun_02",
+        "equipo_pExRT6",
+        "equipo_H6AfyV",
+        "equipo_JpLw3E",
+        "equipo_inCLWe",
+        "equipo_8JUb8X",
         "eq_l1_01",
         "eq_sel_01",
         "eq_sel_02",
@@ -484,7 +987,30 @@
         "eq_sel_04",
         "eq_arg_01",
         "eq_arg_02",
+        "equipo_femWrn",
+        "equipo_JtJV8D",
+        "equipo_6VjVTE",
         "eq_bra_01",
+        "equipo_rVkJEU",
+        "equipo_XiLwBG",
+        "equipo_nQQtmB",
+        "equipo_ciVRHP",
+        "equipo_UhUzrY",
+        "equipo_wGUJNB",
+        "equipo_krJtcq",
+        "equipo_FGMyzA",
+        "equipo_93QXfb",
+        "equipo_GbqrGQ",
+        "equipo_4FhK7E",
+        "equipo_kdheNy",
+        "equipo_RhXA8z",
+        "equipo_peNkiC",
+        "equipo_DKjtAj",
+        "equipo_yCLGMe",
+        "equipo_EdqGbN",
+        "equipo_CFgf7a",
+        "equipo_NAeBYJ",
+        "equipo_DhUcjm",
         "cw_01",
         "cw_02",
         "cw_03"
@@ -513,7 +1039,7 @@
         "testi_eyebrow": "Lo que dicen de nosotros",
         "testi_title": "NUESTROS CLIENTES NOS RECOMIENDAN",
         "testi_subtitle": "Más de 10 años vendiendo a hinchas de todo Chile",
-        "mv_bg_image": "shopify://shop_images/krerr.png",
+        "mv_bg_image": "shopify://shop_images/mn_m.png",
         "mv_bg_position": "50% center",
         "mv_eyebrow": "El Top de la Casa",
         "mv_title": "MÁS VENDIDOS",
