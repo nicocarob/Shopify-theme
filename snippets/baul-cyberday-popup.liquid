@@ -1,5 +1,5 @@
 {% comment %}
-  Aviso Cyber Day. Se abre en cada carga de página y se puede cerrar.
+  Aviso Cyber Day. Se abre una vez por sesión y se puede cerrar.
   Activo del lunes 5 al miércoles 7 de octubre de 2026, hora de Chile.
 {% endcomment %}
 
@@ -89,6 +89,11 @@
     }).format(new Date());
 
     if (hoy < '2026-10-05' || hoy > '2026-10-07') return;
+
+    try {
+      if (sessionStorage.getItem('cyberday-aviso-visto')) return;
+      sessionStorage.setItem('cyberday-aviso-visto', '1');
+    } catch (e) {}
 
     var img = root.querySelector('img');
     var closeBtn = root.querySelector('[data-cyberday-close]');
