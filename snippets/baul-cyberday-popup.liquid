@@ -1,0 +1,120 @@
+{% comment %}
+  Aviso Cyber Day. Se abre en cada carga de página y se puede cerrar.
+  Activo del lunes 5 al miércoles 7 de octubre de 2026, hora de Chile.
+{% endcomment %}
+
+<div
+  id="cyberday-aviso"
+  class="cyberday-aviso"
+  hidden
+  role="dialog"
+  aria-modal="true"
+  aria-label="Cyber Day en La Cábala"
+  data-src="{{ 'cyberday-cabala.jpg' | asset_url }}"
+>
+  <div class="cyberday-aviso__dialog">
+    <button type="button" class="cyberday-aviso__close" data-cyberday-close aria-label="Cerrar aviso">
+      <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" focusable="false">
+        <path d="M1 1l12 12M13 1L1 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <img alt="Cyber Day en La Cábala. $3.000 de descuento en cualquier pedido con el código CYBER2026." width="682" height="1024">
+  </div>
+</div>
+
+<style>
+  .cyberday-aviso {
+    position: fixed;
+    inset: 0;
+    z-index: 100010;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 16px;
+    background: rgba(0, 0, 0, 0.82);
+    box-sizing: border-box;
+  }
+  .cyberday-aviso[hidden] { display: none !important; }
+  body.cyberday-open { overflow: hidden; }
+  .cyberday-aviso__dialog {
+    position: relative;
+    max-width: min(440px, 100%);
+    line-height: 0;
+  }
+  .cyberday-aviso__dialog img {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: calc(100dvh - 40px);
+    border-radius: 14px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+  }
+  .cyberday-aviso__close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.72);
+    color: #fff;
+    cursor: pointer;
+    z-index: 1;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  }
+  .cyberday-aviso__close:hover,
+  .cyberday-aviso__close:focus-visible {
+    background: #0b3dff;
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+</style>
+
+<script>
+  (function () {
+    var root = document.getElementById('cyberday-aviso');
+    if (!root) return;
+
+    var hoy = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'America/Santiago',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).format(new Date());
+
+    if (hoy < '2026-10-05' || hoy > '2026-10-07') return;
+
+    var img = root.querySelector('img');
+    var closeBtn = root.querySelector('[data-cyberday-close]');
+
+    function cerrar() {
+      root.hidden = true;
+      document.body.classList.remove('cyberday-open');
+      document.removeEventListener('keydown', onKey);
+    }
+
+    function onKey(event) {
+      if (event.key === 'Escape') cerrar();
+    }
+
+    closeBtn.addEventListener('click', cerrar);
+    root.addEventListener('click', function (event) {
+      if (event.target === root) cerrar();
+    });
+
+    img.addEventListener('load', function () {
+      root.hidden = false;
+      document.body.classList.add('cyberday-open');
+      document.addEventListener('keydown', onKey);
+      closeBtn.focus();
+    });
+
+    img.src = root.getAttribute('data-src');
+  })();
+</script>
