@@ -314,6 +314,36 @@
             "logo": "shopify://shop_images/rc-celta-vigo-0.png"
           }
         },
+        "equipo_xgG78K": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "athletic-club",
+            "team_name": "Athletic Club",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/athletic-club.deef9dbe.png"
+          }
+        },
+        "equipo_hgpPCy": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "real-sociedad",
+            "team_name": "Real Sociedad",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/89.png"
+          }
+        },
+        "equipo_bcyGqR": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "valencia",
+            "team_name": "Valencia",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Valenciacf_svg.webp"
+          }
+        },
         "equipo_Xe4EJy": {
           "type": "equipo",
           "settings": {
@@ -332,6 +362,66 @@
             "team_name": "La Coruña",
             "emoji": "⚽",
             "logo": "shopify://shop_images/deportivo-la-coruna-logo-png-transparent.png"
+          }
+        },
+        "equipo_tHJKW3": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "rayo-vallecano",
+            "team_name": "Rayo Vallecano",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Rayo_Vallecano_logo.svg"
+          }
+        },
+        "equipo_3YV7E6": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "elche",
+            "team_name": "Elche",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Escudo_Elche_CF.png"
+          }
+        },
+        "equipo_Pea39H": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "levante",
+            "team_name": "Levante",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Levante_Union_Deportiva__S.A.D._logo.svg"
+          }
+        },
+        "equipo_MpMJwm": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "Osasuna",
+            "team_name": "Osasuna",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/CA_Osasuna_2024_crest.svg"
+          }
+        },
+        "equipo_PQMeU6": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "racing-santander",
+            "team_name": "Racing de Santander",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Racing_de_Santander_logo_svg.webp"
+          }
+        },
+        "equipo_BeNn77": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "alaves",
+            "team_name": "Alavés",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Deportivo_Alaves_logo__2020__svg.webp"
           }
         },
         "equipo_ifiBXq": {
@@ -1033,8 +1123,17 @@
         "equipo_rJw6rp",
         "equipo_QgzMFE",
         "equipo_trdaJ6",
+        "equipo_xgG78K",
+        "equipo_hgpPCy",
+        "equipo_bcyGqR",
         "equipo_Xe4EJy",
         "equipo_ttwL43",
+        "equipo_tHJKW3",
+        "equipo_3YV7E6",
+        "equipo_Pea39H",
+        "equipo_MpMJwm",
+        "equipo_PQMeU6",
+        "equipo_BeNn77",
         "equipo_ifiBXq",
         "equipo_9LpH8R",
         "eq_pl_01",
