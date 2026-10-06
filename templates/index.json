@@ -394,6 +394,16 @@
             "logo": "shopify://shop_images/escudo-liverpool.png"
           }
         },
+        "equipo_TpEKRt": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "tottenham",
+            "team_name": "Tottenham",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Tottenham-Hotspur-Logo.png"
+          }
+        },
         "eq_pl_04": {
           "type": "equipo",
           "settings": {
@@ -414,6 +424,46 @@
             "logo": "shopify://shop_images/Everton_FC_logo_svg.webp"
           }
         },
+        "equipo_MWRix6": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "aston-villa",
+            "team_name": "Aston Villa",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/aston_villa_fc-logo_brandlogos.net_9duqy.png"
+          }
+        },
+        "equipo_jtnbjH": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "newcastle",
+            "team_name": "Newcastle United",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/i_1_fb239320-f3d7-4d72-8599-659c5134ece2.png"
+          }
+        },
+        "equipo_cYxjzJ": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "nottingham-forest",
+            "team_name": "Nottingham Forest",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Nottingham_Forest_F_C__logo_svg.webp"
+          }
+        },
+        "equipo_QfFAwi": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "crystal-palace",
+            "team_name": "Crystal Palace",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Crystal_Palace_FC_logo__2022.svg"
+          }
+        },
         "equipo_GXHmXt": {
           "type": "equipo",
           "settings": {
@@ -424,24 +474,34 @@
             "logo": "shopify://shop_images/leeds-united-logo-footylogos-1200.webp"
           }
         },
-        "equipo_TpEKRt": {
+        "equipo_3EmVxW": {
           "type": "equipo",
           "settings": {
             "liga_handle": "premier-league",
-            "collection_handle": "tottenham",
-            "team_name": "Tottenham",
+            "collection_handle": "fulham",
+            "team_name": "Fulham",
             "emoji": "⚽",
-            "logo": "shopify://shop_images/Tottenham-Hotspur-Logo.png"
+            "logo": "shopify://shop_images/Fulham_FC__shield.svg"
           }
         },
-        "equipo_MWRix6": {
+        "equipo_Qwhwx6": {
           "type": "equipo",
           "settings": {
             "liga_handle": "premier-league",
-            "collection_handle": "aston-villa",
-            "team_name": "Aston Villa",
+            "collection_handle": "brighton",
+            "team_name": "Brighton",
             "emoji": "⚽",
-            "logo": "shopify://shop_images/aston_villa_fc-logo_brandlogos.net_9duqy.png"
+            "logo": "shopify://shop_images/19976.png"
+          }
+        },
+        "equipo_fQ9hiJ": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "sunderland",
+            "team_name": "Sunderland",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Logo_Sunderland_svg.webp"
           }
         },
         "eq_sa_01": {
@@ -961,11 +1021,17 @@
         "equipo_XtJKwQ",
         "eq_pl_02",
         "eq_pl_03",
+        "equipo_TpEKRt",
         "eq_pl_04",
         "equipo_XzhVaN",
-        "equipo_GXHmXt",
-        "equipo_TpEKRt",
         "equipo_MWRix6",
+        "equipo_jtnbjH",
+        "equipo_cYxjzJ",
+        "equipo_QfFAwi",
+        "equipo_GXHmXt",
+        "equipo_3EmVxW",
+        "equipo_Qwhwx6",
+        "equipo_fQ9hiJ",
         "eq_sa_01",
         "eq_sa_02",
         "eq_sa_03",
