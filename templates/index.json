@@ -498,10 +498,30 @@
           "type": "equipo",
           "settings": {
             "liga_handle": "premier-league",
-            "collection_handle": "sunderland",
-            "team_name": "Sunderland",
+            "collection_handle": "coventry-city",
+            "team_name": "Coventry City",
             "emoji": "⚽",
-            "logo": "shopify://shop_images/Logo_Sunderland_svg.webp"
+            "logo": "shopify://shop_images/Coventry_City_FC.webp"
+          }
+        },
+        "equipo_afdgcw": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "brentford",
+            "team_name": "Brentford",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Brentford_FC_crest.svg"
+          }
+        },
+        "equipo_DEGpit": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "Bournemouth",
+            "team_name": "Bournemouth",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/AFC_Bournemouth__2013__svg.webp"
           }
         },
         "eq_sa_01": {
@@ -1032,6 +1052,8 @@
         "equipo_3EmVxW",
         "equipo_Qwhwx6",
         "equipo_fQ9hiJ",
+        "equipo_afdgcw",
+        "equipo_DEGpit",
         "eq_sa_01",
         "eq_sa_02",
         "eq_sa_03",
