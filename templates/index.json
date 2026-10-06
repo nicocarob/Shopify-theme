@@ -388,7 +388,7 @@
           "type": "equipo",
           "settings": {
             "liga_handle": "liga-espanola",
-            "collection_handle": "levante",
+            "collection_handle": "levante-ud",
             "team_name": "Levante",
             "emoji": "⚽",
             "logo": "shopify://shop_images/Levante_Union_Deportiva__S.A.D._logo.svg"
