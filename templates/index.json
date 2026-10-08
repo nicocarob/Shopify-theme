@@ -314,6 +314,36 @@
             "logo": "shopify://shop_images/rc-celta-vigo-0.png"
           }
         },
+        "equipo_xgG78K": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "athletic-club",
+            "team_name": "Athletic Club",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/athletic-club.deef9dbe.png"
+          }
+        },
+        "equipo_hgpPCy": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "real-sociedad",
+            "team_name": "Real Sociedad",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/89.png"
+          }
+        },
+        "equipo_bcyGqR": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "valencia",
+            "team_name": "Valencia",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Valenciacf_svg.webp"
+          }
+        },
         "equipo_Xe4EJy": {
           "type": "equipo",
           "settings": {
@@ -332,6 +362,66 @@
             "team_name": "La Coruña",
             "emoji": "⚽",
             "logo": "shopify://shop_images/deportivo-la-coruna-logo-png-transparent.png"
+          }
+        },
+        "equipo_tHJKW3": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "rayo-vallecano",
+            "team_name": "Rayo Vallecano",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Rayo_Vallecano_logo.svg"
+          }
+        },
+        "equipo_3YV7E6": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "elche",
+            "team_name": "Elche",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Escudo_Elche_CF.png"
+          }
+        },
+        "equipo_Pea39H": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "levante-ud",
+            "team_name": "Levante",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Levante_Union_Deportiva__S.A.D._logo.svg"
+          }
+        },
+        "equipo_MpMJwm": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "Osasuna",
+            "team_name": "Osasuna",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/CA_Osasuna_2024_crest.svg"
+          }
+        },
+        "equipo_PQMeU6": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "racing-santander",
+            "team_name": "Racing de Santander",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Racing_de_Santander_logo_svg.webp"
+          }
+        },
+        "equipo_BeNn77": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "liga-espanola",
+            "collection_handle": "alaves",
+            "team_name": "Alavés",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Deportivo_Alaves_logo__2020__svg.webp"
           }
         },
         "equipo_ifiBXq": {
@@ -394,6 +484,16 @@
             "logo": "shopify://shop_images/escudo-liverpool.png"
           }
         },
+        "equipo_TpEKRt": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "tottenham",
+            "team_name": "Tottenham",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Tottenham-Hotspur-Logo.png"
+          }
+        },
         "eq_pl_04": {
           "type": "equipo",
           "settings": {
@@ -414,6 +514,46 @@
             "logo": "shopify://shop_images/Everton_FC_logo_svg.webp"
           }
         },
+        "equipo_MWRix6": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "aston-villa",
+            "team_name": "Aston Villa",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/aston_villa_fc-logo_brandlogos.net_9duqy.png"
+          }
+        },
+        "equipo_jtnbjH": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "newcastle",
+            "team_name": "Newcastle United",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/i_1_fb239320-f3d7-4d72-8599-659c5134ece2.png"
+          }
+        },
+        "equipo_cYxjzJ": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "nottingham-forest",
+            "team_name": "Nottingham Forest",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Nottingham_Forest_F_C__logo_svg.webp"
+          }
+        },
+        "equipo_QfFAwi": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "crystal-palace",
+            "team_name": "Crystal Palace",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Crystal_Palace_FC_logo__2022.svg"
+          }
+        },
         "equipo_GXHmXt": {
           "type": "equipo",
           "settings": {
@@ -424,24 +564,54 @@
             "logo": "shopify://shop_images/leeds-united-logo-footylogos-1200.webp"
           }
         },
-        "equipo_TpEKRt": {
+        "equipo_3EmVxW": {
           "type": "equipo",
           "settings": {
             "liga_handle": "premier-league",
-            "collection_handle": "tottenham",
-            "team_name": "Tottenham",
+            "collection_handle": "fulham",
+            "team_name": "Fulham",
             "emoji": "⚽",
-            "logo": "shopify://shop_images/Tottenham-Hotspur-Logo.png"
+            "logo": "shopify://shop_images/Fulham_FC__shield.svg"
           }
         },
-        "equipo_MWRix6": {
+        "equipo_Qwhwx6": {
           "type": "equipo",
           "settings": {
             "liga_handle": "premier-league",
-            "collection_handle": "aston-villa",
-            "team_name": "Aston Villa",
+            "collection_handle": "brighton",
+            "team_name": "Brighton",
             "emoji": "⚽",
-            "logo": "shopify://shop_images/aston_villa_fc-logo_brandlogos.net_9duqy.png"
+            "logo": "shopify://shop_images/19976.png"
+          }
+        },
+        "equipo_fQ9hiJ": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "coventry-city",
+            "team_name": "Coventry City",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Coventry_City_FC.webp"
+          }
+        },
+        "equipo_afdgcw": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "brentford",
+            "team_name": "Brentford",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/Brentford_FC_crest.svg"
+          }
+        },
+        "equipo_DEGpit": {
+          "type": "equipo",
+          "settings": {
+            "liga_handle": "premier-league",
+            "collection_handle": "Bournemouth",
+            "team_name": "Bournemouth",
+            "emoji": "⚽",
+            "logo": "shopify://shop_images/AFC_Bournemouth__2013__svg.webp"
           }
         },
         "eq_sa_01": {
@@ -953,19 +1123,36 @@
         "equipo_rJw6rp",
         "equipo_QgzMFE",
         "equipo_trdaJ6",
+        "equipo_xgG78K",
+        "equipo_hgpPCy",
+        "equipo_bcyGqR",
         "equipo_Xe4EJy",
         "equipo_ttwL43",
+        "equipo_tHJKW3",
+        "equipo_3YV7E6",
+        "equipo_Pea39H",
+        "equipo_MpMJwm",
+        "equipo_PQMeU6",
+        "equipo_BeNn77",
         "equipo_ifiBXq",
         "equipo_9LpH8R",
         "eq_pl_01",
         "equipo_XtJKwQ",
         "eq_pl_02",
         "eq_pl_03",
+        "equipo_TpEKRt",
         "eq_pl_04",
         "equipo_XzhVaN",
-        "equipo_GXHmXt",
-        "equipo_TpEKRt",
         "equipo_MWRix6",
+        "equipo_jtnbjH",
+        "equipo_cYxjzJ",
+        "equipo_QfFAwi",
+        "equipo_GXHmXt",
+        "equipo_3EmVxW",
+        "equipo_Qwhwx6",
+        "equipo_fQ9hiJ",
+        "equipo_afdgcw",
+        "equipo_DEGpit",
         "eq_sa_01",
         "eq_sa_02",
         "eq_sa_03",
