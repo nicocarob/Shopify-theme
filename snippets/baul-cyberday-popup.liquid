@@ -1,6 +1,6 @@
 {% comment %}
   Aviso Cyber Day. Se abre una vez por sesión y se puede cerrar.
-  Activo del lunes 5 al miércoles 7 de octubre de 2026, hora de Chile.
+  Activo toda la semana, del lunes 5 al domingo 11 de octubre de 2026, hora de Chile.
 {% endcomment %}
 
 <div
@@ -10,7 +10,7 @@
   role="dialog"
   aria-modal="true"
   aria-label="Cyber Day en La Cábala"
-  data-src="{{ 'cyberday-cabala.jpg' | asset_url }}"
+  data-src="{{ 'cyberday-cabala-semana.jpg' | asset_url }}"
 >
   <div class="cyberday-aviso__dialog">
     <button type="button" class="cyberday-aviso__close" data-cyberday-close aria-label="Cerrar aviso">
@@ -18,7 +18,7 @@
         <path d="M1 1l12 12M13 1L1 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
       </svg>
     </button>
-    <img alt="Cyber Day en La Cábala. $3.000 de descuento en cualquier pedido con el código CYBER2026." width="682" height="1024">
+    <img alt="Cyber Day en La Cábala, extendido toda la semana. $1.500 de descuento en cualquier pedido con el código CYBER2026." width="682" height="1024">
   </div>
 </div>
 
@@ -88,11 +88,11 @@
       day: '2-digit'
     }).format(new Date());
 
-    if (hoy < '2026-10-05' || hoy > '2026-10-07') return;
+    if (hoy < '2026-10-05' || hoy > '2026-10-11') return;
 
     try {
-      if (sessionStorage.getItem('cyberday-aviso-visto')) return;
-      sessionStorage.setItem('cyberday-aviso-visto', '1');
+      if (sessionStorage.getItem('cyberday-aviso-semana')) return;
+      sessionStorage.setItem('cyberday-aviso-semana', '1');
     } catch (e) {}
 
     var img = root.querySelector('img');
