@@ -132,6 +132,11 @@
       var cfg = CFG.entregaEstimada;
       if (!cfg || entregado) return null;
 
+      var esperaAduana = textoEsperaRevisionAduana(eventos);
+      if (esperaAduana) {
+        return { texto: esperaAduana, atrasado: true };
+      }
+
       var pivote = fechaPivoteEstimado(eventos);
       if (!pivote || !pivote.fecha) return null;
 
@@ -162,6 +167,25 @@
         1. Si existe "Customs Clearance Success..." → desde ahi, 3-4 dias
         2. Si no, desde Acceptance → 9-16 dias
     */
+    function textoEsperaRevisionAduana(eventos) {
+      var cfg = (CFG.entregaEstimada || {}).enRevisionAduana;
+      if (!cfg || !cfg.desde) return '';
+
+      var desde = String(cfg.desde).toLowerCase();
+      var hasta = String(cfg.hasta || 'customs clearance success').toLowerCase();
+      var hayInspeccion = false;
+      var hayLiberacion = false;
+
+      for (var i = 0; i < eventos.length; i++) {
+        var original = String(eventos[i].original || '').toLowerCase();
+        if (original.indexOf(hasta) !== -1) hayLiberacion = true;
+        if (original.indexOf(desde) !== -1) hayInspeccion = true;
+      }
+
+      if (hayInspeccion && !hayLiberacion) return cfg.texto || '';
+      return '';
+    }
+
     function fechaPivoteEstimado(eventos) {
       var cfg = CFG.entregaEstimada || {};
       var post = cfg.despuesDeAduana;

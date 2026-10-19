@@ -171,6 +171,15 @@ window.SEGUIMIENTO_CONFIG = {
     atrasado:
       'El estimado de 9 a 16 dias ya se cumplio. Si todavia no te llega, escribenos y lo revisamos.',
 
+    // Si el pedido esta en "Customs Clearance Inspection", no se
+    // muestra el estimado vencido de 9 a 16 dias. Aduana puede
+    // tardar semanas y esa espera no es un retraso del envio.
+    enRevisionAduana: {
+      desde: 'customs clearance inspection',
+      hasta: 'customs clearance success',
+      texto: 'Esperando a que Aduanas libere tu pedido',
+    },
+
     despuesDeAduana: {
       desde: 'customs clearance success',
       minDias: 3,
