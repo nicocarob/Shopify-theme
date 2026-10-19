@@ -366,10 +366,12 @@ window.SEGUIMIENTO_CONFIG = {
     { busca: 'customs clearance in process', es: 'En proceso de aduana', nivel: 4 },
     {
       busca: 'customs clearance inspection',
-      es: 'En revision de aduana',
+      es: 'Aduanas de Chile seleccionó tu pedido para revisión',
       nota:
-        'Aduanas está revisando el pago de impuestos. Los impuestos ya están pagados por nosotros, ' +
-        'así que deberían liberarlo pronto. Si pasan varios días sin cambios, escríbenos y lo vemos.',
+        'Aduanas está verificando la documentación y el pago de impuestos de tu envío, los cuales ya fueron pagados por nuestra tienda.\n\n' +
+        'Este procedimiento es realizado directamente por Aduanas de Chile y los plazos de liberación pueden variar entre 1 y 5 semanas aproximadamente, dependiendo de sus procesos de fiscalización. Lamentablemente, estos tiempos son ajenos a nuestra gestión y no podemos acelerar directamente la revisión.\n\n' +
+        '¡No te preocupes! Tu pedido no está perdido. Estamos atentos a su seguimiento y, una vez que Aduanas autorice su liberación, continuará normalmente hacia tu domicilio.\n\n' +
+        'Tu compra está completamente respaldada por nuestra tienda y nuestro compromiso es que recibas tus productos.',
       nivel: 4,
     },
     { busca: 'customs clearance was completed', es: 'Aduana liberada', nivel: 4 },

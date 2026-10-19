@@ -18,13 +18,14 @@ export const REGLAS_EMAIL = [
   {
     id: 'aduana_inspection',
     busca: 'customs clearance inspection',
-    asunto: 'Tu pedido esta en revision de aduana — La Cábala',
+    asunto: 'Aduanas de Chile seleccionó tu pedido para revisión — La Cábala',
     prioridad: true,
-    titulo: 'Tu pedido esta en revision de aduana',
+    titulo: 'Aduanas de Chile seleccionó tu pedido para revisión',
     cuerpo: [
-      'Esto es normal y no tienes que hacer nada.',
-      'Aduana esta revisando el pago de impuestos. Los impuestos ya estan pagados por nosotros, asi que deberian liberarlo pronto.',
-      'En cuanto aduana lo libere, te avisamos de nuevo por este mismo correo.',
+      'Aduanas está verificando la documentación y el pago de impuestos de tu envío, los cuales ya fueron pagados por nuestra tienda.',
+      'Este procedimiento es realizado directamente por Aduanas de Chile y los plazos de liberación pueden variar entre 1 y 5 semanas aproximadamente, dependiendo de sus procesos de fiscalización. Lamentablemente, estos tiempos son ajenos a nuestra gestión y no podemos acelerar directamente la revisión.',
+      '¡No te preocupes! Tu pedido no está perdido. Estamos atentos a su seguimiento y, una vez que Aduanas autorice su liberación, continuará normalmente hacia tu domicilio.',
+      'Tu compra está completamente respaldada por nuestra tienda y nuestro compromiso es que recibas tus productos.',
     ],
   },
   {
