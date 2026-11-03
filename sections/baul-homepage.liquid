@@ -262,7 +262,7 @@
   </div>
 {%- elsif request.design_mode -%}
   <div class="hero-logos hero-logos--empty">
-    <p>Agrega bloques «Logo del hero» para la franja en movimiento.</p>
+    <p>Agrega bloques «Logo de empresa» y sube cada logo desde aquí.</p>
   </div>
 {%- endif -%}
 
@@ -559,7 +559,7 @@
     },
     {
       "type": "paragraph",
-      "content": "Hasta 6 imágenes de fondo, en carrusel. La foto se funde con el fondo negro. Textos, botones y cifras se editan aquí. Los logos de la franja se agregan como bloques «Logo del hero»."
+      "content": "Hasta 6 imágenes de fondo, en carrusel. La foto se funde con el fondo negro. Textos, botones y cifras se editan aquí. Los logos de empresas se suben con el bloque «Logo de empresa»."
     },
     {
       "type": "image_picker",
@@ -710,10 +710,14 @@
       "content": "Franja de logos"
     },
     {
+      "type": "paragraph",
+      "content": "Son logos de empresas, no de ligas. Agrégalos con «Agregar bloque» → «Logo de empresa» y sube la imagen. Si no hay ninguno, la franja no se muestra."
+    },
+    {
       "type": "text",
       "id": "hero_logos_label",
       "label": "Texto accesible de la franja",
-      "default": "Clubes y ligas"
+      "default": "Empresas"
     },
     {
       "type": "range",
@@ -724,7 +728,7 @@
       "step": 2,
       "unit": "s",
       "default": 36,
-      "info": "Más segundos, más lento. Los logos se agregan con el bloque «Logo del hero»."
+      "info": "Más segundos, más lento."
     },
     {
       "type": "header",
@@ -1312,13 +1316,14 @@
     },
     {
       "type": "hero_logo",
-      "name": "Logo del hero",
+      "name": "Logo de empresa",
       "limit": 20,
       "settings": [
         {
           "type": "image_picker",
           "id": "image",
-          "label": "Logo"
+          "label": "Logo",
+          "info": "PNG o WebP con fondo transparente se ve mejor sobre el negro."
         },
         {
           "type": "text",
