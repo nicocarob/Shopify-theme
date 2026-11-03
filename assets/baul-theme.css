@@ -805,9 +805,9 @@
   .hero-logos {
     --hero-logo-gap: 72px;
     position: relative;
-    background: var(--bg);
+    background: #f3efe4;
     overflow: hidden;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-top: 1px solid rgba(10, 10, 10, 0.06);
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
     mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
   }
@@ -818,7 +818,7 @@
     left: 12%;
     right: 12%;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0, 200, 81, 0.45), transparent);
+    background: linear-gradient(90deg, transparent, rgba(201, 162, 39, 0.7), transparent);
     pointer-events: none;
   }
   .hero-logos__track {
@@ -856,7 +856,7 @@
     min-height: 72px;
     -webkit-mask-image: none;
     mask-image: none;
-    border-top: 1px dashed rgba(255, 215, 0, 0.35);
+    border-top: 1px dashed rgba(10, 10, 10, 0.22);
   }
   .hero-logos--empty p {
     margin: 0;
@@ -865,7 +865,7 @@
     font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.55);
+    color: rgba(10, 10, 10, 0.55);
   }
   @keyframes hero-logos-marquee {
     from { transform: translate3d(0, 0, 0); }
