@@ -87,13 +87,14 @@
         {%- assign hero_has_images = true -%}
         <div class="hero-slide{% if slide_index == 0 %} is-active{% endif %}" data-index="{{ slide_index }}">
           <img
-            src="{{ slide_image | image_url: width: 2400 }}"
-            srcset="{{ slide_image | image_url: width: 800 }} 800w, {{ slide_image | image_url: width: 1400 }} 1400w, {{ slide_image | image_url: width: 2400 }} 2400w"
+            src="{{ slide_image | image_url: width: 1400 }}"
+            srcset="{{ slide_image | image_url: width: 750 }} 750w, {{ slide_image | image_url: width: 1100 }} 1100w, {{ slide_image | image_url: width: 1600 }} 1600w, {{ slide_image | image_url: width: 2000 }} 2000w"
             sizes="100vw"
             alt="{{ slide_image.alt | default: section.settings.hero_title_line1 | escape }}"
             width="{{ slide_image.width }}"
             height="{{ slide_image.height }}"
-            {% if slide_index == 0 %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}
+            {% if slide_index == 0 %}loading="eager" fetchpriority="high"{% else %}loading="lazy" fetchpriority="low"{% endif %}
+            decoding="async"
           >
         </div>
         {%- assign slide_index = slide_index | plus: 1 -%}
@@ -134,7 +135,136 @@
       {%- endif -%}
     </div>
   </div>
+
+  {%- if section.settings.hero_stat_1_value != blank or section.settings.hero_stat_1_label != blank or section.settings.hero_stat_2_value != blank or section.settings.hero_stat_2_label != blank or section.settings.hero_stat_3_value != blank or section.settings.hero_stat_3_label != blank -%}
+    <ul class="hero-stats rev-l">
+      {%- if section.settings.hero_stat_1_value != blank or section.settings.hero_stat_1_label != blank -%}
+        <li class="hero-stat">
+          <span class="hero-stat__value">
+            <svg class="hero-stat__star" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+              <path fill="currentColor" d="M10 1.5l2.47 5.01 5.53.8-4 3.9.94 5.5L10 14.1l-4.94 2.6.94-5.5-4-3.9 5.53-.8L10 1.5z"/>
+            </svg>
+            {{ section.settings.hero_stat_1_value }}
+          </span>
+          {%- if section.settings.hero_stat_1_label != blank -%}
+            <span class="hero-stat__label">{{ section.settings.hero_stat_1_label }}</span>
+          {%- endif -%}
+        </li>
+      {%- endif -%}
+      {%- if section.settings.hero_stat_2_value != blank or section.settings.hero_stat_2_label != blank -%}
+        <li class="hero-stat">
+          {%- if section.settings.hero_stat_2_value != blank -%}
+            <span class="hero-stat__value">{{ section.settings.hero_stat_2_value }}</span>
+          {%- endif -%}
+          {%- if section.settings.hero_stat_2_label != blank -%}
+            <span class="hero-stat__label">{{ section.settings.hero_stat_2_label }}</span>
+          {%- endif -%}
+        </li>
+      {%- endif -%}
+      {%- if section.settings.hero_stat_3_value != blank or section.settings.hero_stat_3_label != blank -%}
+        <li class="hero-stat">
+          {%- if section.settings.hero_stat_3_value != blank -%}
+            <span class="hero-stat__value">{{ section.settings.hero_stat_3_value }}</span>
+          {%- endif -%}
+          {%- if section.settings.hero_stat_3_label != blank -%}
+            <span class="hero-stat__label">{{ section.settings.hero_stat_3_label }}</span>
+          {%- endif -%}
+        </li>
+      {%- endif -%}
+    </ul>
+  {%- endif -%}
 </section>
+
+{%- liquid
+  assign hero_logo_count = 0
+  for block in section.blocks
+    if block.type == 'hero_logo' and block.settings.image != blank
+      assign hero_logo_count = hero_logo_count | plus: 1
+    endif
+  endfor
+-%}
+
+{%- if hero_logo_count > 0 -%}
+  {%- liquid
+    assign hero_logo_repeats = 24 | divided_by: hero_logo_count | at_least: 1
+    assign hero_logo_extra = hero_logo_repeats | minus: 1
+  -%}
+  {%- capture hero_logo_row -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'hero_logo' and block.settings.image != blank -%}
+        {%- assign hero_logo_alt = block.settings.alt | default: block.settings.image.alt | default: 'Logo' -%}
+        {%- if block.settings.link != blank -%}
+          <a href="{{ block.settings.link }}" class="hero-logos__item" {{ block.shopify_attributes }}>
+        {%- else -%}
+          <span class="hero-logos__item" {{ block.shopify_attributes }}>
+        {%- endif -%}
+            <img
+              src="{{ block.settings.image | image_url: width: 320 }}"
+              alt="{{ hero_logo_alt | escape }}"
+              width="140"
+              height="48"
+              loading="lazy"
+              decoding="async"
+            >
+        {%- if block.settings.link != blank -%}
+          </a>
+        {%- else -%}
+          </span>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  {%- capture hero_logo_row_clone -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'hero_logo' and block.settings.image != blank -%}
+        {%- if block.settings.link != blank -%}
+          <a href="{{ block.settings.link }}" class="hero-logos__item" tabindex="-1" aria-hidden="true">
+        {%- else -%}
+          <span class="hero-logos__item" aria-hidden="true">
+        {%- endif -%}
+            <img
+              src="{{ block.settings.image | image_url: width: 320 }}"
+              alt=""
+              width="140"
+              height="48"
+              loading="lazy"
+              decoding="async"
+            >
+        {%- if block.settings.link != blank -%}
+          </a>
+        {%- else -%}
+          </span>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  <div
+    class="hero-logos"
+    style="--hero-logos-duration: {{ section.settings.hero_logos_speed | default: 36 }}s;"
+    role="region"
+    aria-label="{{ section.settings.hero_logos_label | default: 'Logos' | escape }}"
+  >
+    <div class="hero-logos__track">
+      <div class="hero-logos__group">
+        {{ hero_logo_row }}
+        {%- if hero_logo_extra > 0 -%}
+          {%- for i in (1..hero_logo_extra) -%}
+            {{ hero_logo_row_clone }}
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+      <div class="hero-logos__group" aria-hidden="true" inert>
+        {%- for i in (1..hero_logo_repeats) -%}
+          {{ hero_logo_row_clone }}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+{%- elsif request.design_mode -%}
+  <div class="hero-logos hero-logos--empty">
+    <p>Agrega bloques «Logo del hero» para la franja en movimiento.</p>
+  </div>
+{%- endif -%}
 
 <div class="divider"></div>
 
@@ -429,7 +559,7 @@
     },
     {
       "type": "paragraph",
-      "content": "Sube hasta 6 imágenes de fondo. Se mostrarán en carrusel automático detrás del texto."
+      "content": "Hasta 6 imágenes de fondo, en carrusel. La foto se funde con el fondo negro. Textos, botones y cifras se editan aquí. Los logos de la franja se agregan como bloques «Logo del hero»."
     },
     {
       "type": "image_picker",
@@ -530,6 +660,71 @@
       "max": 1500,
       "step": 100,
       "default": 900
+    },
+    {
+      "type": "header",
+      "content": "Cifras de confianza"
+    },
+    {
+      "type": "paragraph",
+      "content": "Fila al pie del hero. Deja la cifra y el texto vacíos para ocultar esa columna."
+    },
+    {
+      "type": "text",
+      "id": "hero_stat_1_value",
+      "label": "Reseñas — cifra",
+      "default": "4.9"
+    },
+    {
+      "type": "text",
+      "id": "hero_stat_1_label",
+      "label": "Reseñas — texto",
+      "default": "+800 reseñas"
+    },
+    {
+      "type": "text",
+      "id": "hero_stat_2_value",
+      "label": "Vendidas — cifra",
+      "default": "+10.000"
+    },
+    {
+      "type": "text",
+      "id": "hero_stat_2_label",
+      "label": "Vendidas — texto",
+      "default": "camisetas vendidas"
+    },
+    {
+      "type": "text",
+      "id": "hero_stat_3_value",
+      "label": "Años — cifra",
+      "default": "10+"
+    },
+    {
+      "type": "text",
+      "id": "hero_stat_3_label",
+      "label": "Años — texto",
+      "default": "años"
+    },
+    {
+      "type": "header",
+      "content": "Franja de logos"
+    },
+    {
+      "type": "text",
+      "id": "hero_logos_label",
+      "label": "Texto accesible de la franja",
+      "default": "Clubes y ligas"
+    },
+    {
+      "type": "range",
+      "id": "hero_logos_speed",
+      "label": "Duración del recorrido (segundos)",
+      "min": 16,
+      "max": 80,
+      "step": 2,
+      "unit": "s",
+      "default": 36,
+      "info": "Más segundos, más lento. Los logos se agregan con el bloque «Logo del hero»."
     },
     {
       "type": "header",
@@ -1112,6 +1307,29 @@
           "type": "image_picker",
           "id": "logo",
           "label": "Escudo (opcional)"
+        }
+      ]
+    },
+    {
+      "type": "hero_logo",
+      "name": "Logo del hero",
+      "limit": 20,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Logo"
+        },
+        {
+          "type": "text",
+          "id": "alt",
+          "label": "Texto alternativo",
+          "info": "Si lo dejas vacío se usa el texto de la imagen."
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Enlace (opcional)"
         }
       ]
     }

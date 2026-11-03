@@ -1083,6 +1083,86 @@
             "stock_current": 28,
             "stock_max": 50
           }
+        },
+        "hero_logo_01": {
+          "type": "hero_logo",
+          "settings": {
+            "image": "shopify://shop_images/Campeonatochilenologo.webp",
+            "alt": "Liga Chilena",
+            "link": "shopify://collections/liga-chilena"
+          }
+        },
+        "hero_logo_02": {
+          "type": "hero_logo",
+          "settings": {
+            "image": "shopify://shop_images/LaLiga_logo_2023_svg.webp",
+            "alt": "LaLiga",
+            "link": "shopify://collections/liga-espanola"
+          }
+        },
+        "hero_logo_03": {
+          "type": "hero_logo",
+          "settings": {
+            "image": "shopify://shop_images/english-premier-league.4d68127f.png",
+            "alt": "Premier League",
+            "link": "shopify://collections/premier-league"
+          }
+        },
+        "hero_logo_04": {
+          "type": "hero_logo",
+          "settings": {
+            "image": "shopify://shop_images/Bundesliga_logo__2017.svg",
+            "alt": "Bundesliga",
+            "link": "shopify://collections/liga-alemana"
+          }
+        },
+        "hero_logo_05": {
+          "type": "hero_logo",
+          "settings": {
+            "image": "shopify://shop_images/kdff.png",
+            "alt": "Ligue 1",
+            "link": "shopify://collections/liga-francesa"
+          }
+        },
+        "hero_logo_06": {
+          "type": "hero_logo",
+          "settings": {
+            "image": "shopify://shop_images/fifa-world-cup-2026-logo-footylogos.png",
+            "alt": "Copa del Mundo",
+            "link": "shopify://collections/copa-del-mundo"
+          }
+        },
+        "hero_logo_07": {
+          "type": "hero_logo",
+          "settings": {
+            "image": "shopify://shop_images/Liga_Profesional_de_F_3Ftbol_Argentino__28Icon_29.webp",
+            "alt": "Liga Argentina",
+            "link": "shopify://collections/liga-argentina-1"
+          }
+        },
+        "hero_logo_08": {
+          "type": "hero_logo",
+          "settings": {
+            "image": "shopify://shop_images/Campeonato_Brasileiro_Serie_A_logo__2024__svg.webp",
+            "alt": "Liga Brasileña",
+            "link": "shopify://collections/liga-brasilena"
+          }
+        },
+        "hero_logo_09": {
+          "type": "hero_logo",
+          "settings": {
+            "image": "shopify://shop_images/MX_logo.png",
+            "alt": "Liga MX",
+            "link": "shopify://collections/liga-mx"
+          }
+        },
+        "hero_logo_10": {
+          "type": "hero_logo",
+          "settings": {
+            "image": "shopify://shop_images/Simbolo_da_Liga_Portuguesa_de_Futebol_Profissional.png",
+            "alt": "Liga Portugal",
+            "link": "shopify://collections/liga-portugal"
+          }
         }
       },
       "block_order": [
@@ -1200,7 +1280,17 @@
         "equipo_DhUcjm",
         "cw_01",
         "cw_02",
-        "cw_03"
+        "cw_03",
+        "hero_logo_01",
+        "hero_logo_02",
+        "hero_logo_03",
+        "hero_logo_04",
+        "hero_logo_05",
+        "hero_logo_06",
+        "hero_logo_07",
+        "hero_logo_08",
+        "hero_logo_09",
+        "hero_logo_10"
       ],
       "settings": {
         "countdown_text": "ENVÍO GRATIS POR TIEMPO LIMITADO — TERMINA EN:",
@@ -1223,6 +1313,14 @@
         "hero_btn_secondary_url": "shopify://collections/ninos",
         "hero_autoplay_speed": 4000,
         "hero_fade_speed": 900,
+        "hero_stat_1_value": "4.9",
+        "hero_stat_1_label": "+800 reseñas",
+        "hero_stat_2_value": "+10.000",
+        "hero_stat_2_label": "camisetas vendidas",
+        "hero_stat_3_value": "10+",
+        "hero_stat_3_label": "años",
+        "hero_logos_label": "Clubes y ligas",
+        "hero_logos_speed": 36,
         "testi_eyebrow": "Lo que dicen de nosotros",
         "testi_title": "NUESTROS CLIENTES NOS RECOMIENDAN",
         "testi_subtitle": "Más de 10 años vendiendo a hinchas de todo Chile",
