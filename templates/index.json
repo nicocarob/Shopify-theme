@@ -13,6 +13,47 @@
     "baul_homepage": {
       "type": "baul-homepage",
       "blocks": {
+        "hero_logo_yyxBeU": {
+          "type": "hero_logo",
+          "settings": {
+            "image": "shopify://shop_images/vvvvvx.png",
+            "alt": "",
+            "link": ""
+          }
+        },
+        "hero_logo_p3X6VK": {
+          "type": "hero_logo",
+          "settings": {
+            "image": "shopify://shop_images/fdfdfcx.png",
+            "alt": "",
+            "link": ""
+          }
+        },
+        "hero_logo_7yK9Pn": {
+          "type": "hero_logo",
+          "disabled": true,
+          "settings": {
+            "image": "shopify://shop_images/jkdskjsd.webp",
+            "alt": "",
+            "link": ""
+          }
+        },
+        "hero_logo_BJbEAD": {
+          "type": "hero_logo",
+          "settings": {
+            "image": "shopify://shop_images/logo-webpay-plus-3-2-1024x302.png",
+            "alt": "",
+            "link": ""
+          }
+        },
+        "hero_logo_TKJ44m": {
+          "type": "hero_logo",
+          "settings": {
+            "image": "shopify://shop_images/LOGO-BLUE-EXPRESS-COPEC-RGB-1.png",
+            "alt": "",
+            "link": ""
+          }
+        },
         "testi_08": {
           "type": "testimonial",
           "settings": {
@@ -1086,6 +1127,11 @@
         }
       },
       "block_order": [
+        "hero_logo_yyxBeU",
+        "hero_logo_p3X6VK",
+        "hero_logo_7yK9Pn",
+        "hero_logo_BJbEAD",
+        "hero_logo_TKJ44m",
         "testi_08",
         "testi_10",
         "testi_14",
