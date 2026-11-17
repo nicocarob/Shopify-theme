@@ -25,6 +25,8 @@ let tokenShopifyCache = null;
 let tokenShopifyExpiraEn = 0;
 let tokenShopifyRenovando = null;
 
+export { consultar666post, esNumero666, armarSeguimiento666 };
+
 export default {
   async fetch(request, env) {
     const origen = request.headers.get('Origin') || '';
@@ -72,10 +74,12 @@ export default {
         return json({ ok: false, error: 'no_encontrado' }, 404, cors);
       }
 
-      const datos = await consultarTrackingMore(resuelto.numero, env, {
-        email: resuelto.email,
-        pedido: resuelto.pedido,
-      });
+      const datos = esNumero666(resuelto.numero)
+        ? await consultar666post(resuelto.numero)
+        : await consultarTrackingMore(resuelto.numero, env, {
+            email: resuelto.email,
+            pedido: resuelto.pedido,
+          });
 
       const pedidoInfo = await completarPaquetesDelPedido(resuelto, datos, env);
       const { customerEmail, orderNumber, ...publico } = datos;
@@ -227,6 +231,182 @@ async function renovarTokenShopify(env) {
 function invalidarTokenShopify() {
   tokenShopifyCache = null;
   tokenShopifyExpiraEn = 0;
+}
+
+/* ------------------------------------------------------------
+   666post (numeros solo digitos, ej. 4611175940)
+   ------------------------------------------------------------
+   El tramo internacional vive en 666post. Blue Express entra
+   solo cuando publican un codigo distinto en
+   business_channeltransfercode. Si ese campo viene vacio, o
+   repite el mismo numero, no se muestra caja local: todavia
+   no sabemos si Blue rastrea el mismo codigo.
+   ------------------------------------------------------------ */
+
+function esNumero666(numero) {
+  return /^\d{8,20}$/.test(String(numero || ''));
+}
+
+function fecha666(valor) {
+  const fecha = new Date(String(valor || '').replace(' ', 'T'));
+  return Number.isNaN(fecha.getTime()) ? 0 : fecha.getTime();
+}
+
+const LUGARES_666 = {
+  广州: 'Guangzhou',
+  深圳: 'Shenzhen',
+  上海: 'Shanghai',
+  北京: 'Beijing',
+  义乌: 'Yiwu',
+  香港: 'Hong Kong',
+  杭州: 'Hangzhou',
+};
+
+function lugar666(lugar) {
+  const limpio = String(lugar || '').trim();
+  if (!limpio) return '';
+  if (LUGARES_666[limpio]) return LUGARES_666[limpio];
+  return /[\u3400-\u9fff]/.test(limpio) ? '' : limpio;
+}
+
+function notaEtd(texto) {
+  const encontrado = String(texto || '').match(/ETD\s*:\s*(\d{1,2})[./](\d{1,2})/i);
+  if (!encontrado) return '';
+  const meses = [
+    'enero',
+    'febrero',
+    'marzo',
+    'abril',
+    'mayo',
+    'junio',
+    'julio',
+    'agosto',
+    'septiembre',
+    'octubre',
+    'noviembre',
+    'diciembre',
+  ];
+  const mes = meses[Number(encontrado[1]) - 1];
+  const dia = Number(encontrado[2]);
+  if (!mes || !dia) return '';
+  return `Salida prevista para el ${dia} de ${mes}`;
+}
+
+function evento666(item) {
+  const crudo = String(item?.track_content || '')
+    .replace(/\?/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const lower = crudo.toLowerCase();
+  const code = String(item?.track_status || '').toUpperCase();
+  let texto = crudo;
+  let nota = '';
+
+  if (code === 'TS' || lower.includes('package details received')) {
+    texto = 'Shipment information received';
+  } else if (code === 'CI' || crudo.includes('到达收货点')) {
+    texto = 'Acceptance, Sent To Chile';
+  } else if (code === 'CO' || crudo.includes('货物离开操作中心')) {
+    texto = 'Departed Sunyou Facility';
+  } else if (lower.includes('estimated flight departure')) {
+    texto = 'Estimated flight departure time';
+    nota = notaEtd(crudo);
+  } else if (lower.includes('departed from airport of origin')) {
+    texto = 'Departed from airport of Origin';
+  } else if (lower.includes('flight has landed')) {
+    texto = 'The flight has landed';
+  } else if (lower.includes('in customs clearance') || crudo.includes('清关中')) {
+    texto = 'Customs clearance in process';
+  } else if (
+    lower.includes('customs clearance completed') ||
+    lower.includes('cleared customs') ||
+    crudo.includes('清关完成') ||
+    crudo.includes('已放行')
+  ) {
+    texto = 'Customs Clearance Successed';
+  } else if (lower.includes('flight departed') || crudo.includes('已起飞')) {
+    texto = 'Flight departed';
+  } else if (/\bdelivered\b/.test(lower) || crudo.includes('已签收')) {
+    texto = 'Delivered';
+  }
+
+  return {
+    fecha: item?.track_date || '',
+    texto,
+    lugar: lugar666(item?.track_location),
+    nota,
+  };
+}
+
+function codigoLocal666(item, numero) {
+  const transfer = String(item?.business_channeltransfercode || '').trim();
+  if (!transfer || transfer === '-' || transfer.toLowerCase() === 'null') return '';
+  if (transfer.toUpperCase() === String(numero || '').trim().toUpperCase()) return '';
+  return transfer;
+}
+
+function entregaBlue(numeroLocal) {
+  if (!numeroLocal) return null;
+  return {
+    courier: 'blue',
+    numero: numeroLocal,
+    titulo: 'Numero para Blue Express',
+    explicacion: 'Con este numero puedes seguir la entrega final en Blue Express.',
+    enlace: `https://tracking-unificado.blue.cl/?n_seguimiento=${encodeURIComponent(numeroLocal)}`,
+    textoEnlace: 'Seguir en Blue Express',
+  };
+}
+
+function armarSeguimiento666(numero, item) {
+  const eventos = (item?.trackDetails || [])
+    .map((detalle) => evento666(detalle))
+    .filter((evento) => evento.texto)
+    .sort((a, b) => fecha666(b.fecha) - fecha666(a.fecha));
+
+  const textos = eventos.map((evento) => evento.texto.toLowerCase());
+  let estado = eventos.length ? 'transit' : 'notfound';
+  if (textos.some((texto) => texto.includes('delivered'))) estado = 'delivered';
+
+  return {
+    numero,
+    estado,
+    diasEnTransito: 0,
+    orderNumber: null,
+    customerEmail: null,
+    eventos,
+    origen: '666post',
+    entregaLocal: entregaBlue(codigoLocal666(item, numero)),
+  };
+}
+
+async function consultar666post(numero) {
+  const respuesta = await fetch(
+    `http://www.666post.com/sz56t/selectTrack.htm?documentCode=${encodeURIComponent(numero)}`,
+    { headers: { Accept: 'application/json, text/plain, */*' } }
+  );
+  if (!respuesta.ok) {
+    throw new ErrorCliente('error_servidor', 502);
+  }
+
+  const texto = new TextDecoder('gb18030').decode(await respuesta.arrayBuffer());
+  let payload;
+  try {
+    payload = JSON.parse(texto);
+  } catch {
+    throw new ErrorCliente('no_encontrado', 404);
+  }
+
+  const bloque = Array.isArray(payload) ? payload[0] : payload;
+  const ack = String(bloque?.ack || '').toLowerCase();
+  const lista = Array.isArray(bloque?.data) ? bloque.data : [];
+  const item =
+    lista.find((entrada) => String(entrada?.trackingNumber || '') === String(numero)) || lista[0];
+
+  if (ack !== 'true' || !item?.trackingNumber) {
+    throw new ErrorCliente('no_encontrado', 404);
+  }
+
+  return armarSeguimiento666(numero, item);
 }
 
 /* ------------------------------------------------------------

@@ -1354,7 +1354,7 @@
       pintarPaquetes(datos);
       pintarDias(vista.dias);
       pintarEstimado(vista.estimado);
-      pintarCorreos(vista.numeroCorreos);
+      pintarCorreos(vista.entregaLocal || vista.numeroCorreos);
       pintarBarra(vista.alcanzado);
       pintarLista(vista.eventos);
 
@@ -1501,24 +1501,28 @@
       elEstimado.hidden = false;
     }
 
-    function pintarCorreos(numero) {
+    function pintarCorreos(entrega) {
       if (!elCorreos) return;
 
+      var numero = entrega && typeof entrega === 'object' ? entrega.numero : entrega;
       if (!numero) {
         elCorreos.hidden = true;
         return;
       }
 
       var cfg = CFG.correosChile || {};
-      elCorreosTitulo.textContent = cfg.titulo || 'Numero para Correos de Chile';
+      var enlace = (entrega && entrega.enlace) || cfg.enlace;
+      var textoEnlace = (entrega && entrega.textoEnlace) || cfg.textoEnlace || 'Seguir en Correos de Chile';
+      elCorreosTitulo.textContent = (entrega && entrega.titulo) || cfg.titulo || 'Numero para Correos de Chile';
       elCorreosNum.textContent = numero;
-      elCorreosExp.textContent = cfg.explicacion || '';
+      elCorreosExp.textContent = (entrega && entrega.explicacion) || cfg.explicacion || '';
 
-      if (cfg.enlace) {
-        elCorreosLink.setAttribute('href', cfg.enlace);
-        elCorreosLink.textContent = cfg.textoEnlace || 'Seguir en Correos de Chile';
+      if (enlace) {
+        elCorreosLink.setAttribute('href', enlace);
+        elCorreosLink.textContent = textoEnlace;
       } else {
         elCorreosLink.removeAttribute('href');
+        elCorreosLink.textContent = '';
       }
 
       elCorreos.hidden = false;

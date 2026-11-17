@@ -293,7 +293,7 @@
 
         return {
           es: regla.es,
-          nota: regla.nota,
+          nota: regla.nota || evento.nota || '',
           nivel: nivel,
           traducido: regla.traducido,
           fecha: evento.fecha,
@@ -315,8 +315,18 @@
       // El courier manda "transit" igual cuando el paquete viene
       // viajando y cuando ya esta en Chile. Si los movimientos
       // muestran que llego, se usa el texto que corresponde.
-      if (estado === 'transit' && alcanzado >= 4 && estados.transitEnChile) {
-        info = estados.transitEnChile;
+      if (estado === 'transit' && alcanzado >= 4) {
+        var blue = datos.entregaLocal && datos.entregaLocal.courier === 'blue';
+        if (blue && estados.transitConBlue) {
+          info = estados.transitConBlue;
+        } else if (datos.origen === '666post') {
+          var enAduana = eventos.some(function (evento) {
+            return String(evento.original || '').toLowerCase().indexOf('customs clearance') !== -1;
+          });
+          info = (enAduana ? estados.transitEnChile666 : estados.transitAterrizo666) || info;
+        } else if (estados.transitEnChile) {
+          info = estados.transitEnChile;
+        }
       }
 
       var salida = fechaDeSalida(eventos);
@@ -330,6 +340,7 @@
         alcanzado: alcanzado,
         dias: calcularDias(eventos, entregado, salida),
         estimado: calcularEstimado(eventos, entregado),
+        entregaLocal: datos.entregaLocal && datos.entregaLocal.numero ? datos.entregaLocal : null,
         numeroCorreos: buscarNumeroCorreos(eventos),
         sinTraducir: eventos.filter(function (evento) {
           return !evento.traducido;

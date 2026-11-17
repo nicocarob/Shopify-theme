@@ -246,6 +246,26 @@ window.SEGUIMIENTO_CONFIG = {
       bajada: 'Esta en manos de Correos de Chile para la entrega final.',
       color: 'azul',
     },
+    /*
+      666post llega a Chile antes de que exista un courier local.
+      No se nombra a Correos ni a Blue hasta tener un codigo distinto.
+    */
+    transitAterrizo666: {
+      titulo: 'Tu pedido ya esta en Chile',
+      bajada: 'El vuelo ya aterrizo. Sigue el tramite de aduana.',
+      color: 'azul',
+    },
+    transitEnChile666: {
+      titulo: 'Tu pedido ya esta en Chile',
+      bajada:
+        'Esta en tramite de aduana. El numero del courier local aparece aqui cuando lo toman para la entrega.',
+      color: 'azul',
+    },
+    transitConBlue: {
+      titulo: 'Tu pedido ya esta en Chile',
+      bajada: 'Esta en manos de Blue Express para la entrega final.',
+      color: 'azul',
+    },
     pickup: {
       titulo: 'Salio a reparto',
       bajada: 'El courier lo lleva hoy a tu direccion.',
@@ -320,6 +340,11 @@ window.SEGUIMIENTO_CONFIG = {
     { busca: 'pre-shipment info sent to', es: 'Tu pedido fue preparado', nivel: 1 },
     { busca: 'acceptance, sent to', es: 'Tu pedido fue enviado', nivel: 2 },
     { busca: 'departed sunyou facility', es: 'El paquete está en tránsito', nivel: 3 },
+
+    // 666post. Van antes de las reglas genericas ("customs", "handed over").
+    { busca: 'estimated flight departure', es: 'Salida de vuelo estimada', nivel: 3 },
+    { busca: 'departed from airport of origin', es: 'Salio del aeropuerto de origen', nivel: 3 },
+    { busca: 'the flight has landed', es: 'El vuelo aterrizo en Chile', nivel: 4 },
 
     // Salio del aeropuerto de Santiago: desde aca lo mueve Correos de Chile
     {
