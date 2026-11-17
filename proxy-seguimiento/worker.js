@@ -269,29 +269,6 @@ function lugar666(lugar) {
   return /[\u3400-\u9fff]/.test(limpio) ? '' : limpio;
 }
 
-function notaEtd(texto) {
-  const encontrado = String(texto || '').match(/ETD\s*:\s*(\d{1,2})[./](\d{1,2})/i);
-  if (!encontrado) return '';
-  const meses = [
-    'enero',
-    'febrero',
-    'marzo',
-    'abril',
-    'mayo',
-    'junio',
-    'julio',
-    'agosto',
-    'septiembre',
-    'octubre',
-    'noviembre',
-    'diciembre',
-  ];
-  const mes = meses[Number(encontrado[1]) - 1];
-  const dia = Number(encontrado[2]);
-  if (!mes || !dia) return '';
-  return `Vuelo programado para el ${dia} de ${mes}`;
-}
-
 function evento666(item) {
   const crudo = String(item?.track_content || '')
     .replace(/\?/g, ' ')
@@ -310,7 +287,6 @@ function evento666(item) {
     texto = 'Departed Sunyou Facility';
   } else if (lower.includes('estimated flight departure')) {
     texto = 'Estimated flight departure time';
-    nota = notaEtd(crudo);
   } else if (lower.includes('departed from airport of origin')) {
     texto = 'Departed from airport of Origin';
   } else if (lower.includes('flight has landed')) {
