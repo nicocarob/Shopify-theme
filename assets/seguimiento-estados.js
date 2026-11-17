@@ -134,7 +134,7 @@ window.SEGUIMIENTO_CONFIG = {
     Escribe {dias} donde quieras que salga el numero.
   */
   diasEnTransito: {
-    desde: ['acceptance, sent to', 'departed from airport of origin'],
+    desde: 'acceptance, sent to',
 
     hoy: 'Tu pedido salio hoy',
     unDia: 'Tu pedido lleva 1 dia en transito',
@@ -247,18 +247,16 @@ window.SEGUIMIENTO_CONFIG = {
       color: 'azul',
     },
     /*
-      666post llega a Chile antes de que exista un courier local.
-      No se nombra a Correos ni a Blue hasta tener un codigo distinto.
+      666post. La entrega en Chile es con Blue Express, no con Correos.
     */
     transitAterrizo666: {
       titulo: 'Tu pedido ya esta en Chile',
-      bajada: 'El vuelo ya aterrizo. Sigue el tramite de aduana.',
+      bajada: 'El vuelo ya aterrizo. Sigue el tramite de aduana y despues lo toma Blue Express.',
       color: 'azul',
     },
     transitEnChile666: {
       titulo: 'Tu pedido ya esta en Chile',
-      bajada:
-        'Esta en tramite de aduana. El numero del courier local aparece aqui cuando lo toman para la entrega.',
+      bajada: 'Esta en tramite de aduana. La entrega final la hace Blue Express.',
       color: 'azul',
     },
     transitConBlue: {

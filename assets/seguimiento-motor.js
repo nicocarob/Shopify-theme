@@ -100,7 +100,7 @@
       // Los eventos vienen del mas nuevo al mas viejo, asi que el
       // punto de partida es la coincidencia mas antigua.
       for (var i = eventos.length - 1; i >= 0; i--) {
-        if (textoIncluye(eventos[i].original, desde)) {
+        if (String(eventos[i].original || '').toLowerCase().indexOf(desde) !== -1) {
           return aFecha(eventos[i].fecha);
         }
       }
