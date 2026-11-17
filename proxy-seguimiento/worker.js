@@ -305,7 +305,7 @@ function evento666(item) {
   if (code === 'TS' || lower.includes('package details received')) {
     texto = 'Shipment information received';
   } else if (code === 'CI' || crudo.includes('到达收货点')) {
-    texto = 'Acceptance, Sent To Chile';
+    texto = 'Arrival at local sorting center';
   } else if (code === 'CO' || crudo.includes('货物离开操作中心')) {
     texto = 'Departed Sunyou Facility';
   } else if (lower.includes('estimated flight departure')) {

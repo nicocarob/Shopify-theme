@@ -134,7 +134,7 @@ window.SEGUIMIENTO_CONFIG = {
     Escribe {dias} donde quieras que salga el numero.
   */
   diasEnTransito: {
-    desde: 'acceptance, sent to',
+    desde: ['acceptance, sent to', 'departed from airport of origin'],
 
     hoy: 'Tu pedido salio hoy',
     unDia: 'Tu pedido lleva 1 dia en transito',

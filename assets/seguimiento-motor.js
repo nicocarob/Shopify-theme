@@ -84,6 +84,15 @@
 
       Devuelve null si el pedido todavia no ha salido.
     */
+    function textoIncluye(texto, frases) {
+      var lista = [].concat(frases || []);
+      var lower = String(texto || '').toLowerCase();
+      for (var i = 0; i < lista.length; i++) {
+        if (lista[i] && lower.indexOf(String(lista[i]).toLowerCase()) !== -1) return true;
+      }
+      return false;
+    }
+
     function fechaDeSalida(eventos) {
       var desde = CFG.diasEnTransito && CFG.diasEnTransito.desde;
       if (!desde) return null;
@@ -91,11 +100,38 @@
       // Los eventos vienen del mas nuevo al mas viejo, asi que el
       // punto de partida es la coincidencia mas antigua.
       for (var i = eventos.length - 1; i >= 0; i--) {
-        if (String(eventos[i].original || '').toLowerCase().indexOf(desde) !== -1) {
+        if (textoIncluye(eventos[i].original, desde)) {
           return aFecha(eventos[i].fecha);
         }
       }
       return null;
+    }
+
+    /*
+      "En reparto" solo cuando el courier ya salio a la calle.
+      Llegar a Chile o entrar a aduana no es reparto.
+    */
+    function salioAReparto(eventos) {
+      var marcas = [
+        'out for delivery',
+        'delivery in progress',
+        'failed attempt',
+        'notice left',
+        'available for pickup',
+      ];
+      for (var i = 0; i < eventos.length; i++) {
+        if (textoIncluye(eventos[i].original, marcas)) return true;
+      }
+      return false;
+    }
+
+    function etapasVisibles(alcanzado, eventos, origen) {
+      var etapas = CFG.etapas || [];
+      if (origen !== '666post' || alcanzado < 4 || salioAReparto(eventos)) return etapas;
+      return etapas.map(function (etapa) {
+        if (etapa.nivel !== 4) return etapa;
+        return { nivel: etapa.nivel, nombre: 'En Chile' };
+      });
     }
 
     function calcularDias(eventos, entregado, inicio) {
@@ -338,6 +374,7 @@
         info: info,
         eventos: eventos,
         alcanzado: alcanzado,
+        etapas: etapasVisibles(alcanzado, eventos, datos.origen),
         dias: calcularDias(eventos, entregado, salida),
         estimado: calcularEstimado(eventos, entregado),
         entregaLocal: datos.entregaLocal && datos.entregaLocal.numero ? datos.entregaLocal : null,

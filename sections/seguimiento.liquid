@@ -1355,7 +1355,7 @@
       pintarDias(vista.dias);
       pintarEstimado(vista.estimado);
       pintarCorreos(vista.entregaLocal || vista.numeroCorreos);
-      pintarBarra(vista.alcanzado);
+      pintarBarra(vista.alcanzado, vista.etapas);
       pintarLista(vista.eventos);
 
       result.setAttribute('data-visible', 'true');
@@ -1528,8 +1528,8 @@
       elCorreos.hidden = false;
     }
 
-    function pintarBarra(alcanzado) {
-      var etapas = CFG.etapas || [];
+    function pintarBarra(alcanzado, etapas) {
+      etapas = etapas || CFG.etapas || [];
       elBarra.innerHTML = etapas
         .map(function (etapa) {
           var hecho = etapa.nivel <= alcanzado;
