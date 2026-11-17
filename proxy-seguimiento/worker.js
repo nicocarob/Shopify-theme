@@ -289,7 +289,7 @@ function notaEtd(texto) {
   const mes = meses[Number(encontrado[1]) - 1];
   const dia = Number(encontrado[2]);
   if (!mes || !dia) return '';
-  return `Salida prevista para el ${dia} de ${mes}`;
+  return `Vuelo programado para el ${dia} de ${mes}`;
 }
 
 function evento666(item) {

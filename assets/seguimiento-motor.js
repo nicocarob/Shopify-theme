@@ -63,6 +63,7 @@
         return {
           es: regla.es,
           nota: regla.nota || '',
+          notaComoTitulo: !!regla.notaComoTitulo,
           nivel: regla.nivel || 0,
           traducido: true,
         };
@@ -327,9 +328,18 @@
         // esta en el pais aunque el texto del courier no lo diga.
         if (nivel < 4 && esDeChile(evento.lugar, evento.texto)) nivel = 4;
 
+        var titulo = regla.es;
+        var nota = regla.nota || evento.nota || '';
+        // Solo el aviso de vuelo programado de 666post: la fecha va en
+        // el titulo y no se repite como leyenda debajo.
+        if (regla.notaComoTitulo) {
+          titulo = evento.nota || regla.es;
+          nota = '';
+        }
+
         return {
-          es: regla.es,
-          nota: regla.nota || evento.nota || '',
+          es: titulo,
+          nota: nota,
           nivel: nivel,
           traducido: regla.traducido,
           fecha: evento.fecha,

@@ -340,7 +340,7 @@ window.SEGUIMIENTO_CONFIG = {
     { busca: 'departed sunyou facility', es: 'El paquete está en tránsito', nivel: 3 },
 
     // 666post. Van antes de las reglas genericas ("customs", "handed over").
-    { busca: 'estimated flight departure', es: 'Salida de vuelo estimada', nivel: 3 },
+    { busca: 'estimated flight departure', es: 'Vuelo programado', nivel: 3, notaComoTitulo: true },
     { busca: 'departed from airport of origin', es: 'Salio del aeropuerto de origen', nivel: 3 },
     { busca: 'the flight has landed', es: 'El vuelo aterrizo en Chile', nivel: 4 },
 
