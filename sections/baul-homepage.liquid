@@ -71,8 +71,74 @@
   assign hero_secondary_url = section.settings.hero_btn_secondary_url | default: '#retro'
 -%}
 
+{%- liquid
+  assign price_eyebrow = section.settings.price_eyebrow
+  if price_eyebrow == blank
+    assign price_eyebrow = 'Precio especial'
+  endif
+  assign price_heading = section.settings.price_heading
+  if price_heading == blank
+    assign price_heading = 'Camisetas desde'
+  endif
+  assign price_amount = section.settings.price_amount
+  if price_amount == blank
+    assign price_amount = '$697'
+  endif
+  assign price_btn = section.settings.price_btn
+  if price_btn == blank
+    assign price_btn = 'Comprar ahora'
+  endif
+  assign price_link_label = section.settings.price_link_label
+  if price_link_label == blank
+    assign price_link_label = 'Ver todos los precios'
+  endif
+  assign price_btn_url = section.settings.price_btn_url
+  if price_btn_url == blank
+    assign price_btn_url = section.settings.hero_btn_primary_url
+  endif
+  if price_btn_url == blank
+    assign price_btn_url = routes.all_products_collection_url
+  endif
+  assign price_link_url = section.settings.price_link_url
+  if price_link_url == blank
+    assign price_link_url = price_btn_url
+  endif
+  assign price_note_1 = section.settings.price_note_1
+  if price_note_1 == blank
+    assign price_note_1 = 'Retro y selecciones'
+  endif
+  assign price_note_1_price = section.settings.price_note_1_price
+  if price_note_1_price == blank
+    assign price_note_1_price = '$747'
+  endif
+  assign price_note_2 = section.settings.price_note_2
+  if price_note_2 == blank
+    assign price_note_2 = 'Icónicas y Versión Jugador'
+  endif
+  assign price_note_2_price = section.settings.price_note_2_price
+  if price_note_2_price == blank
+    assign price_note_2_price = '$797'
+  endif
+  assign price_note_3 = section.settings.price_note_3
+  if price_note_3 == blank
+    assign price_note_3 = 'Sin código'
+  endif
+  assign price_count_label = section.settings.price_count_label
+  if price_count_label == blank
+    assign price_count_label = 'Termina en'
+  endif
+  assign price_count_end = section.settings.price_count_end
+  if price_count_end == blank
+    assign price_count_end = '2026-11-25T23:59:59-03:00'
+  endif
+  assign price_marquee = section.settings.price_marquee
+  if price_marquee == blank
+    assign price_marquee = 'Sports dealer.|Archive of pure fandom.|Past · present · forever.'
+  endif
+-%}
+
 <section
-  class="hero hero--slideshow"
+  class="hero hero--slideshow hero--price"
   data-hero-slideshow
   data-autoplay="{{ section.settings.hero_autoplay_speed }}"
   data-fade="{{ section.settings.hero_fade_speed }}"
@@ -108,72 +174,65 @@
 
   <div class="hero-overlay" aria-hidden="true"></div>
 
-  <div class="hero-content rev-l">
-    {%- if section.settings.hero_tag != blank -%}
-      <div class="hero-tag"><span>{{ section.settings.hero_tag }}</span></div>
-    {%- endif -%}
-
-    <h1 class="hero-title">
-      {%- if section.settings.hero_title_line1 != blank -%}
-        {{ section.settings.hero_title_line1 }}<br>
-      {%- endif -%}
-      {%- if section.settings.hero_title_line2 != blank -%}
-        <em>{{ section.settings.hero_title_line2 }}</em>
-      {%- endif -%}
+  <div class="ph-top">
+    <p class="ph-eb">{{ price_eyebrow }}</p>
+    <h1 class="ph-heading">
+      <span class="ph-desde">{{ price_heading }}</span>
+      <span class="ph-price">{{ price_amount }}</span>
     </h1>
-
-    {%- if section.settings.hero_description != blank -%}
-      <p class="hero-desc">{{ section.settings.hero_description }}</p>
-    {%- endif -%}
-
-    <div class="hero-btns">
-      {%- if section.settings.hero_btn_primary != blank -%}
-        <a href="#elige-liga" class="btn-gold" data-scroll-anchor="elige-liga">{{ section.settings.hero_btn_primary }}</a>
-      {%- endif -%}
-      {%- if section.settings.hero_btn_secondary != blank -%}
-        <a href="{{ hero_secondary_url }}" class="btn-hero-link">{{ section.settings.hero_btn_secondary }}</a>
-      {%- endif -%}
+    <div class="ph-actions">
+      <a class="ph-btn" href="{{ price_btn_url }}">{{ price_btn }} →</a>
+      <a class="ph-link" href="{{ price_link_url }}">{{ price_link_label }}</a>
     </div>
   </div>
 
-  {%- if section.settings.hero_stat_1_value != blank or section.settings.hero_stat_1_label != blank or section.settings.hero_stat_2_value != blank or section.settings.hero_stat_2_label != blank or section.settings.hero_stat_3_value != blank or section.settings.hero_stat_3_label != blank -%}
-    <ul class="hero-stats rev-l">
-      {%- if section.settings.hero_stat_1_value != blank or section.settings.hero_stat_1_label != blank -%}
-        <li class="hero-stat">
-          <span class="hero-stat__value">
-            <svg class="hero-stat__star" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
-              <path fill="currentColor" d="M10 1.5l2.47 5.01 5.53.8-4 3.9.94 5.5L10 14.1l-4.94 2.6.94-5.5-4-3.9 5.53-.8L10 1.5z"/>
-            </svg>
-            {{ section.settings.hero_stat_1_value }}
-          </span>
-          {%- if section.settings.hero_stat_1_label != blank -%}
-            <span class="hero-stat__label">{{ section.settings.hero_stat_1_label }}</span>
-          {%- endif -%}
-        </li>
-      {%- endif -%}
-      {%- if section.settings.hero_stat_2_value != blank or section.settings.hero_stat_2_label != blank -%}
-        <li class="hero-stat">
-          {%- if section.settings.hero_stat_2_value != blank -%}
-            <span class="hero-stat__value">{{ section.settings.hero_stat_2_value }}</span>
-          {%- endif -%}
-          {%- if section.settings.hero_stat_2_label != blank -%}
-            <span class="hero-stat__label">{{ section.settings.hero_stat_2_label }}</span>
-          {%- endif -%}
-        </li>
-      {%- endif -%}
-      {%- if section.settings.hero_stat_3_value != blank or section.settings.hero_stat_3_label != blank -%}
-        <li class="hero-stat">
-          {%- if section.settings.hero_stat_3_value != blank -%}
-            <span class="hero-stat__value">{{ section.settings.hero_stat_3_value }}</span>
-          {%- endif -%}
-          {%- if section.settings.hero_stat_3_label != blank -%}
-            <span class="hero-stat__label">{{ section.settings.hero_stat_3_label }}</span>
-          {%- endif -%}
-        </li>
-      {%- endif -%}
-    </ul>
-  {%- endif -%}
+  <div class="ph-info">
+    <span class="ph-i"><span>{{ price_note_1 }}</span> <b>{{ price_note_1_price }}</b></span>
+    <span class="ph-i"><span>{{ price_note_2 }}</span> <b>{{ price_note_2_price }}</b></span>
+    <span class="ph-i">{{ price_note_3 }}</span>
+    <span class="ph-i ph-count" data-ph-count="{{ price_count_end | escape }}">
+      <span>{{ price_count_label }}</span>
+      <b class="ph-count-val">--h --m --s</b>
+    </span>
+  </div>
 </section>
+
+<div class="ph-marquee" aria-hidden="true">
+  <div class="ph-marquee__track">
+    {%- assign marquee_bits = price_marquee | split: '|' -%}
+    {%- for pass in (1..2) -%}
+      <div class="ph-marquee__group">
+        {%- for bit in marquee_bits -%}
+          {%- assign bit_clean = bit | strip -%}
+          {%- if bit_clean != blank -%}
+            <span>{{ bit_clean }}</span>
+            <i></i>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+<script>
+  (function () {
+    var node = document.querySelector('[data-ph-count]');
+    if (!node) return;
+    var out = node.querySelector('.ph-count-val');
+    var end = Date.parse(node.getAttribute('data-ph-count'));
+    if (!out || !end) return;
+    function pad(n) { return String(n).padStart(2, '0'); }
+    function tick() {
+      var diff = Math.max(0, end - Date.now());
+      var h = Math.floor(diff / 3600000);
+      var m = Math.floor((diff % 3600000) / 60000);
+      var s = Math.floor((diff % 60000) / 1000);
+      out.textContent = pad(h) + 'h ' + pad(m) + 'm ' + pad(s) + 's';
+    }
+    tick();
+    setInterval(tick, 1000);
+  })();
+</script>
 
 {%- liquid
   assign hero_logo_count = 0
@@ -559,7 +618,7 @@
     },
     {
       "type": "paragraph",
-      "content": "Hasta 6 imágenes de fondo, en carrusel. La foto se funde con el fondo negro. Textos, botones y cifras se editan aquí. Los logos de empresas se suben con el bloque «Logo de empresa»."
+      "content": "El hero muestra el precio sobre la foto. Hasta 6 imágenes de fondo. Textos y precios se editan abajo."
     },
     {
       "type": "image_picker",
@@ -590,6 +649,94 @@
       "type": "image_picker",
       "id": "hero_image_6",
       "label": "Imagen de fondo 6"
+    },
+    {
+      "type": "text",
+      "id": "price_eyebrow",
+      "label": "Etiqueta",
+      "default": "Precio especial"
+    },
+    {
+      "type": "text",
+      "id": "price_heading",
+      "label": "Titular",
+      "default": "Camisetas desde"
+    },
+    {
+      "type": "text",
+      "id": "price_amount",
+      "label": "Precio grande",
+      "default": "$697"
+    },
+    {
+      "type": "text",
+      "id": "price_btn",
+      "label": "Botón",
+      "default": "Comprar ahora"
+    },
+    {
+      "type": "url",
+      "id": "price_btn_url",
+      "label": "Enlace del botón"
+    },
+    {
+      "type": "text",
+      "id": "price_link_label",
+      "label": "Enlace de texto",
+      "default": "Ver todos los precios"
+    },
+    {
+      "type": "url",
+      "id": "price_link_url",
+      "label": "URL del enlace de texto"
+    },
+    {
+      "type": "text",
+      "id": "price_note_1",
+      "label": "Nota 1",
+      "default": "Retro y selecciones"
+    },
+    {
+      "type": "text",
+      "id": "price_note_1_price",
+      "label": "Precio nota 1",
+      "default": "$747"
+    },
+    {
+      "type": "text",
+      "id": "price_note_2",
+      "label": "Nota 2",
+      "default": "Icónicas y Versión Jugador"
+    },
+    {
+      "type": "text",
+      "id": "price_note_2_price",
+      "label": "Precio nota 2",
+      "default": "$797"
+    },
+    {
+      "type": "text",
+      "id": "price_note_3",
+      "label": "Nota 3",
+      "default": "Sin código"
+    },
+    {
+      "type": "text",
+      "id": "price_count_label",
+      "label": "Texto de la cuenta",
+      "default": "Termina en"
+    },
+    {
+      "type": "text",
+      "id": "price_count_end",
+      "label": "Fin de la cuenta (ISO)",
+      "default": "2026-11-25T23:59:59-03:00"
+    },
+    {
+      "type": "text",
+      "id": "price_marquee",
+      "label": "Cinta inferior (separa con |)",
+      "default": "Sports dealer.|Archive of pure fandom.|Past · present · forever."
     },
     {
       "type": "image_picker",
