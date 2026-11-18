@@ -48,6 +48,7 @@
         },
         "hero_logo_TKJ44m": {
           "type": "hero_logo",
+          "disabled": true,
           "settings": {
             "image": "shopify://shop_images/LOGO-BLUE-EXPRESS-COPEC-RGB-1.png",
             "alt": "",
