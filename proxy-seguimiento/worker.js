@@ -248,12 +248,14 @@ function esNumero666(numero) {
 }
 
 async function consultarNumero(numero) {
-  try {
-    return await consultar666post(numero);
-  } catch (error) {
-    if (!(error instanceof ErrorCliente) || error.codigo !== 'no_encontrado') throw error;
-  }
-  return consultarGuest(numero);
+  const [seis, guest] = await Promise.allSettled([consultar666post(numero), consultarGuest(numero)]);
+  if (seis.status === 'fulfilled') return seis.value;
+  if (guest.status === 'fulfilled') return guest.value;
+
+  const falloSeis = seis.reason;
+  if (falloSeis instanceof ErrorCliente && falloSeis.codigo !== 'no_encontrado') throw falloSeis;
+  if (guest.reason instanceof ErrorCliente) throw guest.reason;
+  throw new ErrorCliente('no_encontrado', 404);
 }
 
 function fecha666(valor) {
@@ -386,7 +388,10 @@ function armarSeguimiento666(numero, item) {
 async function consultar666post(numero) {
   const respuesta = await fetch(
     `http://www.666post.com/sz56t/selectTrack.htm?documentCode=${encodeURIComponent(numero)}`,
-    { headers: { Accept: 'application/json, text/plain, */*' } }
+    {
+      headers: { Accept: 'application/json, text/plain, */*' },
+      signal: AbortSignal.timeout(8000),
+    }
   );
   if (!respuesta.ok) {
     throw new ErrorCliente('error_servidor', 502);
@@ -496,16 +501,16 @@ async function consultarGuest(numero) {
   url.searchParams.set('companyId', GUEST_TRACK.companyId);
   url.searchParams.set('nos', numero);
 
-  const respuesta = await fetch(url, { headers: { Accept: 'application/json' } });
-  if (!respuesta.ok) {
-    throw new ErrorCliente('error_servidor', 502);
-  }
-
   let payload;
   try {
-    payload = await respuesta.json();
-  } catch {
-    throw new ErrorCliente('no_encontrado', 404);
+    payload = await Promise.race([
+      obtenerJsonPorIp(url),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('guest_timeout')), 8000)),
+    ]);
+  } catch (error) {
+    if (error instanceof ErrorCliente) throw error;
+    console.error('guest_fallo', error instanceof Error ? error.message : error);
+    throw new ErrorCliente('error_servidor', 502);
   }
 
   const data = payload?.data;
@@ -514,6 +519,93 @@ async function consultarGuest(numero) {
   }
 
   return armarSeguimientoGuest(numero, data);
+}
+
+function unirBytes(trozos) {
+  const total = trozos.reduce((suma, trozo) => suma + trozo.length, 0);
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const trozo of trozos) {
+    bytes.set(trozo, offset);
+    offset += trozo.length;
+  }
+  return bytes;
+}
+
+function indiceDe(bytes, patron, desde = 0) {
+  for (let i = desde; i <= bytes.length - patron.length; i++) {
+    let coincide = true;
+    for (let j = 0; j < patron.length; j++) {
+      if (bytes[i + j] !== patron[j]) {
+        coincide = false;
+        break;
+      }
+    }
+    if (coincide) return i;
+  }
+  return -1;
+}
+
+function decodificarChunked(bytes) {
+  const partes = [];
+  let i = 0;
+  while (i < bytes.length) {
+    const fin = indiceDe(bytes, [13, 10], i);
+    if (fin === -1) break;
+    const tamano = parseInt(new TextDecoder().decode(bytes.slice(i, fin)), 16);
+    if (!Number.isFinite(tamano)) break;
+    i = fin + 2;
+    if (tamano === 0) break;
+    partes.push(bytes.slice(i, i + tamano));
+    i += tamano + 2;
+  }
+  return new TextDecoder().decode(unirBytes(partes));
+}
+
+async function obtenerJsonPorIp(url) {
+  const { connect } = await import('cloudflare:sockets');
+  const destino = new URL(url);
+  const socket = connect({ hostname: destino.hostname, port: 80 }, { secureTransport: 'off' });
+  const peticion = [
+    `GET ${destino.pathname}${destino.search} HTTP/1.1`,
+    `Host: ${destino.host}`,
+    'Accept: application/json',
+    'User-Agent: Mozilla/5.0',
+    'Connection: close',
+    '',
+    '',
+  ].join('\r\n');
+
+  const writer = socket.writable.getWriter();
+  await writer.write(new TextEncoder().encode(peticion));
+
+  const reader = socket.readable.getReader();
+  const trozos = [];
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    trozos.push(value);
+  }
+  try { await writer.close(); } catch { /* ya cerrado */ }
+
+  const bytes = unirBytes(trozos);
+  const corte = indiceDe(bytes, [13, 10, 13, 10]);
+  if (corte === -1) throw new ErrorCliente('error_servidor', 502);
+
+  const cabeceras = new TextDecoder().decode(bytes.slice(0, corte));
+  const estado = Number((cabeceras.match(/^HTTP\/\d\.\d (\d+)/) || [])[1] || 0);
+  if (estado < 200 || estado >= 300) throw new ErrorCliente('error_servidor', 502);
+
+  const crudo = bytes.slice(corte + 4);
+  const cuerpo = /transfer-encoding:\s*chunked/i.test(cabeceras)
+    ? decodificarChunked(crudo)
+    : new TextDecoder().decode(crudo);
+
+  try {
+    return JSON.parse(cuerpo);
+  } catch {
+    throw new ErrorCliente('no_encontrado', 404);
+  }
 }
 
 /* ------------------------------------------------------------
