@@ -343,6 +343,9 @@ window.SEGUIMIENTO_CONFIG = {
     { busca: 'estimated flight departure', es: 'Documentación de salida aprobada', nivel: 3 },
     { busca: 'departed from airport of origin', es: 'Salio del aeropuerto de origen', nivel: 3 },
     { busca: 'the flight has landed', es: 'El vuelo aterrizo en Chile', nivel: 4 },
+    { busca: 'import clearance start', es: 'Inicio de tramite de aduana', nivel: 4 },
+    { busca: 'last-mile delivery forecast', es: 'Entrega final prevista con Blue Express', nivel: 4 },
+    { busca: 'last mile delivery forecast', es: 'Entrega final prevista con Blue Express', nivel: 4 },
 
     // Salio del aeropuerto de Santiago: desde aca lo mueve Correos de Chile
     {

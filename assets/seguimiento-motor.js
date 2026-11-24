@@ -352,14 +352,26 @@
       // viajando y cuando ya esta en Chile. Si los movimientos
       // muestran que llego, se usa el texto que corresponde.
       if (estado === 'transit' && alcanzado >= 4) {
-        var blue = datos.entregaLocal && datos.entregaLocal.courier === 'blue';
-        if (blue && estados.transitConBlue) {
-          info = estados.transitConBlue;
-        } else if (datos.origen === '666post') {
+        if (datos.origen === '666post') {
           var enAduana = eventos.some(function (evento) {
             return String(evento.original || '').toLowerCase().indexOf('customs clearance') !== -1;
           });
-          info = (enAduana ? estados.transitEnChile666 : estados.transitAterrizo666) || info;
+          var aduanaLiberada = eventos.some(function (evento) {
+            var original = String(evento.original || '').toLowerCase();
+            return (
+              original.indexOf('customs clearance success') !== -1 ||
+              original.indexOf('cleared customs') !== -1
+            );
+          });
+          var conBlue = eventos.some(function (evento) {
+            var original = String(evento.original || '').toLowerCase();
+            return original.indexOf('last-mile') !== -1 || original.indexOf('last mile') !== -1;
+          });
+          if (conBlue && (!enAduana || aduanaLiberada) && estados.transitConBlue) {
+            info = estados.transitConBlue;
+          } else {
+            info = (enAduana ? estados.transitEnChile666 : estados.transitAterrizo666) || info;
+          }
         } else if (estados.transitEnChile) {
           info = estados.transitEnChile;
         }

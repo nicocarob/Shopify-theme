@@ -321,6 +321,25 @@ function codigoLocal666(item, numero) {
   return transfer;
 }
 
+function yaEstaEnChile666(eventos) {
+  return eventos.some((evento) => {
+    const texto = String(evento.texto || '').toLowerCase();
+    return (
+      texto.includes('flight has landed') ||
+      texto.includes('customs clearance') ||
+      texto.includes('import clearance') ||
+      texto.includes('last-mile') ||
+      texto.includes('last mile')
+    );
+  });
+}
+
+function numeroBlue666(item, numero, eventos) {
+  const distinto = codigoLocal666(item, numero);
+  if (distinto) return distinto;
+  return yaEstaEnChile666(eventos) ? String(numero || '').trim() : '';
+}
+
 function entregaBlue(numeroLocal) {
   if (!numeroLocal) return null;
   return {
@@ -328,7 +347,7 @@ function entregaBlue(numeroLocal) {
     numero: numeroLocal,
     titulo: 'Numero para Blue Express',
     explicacion: 'Con este numero puedes seguir la entrega final en Blue Express.',
-    enlace: `https://tracking-unificado.blue.cl/?n_seguimiento=${encodeURIComponent(numeroLocal)}`,
+    enlace: `https://www.blue.cl/enviar/seguimiento?n_seguimiento=${encodeURIComponent(numeroLocal)}`,
     textoEnlace: 'Seguir en Blue Express',
   };
 }
@@ -351,7 +370,7 @@ function armarSeguimiento666(numero, item) {
     customerEmail: null,
     eventos,
     origen: '666post',
-    entregaLocal: entregaBlue(codigoLocal666(item, numero)),
+    entregaLocal: entregaBlue(numeroBlue666(item, numero, eventos)),
   };
 }
 
