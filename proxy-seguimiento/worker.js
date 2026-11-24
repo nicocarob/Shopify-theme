@@ -25,7 +25,7 @@ let tokenShopifyCache = null;
 let tokenShopifyExpiraEn = 0;
 let tokenShopifyRenovando = null;
 
-export { consultar666post, esNumero666, armarSeguimiento666 };
+export { consultar666post, esNumero666, armarSeguimiento666, consultarGuest, armarSeguimientoGuest };
 
 export default {
   async fetch(request, env) {
@@ -75,7 +75,7 @@ export default {
       }
 
       const datos = esNumero666(resuelto.numero)
-        ? await consultar666post(resuelto.numero)
+        ? await consultarNumero(resuelto.numero)
         : await consultarTrackingMore(resuelto.numero, env, {
             email: resuelto.email,
             pedido: resuelto.pedido,
@@ -247,6 +247,15 @@ function esNumero666(numero) {
   return /^\d{8,20}$/.test(String(numero || ''));
 }
 
+async function consultarNumero(numero) {
+  try {
+    return await consultar666post(numero);
+  } catch (error) {
+    if (!(error instanceof ErrorCliente) || error.codigo !== 'no_encontrado') throw error;
+  }
+  return consultarGuest(numero);
+}
+
 function fecha666(valor) {
   const fecha = new Date(String(valor || '').replace(' ', 'T'));
   return Number.isNaN(fecha.getTime()) ? 0 : fecha.getTime();
@@ -402,6 +411,109 @@ async function consultar666post(numero) {
   }
 
   return armarSeguimiento666(numero, item);
+}
+
+/* ------------------------------------------------------------
+   Pagina nueva (numeros que ya no salen en 666post)
+   http://47.112.229.68/guest-track
+   Un numero esta en 666post o aca, nunca en las dos.
+   ------------------------------------------------------------ */
+
+const GUEST_TRACK = {
+  url: 'http://47.112.229.68/its-api/guest/queryTrack',
+  companyId: '1509095506715103233',
+};
+
+function eventoGuest(item) {
+  const crudo = String(item?.content || '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const lower = crudo.toLowerCase();
+  const code = String(item?.status || '').toUpperCase();
+  let texto = crudo;
+
+  if (code === 'A01' || crudo.includes('包裹信息已收到') || lower.includes('package details received')) {
+    texto = 'Shipment information received';
+  } else if (code === 'A05' || crudo.includes('分拣中心已入库') || crudo.includes('到达收货点')) {
+    texto = 'Acceptance, Sent To Chile';
+  } else if (crudo.includes('货物离开操作中心')) {
+    texto = 'Departed Sunyou Facility';
+  } else if (lower.includes('estimated flight departure')) {
+    texto = 'Estimated flight departure time';
+  } else if (lower.includes('departed from airport of origin')) {
+    texto = 'Departed from airport of Origin';
+  } else if (lower.includes('flight has landed')) {
+    texto = 'The flight has landed';
+  } else if (lower.includes('in customs clearance') || crudo.includes('清关中')) {
+    texto = 'Customs clearance in process';
+  } else if (
+    lower.includes('customs clearance completed') ||
+    lower.includes('cleared customs') ||
+    crudo.includes('清关完成') ||
+    crudo.includes('已放行')
+  ) {
+    texto = 'Customs Clearance Successed';
+  } else if (lower.includes('flight departed') || crudo.includes('已起飞')) {
+    texto = 'Flight departed';
+  } else if (/\bdelivered\b/.test(lower) || crudo.includes('已签收')) {
+    texto = 'Delivered';
+  }
+
+  return {
+    fecha: item?.time || '',
+    texto,
+    lugar: lugar666(item?.location || item?.eventCity || ''),
+    nota: '',
+  };
+}
+
+function armarSeguimientoGuest(numero, data) {
+  const eventos = (data?.events || [])
+    .map((detalle) => eventoGuest(detalle))
+    .filter((evento) => evento.texto)
+    .sort((a, b) => fecha666(b.fecha) - fecha666(a.fecha));
+
+  const textos = eventos.map((evento) => evento.texto.toLowerCase());
+  let estado = eventos.length ? 'transit' : 'notfound';
+  if (textos.some((texto) => texto.includes('delivered'))) estado = 'delivered';
+
+  return {
+    numero,
+    estado,
+    diasEnTransito: 0,
+    orderNumber: null,
+    customerEmail: null,
+    eventos,
+    origen: 'guest',
+    entregaLocal: entregaBlue(
+      numeroBlue666({ business_channeltransfercode: data?.localNumber }, numero, eventos)
+    ),
+  };
+}
+
+async function consultarGuest(numero) {
+  const url = new URL(GUEST_TRACK.url);
+  url.searchParams.set('companyId', GUEST_TRACK.companyId);
+  url.searchParams.set('nos', numero);
+
+  const respuesta = await fetch(url, { headers: { Accept: 'application/json' } });
+  if (!respuesta.ok) {
+    throw new ErrorCliente('error_servidor', 502);
+  }
+
+  let payload;
+  try {
+    payload = await respuesta.json();
+  } catch {
+    throw new ErrorCliente('no_encontrado', 404);
+  }
+
+  const data = payload?.data;
+  if (payload?.code !== 0 || !data?.number) {
+    throw new ErrorCliente('no_encontrado', 404);
+  }
+
+  return armarSeguimientoGuest(numero, data);
 }
 
 /* ------------------------------------------------------------

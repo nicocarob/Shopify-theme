@@ -125,9 +125,13 @@
       return false;
     }
 
+    function esPedidoNumerico(origen) {
+      return origen === '666post' || origen === 'guest';
+    }
+
     function etapasVisibles(alcanzado, eventos, origen) {
       var etapas = CFG.etapas || [];
-      if (origen !== '666post' || alcanzado < 4 || salioAReparto(eventos)) return etapas;
+      if (!esPedidoNumerico(origen) || alcanzado < 4 || salioAReparto(eventos)) return etapas;
       return etapas.map(function (etapa) {
         if (etapa.nivel !== 4) return etapa;
         return { nivel: etapa.nivel, nombre: 'En Chile' };
@@ -165,7 +169,7 @@
       internacional (9-16 dias desde Acceptance).
     */
     function calcularEstimado(eventos, entregado, origen) {
-      if (origen === '666post') return estimado666(eventos, entregado);
+      if (esPedidoNumerico(origen)) return estimado666(eventos, entregado);
 
       var cfg = CFG.entregaEstimada;
       if (!cfg || entregado) return null;
@@ -380,7 +384,7 @@
       // viajando y cuando ya esta en Chile. Si los movimientos
       // muestran que llego, se usa el texto que corresponde.
       if (estado === 'transit' && alcanzado >= 4) {
-        if (datos.origen === '666post') {
+        if (esPedidoNumerico(datos.origen)) {
           var enAduana = eventos.some(function (evento) {
             return String(evento.original || '').toLowerCase().indexOf('customs clearance') !== -1;
           });

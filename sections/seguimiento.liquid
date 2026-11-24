@@ -1486,7 +1486,7 @@
 
     function pintarAyuda(origen) {
       if (!elAyuda) return;
-      if (origen === '666post') {
+      if (origen === '666post' || origen === 'guest') {
         elAyuda.innerHTML = '<p>Los envios suelen demorar entre 12 y 24 dias corridos.</p>';
         return;
       }
