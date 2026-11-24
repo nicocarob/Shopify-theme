@@ -999,7 +999,7 @@
   </div>
 
   {% if section.settings.texto_ayuda != blank %}
-    <div class="sg-ayuda">{{ section.settings.texto_ayuda }}</div>
+    <div class="sg-ayuda" data-ayuda>{{ section.settings.texto_ayuda }}</div>
   {% endif %}
 
   <div class="sg-demo" data-demo hidden>
@@ -1145,6 +1145,8 @@
     var elLista = raiz.querySelector('[data-lista]');
     var elCopiar = raiz.querySelector('[data-copiar]');
     var elDemo = raiz.querySelector('[data-demo]');
+    var elAyuda = raiz.querySelector('[data-ayuda]');
+    var ayudaOriginal = elAyuda ? elAyuda.innerHTML : '';
     var elDias = raiz.querySelector('[data-dias]');
     var elEstimado = raiz.querySelector('[data-estimado]');
     var elEstimadoLabel = raiz.querySelector('[data-estimado-label]');
@@ -1354,6 +1356,7 @@
       pintarPaquetes(datos);
       pintarDias(vista.dias);
       pintarEstimado(vista.estimado);
+      pintarAyuda(datos.origen);
       pintarCorreos(vista.entregaLocal || vista.numeroCorreos);
       pintarBarra(vista.alcanzado, vista.etapas);
       pintarLista(vista.eventos);
@@ -1479,6 +1482,15 @@
       if (!elDias) return;
       elDias.textContent = texto || '';
       elDias.hidden = !texto;
+    }
+
+    function pintarAyuda(origen) {
+      if (!elAyuda) return;
+      if (origen === '666post') {
+        elAyuda.innerHTML = '<p>Los envios suelen demorar entre 12 y 24 dias corridos.</p>';
+        return;
+      }
+      elAyuda.innerHTML = ayudaOriginal;
     }
 
     function pintarEstimado(estimado) {

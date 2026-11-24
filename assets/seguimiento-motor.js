@@ -164,7 +164,9 @@
       con la ventana corta (3-4 dias). Si no, se usa la de viaje
       internacional (9-16 dias desde Acceptance).
     */
-    function calcularEstimado(eventos, entregado) {
+    function calcularEstimado(eventos, entregado, origen) {
+      if (origen === '666post') return estimado666(eventos, entregado);
+
       var cfg = CFG.entregaEstimada;
       if (!cfg || entregado) return null;
 
@@ -192,6 +194,32 @@
       }
 
       var texto = String(cfg.formato || '')
+        .replace('{desde}', conDiaSemana(desde))
+        .replace('{hasta}', sinDiaSemana(hasta));
+
+      return { texto: texto, atrasado: false };
+    }
+
+    /*
+      666post: 12 a 24 dias desde que llego al centro en China.
+      Si el rango ya paso, se mantiene la fecha. No se cambia por
+      el aviso de "ya se cumplio".
+    */
+    function estimado666(eventos, entregado) {
+      var cfg = CFG.entregaEstimada666;
+      if (!cfg || entregado) return null;
+
+      var salida = fechaDeSalida(eventos);
+      if (!salida) return null;
+
+      var min = Number(cfg.minDias);
+      var max = Number(cfg.maxDias);
+      if (!isFinite(min) || !isFinite(max)) return null;
+
+      var desde = sumarDias(salida, min);
+      var hasta = sumarDias(salida, max);
+      var formato = cfg.formato || (CFG.entregaEstimada && CFG.entregaEstimada.formato) || '';
+      var texto = String(formato)
         .replace('{desde}', conDiaSemana(desde))
         .replace('{hasta}', sinDiaSemana(hasta));
 
@@ -388,7 +416,7 @@
         alcanzado: alcanzado,
         etapas: etapasVisibles(alcanzado, eventos, datos.origen),
         dias: calcularDias(eventos, entregado, salida),
-        estimado: calcularEstimado(eventos, entregado),
+        estimado: calcularEstimado(eventos, entregado, datos.origen),
         entregaLocal: datos.entregaLocal && datos.entregaLocal.numero ? datos.entregaLocal : null,
         numeroCorreos: buscarNumeroCorreos(eventos),
         sinTraducir: eventos.filter(function (evento) {

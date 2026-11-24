@@ -190,6 +190,16 @@ window.SEGUIMIENTO_CONFIG = {
   },
 
   /*
+    Numeros 666post (sin letras). La ventana es 12 a 24 dias desde
+    el mismo punto de partida, y siempre se muestra la fecha.
+  */
+  entregaEstimada666: {
+    minDias: 12,
+    maxDias: 24,
+    formato: 'entre {desde} y {hasta}',
+  },
+
+  /*
     ------------------------------------------------------------
     NUMERO DE CORREOS DE CHILE
     ------------------------------------------------------------
